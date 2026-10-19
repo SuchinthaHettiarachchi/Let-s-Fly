@@ -1,26 +1,118 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Let's Fly.lk — "Ocean & Sun" palette (approved).
+ * Source of truth: ../tokens.css / tokens.json. Keep these in sync.
+ */
+@theme {
+  /* Brand */
+  --color-navy-900: #0b2545;
+  --color-ocean-600: #13579b;
+  --color-ocean-500: #1b6cc0;
+  --color-sun-400: #ffea00;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Text */
+  --color-ink-900: #0e1e33;
+  --color-ink-600: #44536a;
+  --color-ink-400: #6a778b;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Sand */
+  --color-sand-50: #f7f4ec;
+  --color-sand-100: #f1ede3;
+  --color-sand-200: #efe9db;
+  --color-sand-300: #e6e0d2;
+  --color-sand-400: #cfc6b2;
+  --color-page-bg: #f0eee9;
+  --color-surface: #ffffff;
+
+  /* Type */
+  --font-sans: var(--font-poppins), system-ui, sans-serif;
+
+  /* Radius */
+  --radius-tile: 14px;
+
+  /* Shadows (navy-tinted) */
+  --shadow-lf-sm: 0 12px 30px rgba(11, 37, 69, 0.3);
+  --shadow-lf-md: 0 18px 40px rgba(11, 37, 69, 0.14);
+  --shadow-lf-lg: 0 22px 44px rgba(11, 37, 69, 0.14);
+  --shadow-lf-card-hover: 0 18px 40px rgba(11, 37, 69, 0.1);
+  --shadow-lf-header: 0 4px 20px rgba(11, 37, 69, 0.05);
+  --shadow-lf-ring: 0 0 0 12px rgba(19, 87, 155, 0.12);
+
+  /* Motion */
+  --animate-marquee: lf-marquee 28s linear infinite;
+  @keyframes lf-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-surface);
+    color: var(--color-ink-900);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: var(--color-ocean-600);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--color-navy-900);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ocean-600);
+    outline-offset: 2px;
+  }
+}
+
+@utility icon {
+  font-family: "Material Symbols Rounded";
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+@utility icon-fill {
+  font-variation-settings: "FILL" 1;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

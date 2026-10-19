@@ -1,0 +1,71 @@
+import type { Metadata } from "next";
+import { PageHero } from "@/components/layout/PageHero";
+import { CtaBand } from "@/components/layout/CtaBand";
+import { Container } from "@/components/ui/Container";
+import { Eyebrow, SectionHeading } from "@/components/ui/SectionHeading";
+import { Icon } from "@/components/ui/Icon";
+import { RegionPackages } from "@/components/holidays/RegionPackages";
+import { packages } from "@/data/packages";
+
+export const metadata: Metadata = {
+  title: "Outbound Travels",
+  description: "Flights, visas, hotels and tours bundled into one easy package — for families, couples and groups.",
+};
+
+const reasons = [
+  { icon: "flight", title: "Flights included", text: "Return air tickets on trusted carriers." },
+  { icon: "description", title: "Visa handled", text: "We prepare and submit your documents." },
+  { icon: "hotel", title: "Quality hotels", text: "3★ to 5★ stays, reviewed by our team." },
+  { icon: "payments", title: "Easy payments", text: "Pay in LKR, with instalment options." },
+];
+
+export default function OutboundPage() {
+  const tours = packages.filter((p) => p.category === "outbound");
+  return (
+    <>
+      <PageHero
+        image="/images/hero/dubai.jpg"
+        crumbs={[{ label: "Home", href: "/" }, { label: "Holidays" }, { label: "Outbound Travels" }]}
+        eyebrow="Outbound travels"
+        title="The world, planned from Colombo"
+        sub="Flights, visas, hotels and tours bundled into one easy package — for families, couples and groups."
+      />
+
+      <section className="py-16 lg:py-20">
+        <Container className="flex flex-col gap-8">
+          <SectionHeading eyebrow="Choose a region" title="Where to next?" />
+          <RegionPackages tours={tours} />
+        </Container>
+      </section>
+
+      <section className="bg-sand-50 py-16 lg:py-20">
+        <Container className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1fr_1.6fr] lg:gap-14">
+          <div className="flex flex-col gap-4">
+            <Eyebrow>Why Let&apos;s Fly</Eyebrow>
+            <h2 className="text-[30px] leading-[1.18] font-bold tracking-[-0.01em] sm:text-[36px]">
+              One team for your whole trip
+            </h2>
+            <p className="text-[15px] leading-[1.75] text-ink-600">
+              No juggling five websites — we handle it all and stay on WhatsApp while you travel.
+            </p>
+          </div>
+          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {reasons.map((r) => (
+              <li key={r.title} className="flex items-start gap-4 rounded-xl border border-sand-300 bg-white p-5">
+                <span className="flex size-11 flex-none items-center justify-center rounded-tile bg-sand-200 text-ocean-600">
+                  <Icon name={r.icon} size={22} />
+                </span>
+                <span className="flex flex-col gap-1">
+                  <span className="text-[15px] font-semibold">{r.title}</span>
+                  <span className="text-[13px] leading-relaxed text-ink-600">{r.text}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </section>
+
+      <CtaBand tone="sand" />
+    </>
+  );
+}
