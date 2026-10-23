@@ -44,7 +44,7 @@ export function HeroSlider() {
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(11,37,69,.94)_0%,rgba(11,37,69,.78)_35%,rgba(19,87,155,.35)_70%,rgba(19,87,155,.1)_100%)]" />
 
       <Container className="relative flex h-full flex-col justify-center gap-[22px] pb-16 text-white">
-        <Eyebrow onDark rule className="tracking-[0.28em]">
+        <Eyebrow onDark className="tracking-[0.28em]">
           Dream · Explore · Discover
         </Eyebrow>
         <h1 className="max-w-[640px] text-[40px] leading-[1.08] font-bold tracking-[-0.02em] text-pretty sm:text-[52px] lg:text-[64px]">
