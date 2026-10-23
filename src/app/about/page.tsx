@@ -7,6 +7,8 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { TeamSection } from "@/components/about/TeamSection";
+import { CountUp } from "@/components/home/CountUp";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { contact } from "@/data/site";
 import {
   aboutParagraphs,
@@ -34,21 +36,21 @@ export default function AboutPage() {
     <>
       {/* 1. Hero */}
       <section className="relative overflow-hidden bg-navy-900">
-        <Image src="/images/hero/dubai.jpg" alt="" fill preload sizes="100vw" className="object-cover" />
+        <Image src="/images/hero/dubai.jpg" alt="" fill preload sizes="100vw" className="animate-zoom object-cover" />
         <div className={`absolute inset-0 ${gradient}`} />
         <Container className="relative flex min-h-[600px] flex-col justify-start gap-5 py-14 text-white sm:min-h-[640px] lg:min-h-[660px]">
           <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "About Us" }]} onDark />
-          <Eyebrow onDark rule>
+          <Eyebrow onDark rule className="animate-rise">
             About Us
           </Eyebrow>
-          <h1 className="max-w-[860px] text-[34px] leading-[1.1] font-bold tracking-[-0.02em] text-pretty sm:text-[48px] lg:text-[60px]">
+          <h1 className="max-w-[860px] animate-rise text-[34px] [animation-delay:120ms] leading-[1.1] font-bold tracking-[-0.02em] text-pretty sm:text-[48px] lg:text-[60px]">
             We don&apos;t just plan journeys. We help people experience the world with confidence.
           </h1>
-          <p className="max-w-[560px] text-base leading-relaxed text-white/85 sm:text-lg">
+          <p className="max-w-[560px] animate-rise text-base leading-relaxed text-white/85 [animation-delay:240ms] sm:text-lg">
             A Sri Lankan travel team that handles the tickets, the visas and the hundred small details, so you can focus on
             the trip itself.
           </p>
-          <span className="flex items-center gap-2 self-start rounded-full border border-white/25 bg-white/12 px-4 py-2 text-sm">
+          <span className="flex animate-rise items-center gap-2 self-start rounded-full [animation-delay:360ms] border border-white/25 bg-white/12 px-4 py-2 text-sm">
             <Icon name="groups" size={18} className="text-sun-400" />
             15,000+ travellers since 2016
           </span>
@@ -58,10 +60,15 @@ export default function AboutPage() {
       {/* 2. Vision & Mission */}
       <section className="bg-sand-50 py-16 lg:py-20">
         <Container className="grid grid-cols-1 gap-5 md:grid-cols-2">
-          {visionMission.map((v) => (
-            <div key={v.title} className="flex flex-col gap-4 rounded-2xl border border-sand-300 bg-white p-7 sm:p-9">
+          {visionMission.map((v, i) => (
+            <div
+              key={v.title}
+              data-reveal={i * 120}
+              className="group relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-sand-300 bg-white p-7 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lf-card-hover sm:p-9"
+            >
+              <span aria-hidden="true" className={accentBar} />
               <div className="flex items-center gap-4">
-                <span className="flex size-12 flex-none items-center justify-center rounded-tile bg-ocean-600 text-white">
+                <span className="flex size-12 flex-none items-center justify-center rounded-tile bg-ocean-600 text-white transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">
                   <Icon name={v.icon} size={26} />
                 </span>
                 <div className="flex flex-col">
@@ -78,7 +85,7 @@ export default function AboutPage() {
       {/* 3. Who we are */}
       <section className="py-16 lg:py-24">
         <Container className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.1fr_1fr]">
-          <div className="flex flex-col gap-5">
+          <div data-reveal className="flex flex-col gap-5">
             <Eyebrow>Who we are</Eyebrow>
             <h2 className="text-[32px] leading-[1.15] font-bold tracking-[-0.01em] sm:text-[42px]">
               More Than <span className="text-ocean-600">Just Travel</span>
@@ -103,13 +110,13 @@ export default function AboutPage() {
               </div>
             </figure>
           </div>
-          <div className="relative mx-auto w-full max-w-[500px] pb-16 sm:pb-20">
+          <div data-reveal="150" className="relative mx-auto w-full max-w-[500px] pb-16 sm:pb-20">
             <Placeholder label="TEAM PHOTO" icon="groups" className="aspect-[4/5] w-[92%] rounded-2xl" />
             <div className="absolute bottom-0 left-0 size-[46%] overflow-hidden rounded-2xl border-[6px] border-white shadow-lf-md">
               <Image src="/images/packages/kandy-ella-rail.jpg" alt="" fill sizes="230px" className="object-cover" />
             </div>
-            <div className="absolute top-8 right-0 flex flex-col rounded-xl bg-white px-5 py-4 shadow-lf-md">
-              <span className="text-[32px] font-bold text-ocean-600">14+</span>
+            <div className="absolute top-8 right-0 flex animate-float flex-col rounded-xl bg-white px-5 py-4 shadow-lf-md">
+              <CountUp value="14+" className="text-[32px] font-bold text-ocean-600" />
               <span className="text-xs leading-snug text-ink-600">
                 years helping
                 <br />
@@ -123,7 +130,7 @@ export default function AboutPage() {
       {/* 4. Our approach */}
       <section className="bg-sand-50 py-16 lg:py-24">
         <Container className="flex flex-col gap-12">
-          <div className="mx-auto flex max-w-[640px] flex-col items-center gap-3 text-center">
+          <div data-reveal className="mx-auto flex max-w-[640px] flex-col items-center gap-3 text-center">
             <SectionHeading eyebrow="Our approach" title="Travel, The Way It Should Be" centered />
             <p className="text-[15px] leading-relaxed text-ink-600">
               Five things guide every trip we plan, whether it&apos;s a weekend in Malé or a three-week tour of Europe.
@@ -131,14 +138,19 @@ export default function AboutPage() {
           </div>
           <ol className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
             {approach.map((a, i) => (
-              <li key={a.title} className="flex flex-col gap-3 rounded-xl border border-sand-300 bg-white p-6">
+              <li
+                key={a.title}
+                data-reveal={(i % 5) * 90}
+                className="group relative flex flex-col gap-3 overflow-hidden rounded-xl border border-sand-300 bg-white p-6 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lf-card-hover"
+              >
+                <span aria-hidden="true" className={accentBar} />
                 <div className="flex items-center justify-between">
-                  <span className="flex size-11 items-center justify-center rounded-tile bg-sand-200 text-ocean-600">
+                  <span className="flex size-11 items-center justify-center rounded-tile bg-sand-200 text-ocean-600 transition-[background-color,color,rotate] duration-300 group-hover:-rotate-6 group-hover:bg-ocean-600 group-hover:text-white">
                     <Icon name={a.icon} size={22} />
                   </span>
-                  <span className="text-2xl font-bold text-sand-300">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="text-2xl font-bold text-sand-300 transition-colors duration-300 group-hover:text-sun-400">{String(i + 1).padStart(2, "0")}</span>
                 </div>
-                <span className="text-base font-semibold">{a.title}</span>
+                <span className="text-base font-semibold transition-colors group-hover:text-ocean-600">{a.title}</span>
                 <span className="text-[13px] leading-relaxed text-ink-600">{a.text}</span>
               </li>
             ))}
@@ -148,9 +160,9 @@ export default function AboutPage() {
 
       {/* 5. Why we do it */}
       <section className="relative overflow-hidden bg-navy-900">
-        <Image src="/images/hero/hill-country-rail.jpg" alt="" fill sizes="100vw" className="object-cover" />
+        <Image src="/images/hero/hill-country-rail.jpg" alt="" fill sizes="100vw" className="animate-zoom object-cover [animation-direction:alternate] [animation-iteration-count:infinite]" />
         <div className={`absolute inset-0 ${gradient}`} />
-        <Container className="relative flex min-h-[460px] flex-col justify-center gap-5 py-16 text-white">
+        <Container data-reveal className="relative flex min-h-[460px] flex-col justify-center gap-5 py-16 text-white">
           <Eyebrow onDark>Why we do it</Eyebrow>
           <h2 className="max-w-[720px] text-[32px] leading-[1.15] font-bold tracking-[-0.01em] sm:text-[48px]">
             Because Every Journey Means Something
@@ -164,14 +176,24 @@ export default function AboutPage() {
 
       <section className="py-14 lg:py-20">
         <Container className="flex flex-col gap-6">
-          <div className="flex items-end justify-between gap-4">
+          <div data-reveal className="flex items-end justify-between gap-4">
             <h3 className="text-xl font-bold sm:text-2xl">The journeys we&apos;ve helped with this year</h3>
             <span className="hidden text-[13px] text-ink-400 sm:block lg:hidden">Swipe to see more →</span>
           </div>
           <ul className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 lg:mx-0 lg:grid lg:grid-cols-5 lg:px-0">
-            {journeysThisYear.map((j) => (
-              <li key={j.place} className="relative h-[300px] w-[220px] flex-none snap-start overflow-hidden rounded-xl bg-navy-900 lg:w-auto">
-                <Image src={j.image} alt="" fill sizes="240px" className="object-cover" />
+            {journeysThisYear.map((j, i) => (
+              <li
+                key={j.place}
+                data-reveal={(i % 5) * 90}
+                className="group relative h-[300px] w-[220px] flex-none snap-start overflow-hidden rounded-xl bg-navy-900 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lf-md lg:w-auto"
+              >
+                <Image
+                  src={j.image}
+                  alt=""
+                  fill
+                  sizes="240px"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                />
                 <span className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,37,69,0)_45%,rgba(11,37,69,.88)_100%)]" />
                 <span className="absolute inset-x-4 bottom-4 flex flex-col text-white">
                   <span className="text-base font-semibold">{j.place}</span>
@@ -188,14 +210,14 @@ export default function AboutPage() {
         {/* Faint orbit rings behind the content */}
         <span
           aria-hidden="true"
-          className="absolute top-1/2 left-1/2 size-[1100px] -translate-1/2 rounded-full border border-dashed border-white/10"
+          className="absolute top-1/2 left-1/2 size-[1100px] -translate-1/2 animate-spin-slow rounded-full border border-dashed border-white/10"
         />
         <span
           aria-hidden="true"
-          className="absolute top-1/2 left-1/2 size-[760px] -translate-1/2 rounded-full border border-dashed border-white/[0.07]"
+          className="absolute top-1/2 left-1/2 size-[760px] -translate-1/2 animate-spin-slow rounded-full border border-dashed border-white/[0.07] [animation-direction:reverse]"
         />
         <Container className="relative flex flex-col gap-14">
-          <div className="mx-auto flex max-w-[680px] flex-col items-center gap-4 text-center">
+          <div data-reveal className="mx-auto flex max-w-[680px] flex-col items-center gap-4 text-center">
             <Eyebrow onDark>What we bring together</Eyebrow>
             <h2 className="text-[32px] leading-[1.12] font-bold tracking-[-0.01em] text-balance sm:text-[44px] lg:text-[48px]">
               Everything You Need, Under One Roof
@@ -207,12 +229,13 @@ export default function AboutPage() {
           </div>
           <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-[1fr_380px_1fr] lg:gap-0">
             <ul className="order-2 flex flex-col gap-5 lg:order-1">
-              {underOneRoof.slice(0, 3).map((s) => (
-                <RoofItem key={s.title} {...s} side="left" />
+              {underOneRoof.slice(0, 3).map((s, i) => (
+                <RoofItem key={s.title} {...s} side="left" delay={i * 110} />
               ))}
             </ul>
-            <div className="order-1 mx-auto flex size-[290px] items-center justify-center rounded-full bg-white/[0.04] lg:order-2">
-              <div className="flex size-[250px] flex-col items-center justify-center gap-1.5 rounded-full border border-white/15 bg-[radial-gradient(circle_at_50%_35%,var(--color-ocean-500),var(--color-ocean-600)_55%,var(--color-navy-900)_120%)] text-center shadow-[0_24px_60px_rgba(0,0,0,.35)]">
+            <div data-reveal className="relative order-1 mx-auto flex size-[290px] items-center justify-center rounded-full bg-white/[0.04] lg:order-2">
+              <span aria-hidden="true" className="absolute inset-5 animate-ping rounded-full border border-white/20 [animation-duration:3s]" />
+              <div className="relative flex size-[250px] animate-float flex-col items-center justify-center gap-1.5 rounded-full border border-white/15 bg-[radial-gradient(circle_at_50%_35%,var(--color-ocean-500),var(--color-ocean-600)_55%,var(--color-navy-900)_120%)] text-center shadow-[0_24px_60px_rgba(0,0,0,.35)]">
                 <Image
                   src="/images/logo.jpg"
                   alt="Let's Fly.lk"
@@ -229,8 +252,8 @@ export default function AboutPage() {
               </div>
             </div>
             <ul className="order-3 flex flex-col gap-5">
-              {underOneRoof.slice(3).map((s) => (
-                <RoofItem key={s.title} {...s} side="right" />
+              {underOneRoof.slice(3).map((s, i) => (
+                <RoofItem key={s.title} {...s} side="right" delay={i * 110} />
               ))}
             </ul>
           </div>
@@ -241,7 +264,7 @@ export default function AboutPage() {
       <section className="py-16 lg:py-24">
         <Container className="flex flex-col gap-14">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.3fr]">
-            <div className="flex flex-col gap-4">
+            <div data-reveal className="flex flex-col gap-4">
               <Eyebrow>Our commitment</Eyebrow>
               <h2 className="text-[32px] leading-[1.15] font-bold tracking-[-0.01em] sm:text-[42px]">
                 Your Journey.
@@ -254,26 +277,28 @@ export default function AboutPage() {
             </div>
             <ol className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
               {commitments.map((c, i) => (
-                <li key={c.title} className="flex gap-4">
-                  <span className="text-sm font-bold text-ocean-600">{String(i + 1).padStart(2, "0")}</span>
+                <li key={c.title} data-reveal={(i % 2) * 110} className="group flex gap-4">
+                  <span className="flex size-9 flex-none items-center justify-center rounded-full bg-sand-100 text-sm font-bold text-ocean-600 transition-[background-color,color,scale] duration-300 group-hover:scale-110 group-hover:bg-ocean-600 group-hover:text-white">{String(i + 1).padStart(2, "0")}</span>
                   <span className="flex flex-col gap-1">
-                    <span className="text-[15px] font-semibold">{c.title}</span>
+                    <span className="text-[15px] font-semibold transition-colors group-hover:text-ocean-600">{c.title}</span>
                     <span className="text-[13px] leading-relaxed text-ink-600">{c.text}</span>
                   </span>
                 </li>
               ))}
             </ol>
           </div>
-          <dl className="grid grid-cols-2 overflow-hidden rounded-xl border border-sand-300 lg:grid-cols-4">
+          <dl data-reveal className="grid grid-cols-2 overflow-hidden rounded-xl border border-sand-300 lg:grid-cols-4">
             {aboutStats.map((s, i) => (
               <div
                 key={s.label}
-                className={`flex flex-col items-center gap-1 p-6 text-center ${i % 2 ? "border-l border-sand-300" : ""} ${
+                className={`group flex flex-col items-center gap-1 p-6 text-center transition-colors duration-300 hover:bg-sand-50 ${i % 2 ? "border-l border-sand-300" : ""} ${
                   i > 1 ? "border-t border-sand-300 lg:border-t-0" : ""
                 } ${i === 2 ? "lg:border-l" : ""}`}
               >
                 <dt className="order-2 text-[13px] text-ink-600">{s.label}</dt>
-                <dd className="text-[34px] font-bold text-ocean-600">{s.value}</dd>
+                <dd className="text-[34px] font-bold text-ocean-600 transition-transform duration-300 group-hover:-translate-y-0.5">
+                  {/^[\d,]+\+?$/.test(s.value) ? <CountUp value={s.value} /> : s.value}
+                </dd>
               </div>
             ))}
           </dl>
@@ -283,13 +308,15 @@ export default function AboutPage() {
       {/* 8. Team */}
       <section className="bg-sand-50 py-16 lg:py-24">
         <Container className="flex flex-col gap-10">
-          <div className="mx-auto flex max-w-[620px] flex-col items-center gap-3 text-center">
+          <div data-reveal className="mx-auto flex max-w-[620px] flex-col items-center gap-3 text-center">
             <SectionHeading eyebrow="The people behind your trip" title="Meet Our Team" centered />
             <p className="text-[15px] leading-relaxed text-ink-600">
               Behind every journey is a team that cares about getting the details right.
             </p>
           </div>
-          <TeamSection team={team} />
+          <div data-reveal="120">
+            <TeamSection team={team} />
+          </div>
         </Container>
       </section>
 
@@ -297,7 +324,7 @@ export default function AboutPage() {
       <section className="relative overflow-hidden bg-sun-400 py-20 lg:py-24">
         <span aria-hidden="true" className="absolute -top-[200px] -left-[160px] size-[640px] rounded-full border-[60px] border-navy-900/5" />
         <span aria-hidden="true" className="absolute -right-[120px] -bottom-[240px] size-[480px] rounded-full border-[50px] border-navy-900/5" />
-        <Container className="relative flex flex-col items-center gap-6 text-center text-navy-900">
+        <Container data-reveal className="relative flex flex-col items-center gap-6 text-center text-navy-900">
           <span className="text-[13px] font-semibold tracking-[0.2em] uppercase">Your story, next</span>
           <h2 className="max-w-[780px] text-[34px] leading-[1.1] font-bold tracking-[-0.01em] sm:text-[52px]">
             Ready to Plan Your Next Journey?
@@ -309,7 +336,7 @@ export default function AboutPage() {
           <div aria-hidden="true" className="flex w-full max-w-[520px] items-center gap-3 font-mono text-sm font-semibold">
             <span>CMB</span>
             <span className="h-px flex-1 border-t-2 border-dashed border-navy-900/40" />
-            <Icon name="flight" size={22} className="rotate-90" />
+            <Icon name="flight" size={22} className="animate-glide rotate-90" />
             <span className="h-px flex-1 border-t-2 border-dashed border-navy-900/40" />
             <span>ANYWHERE</span>
           </div>
@@ -330,13 +357,34 @@ export default function AboutPage() {
           </div>
         </Container>
       </section>
+
+      <RevealOnScroll />
     </>
   );
 }
 
-function RoofItem({ icon, title, text, side }: { icon: string; title: string; text: string; side: "left" | "right" }) {
+/** Ocean bar that grows across the top of a card on hover. */
+const accentBar =
+  "absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 bg-ocean-600 transition-transform duration-300 group-hover:scale-x-100";
+
+function RoofItem({
+  icon,
+  title,
+  text,
+  side,
+  delay,
+}: {
+  icon: string;
+  title: string;
+  text: string;
+  side: "left" | "right";
+  delay: number;
+}) {
   return (
-    <li className="relative flex gap-4 rounded-xl border border-white/15 bg-white/[0.04] p-5 sm:p-6">
+    <li
+      data-reveal={delay}
+      className="group relative flex gap-4 rounded-xl border border-white/15 bg-white/[0.04] p-5 transition-[background-color,border-color,translate] duration-300 hover:-translate-y-1 hover:border-sun-400/60 hover:bg-white/[0.08] sm:p-6"
+    >
       {/* Dashed connector to the centre circle (desktop only) */}
       <span
         aria-hidden="true"
@@ -344,7 +392,7 @@ function RoofItem({ icon, title, text, side }: { icon: string; title: string; te
           side === "left" ? "-right-[60px]" : "-left-[60px]"
         }`}
       />
-      <span className="flex size-12 flex-none items-center justify-center rounded-tile bg-sun-400 text-navy-900">
+      <span className="flex size-12 flex-none items-center justify-center rounded-tile bg-sun-400 text-navy-900 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-12">
         <Icon name={icon} size={24} />
       </span>
       <span className="flex flex-col gap-1">

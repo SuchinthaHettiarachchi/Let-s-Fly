@@ -43,12 +43,16 @@ export function TeamSection({ team }: { team: typeof teamData }) {
 
       <div role="tabpanel" aria-label={group.department} className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {group.members.map((m, i) => (
-          <figure key={`${m.name}-${i}`} className="flex flex-col overflow-hidden rounded-xl border border-sand-300 bg-white">
+          <figure
+            key={`${m.name}-${i}`}
+            className="group flex animate-rise flex-col overflow-hidden rounded-xl border border-sand-300 bg-white transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lf-card-hover"
+            style={{ animationDelay: `${i * 80}ms` }}
+          >
             <div className="relative flex aspect-[4/5] items-center justify-center bg-sand-100">
               {m.photo ? (
-                <Image src={m.photo} alt={m.name} fill sizes="300px" className="object-cover" />
+                <Image src={m.photo} alt={m.name} fill sizes="300px" className="object-cover transition-transform duration-700 group-hover:scale-105" />
               ) : (
-                <span className="flex size-20 items-center justify-center rounded-full bg-sand-200 text-2xl font-bold text-ocean-600">
+                <span className="flex size-20 items-center justify-center rounded-full bg-sand-200 text-2xl font-bold text-ocean-600 transition-transform duration-300 group-hover:scale-110">
                   {initials(m.name)}
                 </span>
               )}
@@ -61,7 +65,7 @@ export function TeamSection({ team }: { team: typeof teamData }) {
             </figcaption>
           </figure>
         ))}
-        <div className="flex flex-col justify-between gap-4 rounded-xl bg-navy-900 p-6 text-white">
+        <div className="flex animate-rise flex-col justify-between gap-4 rounded-xl bg-navy-900 p-6 text-white [animation-delay:240ms]">
           <div className="flex flex-col gap-2">
             <Icon name="support_agent" size={32} className="text-sun-400" />
             <span className="text-lg font-semibold">Talk to us</span>
