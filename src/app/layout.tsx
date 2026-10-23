@@ -39,8 +39,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <InquiryProvider>
           <Header />
           <main>{children}</main>
-          <Footer />
           <WhatsAppFab />
+          <Footer />
         </InquiryProvider>
       </body>
     </html>
