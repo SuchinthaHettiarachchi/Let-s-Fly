@@ -17,7 +17,7 @@ import {
   journeysThisYear,
   team,
   underOneRoof,
-  visionPoints,
+  visionMission,
 } from "@/data/about";
 
 export const metadata: Metadata = {
@@ -36,7 +36,7 @@ export default function AboutPage() {
       <section className="relative overflow-hidden bg-navy-900">
         <Image src="/images/hero/dubai.jpg" alt="" fill preload sizes="100vw" className="object-cover" />
         <div className={`absolute inset-0 ${gradient}`} />
-        <Container className="relative flex min-h-[520px] flex-col justify-center gap-5 py-16 text-white lg:min-h-[600px]">
+        <Container className="relative flex min-h-[600px] flex-col justify-start gap-5 py-14 text-white sm:min-h-[640px] lg:min-h-[660px]">
           <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "About Us" }]} onDark />
           <Eyebrow onDark rule>
             About Us
@@ -55,7 +55,27 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      {/* 2. Who we are */}
+      {/* 2. Vision & Mission */}
+      <section className="bg-sand-50 py-16 lg:py-20">
+        <Container className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          {visionMission.map((v) => (
+            <div key={v.title} className="flex flex-col gap-4 rounded-2xl border border-sand-300 bg-white p-7 sm:p-9">
+              <div className="flex items-center gap-4">
+                <span className="flex size-12 flex-none items-center justify-center rounded-tile bg-ocean-600 text-white">
+                  <Icon name={v.icon} size={26} />
+                </span>
+                <div className="flex flex-col">
+                  <span className="text-xs font-semibold tracking-[0.18em] text-ocean-600 uppercase">Our</span>
+                  <h2 className="text-2xl font-bold">{v.title}</h2>
+                </div>
+              </div>
+              <p className="text-base leading-[1.75] text-ink-600">{v.text}</p>
+            </div>
+          ))}
+        </Container>
+      </section>
+
+      {/* 3. Who we are */}
       <section className="py-16 lg:py-24">
         <Container className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.1fr_1fr]">
           <div className="flex flex-col gap-5">
@@ -100,7 +120,7 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      {/* 3. Our approach */}
+      {/* 4. Our approach */}
       <section className="bg-sand-50 py-16 lg:py-24">
         <Container className="flex flex-col gap-12">
           <div className="mx-auto flex max-w-[640px] flex-col items-center gap-3 text-center">
@@ -126,7 +146,7 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      {/* 4. Why we do it */}
+      {/* 5. Why we do it */}
       <section className="relative overflow-hidden bg-navy-900">
         <Image src="/images/hero/hill-country-rail.jpg" alt="" fill sizes="100vw" className="object-cover" />
         <div className={`absolute inset-0 ${gradient}`} />
@@ -163,39 +183,61 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      {/* 5. Under one roof */}
-      <section className="bg-sand-50 py-16 lg:py-24">
-        <Container className="flex flex-col gap-12">
-          <div className="flex max-w-[620px] flex-col gap-3">
-            <SectionHeading eyebrow="What we bring together" title="Everything You Need, Under One Roof" />
-            <p className="text-[15px] leading-relaxed text-ink-600">
+      {/* 6. Under one roof */}
+      <section className="relative overflow-hidden bg-navy-900 py-20 text-white lg:py-28">
+        {/* Faint orbit rings behind the content */}
+        <span
+          aria-hidden="true"
+          className="absolute top-1/2 left-1/2 size-[1100px] -translate-1/2 rounded-full border border-dashed border-white/10"
+        />
+        <span
+          aria-hidden="true"
+          className="absolute top-1/2 left-1/2 size-[760px] -translate-1/2 rounded-full border border-dashed border-white/[0.07]"
+        />
+        <Container className="relative flex flex-col gap-14">
+          <div className="mx-auto flex max-w-[680px] flex-col items-center gap-4 text-center">
+            <Eyebrow onDark>What we bring together</Eyebrow>
+            <h2 className="text-[32px] leading-[1.12] font-bold tracking-[-0.01em] text-balance sm:text-[44px] lg:text-[48px]">
+              Everything You Need, Under One Roof
+            </h2>
+            <p className="text-[15px] leading-relaxed text-white/75 sm:text-base">
               Each part of your trip is handled by a specialist, and all of it is coordinated by one team that knows your
               plans.
             </p>
           </div>
-          <div className="grid grid-cols-1 items-center gap-5 lg:grid-cols-[1fr_300px_1fr]">
-            <ul className="grid grid-cols-2 gap-4 lg:grid-cols-1">
+          <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-[1fr_380px_1fr] lg:gap-0">
+            <ul className="order-2 flex flex-col gap-5 lg:order-1">
               {underOneRoof.slice(0, 3).map((s) => (
-                <RoofItem key={s.title} {...s} />
+                <RoofItem key={s.title} {...s} side="left" />
               ))}
             </ul>
-            <div className="mx-auto flex size-[260px] flex-col items-center justify-center gap-2 rounded-full border-[10px] border-white bg-navy-900 text-center text-white shadow-lf-lg">
-              <span className="text-2xl font-bold">
-                Let&apos;s<span className="text-sun-400">Fly</span>
-              </span>
-              <span className="text-sm text-white/80">One team. One plan.</span>
-              <span className="mt-2 rounded-full bg-sun-400 px-3 py-1 text-xs font-semibold text-navy-900">Your journey</span>
+            <div className="order-1 mx-auto flex size-[290px] items-center justify-center rounded-full bg-white/[0.04] lg:order-2">
+              <div className="flex size-[250px] flex-col items-center justify-center gap-1.5 rounded-full border border-white/15 bg-[radial-gradient(circle_at_50%_35%,var(--color-ocean-500),var(--color-ocean-600)_55%,var(--color-navy-900)_120%)] text-center shadow-[0_24px_60px_rgba(0,0,0,.35)]">
+                <Image
+                  src="/images/logo.jpg"
+                  alt="Let's Fly.lk"
+                  width={76}
+                  height={76}
+                  className="mb-2 size-[76px] rounded-full"
+                />
+                <span className="text-lg leading-tight font-bold">
+                  One team.
+                  <br />
+                  One plan.
+                </span>
+                <span className="text-xs text-white/75">Your journey</span>
+              </div>
             </div>
-            <ul className="grid grid-cols-2 gap-4 lg:grid-cols-1">
+            <ul className="order-3 flex flex-col gap-5">
               {underOneRoof.slice(3).map((s) => (
-                <RoofItem key={s.title} {...s} />
+                <RoofItem key={s.title} {...s} side="right" />
               ))}
             </ul>
           </div>
         </Container>
       </section>
 
-      {/* 6. Commitment */}
+      {/* 7. Commitment */}
       <section className="py-16 lg:py-24">
         <Container className="flex flex-col gap-14">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.3fr]">
@@ -238,7 +280,7 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      {/* 7. Team */}
+      {/* 8. Team */}
       <section className="bg-sand-50 py-16 lg:py-24">
         <Container className="flex flex-col gap-10">
           <div className="mx-auto flex max-w-[620px] flex-col items-center gap-3 text-center">
@@ -248,30 +290,6 @@ export default function AboutPage() {
             </p>
           </div>
           <TeamSection team={team} />
-        </Container>
-      </section>
-
-      {/* 8. Vision */}
-      <section className="relative overflow-hidden bg-navy-900">
-        <Image src="/images/hero/maldives-beach.jpg" alt="" fill sizes="100vw" className="object-cover" />
-        <div className={`absolute inset-0 ${gradient}`} />
-        <Container className="relative py-20 text-white lg:py-28">
-          <div className="flex max-w-[560px] flex-col gap-5">
-            <Eyebrow onDark>Our vision</Eyebrow>
-            <h2 className="text-[32px] leading-[1.15] font-bold tracking-[-0.01em] sm:text-[44px]">Where We&apos;re Going</h2>
-            <p className="text-base leading-relaxed text-white/85">
-              We want to be the travel partner Sri Lankans recommend first, the team people call whenever they think about
-              going somewhere. That means going further while keeping the personal service we started with.
-            </p>
-            <ul className="flex flex-col gap-3">
-              {visionPoints.map((v) => (
-                <li key={v} className="flex items-center gap-3 text-[15px]">
-                  <Icon name="check_circle" size={22} fill className="text-sun-400" />
-                  {v}
-                </li>
-              ))}
-            </ul>
-          </div>
         </Container>
       </section>
 
@@ -316,13 +334,23 @@ export default function AboutPage() {
   );
 }
 
-function RoofItem({ icon, title }: { icon: string; title: string }) {
+function RoofItem({ icon, title, text, side }: { icon: string; title: string; text: string; side: "left" | "right" }) {
   return (
-    <li className="flex items-center gap-3 rounded-xl border border-sand-300 bg-white p-4">
-      <span className="flex size-10 flex-none items-center justify-center rounded-tile bg-sand-200 text-ocean-600">
-        <Icon name={icon} size={20} />
+    <li className="relative flex gap-4 rounded-xl border border-white/15 bg-white/[0.04] p-5 sm:p-6">
+      {/* Dashed connector to the centre circle (desktop only) */}
+      <span
+        aria-hidden="true"
+        className={`absolute top-1/2 hidden w-[60px] border-t border-dashed border-white/30 lg:block ${
+          side === "left" ? "-right-[60px]" : "-left-[60px]"
+        }`}
+      />
+      <span className="flex size-12 flex-none items-center justify-center rounded-tile bg-sun-400 text-navy-900">
+        <Icon name={icon} size={24} />
       </span>
-      <span className="text-sm font-semibold">{title}</span>
+      <span className="flex flex-col gap-1">
+        <span className="text-[17px] font-semibold">{title}</span>
+        <span className="text-[13.5px] leading-relaxed text-white/70">{text}</span>
+      </span>
     </li>
   );
 }

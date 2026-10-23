@@ -31,12 +31,12 @@ export const journeysThisYear = [
 ];
 
 export const underOneRoof = [
-  { icon: "flight", title: "Air tickets" },
-  { icon: "description", title: "Visa services" },
-  { icon: "hotel", title: "Hotel bookings" },
-  { icon: "travel_explore", title: "Tour packages" },
-  { icon: "directions_car", title: "Car & bike rental" },
-  { icon: "business_center", title: "Corporate travel" },
+  { icon: "flight", title: "Flights", text: "Best-value fares on trusted airlines, with changes handled for you." },
+  { icon: "badge", title: "Visas", text: "Document checks, forms and appointments for 30+ countries." },
+  { icon: "apartment", title: "Hotels", text: "Stays matched to your budget, with exclusive partner rates." },
+  { icon: "explore", title: "Travel Packages", text: "Ready-made and tailored tours, from Dubai to Europe." },
+  { icon: "business_center", title: "Corporate Travel", text: "Managed bookings, invoicing and support for business teams." },
+  { icon: "headset_mic", title: "Travel Support", text: "Insurance, transfers and a real person to message while you're away." },
 ];
 
 export const commitments = [
@@ -93,8 +93,16 @@ export const team: { department: string; members: TeamMember[] }[] = [
   },
 ];
 
-export const visionPoints = [
-  "More destinations and visa services every year",
-  "Simpler online planning, with a real person behind it",
-  "Travel within reach for more families and businesses",
+/** Official wording, taken from letsfly.lk/about. */
+export const visionMission = [
+  {
+    icon: "visibility",
+    title: "Vision",
+    text: "To be the most trusted and customer-focused service provider, creating unforgettable experiences, delivering exceptional value, and building lasting partnerships based on quality and care.",
+  },
+  {
+    icon: "flag",
+    title: "Mission",
+    text: "To exceed client expectations through innovative, value-driven travel solutions, delivering professional and efficient services while upholding the highest ethical standards and social responsibility.",
+  },
 ];
