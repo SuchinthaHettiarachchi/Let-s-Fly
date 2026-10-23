@@ -2,11 +2,18 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Button } from "@/components/ui/Button";
+import { Button, ButtonLink } from "@/components/ui/Button";
 import { FormSent } from "@/components/forms/FormSent";
 import { fieldClass, labelClass, serviceOptions, textareaClass, titleOptions } from "@/components/forms/styles";
+import { contact } from "@/data/site";
 
 export type InquiryPrefill = { service?: string; destination?: string; details?: string };
+
+/** Today as YYYY-MM-DD in the visitor's time zone, for the read-only inquiry date. */
+function today() {
+  const d = new Date();
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
+}
 
 type Props = {
   prefill?: InquiryPrefill;
@@ -56,7 +63,7 @@ export function InquiryForm({ prefill = {}, onNavigate, autoFocus = false }: Pro
           <input name="email" type="email" required autoComplete="email" placeholder="you@email.com" className={fieldClass} />
         </label>
         <label className={labelClass}>
-          Service *
+          Services *
           <select name="service" required defaultValue={prefill.service} className={fieldClass}>
             {serviceOptions.map((s) => (
               <option key={s}>{s}</option>
@@ -64,19 +71,31 @@ export function InquiryForm({ prefill = {}, onNavigate, autoFocus = false }: Pro
           </select>
         </label>
         <label className={labelClass}>
-          Destination
-          <input name="destination" defaultValue={prefill.destination} placeholder="e.g. Dubai, Maldives" className={fieldClass} />
+          Destination *
+          <input name="destination" required defaultValue={prefill.destination} placeholder="e.g. Dubai" className={fieldClass} />
         </label>
-        <label className={`${labelClass} @xs:col-span-2`}>
-          Departure date
-          <input name="departure" type="date" className={fieldClass} />
+        <label className={labelClass}>
+          Departure date *
+          <input name="departure" type="date" required className={fieldClass} />
+        </label>
+        <label className={labelClass}>
+          Inquiry date *
+          {/* Server and browser dates can differ around midnight, so the browser's value wins. */}
+          <input
+            name="inquiryDate"
+            type="date"
+            readOnly
+            suppressHydrationWarning
+            defaultValue={today()}
+            className={`${fieldClass} bg-sand-50 text-ink-600`}
+          />
         </label>
         <label className={`${labelClass} @xs:col-span-2`}>
           Inquiry details
           <textarea
             name="details"
             defaultValue={prefill.details}
-            placeholder="Number of travellers, budget, questions…"
+            placeholder="Hotel preferences, budget, special requests…"
             className={textareaClass}
           />
         </label>
@@ -90,9 +109,20 @@ export function InquiryForm({ prefill = {}, onNavigate, autoFocus = false }: Pro
             .
           </span>
         </label>
-        <Button type="submit" variant="primary" size="lg" icon="send" className="h-[52px] w-full @xs:col-span-2">
-          Send Inquiry
+        <Button type="submit" variant="primary" size="lg" icon="arrow_forward" className="h-[52px] w-full @xs:col-span-2">
+          Inquire Now · Send Inquiry
         </Button>
+        <ButtonLink
+          href={contact.whatsappHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          variant="outline"
+          size="lg"
+          leadingIcon="chat"
+          className="h-[52px] w-full @xs:col-span-2"
+        >
+          WhatsApp Us
+        </ButtonLink>
       </form>
     </div>
   );
