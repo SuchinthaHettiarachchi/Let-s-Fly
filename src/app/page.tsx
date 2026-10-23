@@ -7,6 +7,7 @@ import { RentalsTeaser } from "@/components/home/RentalsTeaser";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { Testimonials } from "@/components/home/Testimonials";
 import { CtaBand } from "@/components/layout/CtaBand";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 
 export default function HomePage() {
   return (
@@ -20,6 +21,7 @@ export default function HomePage() {
       <HowItWorks />
       <Testimonials />
       <CtaBand tone="sand" />
+      <RevealOnScroll />
     </>
   );
 }

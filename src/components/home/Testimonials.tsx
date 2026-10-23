@@ -14,7 +14,7 @@ export function Testimonials() {
   return (
     <section className="overflow-hidden bg-sand-50 py-20 lg:py-[110px]">
       <Container>
-        <div className="mb-10 flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-end">
+        <div data-reveal className="mb-10 flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-end">
           <SectionHeading eyebrow="Testimonials" title="What our travellers say" />
           <div className="flex flex-none items-center gap-2.5">
             <ButtonLink
@@ -35,6 +35,7 @@ export function Testimonials() {
         </div>
 
         <div
+          data-reveal="120"
           ref={ref}
           className="no-scrollbar -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-6 overflow-x-auto px-4 pb-2 lg:mx-0 lg:scroll-px-0 lg:px-0"
         >
@@ -72,7 +73,7 @@ export function Testimonials() {
           ))}
         </div>
 
-        <div className="mt-10 flex justify-center">
+        <div data-reveal className="mt-10 flex justify-center">
           <ButtonLink
             href={contact.googleReviewsHref}
             target="_blank"

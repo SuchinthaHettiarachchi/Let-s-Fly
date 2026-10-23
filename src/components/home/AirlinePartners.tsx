@@ -22,7 +22,7 @@ export function AirlinePartners() {
   const track = [...airlines, ...airlines];
   return (
     <section className="border-y border-sand-300 bg-sand-50 py-16">
-      <Container className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+      <Container data-reveal className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
         <div className="flex flex-col gap-2">
           <Eyebrow>Airline partners</Eyebrow>
           <h2 className="text-2xl font-bold sm:text-[28px]">Flying you with the world&apos;s best airlines</h2>
@@ -32,7 +32,7 @@ export function AirlinePartners() {
           <Icon name="arrow_forward" />
         </Link>
       </Container>
-      <Container>
+      <Container data-reveal="120">
         <div className="overflow-hidden mask-[linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
           <div className="flex w-max animate-marquee gap-5">
             {track.map((a, i) => (

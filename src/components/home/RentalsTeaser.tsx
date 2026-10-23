@@ -15,7 +15,7 @@ export function RentalsTeaser() {
   return (
     <section id="rentals" className="scroll-mt-[110px] lg:scroll-mt-[156px] py-20 lg:py-[110px]">
       <Container className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1fr_1.05fr] lg:gap-[72px]">
-        <div className="flex flex-col gap-5">
+        <div data-reveal className="flex flex-col gap-5">
           <Eyebrow>Car &amp; bike rental</Eyebrow>
           <h2 className="text-[30px] leading-[1.18] font-bold tracking-[-0.01em] text-pretty sm:text-[36px] lg:text-[42px]">
             Explore Sri Lanka at your own pace
@@ -58,7 +58,7 @@ export function RentalsTeaser() {
           </ButtonLink>
         </div>
 
-        <div className="relative">
+        <div data-reveal="150" className="relative">
           <div className="relative h-[320px] overflow-hidden rounded-2xl bg-sand-200 sm:h-[480px]">
             {rentalTypes.map((t, i) => (
               <Image

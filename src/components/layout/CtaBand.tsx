@@ -20,7 +20,7 @@ export function CtaBand({
   return (
     <section className={`pb-16 lg:pb-[100px] ${toneClass[tone]}`}>
       <Container>
-        <div className="relative flex flex-col items-start justify-between gap-8 overflow-hidden rounded-2xl bg-sun-400 px-6 py-10 sm:px-10 lg:flex-row lg:items-center lg:gap-10 lg:px-16 lg:py-14">
+        <div data-reveal className="relative flex flex-col items-start justify-between gap-8 overflow-hidden rounded-2xl bg-sun-400 px-6 py-10 sm:px-10 lg:flex-row lg:items-center lg:gap-10 lg:px-16 lg:py-14">
           <div
             aria-hidden="true"
             className="absolute -top-[90px] -right-[60px] size-[300px] rounded-full border-[40px] border-navy-900/6"
