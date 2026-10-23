@@ -57,7 +57,7 @@ export default async function PackagePage({ params }: PageProps<"/packages/[slug
 
       <Container className="grid grid-cols-1 gap-10 pt-8 pb-16 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-12 lg:pb-24">
         <PackageTabs tabs={tabs} />
-        <aside className="lg:sticky lg:top-[108px] lg:self-start">
+        <aside className="lg:sticky lg:top-[160px] lg:self-start">
           <BookingCard pkg={pkg} />
         </aside>
       </Container>

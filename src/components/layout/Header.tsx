@@ -38,15 +38,15 @@ export function Header() {
     <div className="sticky top-0 z-50 md:-top-[42px]">
       <TopBar />
       <header className="border-b border-sand-300 bg-white shadow-lf-header">
-        <Container className="flex h-[72px] items-center justify-between lg:h-[84px]">
+        <Container className="flex h-[88px] items-center justify-between lg:h-[136px]">
           <Link href="/" aria-label="Let's Fly.lk home" className="flex items-center">
             <Image
               src="/images/logo.jpg"
               alt="Let's Fly.lk"
-              width={64}
-              height={64}
+              width={120}
+              height={120}
               preload
-              className="size-14 rounded-full bg-sun-400 lg:size-16"
+              className="size-[72px] rounded-full bg-sun-400 lg:size-[120px]"
             />
           </Link>
 
@@ -183,7 +183,7 @@ function MobileMenu({ active, onInquire }: { active: NavKey | null; onInquire: (
       on ? "bg-sand-50 text-ocean-600" : "text-ink-900 hover:bg-sand-50"
     }`;
   return (
-    <nav aria-label="Mobile" className="max-h-[calc(100vh-72px)] overflow-y-auto border-t border-sand-300 bg-white lg:hidden">
+    <nav aria-label="Mobile" className="max-h-[calc(100dvh-88px)] overflow-y-auto border-t border-sand-300 bg-white lg:hidden">
       <Container className="flex flex-col gap-1 py-4">
         <Link href="/" className={item(active === "home")}>Home</Link>
         <Link href="/air-tickets" className={item(active === "air")}>Air Tickets</Link>

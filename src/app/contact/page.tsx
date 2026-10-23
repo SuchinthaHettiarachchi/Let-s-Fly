@@ -61,7 +61,7 @@ export default function ContactPage() {
         </ul>
       </Container>
 
-      <section id="careers" className="scroll-mt-[100px] py-16 lg:py-24">
+      <section id="careers" className="scroll-mt-[110px] lg:scroll-mt-[156px] py-16 lg:py-24">
         <Container className="flex flex-col gap-10">
           <div className="mx-auto flex max-w-[620px] flex-col items-center gap-3 text-center">
             <SectionHeading eyebrow="Join our team" title="Build your career with us" centered />

@@ -13,7 +13,7 @@ export function RentalsTeaser() {
   const current = rentalTypes[selected];
 
   return (
-    <section id="rentals" className="scroll-mt-[90px] py-20 lg:py-[110px]">
+    <section id="rentals" className="scroll-mt-[110px] lg:scroll-mt-[156px] py-20 lg:py-[110px]">
       <Container className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1fr_1.05fr] lg:gap-[72px]">
         <div className="flex flex-col gap-5">
           <Eyebrow>Car &amp; bike rental</Eyebrow>

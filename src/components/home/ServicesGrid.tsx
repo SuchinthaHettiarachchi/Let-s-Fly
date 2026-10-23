@@ -34,7 +34,7 @@ export function ServicesGrid() {
   const loneLastCard = services.length % 2 === 1 && services.length % 3 === 1;
 
   return (
-    <section id="services" className="scroll-mt-[90px] bg-sand-50 py-20 lg:py-[110px]">
+    <section id="services" className="scroll-mt-[110px] lg:scroll-mt-[156px] bg-sand-50 py-20 lg:py-[110px]">
       <Container>
         <SectionHeading
           eyebrow="Our services"

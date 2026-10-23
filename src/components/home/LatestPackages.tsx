@@ -12,7 +12,7 @@ import { featuredPackages } from "@/data/packages";
 export function LatestPackages() {
   const { ref, prev, next } = useScroller<HTMLDivElement>();
   return (
-    <section id="packages" className="scroll-mt-[90px] overflow-hidden py-20 lg:py-[110px]">
+    <section id="packages" className="scroll-mt-[110px] lg:scroll-mt-[156px] overflow-hidden py-20 lg:py-[110px]">
       <Container>
         <div className="mb-10 flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-end">
           <SectionHeading eyebrow="Latest packages" title="Spend less. Travel more." />

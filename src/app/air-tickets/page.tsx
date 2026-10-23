@@ -75,7 +75,7 @@ export default function AirTicketsPage() {
         </Container>
       </section>
 
-      <section id="flight-inquiry" className="scroll-mt-[100px] bg-sand-50 py-16 lg:py-20">
+      <section id="flight-inquiry" className="scroll-mt-[110px] lg:scroll-mt-[156px] bg-sand-50 py-16 lg:py-20">
         <Container className="flex flex-col items-center gap-8">
           <div className="flex max-w-[620px] flex-col items-center gap-3 text-center">
             <Eyebrow>Need a hand?</Eyebrow>

@@ -18,7 +18,7 @@ export function HotelBookings() {
   const portal = bookingPortals.hotels;
 
   return (
-    <section id="hotels" className="scroll-mt-[110px] pb-20 lg:pb-[110px]">
+    <section id="hotels" className="scroll-mt-[110px] lg:scroll-mt-[156px] pb-20 lg:pb-[110px]">
       <Container>
         <div className="grid grid-cols-1 items-center gap-12 rounded-2xl border border-sand-300 bg-sand-50 p-6 sm:p-10 lg:grid-cols-2 lg:p-14">
           <div className="flex flex-col gap-5">
