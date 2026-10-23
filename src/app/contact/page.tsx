@@ -4,7 +4,6 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow, SectionHeading } from "@/components/ui/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { Placeholder } from "@/components/ui/Placeholder";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { contact } from "@/data/site";
 import { jobs, officeHours, type Job } from "@/data/careers";
@@ -131,15 +130,24 @@ export default function ContactPage() {
             <ContactForm />
           </div>
           <div className="flex flex-col gap-5">
-            <a
-              href={contact.mapHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Open our office location in Google Maps"
-              className="block flex-1"
-            >
-              <Placeholder label="GOOGLE MAP" icon="map" className="h-full min-h-[260px] w-full rounded-2xl bg-white" />
-            </a>
+            <div className="relative flex-1 overflow-hidden rounded-2xl border border-sand-300 bg-white">
+              <iframe
+                src={contact.mapEmbedHref}
+                title="Let's Fly.lk office on Google Maps"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="block h-full min-h-[300px] w-full border-0"
+              />
+              <a
+                href={contact.mapHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[13px] font-semibold shadow-lf-md"
+              >
+                Open in Google Maps
+                <Icon name="north_east" size={16} />
+              </a>
+            </div>
             <div className="rounded-2xl border border-sand-300 bg-white p-6">
               <h3 className="mb-3 text-base font-semibold">Office hours</h3>
               <dl className="flex flex-col">
