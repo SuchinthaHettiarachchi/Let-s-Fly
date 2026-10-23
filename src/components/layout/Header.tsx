@@ -8,16 +8,20 @@ import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { useInquiry } from "@/components/inquiry/InquiryProvider";
-import { contact, holidayLinks, moreLinks, type NavKey, type NavLink } from "@/data/site";
+import { SocialIcon } from "@/components/ui/SocialIcon";
+import { contact, navGroups, socials, type NavLink } from "@/data/site";
 
-function activeKey(pathname: string): NavKey | null {
+/** "home", "contact" or the key of the menu group whose links include this page. */
+function activeKey(pathname: string): string | null {
   if (pathname === "/") return "home";
-  if (pathname.startsWith("/air-tickets")) return "air";
-  if (pathname.startsWith("/holidays") || pathname.startsWith("/packages")) return "holidays";
-  if (pathname.startsWith("/visa")) return "visa";
-  if (pathname.startsWith("/rentals")) return "rentals";
-  if (moreLinks.some((l) => pathname.startsWith(l.href))) return "more";
-  return null;
+  if (pathname.startsWith("/contact")) return "contact";
+  const group = navGroups.find((g) =>
+    g.links.some((l) => {
+      const path = l.href.split("#")[0];
+      return pathname === path || pathname.startsWith(`${path}/`);
+    }),
+  );
+  return group?.key ?? null;
 }
 
 const navItem =
@@ -54,18 +58,12 @@ export function Header() {
             <Link href="/" className={`${navItem} ${navState(active === "home")}`}>
               Home
             </Link>
-            <Link href="/air-tickets" className={`${navItem} ${navState(active === "air")}`}>
-              Air Tickets
-              <Icon name="north_east" size={15} />
+            {navGroups.map((g) => (
+              <Dropdown key={g.key} label={g.label} links={g.links} on={active === g.key} width="w-[250px]" />
+            ))}
+            <Link href="/contact" className={`${navItem} ${navState(active === "contact")}`}>
+              Contact Us
             </Link>
-            <Dropdown label="Holidays" links={holidayLinks} on={active === "holidays"} width="w-[260px]" />
-            <Link href="/visa" className={`${navItem} ${navState(active === "visa")}`}>
-              Visa Services
-            </Link>
-            <Link href="/rentals" className={`${navItem} ${navState(active === "rentals")}`}>
-              Rentals
-            </Link>
-            <Dropdown label="More" links={moreLinks} on={active === "more"} width="w-[220px]" alignRight />
           </nav>
 
           <div className="flex items-center gap-2">
@@ -101,7 +99,7 @@ export function Header() {
 function TopBar() {
   return (
     <div className="hidden bg-navy-900 text-[13px] text-white/85 md:block">
-      <Container className="flex h-[42px] items-center">
+      <Container className="flex h-[42px] items-center justify-between gap-6">
         <div className="flex items-center gap-7">
           <a href={contact.phoneHref} className="flex items-center gap-1.5 text-white/85 hover:text-white">
             <Icon name="call" size={17} className="text-sun-400" />
@@ -113,8 +111,24 @@ function TopBar() {
           </a>
           <span className="hidden items-center gap-1.5 lg:flex">
             <Icon name="location_on" size={17} className="text-sun-400" />
-            {contact.addressShort}
+            {contact.address}
           </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="mr-1 hidden lg:inline">Follow us</span>
+          {socials.map((s) => (
+            <a
+              key={s.name}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={s.name}
+              title={s.name}
+              className="flex size-7 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-sun-400 hover:text-navy-900"
+            >
+              <SocialIcon name={s.name} size={14} />
+            </a>
+          ))}
         </div>
       </Container>
     </div>
@@ -126,13 +140,11 @@ function Dropdown({
   links,
   on,
   width,
-  alignRight = false,
 }: {
   label: string;
   links: NavLink[];
   on: boolean;
   width: string;
-  alignRight?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   return (
@@ -157,7 +169,7 @@ function Dropdown({
         <Icon name="expand_more" size={20} className={`transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
-        <div className={`absolute top-full z-10 pt-2.5 ${alignRight ? "right-0" : "left-0"}`}>
+        <div className={`absolute top-full z-10 pt-2.5 left-0`}>
           <div className={`${width} flex flex-col rounded-xl border border-sand-300 bg-white p-2 shadow-lf-md`}>
             {links.map((l) => (
               <Link
@@ -177,7 +189,7 @@ function Dropdown({
   );
 }
 
-function MobileMenu({ active, onInquire }: { active: NavKey | null; onInquire: () => void }) {
+function MobileMenu({ active, onInquire }: { active: string | null; onInquire: () => void }) {
   const item = (on: boolean) =>
     `flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-medium ${
       on ? "bg-sand-50 text-ocean-600" : "text-ink-900 hover:bg-sand-50"
@@ -186,22 +198,19 @@ function MobileMenu({ active, onInquire }: { active: NavKey | null; onInquire: (
     <nav aria-label="Mobile" className="max-h-[calc(100dvh-88px)] overflow-y-auto border-t border-sand-300 bg-white lg:hidden">
       <Container className="flex flex-col gap-1 py-4">
         <Link href="/" className={item(active === "home")}>Home</Link>
-        <Link href="/air-tickets" className={item(active === "air")}>Air Tickets</Link>
-        <div className="mt-2 px-3 text-xs font-semibold tracking-[0.2em] text-ink-400">HOLIDAYS</div>
-        {holidayLinks.map((l) => (
-          <Link key={l.href} href={l.href} className={item(false)}>
-            {l.icon && <Icon name={l.icon} className="text-ocean-600" />}
-            {l.label}
-          </Link>
+        {navGroups.map((g) => (
+          <div key={g.key} className="flex flex-col gap-1">
+            <div className="mt-3 px-3 text-xs font-semibold tracking-[0.2em] text-ink-400 uppercase">{g.label}</div>
+            {g.links.map((l) => (
+              <Link key={l.href} href={l.href} className={item(false)}>
+                {l.icon && <Icon name={l.icon} className="text-ocean-600" />}
+                {l.label}
+              </Link>
+            ))}
+          </div>
         ))}
         <div className="my-2 h-px bg-sand-300" />
-        <Link href="/visa" className={item(active === "visa")}>Visa Services</Link>
-        <Link href="/rentals" className={item(active === "rentals")}>Rentals</Link>
-        {moreLinks.map((l) => (
-          <Link key={l.href} href={l.href} className={item(false)}>
-            {l.label}
-          </Link>
-        ))}
+        <Link href="/contact" className={item(active === "contact")}>Contact Us</Link>
         <Button variant="primary" size="lg" icon="arrow_forward" onClick={onInquire} className="mt-3 w-full">
           Inquire Now
         </Button>

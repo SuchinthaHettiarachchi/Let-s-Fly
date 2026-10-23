@@ -7,6 +7,9 @@ export const contact = {
   address: "3rd floor, No. 246/2/2, Nawala Road, Rajagiriya",
   mapHref:
     "https://www.google.com/maps/search/?api=1&query=246%2F2%2F2+Nawala+Road+Rajagiriya",
+  /** Keyless Google Maps embed of the office, used in the footer. */
+  mapEmbedHref:
+    "https://maps.google.com/maps?q=246%2F2%2F2+Nawala+Road+Rajagiriya+Sri+Lanka&z=16&output=embed",
   hours: "Mon–Sat · 9.00am – 6.00pm",
   /** Searches Google Maps for the business. Swap for the Google Business Profile reviews link once it's confirmed. */
   googleReviewsHref: "https://www.google.com/maps/search/?api=1&query=Let%27s+Fly.lk+Rajagiriya",
@@ -23,50 +26,80 @@ export const bookingPortals: { hotels: string | null; flights: string | null } =
   flights: null,
 };
 
-export type SocialName = "Facebook" | "Instagram" | "TikTok" | "YouTube";
+export type SocialName = "Facebook" | "Instagram" | "TikTok" | "LinkedIn";
 
-// Shown in the footer. Replace "#" with the real profile links.
+// Shown in the top bar and the footer. TikTok is still "#" until its link is confirmed.
 export const socials: { name: SocialName; href: string }[] = [
-  { name: "Facebook", href: "#" },
-  { name: "Instagram", href: "#" },
+  { name: "Facebook", href: "https://www.facebook.com/Letsfly.lk" },
+  { name: "Instagram", href: "https://www.instagram.com/letsfly.lk/" },
   { name: "TikTok", href: "#" },
-  { name: "YouTube", href: "#" },
+  { name: "LinkedIn", href: "https://www.linkedin.com/company/letsfly-lk" },
 ];
-
-export type NavKey = "home" | "air" | "holidays" | "visa" | "rentals" | "more";
 
 export type NavLink = { label: string; href: string; icon?: string };
 
-export const holidayLinks: NavLink[] = [
-  { label: "Travel Sri Lanka + Hotels", href: "/holidays/sri-lanka", icon: "landscape" },
-  { label: "Outbound Travels", href: "/holidays/outbound", icon: "travel_explore" },
-  { label: "Trains + Cruises", href: "/holidays/trains-cruises", icon: "directions_boat" },
-];
+export type NavGroup = { key: string; label: string; links: NavLink[] };
 
-export const moreLinks: NavLink[] = [
-  { label: "Our Projects", href: "/projects" },
-  { label: "Travellers Gallery", href: "/gallery" },
-  { label: "About Us", href: "/about" },
-  { label: "Contact", href: "/contact" },
+/** Dropdowns in the main menu, between Home and Contact Us. */
+export const navGroups: NavGroup[] = [
+  {
+    key: "sri-lanka",
+    label: "Travel Sri Lanka",
+    links: [
+      { label: "Sri Lanka Tours", href: "/holidays/sri-lanka", icon: "landscape" },
+      { label: "Hotel Bookings", href: "/holidays/sri-lanka#hotels", icon: "hotel" },
+      { label: "Car & Bike Rentals", href: "/rentals", icon: "directions_car" },
+    ],
+  },
+  {
+    key: "outbound",
+    label: "Outbound Travel",
+    links: [
+      { label: "Outbound Packages", href: "/holidays/outbound", icon: "travel_explore" },
+      { label: "Air Tickets", href: "/air-tickets", icon: "flight" },
+      { label: "Visa Services", href: "/visa", icon: "description" },
+    ],
+  },
+  {
+    key: "more",
+    label: "More Travel",
+    links: [
+      { label: "Trains + Cruises", href: "/holidays/trains-cruises", icon: "directions_boat" },
+      { label: "Our Projects", href: "/projects", icon: "work" },
+      { label: "Travellers Gallery", href: "/gallery", icon: "photo_library" },
+      { label: "About Us", href: "/about", icon: "info" },
+    ],
+  },
 ];
 
 export const footerColumns: { title: string; links: NavLink[] }[] = [
   {
-    title: "Holidays",
+    title: "Quick Links & Services",
     links: [
-      ...holidayLinks,
+      { label: "Home", href: "/" },
       { label: "Visa Services", href: "/visa" },
-      { label: "Air Tickets", href: "/air-tickets" },
+      { label: "Air Ticket Booking", href: "/air-tickets" },
+      { label: "Travellers Gallery", href: "/gallery" },
+      { label: "Our Projects", href: "/projects" },
+      { label: "About Us", href: "/about" },
+      { label: "Join Our Team", href: "/contact#careers" },
+      { label: "Contact Us", href: "/contact" },
     ],
   },
   {
-    title: "Company",
+    // Only /privacy and /terms are planned so far; the rest need pages before launch.
+    title: "Legal & Policies",
     links: [
-      { label: "About Us", href: "/about" },
-      { label: "Our Projects", href: "/projects" },
-      { label: "Travellers Gallery", href: "/gallery" },
-      { label: "Rentals", href: "/rentals" },
-      { label: "Contact", href: "/contact" },
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms & Conditions", href: "/terms" },
+      { label: "FAQ", href: "/faq" },
+      { label: "Refund Policy", href: "/refund-policy" },
+      { label: "GDPR Compliance", href: "/gdpr" },
     ],
   },
 ];
+
+export type PaymentMark = "Visa" | "Mastercard" | "Amex" | "Koko";
+
+/** Payment marks shown in the footer. */
+export const paymentMethodsAccepted: PaymentMark[] = ["Visa", "Mastercard", "Amex", "Koko"];

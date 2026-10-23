@@ -2,9 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
-import { Placeholder } from "@/components/ui/Placeholder";
-import { SocialIcon } from "@/components/ui/SocialIcon";
-import { contact, footerColumns, socials } from "@/data/site";
+import { PaymentLogo } from "@/components/ui/PaymentLogo";
+import { SocialIcon, socialBrandClass } from "@/components/ui/SocialIcon";
+import { contact, footerColumns, paymentMethodsAccepted, socials } from "@/data/site";
 
 export function Footer() {
   return (
@@ -36,16 +36,22 @@ export function Footer() {
                   rel="noopener noreferrer"
                   aria-label={s.name}
                   title={s.name}
-                  className="flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-sun-400 hover:text-navy-900"
+                  className={`flex size-10 items-center justify-center rounded-full text-white transition-transform hover:-translate-y-0.5 hover:text-white ${socialBrandClass[s.name]}`}
                 >
                   <SocialIcon name={s.name} size={19} />
                 </a>
               ))}
             </div>
           </div>
-          <div className="mt-1 flex gap-2.5">
-            <Placeholder label="AWARD" icon="workspace_premium" dark className="size-[72px]" />
-            <Placeholder label="AWARD" icon="workspace_premium" dark className="size-[72px]" />
+          <div className="flex flex-col gap-2.5">
+            <span className="text-[13px] font-semibold text-white">We accept</span>
+            <ul className="flex flex-wrap gap-2">
+              {paymentMethodsAccepted.map((m) => (
+                <li key={m}>
+                  <PaymentLogo name={m} />
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
@@ -74,8 +80,21 @@ export function Footer() {
             <Icon name="schedule" size={18} className="text-sun-400" />
             {contact.hours}
           </div>
-          <a href={contact.mapHref} target="_blank" rel="noopener noreferrer" className="mt-1 block hover:text-white">
-            <Placeholder label="GOOGLE MAP" icon="map" dark className="h-[120px] w-full" />
+          <iframe
+            src={contact.mapEmbedHref}
+            title="Let's Fly.lk office on Google Maps"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="mt-1 h-[160px] w-full rounded-xl border-0"
+          />
+          <a
+            href={contact.mapHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-[13px] text-white/75 hover:text-sun-400"
+          >
+            Open in Google Maps
+            <Icon name="north_east" size={16} />
           </a>
         </div>
       </Container>
@@ -83,13 +102,21 @@ export function Footer() {
       <div className="border-t border-white/12">
         <Container className="flex flex-col items-start justify-between gap-2 py-5 text-[13px] text-white/60 sm:h-16 sm:flex-row sm:items-center sm:py-0">
           <span>© {new Date().getFullYear()} Let&apos;s Fly.lk · All rights reserved.</span>
-          <div className="flex gap-6">
-            <Link href="/privacy" className="text-white/60 hover:text-sun-400">
-              Privacy Policy
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <Link href="/privacy#cookies" className="text-white/60 hover:text-sun-400">
+              Cookies consent
             </Link>
-            <Link href="/terms" className="text-white/60 hover:text-sun-400">
-              Terms &amp; Conditions
-            </Link>
+            <span>
+              Designed &amp; developed by{" "}
+              <a
+                href="https://www.karalliyaddaone.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-white/85 hover:text-sun-400"
+              >
+                karalliyaddaone
+              </a>
+            </span>
           </div>
         </Container>
       </div>
