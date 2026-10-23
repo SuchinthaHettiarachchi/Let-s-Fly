@@ -8,6 +8,10 @@ export const contact = {
   mapHref:
     "https://www.google.com/maps/search/?api=1&query=246%2F2%2F2+Nawala+Road+Rajagiriya",
   hours: "Mon–Sat · 9.00am – 6.00pm",
+  /** Searches Google Maps for the business. Swap for the Google Business Profile reviews link once it's confirmed. */
+  googleReviewsHref: "https://www.google.com/maps/search/?api=1&query=Let%27s+Fly.lk+Rajagiriya",
+  /** Opens the "write a review" box. Needs the business's Place ID: https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID */
+  googleWriteReviewHref: "https://www.google.com/maps/search/?api=1&query=Let%27s+Fly.lk+Rajagiriya",
 };
 
 /**

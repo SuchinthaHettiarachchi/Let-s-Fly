@@ -3,21 +3,34 @@
 import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { ArrowButton } from "@/components/ui/Button";
+import { ArrowButton, ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { useScroller } from "@/hooks/useScroller";
 import { reviews } from "@/data/home";
+import { contact } from "@/data/site";
 
 export function Testimonials() {
   const { ref, prev, next } = useScroller<HTMLDivElement>();
   return (
     <section className="overflow-hidden bg-sand-50 py-20 lg:py-[110px]">
       <Container>
-        <div className="mb-10 flex items-end justify-between gap-5">
+        <div className="mb-10 flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-end">
           <SectionHeading eyebrow="Testimonials" title="What our travellers say" />
-          <div className="hidden gap-2.5 sm:flex">
-            <ArrowButton direction="prev" onClick={prev} />
-            <ArrowButton direction="next" onClick={next} />
+          <div className="flex flex-none items-center gap-2.5">
+            <ButtonLink
+              href={contact.googleWriteReviewHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              size="md"
+              leadingIcon="rate_review"
+              className="sm:mr-2"
+            >
+              Write a review
+            </ButtonLink>
+            <div className="flex gap-2.5">
+              <ArrowButton direction="prev" onClick={prev} />
+              <ArrowButton direction="next" onClick={next} />
+            </div>
           </div>
         </div>
 
@@ -57,6 +70,19 @@ export function Testimonials() {
               </figcaption>
             </figure>
           ))}
+        </div>
+
+        <div className="mt-10 flex justify-center">
+          <ButtonLink
+            href={contact.googleReviewsHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="outline"
+            leadingIcon="star"
+            icon="north_east"
+          >
+            See all reviews on Google
+          </ButtonLink>
         </div>
       </Container>
     </section>
