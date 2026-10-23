@@ -1,10 +1,10 @@
 /*
- * CSR, events and group journeys. Only the Dubai conference has full copy in
- * the design; the others use their card summary until the team writes more.
- * Dates other than September 2026 are drafts (the design only shows one).
+ * MICE projects: meetings, incentives, conferences and exhibitions. These are
+ * sample entries until the client adds the real ones. Only the Dubai conference
+ * has full copy; the others use their card summary.
  */
 
-export type ProjectCategory = "events" | "csr" | "other";
+export type ProjectCategory = "meetings" | "incentives" | "conferences" | "exhibitions";
 
 export type Project = {
   slug: string;
@@ -21,16 +21,17 @@ export type Project = {
 };
 
 export const projectCategories: { id: ProjectCategory; label: string }[] = [
-  { id: "events", label: "Events" },
-  { id: "csr", label: "CSR" },
-  { id: "other", label: "Other" },
+  { id: "meetings", label: "Meetings" },
+  { id: "incentives", label: "Incentives" },
+  { id: "conferences", label: "Conferences" },
+  { id: "exhibitions", label: "Exhibitions" },
 ];
 
 export const projects: Project[] = [
   {
     slug: "annual-regional-conference-dubai",
     title: "Annual Regional Conference in Dubai",
-    category: "events",
+    category: "conferences",
     date: "2026-09",
     summary:
       "Flights, visas, hotel blocks and venue logistics for 140 delegates from four countries, with on-site coordinators from arrival to the closing dinner.",
@@ -44,17 +45,17 @@ export const projects: Project[] = [
     photoCount: 7,
   },
   {
-    slug: "beach-clean-up-mount-lavinia",
-    title: "Beach Clean-up at Mount Lavinia",
-    category: "csr",
+    slug: "leadership-offsite-kandy",
+    title: "Leadership Offsite in Kandy",
+    category: "meetings",
     date: "2026-08",
     summary:
-      "Our team and 120 volunteers cleared over 600 kg of plastic from the shoreline and sorted it for recycling with a local partner.",
+      "Two days of strategy sessions for 40 senior managers at a hill-country resort, with meeting rooms, team dinners and transfers from Colombo.",
   },
   {
     slug: "sales-incentive-trip-bangkok",
     title: "Sales Incentive Trip to Bangkok",
-    category: "other",
+    category: "incentives",
     date: "2026-07",
     summary:
       "A four-day reward trip for 85 top performers, with chartered seats, a river cruise and a gala dinner overlooking the Chao Phraya.",
@@ -63,23 +64,23 @@ export const projects: Project[] = [
   {
     slug: "corporate-awards-night-colombo",
     title: "Corporate Awards Night in Colombo",
-    category: "events",
+    category: "meetings",
     date: "2026-06",
     summary:
       "Venue, stage production and guest travel for a 300-guest annual awards ceremony, including out-of-town transfers and hotel stays.",
   },
   {
-    slug: "back-to-school-monaragala",
-    title: "Back-to-School Packs for Monaragala Students",
-    category: "csr",
+    slug: "partner-summit-colombo",
+    title: "Partner Summit in Colombo",
+    category: "conferences",
     date: "2026-05",
     summary:
-      "We delivered bags, books and stationery to 450 children in three rural schools, and funded new library shelves for the smallest.",
+      "A one-day summit for 250 regional partners, with venue booking, keynote stage set-up, delegate registration and hotel stays.",
   },
   {
     slug: "singapore-science-tour",
     title: "Singapore Science Tour for Students",
-    category: "other",
+    category: "incentives",
     date: "2026-04",
     summary:
       "Five days of museums, labs and Sentosa for 60 students and teachers, with 24/7 on-trip coordinators and parent updates every evening.",
@@ -88,23 +89,23 @@ export const projects: Project[] = [
   {
     slug: "travel-fair-2026",
     title: "Let’s Fly Stand at Travel Fair 2026",
-    category: "events",
+    category: "exhibitions",
     date: "2026-03",
     summary:
       "Our team met more than 2,000 visitors over three days, launching new Maldives and Japan packages with on-the-spot booking offers.",
   },
   {
-    slug: "sinharaja-tree-planting",
-    title: "Tree Planting at the Sinharaja Buffer Zone",
-    category: "csr",
+    slug: "itb-asia-pavilion",
+    title: "Sri Lanka Pavilion at ITB Asia",
+    category: "exhibitions",
     date: "2026-02",
     summary:
-      "Working with a local conservation group, we planted 1,000 native saplings to help restore forest cover around the reserve.",
+      "Stand design, shipping and travel for eight exhibitors sharing a Sri Lanka pavilion at the trade show in Singapore.",
   },
   {
     slug: "buddhist-circuit-india",
     title: "Buddhist Circuit Pilgrimage to India",
-    category: "other",
+    category: "incentives",
     date: "2026-01",
     summary:
       "A guided nine-day pilgrimage for 110 devotees to Bodh Gaya, Sarnath and Kushinagar, with flights, visas and ground transport arranged.",
