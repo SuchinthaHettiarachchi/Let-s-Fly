@@ -60,3 +60,24 @@ export const reviews = [
   { name: "Ruwan Silva", trip: "Bangkok & Phuket", image: "/images/people/ruwan.jpg", quote: "Smooth from start to finish. Our guide in Phuket was fantastic and flights were on time." },
   { name: "Anjali Perera", trip: "Schengen Visa", image: "/images/people/anjali.jpg", quote: "My visa file was checked twice before submission — approved in 10 days. Stress-free." },
 ];
+
+/** Airline partner logos for the home page carousel (from letsfly.lk). */
+export const airlines = [
+  { name: "SriLankan Airlines", logo: "/images/airlines/srilankan.jpg" },
+  { name: "Thai Airways", logo: "/images/airlines/thai.jpg" },
+  { name: "Qatar Airways", logo: "/images/airlines/qatar.jpg" },
+  { name: "Etihad Airways", logo: "/images/airlines/etihad.jpg" },
+  { name: "China Airlines", logo: "/images/airlines/china-airlines.jpg" },
+  { name: "FitsAir", logo: "/images/airlines/fitsair.jpg" },
+  { name: "Emirates", logo: "/images/airlines/emirates.jpg" },
+  { name: "Singapore Airlines", logo: "/images/airlines/singapore.jpg" },
+  { name: "Malaysia Airlines", logo: "/images/airlines/malaysia.jpg" },
+  { name: "Virgin Atlantic", logo: "/images/airlines/virgin-atlantic.jpg" },
+  { name: "Cathay Pacific", logo: "/images/airlines/cathay-pacific.jpg" },
+  { name: "Qantas", logo: "/images/airlines/qantas.jpg" },
+  { name: "Turkish Airlines", logo: "/images/airlines/turkish.jpg" },
+  { name: "British Airways", logo: "/images/airlines/british-airways.jpg" },
+  { name: "Saudia", logo: "/images/airlines/saudia.jpg" },
+  { name: "Air New Zealand", logo: "/images/airlines/air-new-zealand.jpg" },
+  { name: "Gulf Air", logo: "/images/airlines/gulf-air.jpg" },
+];

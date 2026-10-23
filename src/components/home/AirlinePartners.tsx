@@ -1,19 +1,18 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/SectionHeading";
 import { Icon } from "@/components/ui/Icon";
+import { airlines } from "@/data/home";
 
-// Placeholder tiles until the real airline logos are supplied.
-const airlines = Array.from({ length: 7 }, (_, i) => `Airline ${i + 1}`);
-
-function LogoTile({ name }: { name: string }) {
+// Logo files are squares with white margins, so each tile crops to the middle band.
+function LogoTile({ name, logo, copy = false }: { name: string; logo: string; copy?: boolean }) {
   return (
     <div
       title={name}
-      className="flex h-[76px] w-[150px] flex-none items-center justify-center gap-2 rounded-xl border-[1.5px] border-dashed border-sand-400 bg-white font-mono text-[10.5px] font-semibold tracking-[0.08em] text-ink-400"
+      className="flex h-[84px] w-[160px] flex-none items-center justify-center overflow-hidden rounded-xl border border-sand-300 bg-white"
     >
-      <Icon name="flight" size={20} />
-      AIRLINE LOGO
+      <Image src={logo} alt={copy ? "" : name} width={124} height={124} className="size-[124px] max-w-none flex-none object-contain" />
     </div>
   );
 }
@@ -35,9 +34,9 @@ export function AirlinePartners() {
       </Container>
       <Container>
         <div className="overflow-hidden mask-[linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
-          <div className="flex w-max animate-marquee gap-5 hover:[animation-play-state:paused]">
-            {track.map((name, i) => (
-              <LogoTile key={i} name={name} />
+          <div className="flex w-max animate-marquee gap-5">
+            {track.map((a, i) => (
+              <LogoTile key={i} {...a} copy={i >= airlines.length} />
             ))}
           </div>
         </div>

@@ -40,7 +40,7 @@
   --shadow-lf-ring: 0 0 0 12px rgba(19, 87, 155, 0.12);
 
   /* Motion */
-  --animate-marquee: lf-marquee 28s linear infinite;
+  --animate-marquee: lf-marquee 60s linear infinite;
   @keyframes lf-marquee {
     from {
       transform: translateX(0);
