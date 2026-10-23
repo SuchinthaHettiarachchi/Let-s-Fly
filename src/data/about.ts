@@ -55,7 +55,7 @@ export const aboutStats = [
   { value: "24/7", label: "Travel support" },
 ];
 
-export type TeamMember = { name: string; role: string; photo?: string };
+export type TeamMember = { name: string; role: string; photo?: string; linkedin?: string };
 
 // Draft — only the CEO is named in the design. Replace placeholders with real names and photos.
 export const team: { department: string; members: TeamMember[] }[] = [

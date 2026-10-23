@@ -3,84 +3,147 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Icon } from "@/components/ui/Icon";
+import { SocialIcon } from "@/components/ui/SocialIcon";
 import { contact } from "@/data/site";
-import type { team as teamData } from "@/data/about";
+import type { TeamMember, team as teamData } from "@/data/about";
 
-const initials = (name: string) =>
-  name.startsWith("Name to")
+const isPlaceholder = (m: TeamMember) => m.name.startsWith("Name to");
+
+const initials = (m: TeamMember) =>
+  isPlaceholder(m)
     ? "?"
-    : name
+    : m.name
         .split(" ")
         .map((p) => p[0])
         .join("")
         .slice(0, 2);
 
-/** "Meet Our Team": department tabs, member cards and a "Talk to us" card. */
+/**
+ * "Meet Our Team": one list of names. Hovering (or focusing) a name shows that person's
+ * portrait beside the list; with no name hovered the portrait area stays empty.
+ * Phones show a small photo in each row instead.
+ */
 export function TeamSection({ team }: { team: typeof teamData }) {
-  const [active, setActive] = useState(0);
-  const group = team[active];
+  const members = team.flatMap((g) => g.members.map((m) => ({ ...m, department: g.department })));
+  const [active, setActive] = useState<number | null>(null);
 
   return (
-    <div className="flex flex-col gap-8">
-      <div role="tablist" aria-label="Departments" className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:justify-center lg:px-0">
-        {team.map((g, i) => {
-          const on = i === active;
-          return (
-            <button
-              key={g.department}
-              role="tab"
-              aria-selected={on}
-              onClick={() => setActive(i)}
-              className={`h-10 flex-none cursor-pointer rounded-full border-[1.5px] px-[18px] text-sm font-medium transition-colors ${
-                on ? "border-ocean-600 bg-ocean-600 text-white" : "border-sand-300 bg-white text-ink-900 hover:border-ocean-600"
-              }`}
-            >
-              {g.department}
-            </button>
-          );
-        })}
-      </div>
-
-      <div role="tabpanel" aria-label={group.department} className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {group.members.map((m, i) => (
-          <figure
-            key={`${m.name}-${i}`}
-            className="group flex animate-rise flex-col overflow-hidden rounded-xl border border-sand-300 bg-white transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lf-card-hover"
-            style={{ animationDelay: `${i * 80}ms` }}
-          >
-            <div className="relative flex aspect-[4/5] items-center justify-center bg-sand-100">
-              {m.photo ? (
-                <Image src={m.photo} alt={m.name} fill sizes="300px" className="object-cover transition-transform duration-700 group-hover:scale-105" />
-              ) : (
-                <span className="flex size-20 items-center justify-center rounded-full bg-sand-200 text-2xl font-bold text-ocean-600 transition-transform duration-300 group-hover:scale-110">
-                  {initials(m.name)}
+    <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+      {/* Portrait: stays in view while the list scrolls past */}
+      <div className="hidden lg:block">
+        <div className="sticky top-[160px]">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl">
+            {members.map((m, i) => (
+              <div
+                key={`${m.name}-${i}`}
+                aria-hidden={i !== active}
+                className={`absolute inset-0 bg-sand-100 transition-[opacity,scale] duration-500 ease-out ${
+                  i === active ? "scale-100 opacity-100" : "scale-[1.04] opacity-0"
+                }`}
+              >
+                {m.photo ? (
+                  <Image src={m.photo} alt={m.name} fill sizes="480px" className="object-cover" />
+                ) : (
+                  <span className="flex h-full items-center justify-center">
+                    <span className="flex size-36 items-center justify-center rounded-full bg-sand-200 text-5xl font-bold text-ocean-600">
+                      {initials(m)}
+                    </span>
+                  </span>
+                )}
+                <span className="absolute inset-x-0 bottom-0 flex flex-col bg-[linear-gradient(180deg,rgba(11,37,69,0)_0%,rgba(11,37,69,.85)_100%)] px-6 pt-16 pb-5 text-white">
+                  <span className="text-lg font-semibold">{isPlaceholder(m) ? "Team member" : m.name}</span>
+                  <span className="text-sm text-white/80">{m.role}</span>
                 </span>
-              )}
-            </div>
-            <figcaption className="flex flex-col gap-0.5 p-4">
-              <span className={`text-[15px] font-semibold ${m.name.startsWith("Name to") ? "text-ink-400 italic" : ""}`}>
-                {m.name}
-              </span>
-              <span className="text-[13px] text-ink-600">{m.role}</span>
-            </figcaption>
-          </figure>
-        ))}
-        <div className="flex animate-rise flex-col justify-between gap-4 rounded-xl bg-navy-900 p-6 text-white [animation-delay:240ms]">
-          <div className="flex flex-col gap-2">
-            <Icon name="support_agent" size={32} className="text-sun-400" />
-            <span className="text-lg font-semibold">Talk to us</span>
-            <span className="text-[13px] leading-relaxed text-white/75">
-              Call our travel experts today for more information and bookings.
-            </span>
-          </div>
-          <div className="flex flex-col text-sm">
-            <span className="text-xs text-white/60">General inquiries:</span>
-            <a href={contact.phoneHref} className="font-semibold text-white hover:text-sun-400">
-              {contact.phone}
-            </a>
+              </div>
+            ))}
           </div>
         </div>
       </div>
+
+      <ul className="flex flex-col border-t border-sand-300">
+        {members.map((m, i) => {
+          const on = i === active;
+          return (
+            <li
+              key={`${m.name}-${i}`}
+              onMouseEnter={() => setActive(i)}
+              onMouseLeave={() => setActive(null)}
+              onFocus={() => setActive(i)}
+              onBlur={() => setActive(null)}
+              tabIndex={0}
+              className="group relative grid cursor-default grid-cols-[56px_1fr_auto] items-center gap-x-4 gap-y-1 py-5 outline-none sm:grid-cols-[56px_1fr_1fr_auto] lg:grid-cols-[1.5fr_1fr_auto] lg:py-7"
+            >
+              {/* Divider, which turns into a thick ocean line under the active row */}
+              <span
+                aria-hidden="true"
+                className={`absolute inset-x-0 bottom-0 origin-left transition-[height,background-color] duration-300 ${
+                  on ? "h-[3px] bg-ocean-600" : "h-px bg-sand-300"
+                }`}
+              />
+              <span className="relative row-span-2 size-14 overflow-hidden rounded-full bg-sand-200 sm:row-span-1 lg:hidden">
+                {m.photo ? (
+                  <Image src={m.photo} alt="" fill sizes="56px" className="object-cover" />
+                ) : (
+                  <span className="flex h-full items-center justify-center text-base font-bold text-ocean-600">
+                    {initials(m)}
+                  </span>
+                )}
+              </span>
+              <span
+                className={`text-xl tracking-[-0.01em] transition-[color,translate] duration-300 sm:text-2xl lg:text-[26px] ${
+                  on ? "translate-x-1.5" : ""
+                } ${isPlaceholder(m) ? "font-medium text-ink-400 italic" : `font-semibold ${on ? "text-ocean-600" : "text-ink-900"}`}`}
+              >
+                {m.name}
+              </span>
+              <span className="col-start-2 row-start-2 flex flex-col sm:col-start-3 sm:row-start-1 lg:col-start-2">
+                <span className="text-[15px] text-ink-900">{m.role}</span>
+                <span className="text-xs text-ink-400">{m.department}</span>
+              </span>
+              <span className="col-start-3 row-span-2 sm:col-start-4 sm:row-span-1 lg:col-start-3">
+                {m.linkedin ? (
+                  <a
+                    href={m.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${m.name} on LinkedIn`}
+                    className="flex size-9 items-center justify-center rounded-md text-ink-400 transition-colors hover:bg-[#0a66c2] hover:text-white"
+                  >
+                    <SocialIcon name="LinkedIn" size={18} />
+                  </a>
+                ) : (
+                  <Icon
+                    name="arrow_outward"
+                    size={22}
+                    className={`transition-[color,rotate] duration-300 ${on ? "rotate-45 text-ocean-600" : "text-sand-400"}`}
+                  />
+                )}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div className="lg:col-start-2">
+        <TalkToUs />
+      </div>
+    </div>
+  );
+}
+
+function TalkToUs() {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-navy-900 px-6 py-5 text-white">
+      <div className="flex items-center gap-3">
+        <Icon name="support_agent" size={30} className="text-sun-400" />
+        <span className="flex flex-col">
+          <span className="font-semibold">Talk to us</span>
+          <span className="text-[13px] text-white/75">Call our travel experts for information and bookings.</span>
+        </span>
+      </div>
+      <a href={contact.phoneHref} className="font-semibold text-white hover:text-sun-400">
+        {contact.phone}
+      </a>
     </div>
   );
 }
