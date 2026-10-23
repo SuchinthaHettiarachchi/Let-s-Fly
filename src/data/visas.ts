@@ -74,6 +74,6 @@ export const detailVisas = () => visas.filter((v) => v.documentGroups?.length);
 export const visaSteps = [
   { title: "Share details", text: "Tell us your destination and travel dates." },
   { title: "Document check", text: "We review everything and flag gaps." },
-  { title: "We submit", text: "Forms, fees and appointment — handled." },
+  { title: "We submit", text: "Forms, fees and appointment, all handled." },
   { title: "Visa in hand", text: "Track progress on WhatsApp until approval." },
 ];

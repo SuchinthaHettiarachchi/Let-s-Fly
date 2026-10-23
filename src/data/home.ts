@@ -58,7 +58,7 @@ export const reviews = [
   { name: "Kasun Jayawardena", trip: "Maldives Honeymoon", image: "/images/people/kasun.jpg", quote: "Great price, quick replies on WhatsApp and a surprise room upgrade. Highly recommend Let's Fly." },
   { name: "Sarah Mitchell", trip: "Kandy to Ella Rail", image: "/images/people/sarah.jpg", quote: "They got us the observation-car seats everyone said were sold out. The views were unreal." },
   { name: "Ruwan Silva", trip: "Bangkok & Phuket", image: "/images/people/ruwan.jpg", quote: "Smooth from start to finish. Our guide in Phuket was fantastic and flights were on time." },
-  { name: "Anjali Perera", trip: "Schengen Visa", image: "/images/people/anjali.jpg", quote: "My visa file was checked twice before submission — approved in 10 days. Stress-free." },
+  { name: "Anjali Perera", trip: "Schengen Visa", image: "/images/people/anjali.jpg", quote: "My visa file was checked twice before submission and approved in 10 days. Stress-free." },
 ];
 
 /** Airline partner logos for the home page carousel (from letsfly.lk). */

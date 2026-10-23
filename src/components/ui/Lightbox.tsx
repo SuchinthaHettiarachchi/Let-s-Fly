@@ -55,7 +55,7 @@ export function Lightbox({ images, start, title, captions, onClose }: LightboxPr
         </button>
       </div>
       <div className="relative flex-1" onClick={(e) => e.stopPropagation()}>
-        <Image src={images[index]} alt={`${title} — photo ${index + 1}`} fill sizes="100vw" className="object-contain" />
+        <Image src={images[index]} alt={`${title}, photo ${index + 1}`} fill sizes="100vw" className="object-contain" />
       </div>
       {count > 1 && (
         <div className="flex justify-center gap-3 p-4" onClick={(e) => e.stopPropagation()}>

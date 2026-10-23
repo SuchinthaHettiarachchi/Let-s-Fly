@@ -41,12 +41,12 @@ export const journeys: Journey[] = [
     kind: "train",
     label: "Classic",
     title: "Colombo → Kandy",
-    text: "The historic hill climb up the Kadugannawa pass — perfect start to a hill-country tour.",
+    text: "The historic hill climb up the Kadugannawa pass, the perfect start to a hill-country tour.",
     chips: ["3h 00m", "Intercity Express", "Twice daily"],
     price: 2200,
     priceNote: "per seat, one way",
   },
-  // Draft cruises — the design has no Cruises content yet. Confirm routes and prices with the team.
+  // Draft cruises: the design has no Cruises content yet. Confirm routes and prices with the team.
   {
     id: "singapore-penang-phuket",
     kind: "cruise",
@@ -63,7 +63,7 @@ export const journeys: Journey[] = [
     kind: "cruise",
     label: "Arabian Gulf",
     title: "Dubai → Muscat → Doha",
-    text: "A week around the Gulf with a night in Dubai before boarding — ideal for families in the cooler months.",
+    text: "A week around the Gulf with a night in Dubai before boarding. Ideal for families in the cooler months.",
     chips: ["7 nights", "All meals on board", "Nov – Mar"],
     price: 285000,
     priceNote: "per person, twin cabin",

@@ -84,7 +84,7 @@ export const packages: Package[] = [
     gallery: ["/images/hero/dubai.jpg", "/images/hero/maldives-beach.jpg"],
     overview: {
       summary:
-        "A relaxed six-day trip built for families: a desert safari with BBQ dinner, the Burj Khalifa at sunset, a full day at a theme park and a dhow cruise along Dubai Marina. Five nights in a 4★ hotel with breakfast, private airport transfers and your UAE visa — all arranged from Colombo.",
+        "A relaxed six-day trip built for families: a desert safari with BBQ dinner, the Burj Khalifa at sunset, a full day at a theme park and a dhow cruise along Dubai Marina. Five nights in a 4★ hotel with breakfast, private airport transfers and your UAE visa, all arranged from Colombo.",
       highlights: [
         { icon: "landscape", label: "Desert safari & BBQ dinner" },
         { icon: "apartment", label: "Burj Khalifa at the Top" },
@@ -116,7 +116,7 @@ export const packages: Package[] = [
             { icon: "location_on", label: "Al Fahidi · Deira · Downtown" },
             { icon: "schedule", label: "Half-day tour" },
           ],
-          // Draft copy — not in the design; confirm with the travel team.
+          // Draft copy: not in the design; confirm with the travel team.
           body: "Start in the Al Fahidi historic district, cross the creek by abra to the Deira spice and gold souks, then stop at the Dubai Frame for views of old and new Dubai. After an afternoon break at the hotel, ride up to the Burj Khalifa observation deck in time for sunset.",
         },
         {
@@ -126,7 +126,7 @@ export const packages: Package[] = [
             { icon: "location_on", label: "Dubai Desert Conservation Reserve" },
             { icon: "schedule", label: "Afternoon & evening" },
           ],
-          // Draft copy — not in the design; confirm with the travel team.
+          // Draft copy: not in the design; confirm with the travel team.
           body: "A free morning to enjoy the pool. In the afternoon a 4×4 picks you up for dune bashing, sandboarding and a short camel ride, then dinner at a desert camp with a BBQ buffet, henna and live shows under the stars.",
         },
         {
@@ -136,8 +136,8 @@ export const packages: Package[] = [
             { icon: "location_on", label: "Yas Island, Abu Dhabi" },
             { icon: "schedule", label: "Full day" },
           ],
-          // Draft copy — not in the design; confirm with the travel team.
-          body: "A private transfer takes you to Yas Island in Abu Dhabi. Choose Ferrari World for record-breaking rides or Warner Bros. World for the younger ones — your pass covers a full day of entry. Back to Dubai in the evening.",
+          // Draft copy: not in the design; confirm with the travel team.
+          body: "A private transfer takes you to Yas Island in Abu Dhabi. Choose Ferrari World for record-breaking rides or Warner Bros. World for the younger ones. Your pass covers a full day of entry. Back to Dubai in the evening.",
         },
         {
           category: "Leisure & cruise",
@@ -146,7 +146,7 @@ export const packages: Package[] = [
             { icon: "location_on", label: "JBR · Palm · Dubai Marina" },
             { icon: "schedule", label: "2-hour cruise" },
           ],
-          // Draft copy — not in the design; confirm with the travel team.
+          // Draft copy: not in the design; confirm with the travel team.
           body: "Spend the morning at JBR beach, then drive out along the Palm Jumeirah for photos at the Atlantis. In the evening, board a traditional dhow for a two-hour dinner cruise past the lights of Dubai Marina.",
         },
         {
@@ -156,7 +156,7 @@ export const packages: Package[] = [
             { icon: "location_on", label: "Dubai → Colombo" },
             { icon: "flight", label: "Return flight" },
           ],
-          // Draft copy — not in the design; confirm with the travel team.
+          // Draft copy: not in the design; confirm with the travel team.
           body: "Check out after breakfast and fit in some last-minute shopping before your private transfer to Dubai International for the flight back to Colombo.",
         },
       ],
@@ -204,7 +204,7 @@ export const packages: Package[] = [
     category: "outbound", outboundRegion: "maldives", featured: true, days: 4, nights: 3, price: 185000,
     image: "/images/packages/maldives-overwater-villa.jpg",
   },
-  // Sri Lanka tours. All detail copy below is draft — confirm hotels, timings and inclusions with the travel team.
+  // Sri Lanka tours. All detail copy below is draft; confirm hotels, timings and inclusions with the travel team.
   {
     slug: "kandy-ella-rail", title: "Kandy to Ella Rail Journey", region: "Sri Lanka", area: "Kandy · Ella", location: "Sri Lanka · Hill Country",
     category: "sri-lanka", themes: ["hill-country"], featured: true, days: 3, nights: 2, price: 48000,

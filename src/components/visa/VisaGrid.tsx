@@ -11,7 +11,7 @@ import type { Visa } from "@/data/visas";
 
 const ANY = "";
 
-/** "Where Sri Lankans are heading" — visa cards with type and country filters. */
+/** "Where Sri Lankans are heading": visa cards with type and country filters. */
 export function VisaGrid({ visas }: { visas: Visa[] }) {
   const [type, setType] = useState(ANY);
   const [country, setCountry] = useState(ANY);
@@ -99,7 +99,7 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
           })}
         </div>
       ) : (
-        <p className="py-10 text-center text-ink-600">No visas match those filters — ask us about your destination.</p>
+        <p className="py-10 text-center text-ink-600">No visas match those filters. Ask us about your destination.</p>
       )}
     </div>
   );

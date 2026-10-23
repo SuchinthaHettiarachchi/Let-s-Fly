@@ -28,7 +28,7 @@ export function HotelBookings() {
             </h2>
             <p className="text-[15px] leading-[1.75] text-ink-600">
               From boutique villas in Galle to tea-estate bungalows in Ella, book 2,000+ hand-checked hotels at our
-              partner rates — instantly, through our booking portal.
+              partner rates, instantly, through our booking portal.
             </p>
             <div className="flex gap-6">
               {stats.map((s, i) => (

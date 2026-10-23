@@ -9,7 +9,7 @@ import { packages } from "@/data/packages";
 export const metadata: Metadata = {
   title: "Travel Sri Lanka + Hotels",
   description:
-    "Private Sri Lanka tours with a driver-guide and hand-picked stays — ancient cities, tea country, wildlife and beaches.",
+    "Private Sri Lanka tours with a driver-guide and hand-picked stays. Ancient cities, tea country, wildlife and beaches.",
 };
 
 export default function SriLankaPage() {
@@ -23,7 +23,7 @@ export default function SriLankaPage() {
         crumbs={[{ label: "Home", href: "/" }, { label: "Holidays" }, { label: "Travel Sri Lanka + Hotels" }]}
         eyebrow="Travel Sri Lanka"
         title="Discover the island, your way"
-        sub="Ancient cities, misty tea country, wild parks and golden beaches — private tours with a driver-guide and hand-picked stays."
+        sub="Ancient cities, misty tea country, wild parks and golden beaches. Private tours with a driver-guide and hand-picked stays."
       />
       {/* The masks photo starts right under the hero and covers the rest of the page, under a 50% ocean-blue wash */}
       <div className="bg-[url(/images/hero/sri-lanka-masks.jpg)] bg-cover bg-top bg-no-repeat">

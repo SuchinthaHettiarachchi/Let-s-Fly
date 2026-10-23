@@ -19,7 +19,7 @@ export function Footer() {
             className="size-[84px] rounded-full bg-sun-400"
           />
           <p className="max-w-[280px] leading-[1.7]">
-            Air tickets, tour packages and visa services — planned in Sri Lanka, for Sri Lankans and the world.
+            Air tickets, tour packages and visa services, planned in Sri Lanka for Sri Lankans and the world.
           </p>
           <div className="flex items-start gap-1.5 leading-relaxed">
             <Icon name="location_on" size={18} className="text-sun-400" />

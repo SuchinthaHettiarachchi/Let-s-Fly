@@ -14,11 +14,11 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: {
-    default: "Let's Fly.lk — Air tickets, tour packages & visas",
+    default: "Let's Fly.lk | Air tickets, tour packages & visas",
     template: "%s · Let's Fly.lk",
   },
   description:
-    "Handpicked holidays, air tickets and visas — planned end-to-end by our Colombo travel team.",
+    "Handpicked holidays, air tickets and visas, planned end-to-end by our Colombo travel team.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

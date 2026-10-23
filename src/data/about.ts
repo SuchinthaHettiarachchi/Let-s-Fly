@@ -13,12 +13,12 @@ export const founderQuote = {
   role: "Chief Executive Officer, Let's Fly.lk",
 };
 
-// Draft — the five approach cards are images in the design; confirm wording.
+// Draft: the five approach cards are images in the design; confirm wording.
 export const approach = [
   { icon: "person_check", title: "One consultant, start to finish", text: "The person who quotes your trip is the one who sees it through." },
   { icon: "fact_check", title: "Documents checked twice", text: "Every visa file is reviewed by a second specialist before it goes in." },
   { icon: "receipt_long", title: "Honest, all-in pricing", text: "Clear quotes in LKR, with what's included and what isn't spelled out." },
-  { icon: "tune", title: "Planned around you", text: "Your dates, your budget and your pace — not a one-size-fits-all package." },
+  { icon: "tune", title: "Planned around you", text: "Your dates, your budget and your pace, not a one-size-fits-all package." },
   { icon: "chat", title: "Always reachable", text: "A real person on WhatsApp before, during and after your trip." },
 ];
 
@@ -57,7 +57,7 @@ export const aboutStats = [
 
 export type TeamMember = { name: string; role: string; photo?: string; linkedin?: string };
 
-// Draft — only the CEO is named in the design. Replace placeholders with real names and photos.
+// Draft: only the CEO is named in the design. Replace placeholders with real names and photos.
 export const team: { department: string; members: TeamMember[] }[] = [
   {
     department: "Leadership",

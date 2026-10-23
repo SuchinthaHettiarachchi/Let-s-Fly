@@ -83,7 +83,7 @@ export function TourGrid({ tours }: { tours: Package[] }) {
           ))}
         </div>
       ) : (
-        <p className="py-10 text-center text-ink-600">No tours match this filter yet — ask us and we&apos;ll build one.</p>
+        <p className="py-10 text-center text-ink-600">No tours match this filter yet. Ask us and we&apos;ll build one.</p>
       )}
 
       {visible.length > limit && (

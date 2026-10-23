@@ -41,7 +41,7 @@ export default function GalleryPage() {
               <div className="flex flex-col gap-1.5">
                 <h2 className="text-2xl font-bold">Share your trip with #LetsFlyLK</h2>
                 <p className="max-w-[520px] text-[15px] text-white/75">
-                  Tag us on Instagram or send your favourite photos on WhatsApp — we feature new travellers every month.
+                  Tag us on Instagram or send your favourite photos on WhatsApp. We feature new travellers every month.
                 </p>
               </div>
             </div>

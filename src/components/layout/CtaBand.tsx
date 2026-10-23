@@ -14,7 +14,7 @@ const toneClass = { white: "bg-white", sand: "bg-sand-50", clear: "" };
 /** The yellow "Ready to plan your next trip?" band that sits above the footer. */
 export function CtaBand({
   title = "Ready to plan your next trip?",
-  text = "Tell us where you want to go — we'll send a tailored quote within the day.",
+  text = "Tell us where you want to go and we'll send a tailored quote within the day.",
   tone = "white",
 }: CtaBandProps) {
   return (

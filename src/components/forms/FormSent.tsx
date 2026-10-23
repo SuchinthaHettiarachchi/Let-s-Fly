@@ -4,7 +4,7 @@ import { Icon } from "@/components/ui/Icon";
 /** Confirmation shown after any form is submitted. */
 export function FormSent({
   title = "Inquiry sent!",
-  text = "Thanks — a Let's Fly consultant will call you shortly.",
+  text = "Thanks! A Let's Fly consultant will call you shortly.",
   onReset,
 }: {
   title?: string;

@@ -9,7 +9,7 @@ import { packages } from "@/data/packages";
 
 export const metadata: Metadata = {
   title: "Outbound Travels",
-  description: "Flights, visas, hotels and tours bundled into one easy package — for families, couples and groups.",
+  description: "Flights, visas, hotels and tours bundled into one easy package for families, couples and groups.",
 };
 
 const reasons = [
@@ -28,7 +28,7 @@ export default function OutboundPage() {
         crumbs={[{ label: "Home", href: "/" }, { label: "Holidays" }, { label: "Outbound Travels" }]}
         eyebrow="Outbound travels"
         title="The world, planned from Colombo"
-        sub="Flights, visas, hotels and tours bundled into one easy package — for families, couples and groups."
+        sub="Flights, visas, hotels and tours bundled into one easy package for families, couples and groups."
       />
 
       <section className="py-16 lg:py-20">
@@ -46,7 +46,7 @@ export default function OutboundPage() {
               One team for your whole trip
             </h2>
             <p className="text-[15px] leading-[1.75] text-ink-600">
-              No juggling five websites — we handle it all and stay on WhatsApp while you travel.
+              No juggling five websites. We handle it all and stay on WhatsApp while you travel.
             </p>
           </div>
           <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">

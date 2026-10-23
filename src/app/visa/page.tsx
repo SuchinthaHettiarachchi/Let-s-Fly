@@ -9,7 +9,7 @@ import { visaSteps, visas } from "@/data/visas";
 export const metadata: Metadata = {
   title: "Visa Services",
   description:
-    "We check your documents, fill the forms, book the appointment and track your application — for 30+ countries.",
+    "We check your documents, fill the forms, book the appointment and track your application for 30+ countries.",
 };
 
 export default function VisaServicesPage() {
@@ -19,7 +19,7 @@ export default function VisaServicesPage() {
         crumbs={[{ label: "Home", href: "/" }, { label: "Visa Services" }]}
         eyebrow="Visa services"
         title="Visas made simple"
-        sub="We check your documents, fill the forms, book the appointment and track your application — for 30+ countries."
+        sub="We check your documents, fill the forms, book the appointment and track your application for 30+ countries."
       />
 
       <section className="py-16 lg:py-20">

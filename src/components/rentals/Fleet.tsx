@@ -115,7 +115,7 @@ export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
       ) : (
         <p className="py-10 text-center text-ink-600">
           No {type === "all" ? "" : `${vehicleTypes.find((t) => t.id === type)?.label.toLowerCase()} `}available{" "}
-          {mode === "with-driver" ? "with a driver" : "for self-drive"} — try the other option or ask us.
+          {mode === "with-driver" ? "with a driver" : "for self-drive"}. Try the other option or ask us.
         </p>
       )}
     </div>

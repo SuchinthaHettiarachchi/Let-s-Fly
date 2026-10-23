@@ -1,6 +1,6 @@
 /**
  * How customers pay for a package. Shared by every package page's
- * "Payment Methods" tab. Draft copy — confirm methods, deposit and
+ * "Payment Methods" tab. Draft copy: confirm methods, deposit and
  * deadlines with the travel team before launch.
  */
 

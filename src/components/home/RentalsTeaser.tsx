@@ -21,7 +21,7 @@ export function RentalsTeaser() {
             Explore Sri Lanka at your own pace
           </h2>
           <p className="text-base leading-[1.75] text-ink-600">
-            Self-drive or with a chauffeur — clean, insured vehicles delivered to your hotel or the airport.
+            Self-drive or with a chauffeur. Clean, insured vehicles delivered to your hotel or the airport.
           </p>
           <ul className="flex flex-col gap-3">
             {rentalPerks.map((perk) => (

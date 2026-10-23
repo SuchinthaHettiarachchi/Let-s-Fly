@@ -8,7 +8,7 @@ import { rentalEssentials, vehicles } from "@/data/rentals";
 
 export const metadata: Metadata = {
   title: "Car & Bike Rental",
-  description: "Self-drive or chauffeur-driven — insured vehicles delivered to your hotel or the airport, island-wide.",
+  description: "Self-drive or chauffeur-driven. Insured vehicles delivered to your hotel or the airport, island-wide.",
 };
 
 export default function RentalsPage() {
@@ -19,7 +19,7 @@ export default function RentalsPage() {
         crumbs={[{ label: "Home", href: "/" }, { label: "Rentals" }]}
         eyebrow="Car & bike rental"
         title="Wheels for every journey"
-        sub="Self-drive or chauffeur-driven — insured vehicles delivered to your hotel or the airport, island-wide."
+        sub="Self-drive or chauffeur-driven. Insured vehicles delivered to your hotel or the airport, island-wide."
       />
 
       <section className="py-14 lg:py-20">

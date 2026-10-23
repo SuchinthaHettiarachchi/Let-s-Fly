@@ -17,7 +17,7 @@ export function AboutIntro() {
     <section className="py-16 lg:py-20">
       <Container className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2 lg:gap-[72px]">
         <div data-reveal className="relative">
-          {/* Brand film placeholder — swap for the real video embed once it's produced. */}
+          {/* Brand film placeholder: swap for the real video embed once it's produced. */}
           <div className="flex h-[300px] flex-col items-center justify-center gap-3.5 rounded-2xl border-2 border-dashed border-sand-400 bg-sand-100 text-ink-400 sm:h-[440px]">
             <div className="relative flex size-[84px] items-center justify-center">
               {/* Soft ripple that keeps pulsing out from the play button. */}
@@ -56,7 +56,7 @@ export function AboutIntro() {
           </h2>
           <p className="text-base leading-[1.75] text-ink-600">
             From a weekend in Ella to a family week in Dubai, our Rajagiriya team handles your tickets, visas, hotels
-            and transfers — so all you have to do is pack.
+            and transfers, so all you have to do is pack.
           </p>
           <div className="mt-2.5 mb-2 grid grid-cols-3 gap-3 sm:gap-4">
             {stats.map((s) => (

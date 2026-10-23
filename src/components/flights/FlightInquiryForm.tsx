@@ -16,7 +16,7 @@ const tripTypes: { id: TripType; label: string }[] = [
 ];
 const MAX_LEGS = 5;
 
-/** "Let our ticketing desk book it for you" — route, passengers and contact details. */
+/** "Let our ticketing desk book it for you": route, passengers and contact details. */
 export function FlightInquiryForm() {
   const [trip, setTrip] = useState<TripType>("return");
   const [extraLegs, setExtraLegs] = useState(1);
@@ -32,7 +32,7 @@ export function FlightInquiryForm() {
     return (
       <FormSent
         title="Flight inquiry sent!"
-        text="Thanks — our ticketing desk will reply by email or WhatsApp with the best options."
+        text="Thanks! Our ticketing desk will reply by email or WhatsApp with the best options."
         onReset={() => setSent(false)}
       />
     );
