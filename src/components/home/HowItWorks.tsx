@@ -8,7 +8,7 @@ export function HowItWorks() {
   return (
     <section className="pb-20 lg:pb-[110px]">
       <Container className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[0.8fr_1.6fr] lg:gap-16">
-        <div className="flex flex-col gap-4">
+        <div data-reveal className="flex flex-col gap-4">
           <Eyebrow>How it works</Eyebrow>
           <h2 className="text-[30px] leading-[1.18] font-bold tracking-[-0.01em] sm:text-[36px] lg:text-[42px]">
             We make travel <em className="text-ocean-600">simple for you</em>
@@ -20,18 +20,30 @@ export function HowItWorks() {
           </Link>
         </div>
 
-        <ol className="grid grid-cols-1 divide-y divide-sand-300 rounded-2xl border border-sand-300 bg-white sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        <ol data-reveal="150" className="grid grid-cols-1 divide-y divide-sand-300 overflow-hidden rounded-2xl border border-sand-300 bg-white sm:grid-cols-3 sm:divide-x sm:divide-y-0">
           {howItWorks.map((step, i) => (
-            <li key={step.title} className="flex flex-col gap-3 p-6 lg:p-7">
+            <li
+              key={step.title}
+              className="group relative flex flex-col gap-3 p-6 transition-colors duration-300 hover:bg-sand-50 lg:p-7"
+            >
+              {/* Accent bar that grows along the top edge on hover. */}
               <span
-                className={`flex size-9 items-center justify-center rounded-full text-[13px] font-semibold ${
+                aria-hidden="true"
+                className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-ocean-600 transition-transform duration-300 group-hover:scale-x-100"
+              />
+              <span
+                className={`flex size-9 items-center justify-center rounded-full text-[13px] font-semibold transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-12 ${
                   i === 1 ? "bg-sun-400 text-navy-900" : "bg-navy-900 text-white"
                 }`}
               >
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <Icon name={step.icon} size={30} className="text-ocean-600" />
-              <span className="text-[17px] font-semibold">{step.title}</span>
+              <Icon
+                name={step.icon}
+                size={30}
+                className="self-start text-ocean-600 transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-110"
+              />
+              <span className="text-[17px] font-semibold transition-colors duration-300 group-hover:text-ocean-600">{step.title}</span>
               <span className="text-[14px] leading-[1.6] text-ink-600">{step.text}</span>
             </li>
           ))}
