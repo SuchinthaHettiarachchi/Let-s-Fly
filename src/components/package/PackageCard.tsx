@@ -48,6 +48,7 @@ export function PackageCard({ pkg, className = "", imageSizes = "(min-width: 102
           <div className="flex flex-col">
             <span className="text-[11.5px] text-ink-400">From</span>
             <span className="text-[19px] font-bold text-ocean-600">{formatLKR(pkg.price)}</span>
+            <span className="text-[11.5px] text-ink-400">per person</span>
           </div>
           <span className="flex items-center gap-0.5 text-[13.5px] font-semibold text-ocean-600">
             View More
