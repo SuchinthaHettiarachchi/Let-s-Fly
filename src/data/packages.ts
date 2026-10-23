@@ -60,6 +60,9 @@ export type Package = {
   related?: string[];
 };
 
+const sriLankaFootnote =
+  "Driving times are indicative and the order of visits may change with weather, train schedules and availability. Your final itinerary is confirmed with your booking.";
+
 export const packages: Package[] = [
   {
     slug: "dubai-family-escape",
@@ -201,31 +204,407 @@ export const packages: Package[] = [
     category: "outbound", outboundRegion: "maldives", featured: true, days: 4, nights: 3, price: 185000,
     image: "/images/packages/maldives-overwater-villa.jpg",
   },
+  // Sri Lanka tours. All detail copy below is draft — confirm hotels, timings and inclusions with the travel team.
   {
     slug: "kandy-ella-rail", title: "Kandy to Ella Rail Journey", region: "Sri Lanka", area: "Kandy · Ella", location: "Sri Lanka · Hill Country",
     category: "sri-lanka", themes: ["hill-country"], featured: true, days: 3, nights: 2, price: 48000,
     image: "/images/packages/kandy-ella-rail.jpg",
+    priceNote: "Twin share · hotels, train seats & driver",
+    overview: {
+      summary:
+        "Ride one of the world's most scenic train lines through misty tea country. Start with the Temple of the Tooth in Kandy, take reserved seats on the hill-country train to Ella, then walk to the Nine Arch Bridge and Little Adam's Peak. A private driver-guide meets you in Colombo and handles every transfer.",
+      highlights: [
+        { icon: "temple_buddhist", label: "Temple of the Tooth, Kandy" },
+        { icon: "train", label: "Reserved hill-country train seats" },
+        { icon: "landscape", label: "Nine Arch Bridge" },
+        { icon: "hiking", label: "Little Adam's Peak hike" },
+        { icon: "water", label: "Ravana Falls" },
+        { icon: "directions_car", label: "Private driver-guide" },
+      ],
+    },
+    itinerary: {
+      endpoints: "Colombo ⇄ Ella",
+      route: ["Colombo", "Kandy", "Nanu Oya", "Ella", "Colombo"],
+      footnote: sriLankaFootnote,
+      days: [
+        {
+          category: "Arrival",
+          title: "Colombo to Kandy – Temple of the Tooth & cultural show",
+          meta: [
+            { icon: "location_on", label: "Kandy" },
+            { icon: "hotel", label: "Hill-view hotel" },
+          ],
+          body: "Your driver-guide picks you up in Colombo for the drive to Kandy, stopping at the Pinnawala area on the way. In the evening visit the Temple of the Tooth Relic for the puja ceremony, then watch a Kandyan dance performance by the lake.",
+        },
+        {
+          category: "Scenic rail",
+          title: "Kandy to Ella by train through tea country",
+          meta: [
+            { icon: "train", label: "Kandy → Ella" },
+            { icon: "schedule", label: "Approx. 7 hours" },
+          ],
+          body: "Board the morning train with reserved seats and wind up through tea estates, waterfalls and cloud forest past Nanu Oya and Haputale. Your driver meets you at Ella station and takes you to your hotel for a relaxed evening in town.",
+        },
+        {
+          category: "Ella & departure",
+          title: "Nine Arch Bridge, Little Adam's Peak & drive home",
+          meta: [
+            { icon: "location_on", label: "Ella → Colombo" },
+            { icon: "hiking", label: "Easy morning walks" },
+          ],
+          body: "Walk to the Nine Arch Bridge in time to see a train cross, then climb Little Adam's Peak for views over Ella Gap. After lunch, stop at Ravana Falls on the way back to Colombo.",
+        },
+      ],
+    },
+    inclusions: {
+      intro: "Everything below is covered in the package price of LKR 48,000 per person.",
+      included: [
+        { title: "2 nights' accommodation", note: "Kandy and Ella, twin share" },
+        { title: "Daily breakfast and dinner" },
+        { title: "Reserved train seats Kandy → Ella" },
+        { title: "Private air-conditioned car with driver-guide", note: "From Colombo and back" },
+        { title: "Temple of the Tooth entrance & Kandyan dance show" },
+      ],
+      excluded: [
+        { title: "Travel insurance", note: "We can arrange a policy" },
+        { title: "Lunches and drinks" },
+        { title: "Other entrance fees" },
+        { title: "Tips for your driver-guide" },
+        { title: "Personal expenses" },
+      ],
+    },
+    related: ["little-england-weekend", "cultural-triangle-explorer", "yala-wildlife-safari"],
   },
   {
     slug: "yala-wildlife-safari", title: "Yala Wildlife Safari", region: "Sri Lanka", area: "Yala", location: "Sri Lanka · Yala",
     category: "sri-lanka", themes: ["wildlife"], featured: true, days: 2, nights: 1, price: 36500,
     image: "/images/packages/yala-safari.jpg",
+    priceNote: "Twin share · lodge, safaris & transport",
+    overview: {
+      summary:
+        "Two jeep safaris in Yala, home to one of the highest densities of leopards in the world. Spend the night at a safari lodge on the edge of the park, with an afternoon drive on arrival and a dawn drive when the animals are most active.",
+      highlights: [
+        { icon: "pets", label: "Leopards, elephants & sloth bears" },
+        { icon: "directions_car", label: "Two private jeep safaris" },
+        { icon: "cottage", label: "Safari lodge stay" },
+        { icon: "wb_twilight", label: "Dawn game drive" },
+        { icon: "local_dining", label: "All meals at the lodge" },
+        { icon: "confirmation_number", label: "Park entrance fees" },
+      ],
+    },
+    itinerary: {
+      endpoints: "Colombo ⇄ Yala",
+      route: ["Colombo", "Southern Expressway", "Tissamaharama", "Yala National Park", "Colombo"],
+      footnote: sriLankaFootnote,
+      days: [
+        {
+          category: "Arrival & safari",
+          title: "Drive to Yala – afternoon game drive",
+          meta: [
+            { icon: "location_on", label: "Yala National Park" },
+            { icon: "schedule", label: "3-hour safari" },
+          ],
+          body: "Leave Colombo early on the Southern Expressway and check in at your lodge near Tissamaharama by lunch. At 2.30pm your jeep and tracker collect you for an afternoon safari looking for leopards, elephants, crocodiles and peacocks.",
+        },
+        {
+          category: "Dawn safari & departure",
+          title: "Sunrise game drive & return to Colombo",
+          meta: [
+            { icon: "wb_twilight", label: "5.30am start" },
+            { icon: "location_on", label: "Yala → Colombo" },
+          ],
+          body: "Head back into the park at first light, the best time to spot leopards on the move. Return to the lodge for a late breakfast, then drive back to Colombo in the afternoon.",
+        },
+      ],
+    },
+    inclusions: {
+      intro: "Everything below is covered in the package price of LKR 36,500 per person.",
+      included: [
+        { title: "1 night at a safari lodge", note: "Twin share, full board" },
+        { title: "Two private jeep safaris with tracker" },
+        { title: "Yala National Park entrance fees" },
+        { title: "Private air-conditioned transport from Colombo" },
+      ],
+      excluded: [
+        { title: "Travel insurance", note: "We can arrange a policy" },
+        { title: "Drinks" },
+        { title: "Tips for the tracker and driver" },
+        { title: "Personal expenses" },
+      ],
+    },
+    related: ["southern-coast-getaway", "east-coast-whale-watch", "kandy-ella-rail"],
   },
   {
     slug: "cultural-triangle-explorer", title: "Cultural Triangle Explorer", region: "Sri Lanka", area: "Sigiriya · Dambulla", location: "Sri Lanka · Cultural Triangle",
     category: "sri-lanka", themes: ["cultural"], days: 4, nights: 3, price: 68000,
+    priceNote: "Twin share · hotel, entrances & driver",
+    overview: {
+      summary:
+        "Four days among Sri Lanka's ancient kingdoms: climb Sigiriya Rock Fortress, explore the painted caves of Dambulla and cycle through the ruins of Polonnaruwa. Finish with an elephant safari in Minneriya and a sunrise climb up Pidurangala, all with a private driver-guide.",
+      highlights: [
+        { icon: "landscape", label: "Sigiriya Rock Fortress" },
+        { icon: "temple_buddhist", label: "Dambulla Cave Temple" },
+        { icon: "account_balance", label: "Polonnaruwa ancient city" },
+        { icon: "pets", label: "Minneriya elephant safari" },
+        { icon: "agriculture", label: "Village tour & lunch" },
+        { icon: "wb_twilight", label: "Pidurangala sunrise" },
+      ],
+    },
+    itinerary: {
+      endpoints: "Colombo ⇄ Sigiriya",
+      route: ["Colombo", "Dambulla", "Sigiriya", "Polonnaruwa", "Minneriya", "Colombo"],
+      footnote: sriLankaFootnote,
+      days: [
+        {
+          category: "Arrival",
+          title: "Colombo to Dambulla Cave Temple",
+          meta: [
+            { icon: "location_on", label: "Dambulla · Sigiriya" },
+            { icon: "hotel", label: "Hotel near Sigiriya" },
+          ],
+          body: "Drive north from Colombo to Dambulla and explore the five cave shrines filled with ancient Buddha statues and murals. Continue to your hotel near Sigiriya for the evening.",
+        },
+        {
+          category: "Sigiriya",
+          title: "Climb Sigiriya Rock & village tour",
+          meta: [
+            { icon: "landscape", label: "Sigiriya" },
+            { icon: "schedule", label: "Morning climb" },
+          ],
+          body: "Climb Sigiriya early to beat the heat, passing the frescoes and Lion's Paw on the way to the summit palace. In the afternoon, take a bullock-cart and catamaran village tour with a traditional lunch.",
+        },
+        {
+          category: "Ancient city & safari",
+          title: "Polonnaruwa ruins & Minneriya elephant safari",
+          meta: [
+            { icon: "account_balance", label: "Polonnaruwa" },
+            { icon: "pets", label: "Afternoon jeep safari" },
+          ],
+          body: "Cycle or drive through the royal palace, Gal Vihara statues and temples of Polonnaruwa. In the afternoon, a jeep safari in Minneriya to see wild elephants gathering by the reservoir.",
+        },
+        {
+          category: "Departure",
+          title: "Pidurangala sunrise & drive home",
+          meta: [
+            { icon: "wb_twilight", label: "Pidurangala" },
+            { icon: "location_on", label: "Sigiriya → Colombo" },
+          ],
+          body: "An optional early climb up Pidurangala for sunrise views of Sigiriya. After breakfast, drive back to Colombo with a stop at a spice garden in Matale.",
+        },
+      ],
+    },
+    inclusions: {
+      intro: "Everything below is covered in the package price of LKR 68,000 per person.",
+      included: [
+        { title: "3 nights' accommodation near Sigiriya", note: "Twin share" },
+        { title: "Daily breakfast and dinner" },
+        { title: "Entrance tickets", note: "Sigiriya, Dambulla Cave Temple and Polonnaruwa" },
+        { title: "Minneriya jeep safari" },
+        { title: "Village tour with traditional lunch" },
+        { title: "Private air-conditioned car with driver-guide" },
+      ],
+      excluded: [
+        { title: "Travel insurance", note: "We can arrange a policy" },
+        { title: "Lunches not mentioned in the itinerary" },
+        { title: "Bicycle hire in Polonnaruwa" },
+        { title: "Tips and personal expenses" },
+      ],
+    },
+    related: ["kandy-ella-rail", "east-coast-whale-watch", "yala-wildlife-safari"],
   },
   {
     slug: "southern-coast-getaway", title: "Southern Coast Getaway", region: "Sri Lanka", area: "Mirissa · Galle", location: "Sri Lanka · South Coast",
     category: "sri-lanka", themes: ["beaches"], days: 4, nights: 3, price: 55000,
+    priceNote: "Twin share · beach hotel & driver",
+    overview: {
+      summary:
+        "Slow down on the south coast: wander the ramparts of Galle Fort, watch the stilt fishermen at Koggala and spend lazy days on Mirissa beach. In season, head out at dawn to see blue whales. A private driver-guide handles every transfer from Colombo.",
+      highlights: [
+        { icon: "fort", label: "Galle Fort walking tour" },
+        { icon: "sailing", label: "Mirissa whale watching" },
+        { icon: "beach_access", label: "Beachfront hotel" },
+        { icon: "phishing", label: "Koggala stilt fishermen" },
+        { icon: "eco", label: "Turtle hatchery visit" },
+        { icon: "directions_car", label: "Private driver-guide" },
+      ],
+    },
+    itinerary: {
+      endpoints: "Colombo ⇄ Mirissa",
+      route: ["Colombo", "Bentota", "Galle", "Mirissa", "Colombo"],
+      footnote: sriLankaFootnote,
+      days: [
+        {
+          category: "Arrival",
+          title: "Colombo to Bentota & Galle Fort",
+          meta: [
+            { icon: "location_on", label: "Bentota · Galle" },
+            { icon: "schedule", label: "Afternoon walk" },
+          ],
+          body: "Drive down the coast with a stop at a turtle hatchery near Bentota. In the afternoon, walk the ramparts, lighthouse and old streets of Galle Fort, then continue to your beach hotel in Mirissa.",
+        },
+        {
+          category: "Whale watching",
+          title: "Dawn whale watching & beach afternoon",
+          meta: [
+            { icon: "sailing", label: "Mirissa harbour" },
+            { icon: "schedule", label: "Approx. 4 hours" },
+          ],
+          body: "Head out from Mirissa harbour at dawn to look for blue whales, sperm whales and dolphins (November to April). Spend the afternoon on the beach and catch sunset from Coconut Tree Hill.",
+        },
+        {
+          category: "Leisure",
+          title: "Koggala, stilt fishermen & free time",
+          meta: [
+            { icon: "location_on", label: "Koggala · Weligama" },
+            { icon: "beach_access", label: "Free afternoon" },
+          ],
+          body: "A morning trip to see the stilt fishermen and a boat ride on Koggala Lake. The rest of the day is yours: surf lessons at Weligama, a spa treatment or simply the pool.",
+        },
+        {
+          category: "Departure",
+          title: "Beach morning & drive home",
+          meta: [{ icon: "location_on", label: "Mirissa → Colombo" }],
+          body: "Enjoy a last swim and breakfast by the sea before your driver takes you back to Colombo on the Southern Expressway.",
+        },
+      ],
+    },
+    inclusions: {
+      intro: "Everything below is covered in the package price of LKR 55,000 per person.",
+      included: [
+        { title: "3 nights at a beachfront hotel in Mirissa", note: "Twin share" },
+        { title: "Daily breakfast and dinner" },
+        { title: "Whale-watching boat trip", note: "November to April; swapped for a lagoon safari off season" },
+        { title: "Galle Fort walking tour" },
+        { title: "Private air-conditioned car with driver-guide" },
+      ],
+      excluded: [
+        { title: "Travel insurance", note: "We can arrange a policy" },
+        { title: "Lunches and drinks" },
+        { title: "Surf lessons, spa treatments and other optional activities" },
+        { title: "Tips and personal expenses" },
+      ],
+    },
+    related: ["yala-wildlife-safari", "east-coast-whale-watch", "kandy-ella-rail"],
   },
   {
     slug: "little-england-weekend", title: "Little England Weekend", region: "Sri Lanka", area: "Nuwara Eliya", location: "Sri Lanka · Nuwara Eliya",
     category: "sri-lanka", themes: ["hill-country"], days: 2, nights: 1, price: 32000,
+    priceNote: "Twin share · bungalow stay & driver",
+    overview: {
+      summary:
+        "A cool-climate weekend in Nuwara Eliya, Sri Lanka's 'Little England'. Visit a working tea factory, boat on Gregory Lake and stay in a colonial-era bungalow, with waterfalls and tea estates all along the drive up from Colombo.",
+      highlights: [
+        { icon: "emoji_food_beverage", label: "Tea factory tour & tasting" },
+        { icon: "cottage", label: "Colonial bungalow stay" },
+        { icon: "rowing", label: "Gregory Lake" },
+        { icon: "water", label: "Ramboda Falls" },
+        { icon: "park", label: "Victoria Park" },
+        { icon: "directions_car", label: "Private driver-guide" },
+      ],
+    },
+    itinerary: {
+      endpoints: "Colombo ⇄ Nuwara Eliya",
+      route: ["Colombo", "Ramboda", "Nuwara Eliya", "Colombo"],
+      footnote: sriLankaFootnote,
+      days: [
+        {
+          category: "Arrival",
+          title: "Drive up to Nuwara Eliya via Ramboda Falls",
+          meta: [
+            { icon: "location_on", label: "Ramboda · Nuwara Eliya" },
+            { icon: "hotel", label: "Colonial bungalow" },
+          ],
+          body: "Leave Colombo in the morning and wind up into the hills, stopping at Ramboda Falls and a tea factory for a tour and tasting. Check in to your bungalow and spend the evening by Gregory Lake.",
+        },
+        {
+          category: "Departure",
+          title: "Town walk, Victoria Park & drive home",
+          meta: [{ icon: "location_on", label: "Nuwara Eliya → Colombo" }],
+          body: "After breakfast, walk past the old post office and Hill Club, then through Victoria Park. Pick up fresh strawberries and vegetables at the market before driving back to Colombo.",
+        },
+      ],
+    },
+    inclusions: {
+      intro: "Everything below is covered in the package price of LKR 32,000 per person.",
+      included: [
+        { title: "1 night in a colonial-style bungalow", note: "Twin share" },
+        { title: "Breakfast and dinner" },
+        { title: "Tea factory tour & tasting" },
+        { title: "Private air-conditioned car with driver-guide" },
+      ],
+      excluded: [
+        { title: "Travel insurance", note: "We can arrange a policy" },
+        { title: "Lunches and drinks" },
+        { title: "Boat rides and park entrance fees" },
+        { title: "Tips and personal expenses" },
+      ],
+    },
+    related: ["kandy-ella-rail", "cultural-triangle-explorer", "southern-coast-getaway"],
   },
   {
     slug: "east-coast-whale-watch", title: "East Coast Whale Watch", region: "Sri Lanka", area: "Trincomalee", location: "Sri Lanka · Trincomalee",
     category: "sri-lanka", themes: ["beaches", "wildlife"], days: 3, nights: 2, price: 44000,
+    priceNote: "Twin share · beach hotel, boat trips & driver",
+    overview: {
+      summary:
+        "Sri Lanka's east coast at its best: blue whales and dolphins off Trincomalee, snorkelling with reef sharks at Pigeon Island and long white beaches at Nilaveli. Add Koneswaram Temple on its clifftop and you have an easy three-day escape.",
+      highlights: [
+        { icon: "sailing", label: "Whale & dolphin watching" },
+        { icon: "scuba_diving", label: "Pigeon Island snorkelling" },
+        { icon: "beach_access", label: "Nilaveli beach hotel" },
+        { icon: "temple_hindu", label: "Koneswaram Temple" },
+        { icon: "fort", label: "Fort Frederick" },
+        { icon: "directions_car", label: "Private driver-guide" },
+      ],
+    },
+    itinerary: {
+      endpoints: "Colombo ⇄ Trincomalee",
+      route: ["Colombo", "Habarana", "Trincomalee", "Nilaveli", "Colombo"],
+      footnote: sriLankaFootnote,
+      days: [
+        {
+          category: "Arrival",
+          title: "Colombo to Trincomalee & Koneswaram Temple",
+          meta: [
+            { icon: "location_on", label: "Trincomalee" },
+            { icon: "hotel", label: "Nilaveli beach hotel" },
+          ],
+          body: "Drive across the island via Habarana to Trincomalee. Visit Fort Frederick and Koneswaram Temple on Swami Rock at sunset, then check in at your hotel on Nilaveli beach.",
+        },
+        {
+          category: "Whales & reef",
+          title: "Whale watching & Pigeon Island snorkelling",
+          meta: [
+            { icon: "sailing", label: "Trincomalee Bay" },
+            { icon: "scuba_diving", label: "Pigeon Island National Park" },
+          ],
+          body: "An early boat trip into Trincomalee Bay to look for blue whales and spinner dolphins (March to August). After lunch, snorkel the coral reef at Pigeon Island, home to black-tip reef sharks and turtles.",
+        },
+        {
+          category: "Departure",
+          title: "Beach morning & drive home",
+          meta: [{ icon: "location_on", label: "Nilaveli → Colombo" }],
+          body: "A last swim at Nilaveli, then drive back to Colombo, stopping at the Kanniya hot wells on the way.",
+        },
+      ],
+    },
+    inclusions: {
+      intro: "Everything below is covered in the package price of LKR 44,000 per person.",
+      included: [
+        { title: "2 nights at a beach hotel in Nilaveli", note: "Twin share" },
+        { title: "Daily breakfast and dinner" },
+        { title: "Whale-watching boat trip", note: "March to August" },
+        { title: "Pigeon Island boat transfer & snorkel gear" },
+        { title: "Private air-conditioned car with driver-guide" },
+      ],
+      excluded: [
+        { title: "Travel insurance", note: "We can arrange a policy" },
+        { title: "Pigeon Island park entrance fee" },
+        { title: "Lunches and drinks" },
+        { title: "Tips and personal expenses" },
+      ],
+    },
+    related: ["southern-coast-getaway", "yala-wildlife-safari", "cultural-triangle-explorer"],
   },
   {
     slug: "bali-honeymoon", title: "Bali Honeymoon Special", region: "Indonesia", location: "Indonesia · Bali",
