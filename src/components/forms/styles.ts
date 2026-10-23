@@ -13,6 +13,7 @@ export const serviceOptions = [
   "Hotels",
   "Trains + Cruises",
   "Rentals",
+  "Travel insurance",
 ];
 
 export const titleOptions = ["Mr.", "Mrs.", "Ms.", "Dr."];

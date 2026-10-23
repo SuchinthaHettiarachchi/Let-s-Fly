@@ -30,13 +30,25 @@ export const stats = [
   { value: "40+", label: "Destinations" },
 ];
 
-export const services = [
+/** A service card links to `href`, or opens the inquiry form for `inquiry` when it has no page yet. */
+export type Service = {
+  icon: string;
+  title: string;
+  line: string;
+  link: string;
+  linkIcon: string;
+  href?: string;
+  inquiry?: string;
+};
+
+export const services: Service[] = [
   { icon: "landscape", title: "Travel Sri Lanka", line: "Island tours from Sigiriya to the south coast, with drivers and stays.", link: "Explore tours", linkIcon: "arrow_forward", href: "/holidays/sri-lanka" },
   { icon: "hotel", title: "Hotel Bookings", line: "Best rates on 2,000+ hotels, booked through our partner Aahaas.", link: "Book on Aahaas", linkIcon: "north_east", href: "/holidays/sri-lanka#hotels" },
   { icon: "travel_explore", title: "Outbound Travels", line: "Group and private holidays to Asia, the Middle East and Europe.", link: "See destinations", linkIcon: "arrow_forward", href: "/holidays/outbound" },
   { icon: "flight", title: "Air Tickets", line: "Compare fares across major airlines and book instantly via Aahaas.", link: "Book on Aahaas", linkIcon: "north_east", href: "/air-tickets" },
   { icon: "train", title: "Trains + Cruises", line: "Scenic rail seats in Sri Lanka and ocean cruises across Asia.", link: "View options", linkIcon: "arrow_forward", href: "/holidays/trains-cruises" },
   { icon: "description", title: "Visa Services", line: "Document checks and submissions for 30+ countries, done for you.", link: "Check requirements", linkIcon: "arrow_forward", href: "/visa" },
+  { icon: "health_and_safety", title: "Travel Insurance", line: "Medical, baggage and trip-delay cover for every journey, arranged before you fly.", link: "Get a quote", linkIcon: "arrow_forward", inquiry: "Travel insurance" },
 ];
 
 export const rentalPerks = [
