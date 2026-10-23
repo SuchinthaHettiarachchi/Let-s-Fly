@@ -41,6 +41,52 @@
 
   /* Motion */
   --animate-marquee: lf-marquee 60s linear infinite;
+  --animate-rise: lf-rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  @keyframes lf-rise {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  --animate-float: lf-float 4s ease-in-out infinite;
+  @keyframes lf-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+  --animate-zoom: lf-zoom 14s ease-out both;
+  @keyframes lf-zoom {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.08);
+    }
+  }
+  --animate-spin-slow: lf-spin 90s linear infinite;
+  @keyframes lf-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  --animate-glide: lf-glide 3s ease-in-out infinite;
+  @keyframes lf-glide {
+    0%,
+    100% {
+      transform: translateX(-28px);
+    }
+    50% {
+      transform: translateX(28px);
+    }
+  }
   @keyframes lf-marquee {
     from {
       transform: translateX(0);
