@@ -39,15 +39,16 @@ export function RentalsTeaser() {
                   key={t.label}
                   type="button"
                   aria-pressed={on}
+                  aria-label={t.label}
+                  title={t.label}
                   onClick={() => setSelected(i)}
-                  className={`flex h-10 cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] px-[18px] text-sm font-medium transition-colors ${
+                  className={`flex h-[52px] w-16 cursor-pointer items-center justify-center rounded-full border-[1.5px] transition-colors ${
                     on
                       ? "border-ocean-600 bg-ocean-600 text-white"
                       : "border-sand-300 bg-white text-ink-900 hover:border-ocean-600"
                   }`}
                 >
-                  <Icon name={t.icon} size={18} />
-                  {t.label}
+                  <Icon name={t.icon} size={28} />
                 </button>
               );
             })}
