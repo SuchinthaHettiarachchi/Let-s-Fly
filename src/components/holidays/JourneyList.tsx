@@ -10,7 +10,7 @@ import { formatLKR } from "@/data/packages";
 import type { Journey } from "@/data/journeys";
 
 const kinds = [
-  { id: "train", label: "Trains", icon: "train", note: "Seats open 30 days before travel — reserve early." },
+  { id: "train", label: "Trains", icon: "train", note: "Seats open 30 days before travel, so book early." },
   { id: "cruise", label: "Cruises", icon: "directions_boat", note: "Cabins sell out early in peak season." },
 ] as const;
 
@@ -83,7 +83,7 @@ export function JourneyList({ journeys }: { journeys: Journey[] }) {
                   icon="arrow_forward"
                   onClick={() => openInquiry({ service: "Trains + Cruises", destination: j.title })}
                 >
-                  Reserve
+                  Book Now
                 </Button>
               </div>
             </li>
