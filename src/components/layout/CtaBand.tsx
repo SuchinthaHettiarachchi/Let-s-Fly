@@ -5,9 +5,11 @@ import { contact } from "@/data/site";
 type CtaBandProps = {
   title?: string;
   text?: string;
-  /** Background of the strip behind the band; match the section above it. */
-  tone?: "white" | "sand";
+  /** Background of the strip behind the band; match the section above it. "clear" lets a page background show through. */
+  tone?: "white" | "sand" | "clear";
 };
+
+const toneClass = { white: "bg-white", sand: "bg-sand-50", clear: "" };
 
 /** The yellow "Ready to plan your next trip?" band that sits above the footer. */
 export function CtaBand({
@@ -16,7 +18,7 @@ export function CtaBand({
   tone = "white",
 }: CtaBandProps) {
   return (
-    <section className={`pb-16 lg:pb-[100px] ${tone === "sand" ? "bg-sand-50" : "bg-white"}`}>
+    <section className={`pb-16 lg:pb-[100px] ${toneClass[tone]}`}>
       <Container>
         <div className="relative flex flex-col items-start justify-between gap-8 overflow-hidden rounded-2xl bg-sun-400 px-6 py-10 sm:px-10 lg:flex-row lg:items-center lg:gap-10 lg:px-16 lg:py-14">
           <div
