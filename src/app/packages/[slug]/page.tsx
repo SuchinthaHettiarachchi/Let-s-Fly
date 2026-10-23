@@ -8,6 +8,7 @@ import { PackageTabs, type Tab } from "@/components/package/PackageTabs";
 import { OverviewPanel } from "@/components/package/OverviewPanel";
 import { ItineraryPanel } from "@/components/package/ItineraryPanel";
 import { InclusionsPanel } from "@/components/package/InclusionsPanel";
+import { PaymentPanel } from "@/components/package/PaymentPanel";
 import { BookingCard } from "@/components/package/BookingCard";
 import { RelatedPackages } from "@/components/package/RelatedPackages";
 import { detailPackages, durationLabel, formatLKR, getPackage, relatedPackages } from "@/data/packages";
@@ -45,6 +46,7 @@ export default async function PackagePage({ params }: PageProps<"/packages/[slug
   if (pkg.inclusions) {
     tabs.push({ id: "inclusions", label: "Inclusions & Exclusions", content: <InclusionsPanel inclusions={pkg.inclusions} /> });
   }
+  tabs.push({ id: "payment", label: "Payment Methods", content: <PaymentPanel /> });
 
   return (
     <>
