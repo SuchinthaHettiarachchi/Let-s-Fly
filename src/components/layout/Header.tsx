@@ -8,7 +8,7 @@ import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { useInquiry } from "@/components/inquiry/InquiryProvider";
-import { contact, holidayLinks, moreLinks, socials, type NavKey, type NavLink } from "@/data/site";
+import { contact, holidayLinks, moreLinks, type NavKey, type NavLink } from "@/data/site";
 
 function activeKey(pathname: string): NavKey | null {
   if (pathname === "/") return "home";
@@ -101,7 +101,7 @@ export function Header() {
 function TopBar() {
   return (
     <div className="hidden bg-navy-900 text-[13px] text-white/85 md:block">
-      <Container className="flex h-[42px] items-center justify-between">
+      <Container className="flex h-[42px] items-center">
         <div className="flex items-center gap-7">
           <a href={contact.phoneHref} className="flex items-center gap-1.5 text-white/85 hover:text-white">
             <Icon name="call" size={17} className="text-sun-400" />
@@ -115,19 +115,6 @@ function TopBar() {
             <Icon name="location_on" size={17} className="text-sun-400" />
             {contact.addressShort}
           </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="mr-1.5 text-white/60">Follow us</span>
-          {socials.map((s) => (
-            <a
-              key={s.name}
-              href={s.href}
-              aria-label={s.name}
-              className="flex size-[26px] items-center justify-center rounded-full bg-white/12 text-[10px] font-semibold text-white transition-colors hover:bg-sun-400 hover:text-navy-900"
-            >
-              {s.label}
-            </a>
-          ))}
         </div>
       </Container>
     </div>

@@ -23,11 +23,14 @@ export const bookingPortals: { hotels: string | null; flights: string | null } =
   flights: null,
 };
 
-export const socials = [
-  { label: "f", name: "Facebook", href: "#" },
-  { label: "ig", name: "Instagram", href: "#" },
-  { label: "tt", name: "TikTok", href: "#" },
-  { label: "yt", name: "YouTube", href: "#" },
+export type SocialName = "Facebook" | "Instagram" | "TikTok" | "YouTube";
+
+// Shown in the footer. Replace "#" with the real profile links.
+export const socials: { name: SocialName; href: string }[] = [
+  { name: "Facebook", href: "#" },
+  { name: "Instagram", href: "#" },
+  { name: "TikTok", href: "#" },
+  { name: "YouTube", href: "#" },
 ];
 
 export type NavKey = "home" | "air" | "holidays" | "visa" | "rentals" | "more";

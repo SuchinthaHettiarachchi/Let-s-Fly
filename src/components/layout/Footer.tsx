@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { Placeholder } from "@/components/ui/Placeholder";
+import { SocialIcon } from "@/components/ui/SocialIcon";
 import { contact, footerColumns, socials } from "@/data/site";
 
 export function Footer() {
@@ -24,17 +25,23 @@ export function Footer() {
             <Icon name="location_on" size={18} className="text-sun-400" />
             {contact.address}
           </div>
-          <div className="flex gap-2">
-            {socials.map((s) => (
-              <a
-                key={s.name}
-                href={s.href}
-                aria-label={s.name}
-                className="flex size-9 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-white transition-colors hover:bg-sun-400 hover:text-navy-900"
-              >
-                {s.label}
-              </a>
-            ))}
+          <div className="flex flex-col gap-2.5">
+            <span className="text-[13px] font-semibold text-white">Follow us</span>
+            <div className="flex gap-2.5">
+              {socials.map((s) => (
+                <a
+                  key={s.name}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.name}
+                  title={s.name}
+                  className="flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-sun-400 hover:text-navy-900"
+                >
+                  <SocialIcon name={s.name} size={19} />
+                </a>
+              ))}
+            </div>
           </div>
           <div className="mt-1 flex gap-2.5">
             <Placeholder label="AWARD" icon="workspace_premium" dark className="size-[72px]" />
