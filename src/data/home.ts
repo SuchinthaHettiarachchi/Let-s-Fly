@@ -1,31 +1,14 @@
-export type HeroSlide = { image: string; title: string; sub: string; price: string; href: string };
+/** Background photos the home hero cycles through; the title labels each slide dot. */
+export type HeroSlide = { image: string; title: string };
 
 export const heroSlides: HeroSlide[] = [
-  {
-    image: "/images/hero/maldives-beach.jpg",
-    title: "Maldives Beach Retreat",
-    sub: "Handpicked holidays, air tickets and visas — planned end-to-end by our Colombo travel team.",
-    price: "LKR 185,000",
-    href: "/packages/maldives-overwater-villa",
-  },
-  {
-    image: "/images/hero/dubai.jpg",
-    title: "Dubai Family Escape",
-    sub: "Desert safaris, Burj Khalifa views and theme parks — 5 days of family fun with flights included.",
-    price: "LKR 150,000",
-    href: "/packages/dubai-family-escape",
-  },
-  {
-    image: "/images/hero/hill-country-rail.jpg",
-    title: "Hill Country by Rail",
-    sub: "Ride the scenic train from Kandy to Ella through misty tea estates and waterfalls.",
-    price: "LKR 48,000",
-    href: "/packages/kandy-ella-rail",
-  },
+  { image: "/images/hero/maldives-beach.jpg", title: "Maldives Beach Retreat" },
+  { image: "/images/hero/dubai.jpg", title: "Dubai Family Escape" },
+  { image: "/images/hero/hill-country-rail.jpg", title: "Hill Country by Rail" },
 ];
 
 export const stats = [
-  { value: "10+", label: "Years of service" },
+  { value: "14+", label: "Years of service" },
   { value: "5,000+", label: "Happy travellers" },
   { value: "40+", label: "Destinations" },
 ];
@@ -49,6 +32,12 @@ export const services: Service[] = [
   { icon: "train", title: "Trains + Cruises", line: "Scenic rail seats in Sri Lanka and ocean cruises across Asia.", link: "View options", linkIcon: "arrow_forward", href: "/holidays/trains-cruises" },
   { icon: "description", title: "Visa Services", line: "Document checks and submissions for 30+ countries, done for you.", link: "Check requirements", linkIcon: "arrow_forward", href: "/visa" },
   { icon: "health_and_safety", title: "Travel Insurance", line: "Medical, baggage and trip-delay cover for every journey, arranged before you fly.", link: "Get a quote", linkIcon: "arrow_forward", inquiry: "Travel insurance" },
+];
+
+export const howItWorks = [
+  { icon: "chat", title: "Tell Us Your Dream", text: "Share your destination, preferences and budget." },
+  { icon: "map", title: "We Craft Your Journey", text: "Our travel experts create a flexible, tailor-made itinerary." },
+  { icon: "luggage", title: "Enjoy Stress-Free Travel", text: "We take care of flights, visas, hotels and transportation." },
 ];
 
 export const rentalPerks = [

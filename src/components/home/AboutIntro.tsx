@@ -13,7 +13,7 @@ const reviewerAvatars = [
 
 export function AboutIntro() {
   return (
-    <section className="py-20 lg:py-[110px]">
+    <section className="py-16 lg:py-20">
       <Container className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2 lg:gap-[72px]">
         <div className="relative">
           {/* Brand film placeholder — swap for the real video embed once it's produced. */}

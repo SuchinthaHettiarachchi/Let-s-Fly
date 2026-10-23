@@ -10,6 +10,7 @@ import { Icon } from "./Icon";
  *  - ghostOnDark:  translucent outline for imagery / navy backgrounds
  *  - navy:         the yellow CTA band's button; inverts to white on hover
  *  - outlineNavy:  secondary button inside the yellow CTA band
+ *  - sand:         soft tertiary button on imagery (home hero)
  * Yellow is never a button colour.
  */
 const variants = {
@@ -22,6 +23,7 @@ const variants = {
   navy: "bg-navy-900 text-white hover:bg-white hover:text-navy-900",
   outlineNavy:
     "text-navy-900 border-[1.5px] border-navy-900 hover:bg-navy-900 hover:text-white",
+  sand: "bg-sand-200 text-navy-900 hover:bg-white hover:text-navy-900",
 } as const;
 
 const sizes = {

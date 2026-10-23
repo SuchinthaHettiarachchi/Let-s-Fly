@@ -1,0 +1,42 @@
+import Link from "next/link";
+import { Container } from "@/components/ui/Container";
+import { Eyebrow } from "@/components/ui/SectionHeading";
+import { Icon } from "@/components/ui/Icon";
+import { howItWorks } from "@/data/home";
+
+export function HowItWorks() {
+  return (
+    <section className="pb-20 lg:pb-[110px]">
+      <Container className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[0.8fr_1.6fr] lg:gap-16">
+        <div className="flex flex-col gap-4">
+          <Eyebrow>How it works</Eyebrow>
+          <h2 className="text-[30px] leading-[1.18] font-bold tracking-[-0.01em] sm:text-[36px] lg:text-[42px]">
+            We make travel <em className="text-ocean-600">simple for you</em>
+          </h2>
+          <p className="text-base leading-[1.75] text-ink-600">From dreaming to departure, we handle every detail.</p>
+          <Link href="/about" className="flex items-center gap-1.5 self-start text-[15px] font-semibold">
+            Learn more about us
+            <Icon name="arrow_forward" />
+          </Link>
+        </div>
+
+        <ol className="grid grid-cols-1 divide-y divide-sand-300 rounded-2xl border border-sand-300 bg-white sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          {howItWorks.map((step, i) => (
+            <li key={step.title} className="flex flex-col gap-3 p-6 lg:p-7">
+              <span
+                className={`flex size-9 items-center justify-center rounded-full text-[13px] font-semibold ${
+                  i === 1 ? "bg-sun-400 text-navy-900" : "bg-navy-900 text-white"
+                }`}
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <Icon name={step.icon} size={30} className="text-ocean-600" />
+              <span className="text-[17px] font-semibold">{step.title}</span>
+              <span className="text-[14px] leading-[1.6] text-ink-600">{step.text}</span>
+            </li>
+          ))}
+        </ol>
+      </Container>
+    </section>
+  );
+}

@@ -4,7 +4,9 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/SectionHeading";
-import { ArrowButton, ButtonLink } from "@/components/ui/Button";
+import { ArrowButton, Button, ButtonLink } from "@/components/ui/Button";
+import { Icon } from "@/components/ui/Icon";
+import { useInquiry } from "@/components/inquiry/InquiryProvider";
 import { contact } from "@/data/site";
 import { heroSlides } from "@/data/home";
 
@@ -14,7 +16,7 @@ export function HeroSlider() {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const count = heroSlides.length;
-  const slide = heroSlides[index];
+  const { openInquiry } = useInquiry();
 
   useEffect(() => {
     if (paused) return;
@@ -45,38 +47,41 @@ export function HeroSlider() {
 
       <Container className="relative flex h-full flex-col justify-center gap-[22px] pb-16 text-white">
         <Eyebrow onDark className="tracking-[0.28em]">
-          Dream · Explore · Discover
+          Your journey · Our passion
         </Eyebrow>
         <h1 className="max-w-[640px] text-[40px] leading-[1.08] font-bold tracking-[-0.02em] text-pretty sm:text-[52px] lg:text-[64px]">
-          Find your next adventure with us
+          Plan your ultimate travel experience today
         </h1>
-        <p aria-live="polite" className="max-w-[520px] text-base leading-[1.6] text-white/85 sm:text-lg">
-          {slide.sub}
+        <p className="max-w-[520px] text-base leading-[1.6] text-white/85 sm:text-lg">
+          Discover cheap flights, visa assistance, customised holiday tours, and complete travel management
+          solutions.
         </p>
-        <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-          <span className="text-sm text-white/70">{slide.title} · from</span>
-          <span className="text-[26px] font-bold text-white sm:text-[30px]">{slide.price}</span>
-          <span className="text-sm text-white/70">per person</span>
+        <div className="flex items-center gap-2 text-sm text-white/80">
+          <Icon name="verified" size={20} fill className="text-sun-400" />
+          Most trusted travel agency in Sri Lanka
         </div>
         <div className="mt-1.5 flex flex-wrap gap-3.5">
-          <ButtonLink
-            href={slide.href}
+          <Button
             variant="primary"
             size="xl"
             icon="arrow_forward"
             className="px-[30px] shadow-[0_8px_24px_rgba(0,0,0,.25)]"
+            onClick={() => openInquiry()}
           >
-            View Package
+            Plan My Trip
+          </Button>
+          <ButtonLink href="/air-tickets" variant="ghostOnDark" size="xl" leadingIcon="flight">
+            Book a Flight
           </ButtonLink>
           <ButtonLink
             href={contact.whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
-            variant="ghostOnDark"
+            variant="sand"
             size="xl"
-            leadingIcon="chat"
+            icon="forum"
           >
-            WhatsApp Us
+            Ask Let&apos;s Fly
           </ButtonLink>
         </div>
       </Container>
