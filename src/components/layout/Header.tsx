@@ -45,12 +45,12 @@ export function Header() {
         <Container className="flex h-[88px] items-center justify-between lg:h-[136px]">
           <Link href="/" aria-label="Let's Fly.lk home" className="flex items-center">
             <Image
-              src="/images/logo.jpg"
+              src="/images/logo.png"
               alt="Let's Fly.lk"
               width={120}
               height={120}
               preload
-              className="size-[72px] rounded-full bg-sun-400 lg:size-[120px]"
+              className="size-[76px] lg:size-[120px]"
             />
           </Link>
 

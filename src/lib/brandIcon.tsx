@@ -4,8 +4,8 @@ import { ImageResponse } from "next/og";
 
 /** The round yellow logo as a square PNG, for the favicon and the Apple touch icon. */
 export async function brandIcon(px: number, background = "transparent") {
-  const logo = await readFile(join(process.cwd(), "public/images/logo.jpg"));
-  const src = `data:image/jpeg;base64,${logo.toString("base64")}`;
+  const logo = await readFile(join(process.cwd(), "public/images/logo.png"));
+  const src = `data:image/png;base64,${logo.toString("base64")}`;
   return new ImageResponse(
     (
       <div style={{ display: "flex", width: "100%", height: "100%", background }}>
