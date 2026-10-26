@@ -23,7 +23,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${poppins.variable} antialiased`}>
+    // data-scroll-behavior lets Next jump straight to the top on route changes; in-page anchors keep smooth scrolling.
+    <html lang="en" data-scroll-behavior="smooth" className={`${poppins.variable} antialiased`}>
       <head>
         {/* Icon font: variable axes so FILL can be toggled per icon.
             display=block keeps ligature names ("arrow_forward") from flashing before it loads. */}
