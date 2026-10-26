@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/layout/PageHero";
 import { CtaBand } from "@/components/layout/CtaBand";
 import { Container } from "@/components/ui/Container";
-import { Eyebrow, SectionHeading } from "@/components/ui/SectionHeading";
-import { VisaGrid } from "@/components/visa/VisaGrid";
+import { Eyebrow } from "@/components/ui/SectionHeading";
+import { VisaTabs } from "@/components/visa/VisaTabs";
 import { visaSteps, visas } from "@/data/visas";
 
 export const metadata: Metadata = {
@@ -19,15 +19,12 @@ export default function VisaServicesPage() {
         crumbs={[{ label: "Home", href: "/" }, { label: "Visa Services" }]}
         eyebrow="Visa services"
         title="Visas made simple"
-        sub="We check your documents, fill the forms, book the appointment and track your application for 30+ countries."
-      />
+        sub="Going abroad or coming to Sri Lanka, we check your documents, fill the forms and track your application until it's approved."
+      >
+        <div className="h-14" />
+      </PageHero>
 
-      <section className="py-16 lg:py-20">
-        <Container className="flex flex-col gap-8">
-          <SectionHeading eyebrow="Popular visas" title="Where Sri Lankans are heading" />
-          <VisaGrid visas={visas} />
-        </Container>
-      </section>
+      <VisaTabs visas={visas} />
 
       <section className="bg-navy-900 py-16 text-white lg:py-20">
         <Container className="flex flex-col gap-10">
