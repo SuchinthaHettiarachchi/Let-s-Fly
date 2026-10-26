@@ -64,7 +64,7 @@ export const navGroups: NavGroup[] = [
     key: "more",
     label: "More Travel",
     links: [
-      { label: "Trains + Cruises", href: "/holidays/trains-cruises", icon: "directions_boat" },
+      { label: "Trains & Cruise Adventures", href: "/holidays/trains-cruises", icon: "directions_boat" },
       { label: "Our Projects", href: "/projects", icon: "work" },
       { label: "Travellers Gallery", href: "/gallery", icon: "photo_library" },
       { label: "About Us", href: "/about", icon: "info" },

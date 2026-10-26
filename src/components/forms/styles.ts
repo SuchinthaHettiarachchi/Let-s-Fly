@@ -14,7 +14,7 @@ export const serviceOptions = [
   "Air tickets",
   "Visa services",
   "Hotels",
-  "Trains + Cruises",
+  "Trains & Cruises",
   "Rentals",
   "Travel insurance",
 ];
