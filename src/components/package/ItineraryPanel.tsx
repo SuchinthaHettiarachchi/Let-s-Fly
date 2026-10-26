@@ -57,8 +57,7 @@ export function ItineraryPanel({ itinerary, days, nights }: Props) {
         <span aria-hidden="true" className="absolute top-6 bottom-6 left-[37px] border-l-2 border-dotted border-sand-300" />
         {itinerary.days.map((day, i) => {
           const isOpen = open.has(i);
-          const n = String(i + 1).padStart(2, "0");
-          return (
+          const n = String(i + 1).padStart(2, "0");          return (
             <li
               key={day.title}
               className={`relative rounded-xl border bg-white transition-shadow ${
@@ -85,14 +84,6 @@ export function ItineraryPanel({ itinerary, days, nights }: Props) {
                     {day.category}
                   </span>
                   <span className="text-[15.5px] leading-snug font-semibold text-ink-900">{day.title}</span>
-                  <span className="mt-0.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-400">
-                    {day.meta.map((m) => (
-                      <span key={m.label} className="flex items-center gap-1">
-                        <Icon name={m.icon} size={15} />
-                        {m.label}
-                      </span>
-                    ))}
-                  </span>
                 </span>
                 <span
                   className={`flex size-8 flex-none items-center justify-center rounded-full transition-colors ${
