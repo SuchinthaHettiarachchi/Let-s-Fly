@@ -6,7 +6,7 @@ import { Icon } from "@/components/ui/Icon";
 import { airlines } from "@/data/home";
 
 // Logo files are squares with white margins, so each tile crops to the middle band.
-function LogoTile({ name, logo, copy = false }: { name: string; logo: string; copy?: boolean }) {
+export function LogoTile({ name, logo, copy = false }: { name: string; logo: string; copy?: boolean }) {
   return (
     <div
       title={name}

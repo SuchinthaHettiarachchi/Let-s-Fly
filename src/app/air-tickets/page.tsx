@@ -8,6 +8,7 @@ import { PortalCard } from "@/components/flights/PortalCard";
 import { FareGrid } from "@/components/flights/FareGrid";
 import { FlightInquiryForm } from "@/components/flights/FlightInquiryForm";
 import { flightFeatures, topFares } from "@/data/flights";
+import { AirlineLogos } from "@/components/flights/AirlineLogos";
 
 export const metadata: Metadata = {
   title: "Air Tickets",
@@ -43,19 +44,10 @@ export default function AirTicketsPage() {
 
       <section className="border-y border-sand-300 bg-sand-50 py-16 lg:py-20">
         <Container className="flex flex-col gap-8">
-          <SectionHeading eyebrow="Airline partners" title="We ticket with 40+ airlines" centered />
-          {/* Placeholder tiles until the real airline logos are supplied. */}
-          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
-            {Array.from({ length: 12 }, (_, i) => (
-              <li
-                key={i}
-                className="flex h-[72px] items-center justify-center gap-2 rounded-xl border-[1.5px] border-dashed border-sand-400 bg-white font-mono text-[10.5px] font-semibold tracking-[0.08em] text-ink-400"
-              >
-                <Icon name="flight" size={18} />
-                AIRLINE LOGO
-              </li>
-            ))}
-          </ul>
+          <div data-reveal>
+            <SectionHeading eyebrow="Airline partners" title="We ticket with 40+ airlines" centered />
+          </div>
+          <AirlineLogos />
         </Container>
       </section>
 
