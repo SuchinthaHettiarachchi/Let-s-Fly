@@ -1,5 +1,7 @@
 /** About Us page content. Items marked "draft" were not readable in the design and need confirming. */
 
+import { contact } from "./site";
+
 export const aboutParagraphs = [
   "Let's Fly started in a small Rajagiriya office with one simple idea: planning a trip abroad shouldn't feel harder than the trip itself.",
   "Today we're a team of travel consultants, visa specialists and ticketing experts. We book flights, prepare visa files, find the right hotel, build tour packages and look after companies whose people travel for work. But what people remember is the person who answered the phone, checked their documents twice and messaged them on the morning of their flight.",
@@ -14,12 +16,13 @@ export const founderQuote = {
 };
 
 // Draft: the five approach cards are images in the design; confirm wording.
+/** Our approach: five words, each opened on hover or when scrolled to the middle of the screen. */
 export const approach = [
-  { icon: "person_check", title: "One consultant, start to finish", text: "The person who quotes your trip is the one who sees it through." },
-  { icon: "fact_check", title: "Documents checked twice", text: "Every visa file is reviewed by a second specialist before it goes in." },
-  { icon: "receipt_long", title: "Honest, all-in pricing", text: "Clear quotes in LKR, with what's included and what isn't spelled out." },
-  { icon: "tune", title: "Planned around you", text: "Your dates, your budget and your pace, not a one-size-fits-all package." },
-  { icon: "chat", title: "Always reachable", text: "A real person on WhatsApp before, during and after your trip." },
+  { title: "Simple.", text: "One conversation, one point of contact. We turn airline rules, visa forms and hotel options into a clear plan you can actually follow." },
+  { title: "Convenient.", text: "Reach us on WhatsApp, by phone or in person. We send documents, tickets and updates to you, so you don't have to chase anything." },
+  { title: "Personal.", text: "Your budget, your pace, your family. We ask the right questions first, then plan around the answers." },
+  { title: "Reliable.", text: "Trusted airline and hotel partners, licensed operations and a team that answers when plans change at the last minute." },
+  { title: "Well planned.", text: "Connections, transfers, check-in times and paperwork checked before you leave, so there are fewer surprises on the way." },
 ];
 
 export const journeysThisYear = [
@@ -55,54 +58,66 @@ export const aboutStats = [
   { value: "24/7", label: "Travel support" },
 ];
 
-export type TeamMember = { name: string; role: string; photo?: string; linkedin?: string };
+export type TeamMember = {
+  name: string;
+  role: string;
+  photo?: string;
+  linkedin?: string;
+  email?: string;
+  /** Display format, e.g. "+94 77 831 6020"; the tel: link is built from it. */
+  phone?: string;
+};
+
+// Draft: each member's own email and phone are to be confirmed. Until then every row
+// shows the main office contact. Replace per member once the real details arrive.
+const contactToConfirm = { email: contact.email, phone: contact.phone };
 
 // Draft: only the CEO is named in the design. Replace placeholders with real names and photos.
 export const team: { department: string; members: TeamMember[] }[] = [
   {
     department: "Leadership",
     members: [
-      { name: "Kasun Bulathsinhala", role: "Chief Executive Officer" },
-      { name: "Name to confirm", role: "Head of Operations" },
+      { name: "Kasun Bulathsinhala", role: "Chief Executive Officer", ...contactToConfirm },
+      { name: "Name to confirm", role: "Head of Operations", ...contactToConfirm },
     ],
   },
   {
     department: "Visa & Travel Counselors",
     members: [
-      { name: "Name to confirm", role: "Senior Visa Counselor" },
-      { name: "Name to confirm", role: "Travel Counselor" },
+      { name: "Name to confirm", role: "Senior Visa Counselor", ...contactToConfirm },
+      { name: "Name to confirm", role: "Travel Counselor", ...contactToConfirm },
     ],
   },
   {
     department: "Airline Ticketing & Reservations",
     members: [
-      { name: "Name to confirm", role: "Ticketing Manager" },
-      { name: "Name to confirm", role: "Reservations Executive" },
+      { name: "Name to confirm", role: "Ticketing Manager", ...contactToConfirm },
+      { name: "Name to confirm", role: "Reservations Executive", ...contactToConfirm },
     ],
   },
   {
     department: "Inbound & Outbound Tours",
     members: [
-      { name: "Name to confirm", role: "Tours Manager" },
-      { name: "Name to confirm", role: "Tour Coordinator" },
+      { name: "Name to confirm", role: "Tours Manager", ...contactToConfirm },
+      { name: "Name to confirm", role: "Tour Coordinator", ...contactToConfirm },
     ],
   },
   {
     department: "Finance & Operations",
-    members: [{ name: "Name to confirm", role: "Finance Executive" }],
+    members: [{ name: "Name to confirm", role: "Finance Executive", ...contactToConfirm }],
   },
 ];
 
 /** Official wording, taken from letsfly.lk/about. */
 export const visionMission = [
   {
-    icon: "visibility",
     title: "Vision",
+    image: "/images/about/vision.jpg",
     text: "To be the most trusted and customer-focused service provider, creating unforgettable experiences, delivering exceptional value, and building lasting partnerships based on quality and care.",
   },
   {
-    icon: "flag",
     title: "Mission",
+    image: "/images/about/mission.jpg",
     text: "To exceed client expectations through innovative, value-driven travel solutions, delivering professional and efficient services while upholding the highest ethical standards and social responsibility.",
   },
 ];

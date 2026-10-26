@@ -7,6 +7,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { TeamSection } from "@/components/about/TeamSection";
+import { ApproachList } from "@/components/about/ApproachList";
 import { CountUp } from "@/components/home/CountUp";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { contact } from "@/data/site";
@@ -38,17 +39,16 @@ export default function AboutPage() {
       <section className="relative overflow-hidden bg-navy-900">
         <Image src="/images/hero/dubai.jpg" alt="" fill preload sizes="100vw" className="animate-zoom object-cover" />
         <div className={`absolute inset-0 ${gradient}`} />
-        <Container className="relative flex min-h-[600px] flex-col justify-start gap-5 py-14 text-white sm:min-h-[640px] lg:min-h-[660px]">
+        <Container className="relative flex min-h-[600px] flex-col justify-center gap-5 py-14 text-white sm:min-h-[640px] lg:min-h-[660px]">
           <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "About Us" }]} onDark />
-          <Eyebrow onDark rule className="animate-rise">
+          <Eyebrow onDark className="animate-rise">
             About Us
           </Eyebrow>
           <h1 className="max-w-[860px] animate-rise text-[34px] [animation-delay:120ms] leading-[1.1] font-bold tracking-[-0.02em] text-pretty sm:text-[48px] lg:text-[60px]">
-            We don&apos;t just plan journeys. We help people experience the world with confidence.
+            Sri Lankan travel experts who plan everything
           </h1>
           <p className="max-w-[560px] animate-rise text-base leading-relaxed text-white/85 [animation-delay:240ms] sm:text-lg">
-            A Sri Lankan travel team that handles the tickets, the visas and the hundred small details, so you can focus on
-            the trip itself.
+            A Sri Lankan team handling your flights, visas, hotels and tours with professionalism, efficiency and a personal touch.
           </p>
           <span className="flex animate-rise items-center gap-2 self-start rounded-full [animation-delay:360ms] border border-white/25 bg-white/12 px-4 py-2 text-sm">
             <Icon name="groups" size={18} className="text-sun-400" />
@@ -57,26 +57,28 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      {/* 2. Vision & Mission */}
-      <section className="bg-sand-50 py-16 lg:py-20">
+      {/* 2. Vision & Mission: two photo panels side by side, text over a navy fade */}
+      <section className="pt-16 lg:pt-24">
         <Container className="grid grid-cols-1 gap-5 md:grid-cols-2">
           {visionMission.map((v, i) => (
             <div
               key={v.title}
               data-reveal={i * 120}
-              className="group relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-sand-300 bg-white p-7 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lf-card-hover sm:p-9"
+              className="group relative flex min-h-[420px] items-end overflow-hidden rounded-2xl bg-navy-900 text-white lg:min-h-[520px]"
             >
-              <span aria-hidden="true" className={accentBar} />
-              <div className="flex items-center gap-4">
-                <span className="flex size-12 flex-none items-center justify-center rounded-tile bg-ocean-600 text-white transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">
-                  <Icon name={v.icon} size={26} />
-                </span>
-                <div className="flex flex-col">
-                  <span className="text-xs font-semibold tracking-[0.18em] text-ocean-600 uppercase">Our</span>
-                  <h2 className="text-2xl font-bold">{v.title}</h2>
-                </div>
+              <Image
+                src={v.image}
+                alt=""
+                fill
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,37,69,.15)_0%,rgba(11,37,69,.55)_45%,rgba(11,37,69,.94)_100%)]" />
+              <div className="relative flex flex-col gap-4 p-7 sm:p-10">
+                <Eyebrow onDark>Our</Eyebrow>
+                <h2 className="text-[38px] leading-[1.05] font-bold tracking-[-0.02em] sm:text-[48px]">{v.title}</h2>
+                <p className="text-base leading-[1.75] text-white/88">{v.text}</p>
               </div>
-              <p className="text-base leading-[1.75] text-ink-600">{v.text}</p>
             </div>
           ))}
         </Container>
@@ -129,32 +131,30 @@ export default function AboutPage() {
 
       {/* 4. Our approach */}
       <section className="bg-sand-50 py-16 lg:py-24">
-        <Container className="flex flex-col gap-12">
-          <div data-reveal className="mx-auto flex max-w-[640px] flex-col items-center gap-3 text-center">
-            <SectionHeading eyebrow="Our approach" title="Travel, The Way It Should Be" centered />
-            <p className="text-[15px] leading-relaxed text-ink-600">
+        <Container className="flex flex-col gap-10 lg:gap-14">
+          <div data-reveal className="grid grid-cols-1 items-end gap-4 lg:grid-cols-2 lg:gap-16">
+            <SectionHeading eyebrow="Our approach" title="Travel, The Way It Should Be" />
+            <p className="text-base leading-relaxed text-ink-600">
               Five things guide every trip we plan, whether it&apos;s a weekend in Malé or a three-week tour of Europe.
             </p>
           </div>
-          <ol className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
-            {approach.map((a, i) => (
-              <li
-                key={a.title}
-                data-reveal={(i % 5) * 90}
-                className="group relative flex flex-col gap-3 overflow-hidden rounded-xl border border-sand-300 bg-white p-6 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lf-card-hover"
-              >
-                <span aria-hidden="true" className={accentBar} />
-                <div className="flex items-center justify-between">
-                  <span className="flex size-11 items-center justify-center rounded-tile bg-sand-200 text-ocean-600 transition-[background-color,color,rotate] duration-300 group-hover:-rotate-6 group-hover:bg-ocean-600 group-hover:text-white">
-                    <Icon name={a.icon} size={22} />
-                  </span>
-                  <span className="text-2xl font-bold text-sand-300 transition-colors duration-300 group-hover:text-sun-400">{String(i + 1).padStart(2, "0")}</span>
-                </div>
-                <span className="text-base font-semibold transition-colors group-hover:text-ocean-600">{a.title}</span>
-                <span className="text-[13px] leading-relaxed text-ink-600">{a.text}</span>
-              </li>
-            ))}
-          </ol>
+          <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[1fr_340px] lg:gap-12 xl:grid-cols-[1fr_420px] xl:gap-[70px]">
+            <div data-reveal className="order-2 lg:order-1">
+              <ApproachList items={approach} />
+            </div>
+            <div
+              data-reveal="150"
+              className="relative order-1 aspect-[16/10] overflow-hidden rounded-2xl lg:sticky lg:top-[170px] lg:order-2 lg:aspect-[3/4]"
+            >
+              <Image src="/images/about/approach.jpg" alt="A traveller hiking through a green mountain valley" fill sizes="(min-width: 1280px) 420px, (min-width: 1024px) 340px, 100vw" className="object-cover" />
+              <div className="absolute inset-x-4 bottom-4 flex items-center gap-3 rounded-xl bg-white/95 px-4 py-3.5 text-[13px] text-ink-900 backdrop-blur-sm">
+                <span className="flex size-9 flex-none items-center justify-center rounded-full bg-sun-400 text-navy-900">
+                  <Icon name="check" size={18} />
+                </span>
+                Every itinerary is reviewed by a second consultant before it reaches you.
+              </div>
+            </div>
+          </div>
         </Container>
       </section>
 
@@ -237,7 +237,7 @@ export default function AboutPage() {
               <span aria-hidden="true" className="absolute inset-5 animate-ping rounded-full border border-white/20 [animation-duration:3s]" />
               <div className="relative flex size-[250px] animate-float flex-col items-center justify-center gap-1.5 rounded-full border border-white/15 bg-[radial-gradient(circle_at_50%_35%,var(--color-ocean-500),var(--color-ocean-600)_55%,var(--color-navy-900)_120%)] text-center shadow-[0_24px_60px_rgba(0,0,0,.35)]">
                 <Image
-                  src="/images/logo.jpg"
+                  src="/images/logo.png"
                   alt="Let's Fly.lk"
                   width={76}
                   height={76}
@@ -362,10 +362,6 @@ export default function AboutPage() {
     </>
   );
 }
-
-/** Ocean bar that grows across the top of a card on hover. */
-const accentBar =
-  "absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 bg-ocean-600 transition-transform duration-300 group-hover:scale-x-100";
 
 function RoofItem({
   icon,
