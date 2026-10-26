@@ -2,7 +2,6 @@ import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
 import { stats } from "@/data/home";
 import { CountUp } from "./CountUp";
 
@@ -17,18 +16,18 @@ export function AboutIntro() {
     <section className="py-16 lg:py-20">
       <Container className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2 lg:gap-[72px]">
         <div data-reveal className="relative">
-          {/* Brand film placeholder: swap for the real video embed once it's produced. */}
-          <div className="flex h-[300px] flex-col items-center justify-center gap-3.5 rounded-2xl border-2 border-dashed border-sand-400 bg-sand-100 text-ink-400 sm:h-[440px]">
-            <div className="relative flex size-[84px] items-center justify-center">
-              {/* Soft ripple that keeps pulsing out from the play button. */}
-              <span aria-hidden="true" className="absolute inset-0 animate-ping rounded-full bg-ocean-600/25" />
-              <span className="relative flex size-full items-center justify-center rounded-full bg-ocean-600 text-white shadow-lf-ring transition-transform duration-300 hover:scale-110">
-                <Icon name="play_arrow" size={44} />
-              </span>
-            </div>
-            <div className="font-mono text-[13px] font-semibold tracking-[0.12em]">VIDEO</div>
-            <div className="text-xs">Brand film · 60–90 sec · 16:9</div>
-          </div>
+          {/* Brand film: plays silently on a loop, with no play button or controls. */}
+          <video
+            src="/videos/letsfly-home.mp4"
+            poster="/videos/letsfly-home-poster.jpg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-label="Let's Fly.lk brand film"
+            className="block aspect-video w-full rounded-2xl bg-navy-900 object-cover shadow-lf-md"
+          />
           <div className="absolute -bottom-7 right-4 flex animate-float items-center gap-3.5 rounded-xl bg-white px-5 py-4 shadow-lf-md sm:-right-6">
             <div className="flex">
               {reviewerAvatars.map((src, i) => (
