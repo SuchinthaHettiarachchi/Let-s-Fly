@@ -10,6 +10,7 @@ import { ItineraryPanel } from "@/components/package/ItineraryPanel";
 import { InclusionsPanel } from "@/components/package/InclusionsPanel";
 import { PaymentPanel } from "@/components/package/PaymentPanel";
 import { BookingCard } from "@/components/package/BookingCard";
+import { MessageSection } from "@/components/contact/MessageSection";
 import { RelatedPackages } from "@/components/package/RelatedPackages";
 import { detailPackages, durationLabel, formatLKR, getPackage, relatedPackages } from "@/data/packages";
 
@@ -61,6 +62,12 @@ export default async function PackagePage({ params }: PageProps<"/packages/[slug
           <BookingCard pkg={pkg} />
         </aside>
       </Container>
+
+      <MessageSection
+        subject={`Package enquiry: ${pkg.title}`}
+        service="Tour package"
+        text={`Questions about ${pkg.title}, or want to change dates, hotels or the route? Send us a message and we'll tailor it for you.`}
+      />
 
       <RelatedPackages items={relatedPackages(pkg)} />
       <CtaBand tone="sand" />

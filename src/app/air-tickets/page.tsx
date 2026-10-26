@@ -3,11 +3,11 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { PageHero } from "@/components/layout/PageHero";
 import { CtaBand } from "@/components/layout/CtaBand";
 import { Container } from "@/components/ui/Container";
-import { Eyebrow, SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Icon } from "@/components/ui/Icon";
 import { PortalCard } from "@/components/flights/PortalCard";
 import { FareGrid } from "@/components/flights/FareGrid";
-import { FlightInquiryForm } from "@/components/flights/FlightInquiryForm";
+import { MessageSection } from "@/components/contact/MessageSection";
 import { AirlineLogos } from "@/components/flights/AirlineLogos";
 import { flightFeatures, topFares } from "@/data/flights";
 
@@ -23,11 +23,10 @@ export default function AirTicketsPage() {
       <PageHero
         crumbs={[{ label: "Home", href: "/" }, { label: "Air Tickets" }]}
         eyebrow="Air tickets"
-        title="Fly anywhere for less"
-        sub="Search fares across 40+ airlines and book instantly on our own booking portal, or let our ticketing desk find the best route for you."
-      >
-        <div className="h-16 lg:h-20" />
-      </PageHero>
+        title="Book cheap air tickets from Sri Lanka"
+        sub="Self-book flights on our portal or send your requirements and our team will find the best available fares."
+        overlap="lg"
+      />
 
       <Container className="relative -mt-20 animate-rise [animation-delay:480ms] lg:-mt-24">
         <PortalCard />
@@ -68,21 +67,13 @@ export default function AirTicketsPage() {
         </Container>
       </section>
 
-      <section id="flight-inquiry" className="scroll-mt-[110px] lg:scroll-mt-[156px] bg-sand-50 py-16 lg:py-20">
-        <Container className="flex flex-col items-center gap-8">
-          <div data-reveal className="flex max-w-[620px] flex-col items-center gap-3 text-center">
-            <Eyebrow>Need a hand?</Eyebrow>
-            <h2 className="text-[28px] font-bold tracking-[-0.01em] sm:text-[36px]">Let our ticketing desk book it for you</h2>
-            <p className="text-[15px] leading-relaxed text-ink-600">
-              Group bookings, multi-city trips, student fares or just short on time? Share your plans and we&apos;ll send
-              the best options, usually within a few hours.
-            </p>
-          </div>
-          <div data-reveal="150" className="w-full max-w-[960px] rounded-2xl border border-sand-300 bg-white p-6 shadow-lf-md sm:p-10">
-            <FlightInquiryForm />
-          </div>
-        </Container>
-      </section>
+      <MessageSection
+        id="flight-inquiry"
+        subject="Air ticket enquiry"
+        service="Air tickets"
+        title="Let our ticketing desk book it for you"
+        text="Group bookings, multi-city trips, student fares or just short on time? Share your plans and we'll send the best options, usually within a few hours."
+      />
 
       <div className="bg-sand-50">
         <CtaBand

@@ -4,6 +4,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { CtaBand } from "@/components/layout/CtaBand";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/SectionHeading";
+import { MessageSection } from "@/components/contact/MessageSection";
 import { VisaTabs } from "@/components/visa/VisaTabs";
 import { visaSteps, visas } from "@/data/visas";
 
@@ -19,11 +20,10 @@ export default function VisaServicesPage() {
       <PageHero
         crumbs={[{ label: "Home", href: "/" }, { label: "Visa Services" }]}
         eyebrow="Visa services"
-        title="Visas made simple"
-        sub="Going abroad or coming to Sri Lanka, we check your documents, fill the forms and track your application until it's approved."
-      >
-        <div className="h-14" />
-      </PageHero>
+        title="Visa services for Sri Lankan travellers, simplified"
+        sub="Document checks, appointments and application submissions for 30+ countries, handled start to finish by our expert visa team."
+        overlap="md"
+      />
 
       <VisaTabs visas={visas} />
 
@@ -50,6 +50,12 @@ export default function VisaServicesPage() {
           </ol>
         </Container>
       </section>
+
+      <MessageSection
+        subject="Visa enquiry"
+        service="Visa services"
+        text="Tell us where you're going or why you're visiting Sri Lanka, and our visa team will confirm the documents you need."
+      />
 
       <div className="pt-16 lg:pt-[100px]">
         <CtaBand />
