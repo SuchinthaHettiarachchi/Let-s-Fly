@@ -1,19 +1,21 @@
 import { LogoTile } from "@/components/home/AirlinePartners";
 import { airlines } from "@/data/home";
 
-/** Airline logos laid out in place. Each fades up in turn on scroll and lifts on hover. */
+// Each row repeats its half of the logos four times, so the -50% marquee loop is seamless and never runs short.
+const half = Math.ceil(airlines.length / 2);
+const rows = [airlines.slice(0, half), airlines.slice(half)].map((r) => [...r, ...r, ...r, ...r]);
+
+/** Two rows of airline logos scrolling in opposite directions. */
 export function AirlineLogos() {
   return (
-    <ul className="flex flex-wrap justify-center gap-4">
-      {airlines.map((a, i) => (
-        <li
-          key={a.name}
-          data-reveal={(i % 6) * 70}
-          className="rounded-xl transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lf-card-hover"
-        >
-          <LogoTile {...a} />
-        </li>
+    <div className="flex flex-col gap-4 overflow-hidden mask-[linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+      {rows.map((track, r) => (
+        <div key={r} className={`flex w-max animate-marquee gap-4 ${r === 1 ? "[animation-direction:reverse]" : ""}`}>
+          {track.map((a, i) => (
+            <LogoTile key={i} {...a} copy={i >= track.length / 4} />
+          ))}
+        </div>
       ))}
-    </ul>
+    </div>
   );
 }
