@@ -16,7 +16,6 @@ const kinds = [
 
 export function JourneyList({ journeys }: { journeys: Journey[] }) {
   const [kind, setKind] = useState<Journey["kind"]>("train");
-  const { openInquiry } = useInquiry();
   const current = kinds.find((k) => k.id === kind)!;
 
   return (
@@ -48,47 +47,55 @@ export function JourneyList({ journeys }: { journeys: Journey[] }) {
         {journeys
           .filter((j) => j.kind === kind)
           .map((j) => (
-            <li
-              key={j.id}
-              className="grid grid-cols-1 overflow-hidden rounded-xl border border-sand-300 bg-white transition-[border-color,box-shadow] hover:border-ocean-600 hover:shadow-lf-card-hover md:grid-cols-[260px_1fr_220px]"
-            >
-              <div className="relative h-[180px] bg-sand-200 md:h-auto md:min-h-[180px]">
-                {j.image ? (
-                  <Image src={j.image} alt="" fill sizes="(min-width: 768px) 260px, 100vw" className="object-cover" />
-                ) : (
-                  <Placeholder label="PHOTO" className="absolute inset-0 rounded-none border-0" />
-                )}
-              </div>
-              <div className="flex flex-col gap-2.5 p-6">
-                <span className="text-[11px] font-semibold tracking-[0.14em] text-ocean-600 uppercase">{j.label}</span>
-                <h3 className="text-xl font-semibold">{j.title}</h3>
-                <p className="text-sm leading-relaxed text-ink-600">{j.text}</p>
-                <ul className="mt-1 flex flex-wrap gap-2">
-                  {j.chips.map((c) => (
-                    <li key={c} className="rounded-full bg-sand-50 px-3 py-1 text-xs font-medium text-ocean-600">
-                      {c}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="flex flex-row items-end justify-between gap-4 border-t border-sand-300 p-6 md:flex-col md:items-start md:justify-center md:border-t-0 md:border-l">
-                <div className="flex flex-col">
-                  <span className="text-xs text-ink-400">From</span>
-                  <span className="text-[22px] font-bold text-ocean-600">{formatLKR(j.price)}</span>
-                  <span className="text-xs text-ink-400">{j.priceNote}</span>
-                </div>
-                <Button
-                  variant="primary"
-                  size="md"
-                  icon="arrow_forward"
-                  onClick={() => openInquiry({ service: "Trains + Cruises", destination: j.title })}
-                >
-                  Book Now
-                </Button>
-              </div>
+            <li key={j.id}>
+              <JourneyCard journey={j} />
             </li>
           ))}
       </ul>
+    </div>
+  );
+}
+
+/** One train or cruise row, also shown under the home page's "Train & Cruise" filter. */
+export function JourneyCard({ journey: j }: { journey: Journey }) {
+  const { openInquiry } = useInquiry();
+
+  return (
+    <div className="grid grid-cols-1 overflow-hidden rounded-xl border border-sand-300 bg-white transition-[border-color,box-shadow] hover:border-ocean-600 hover:shadow-lf-card-hover md:grid-cols-[260px_1fr_220px]">
+      <div className="relative h-[180px] bg-sand-200 md:h-auto md:min-h-[180px]">
+        {j.image ? (
+          <Image src={j.image} alt="" fill sizes="(min-width: 768px) 260px, 100vw" className="object-cover" />
+        ) : (
+          <Placeholder label="PHOTO" className="absolute inset-0 rounded-none border-0" />
+        )}
+      </div>
+      <div className="flex flex-col gap-2.5 p-6">
+        <span className="text-[11px] font-semibold tracking-[0.14em] text-ocean-600 uppercase">{j.label}</span>
+        <h3 className="text-xl font-semibold">{j.title}</h3>
+        <p className="text-sm leading-relaxed text-ink-600">{j.text}</p>
+        <ul className="mt-1 flex flex-wrap gap-2">
+          {j.chips.map((c) => (
+            <li key={c} className="rounded-full bg-sand-50 px-3 py-1 text-xs font-medium text-ocean-600">
+              {c}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="flex flex-row items-end justify-between gap-4 border-t border-sand-300 p-6 md:flex-col md:items-start md:justify-center md:border-t-0 md:border-l">
+        <div className="flex flex-col">
+          <span className="text-xs text-ink-400">From</span>
+          <span className="text-[22px] font-bold text-ocean-600">{formatLKR(j.price)}</span>
+          <span className="text-xs text-ink-400">{j.priceNote}</span>
+        </div>
+        <Button
+          variant="primary"
+          size="md"
+          icon="arrow_forward"
+          onClick={() => openInquiry({ service: "Trains & Cruises", destination: j.title })}
+        >
+          Book Now
+        </Button>
+      </div>
     </div>
   );
 }
