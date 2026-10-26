@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { PageHero } from "@/components/layout/PageHero";
 import { CtaBand } from "@/components/layout/CtaBand";
 import { Container } from "@/components/ui/Container";
@@ -28,13 +29,13 @@ export default function AirTicketsPage() {
         <div className="h-16 lg:h-20" />
       </PageHero>
 
-      <Container className="relative -mt-20 lg:-mt-24">
+      <Container className="relative -mt-20 animate-rise [animation-delay:480ms] lg:-mt-24">
         <PortalCard />
       </Container>
 
       <section className="py-16 lg:py-20">
         <Container className="flex flex-col gap-8">
-          <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-end">
+          <div data-reveal className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-end">
             <SectionHeading eyebrow="Popular routes" title="Top fares from Colombo" />
             <p className="text-xs text-ink-400">Return fares per person, incl. taxes · Prices indicative</p>
           </div>
@@ -54,9 +55,9 @@ export default function AirTicketsPage() {
       <section className="py-16 lg:py-20">
         <Container>
           <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {flightFeatures.map((f) => (
-              <li key={f.title} className="flex flex-col gap-3 rounded-xl border border-sand-300 bg-white p-6">
-                <span className="flex size-11 items-center justify-center rounded-tile bg-sand-200 text-ocean-600">
+            {flightFeatures.map((f, i) => (
+              <li key={f.title} data-reveal={i * 100} className="group relative flex flex-col gap-3 overflow-hidden rounded-xl border border-sand-300 bg-white p-6 transition-[translate,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-ocean-600 hover:shadow-lf-card-hover">
+                <span className="flex size-11 items-center justify-center rounded-tile bg-sand-200 text-ocean-600 transition-[background-color,color,scale] duration-300 group-hover:scale-110 group-hover:bg-ocean-600 group-hover:text-white">
                   <Icon name={f.icon} size={22} />
                 </span>
                 <span className="text-base font-semibold">{f.title}</span>
@@ -69,7 +70,7 @@ export default function AirTicketsPage() {
 
       <section id="flight-inquiry" className="scroll-mt-[110px] lg:scroll-mt-[156px] bg-sand-50 py-16 lg:py-20">
         <Container className="flex flex-col items-center gap-8">
-          <div className="flex max-w-[620px] flex-col items-center gap-3 text-center">
+          <div data-reveal className="flex max-w-[620px] flex-col items-center gap-3 text-center">
             <Eyebrow>Need a hand?</Eyebrow>
             <h2 className="text-[28px] font-bold tracking-[-0.01em] sm:text-[36px]">Let our ticketing desk book it for you</h2>
             <p className="text-[15px] leading-relaxed text-ink-600">
@@ -77,7 +78,7 @@ export default function AirTicketsPage() {
               the best options, usually within a few hours.
             </p>
           </div>
-          <div className="w-full max-w-[960px] rounded-2xl border border-sand-300 bg-white p-6 shadow-lf-md sm:p-10">
+          <div data-reveal="150" className="w-full max-w-[960px] rounded-2xl border border-sand-300 bg-white p-6 shadow-lf-md sm:p-10">
             <FlightInquiryForm />
           </div>
         </Container>
@@ -90,6 +91,7 @@ export default function AirTicketsPage() {
           text="Add hotels, visas and tours, and we'll put together one tailored quote."
         />
       </div>
+      <RevealOnScroll />
     </>
   );
 }

@@ -35,22 +35,24 @@ export function PageHero({
 }: PageHeroProps) {
   return (
     <section className="relative overflow-hidden bg-navy-900">
-      {image && <Image src={image} alt="" fill preload sizes="100vw" className={`object-cover ${imagePosition}`} />}
+      {image && <Image src={image} alt="" fill preload sizes="100vw" className={`animate-zoom object-cover ${imagePosition}`} />}
       {overlay && <div className={`absolute inset-0 ${heroGradient}`} />}
       <Container
         className={`relative flex min-h-[600px] flex-col justify-start gap-4 py-14 text-white sm:min-h-[640px] lg:min-h-[660px] ${
           overlay ? "" : "[text-shadow:0_2px_12px_rgba(11,37,69,.7)]"
         }`}
       >
-        <Breadcrumb items={crumbs} onDark />
-        <Eyebrow onDark className="mt-1">
+        <div className="animate-rise">
+          <Breadcrumb items={crumbs} onDark />
+        </div>
+        <Eyebrow onDark className="mt-1 animate-rise [animation-delay:120ms]">
           {eyebrow}
         </Eyebrow>
-        <h1 className="max-w-[640px] text-[34px] leading-[1.1] font-bold tracking-[-0.02em] text-pretty sm:text-[44px] lg:text-[52px]">
+        <h1 className="max-w-[640px] animate-rise text-[34px] [animation-delay:240ms] leading-[1.1] font-bold tracking-[-0.02em] text-pretty sm:text-[44px] lg:text-[52px]">
           {titleIcon && <span className="mr-3.5 inline-block align-middle">{titleIcon}</span>}
           {title}
         </h1>
-        {sub && <p className="max-w-[520px] text-base leading-[1.6] text-white/85">{sub}</p>}
+        {sub && <p className="max-w-[520px] animate-rise text-base [animation-delay:360ms] leading-[1.6] text-white/85">{sub}</p>}
         {children}
       </Container>
     </section>

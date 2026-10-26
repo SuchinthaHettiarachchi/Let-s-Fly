@@ -19,7 +19,7 @@ export function RegionPackages({ tours }: { tours: Package[] }) {
   return (
     <div className="flex flex-col gap-9">
       <div role="group" aria-label="Region" className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
-        {outboundRegions.map((r) => {
+        {outboundRegions.map((r, i) => {
           const on = r.id === region;
           const n = count(r.id);
           return (
@@ -27,8 +27,9 @@ export function RegionPackages({ tours }: { tours: Package[] }) {
               key={r.id}
               type="button"
               aria-pressed={on}
+              data-reveal={i * 90}
               onClick={() => setRegion(r.id)}
-              className={`group relative h-[120px] cursor-pointer overflow-hidden rounded-xl bg-navy-900 text-left outline-offset-2 sm:h-[140px] ${
+              className={`group relative h-[120px] cursor-pointer overflow-hidden rounded-xl bg-navy-900 text-left outline-offset-2 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lf-card-hover sm:h-[140px] ${
                 on ? "ring-[3px] ring-sun-400" : ""
               }`}
             >
@@ -57,8 +58,10 @@ export function RegionPackages({ tours }: { tours: Package[] }) {
 
       {visible.length ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {visible.map((t) => (
-            <PackageCard key={t.slug} pkg={t} />
+          {visible.map((t, i) => (
+            <div key={t.slug} data-reveal={(i % 3) * 100}>
+              <PackageCard pkg={t} className="h-full" />
+            </div>
           ))}
         </div>
       ) : (

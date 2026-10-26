@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { PageHero } from "@/components/layout/PageHero";
 import { CtaBand } from "@/components/layout/CtaBand";
 import { Container } from "@/components/ui/Container";
@@ -34,14 +35,16 @@ export default function OutboundPage() {
 
       <section className="py-16 lg:py-20">
         <Container className="flex flex-col gap-8">
-          <SectionHeading eyebrow="Choose a region" title="Where to next?" />
+          <div data-reveal>
+            <SectionHeading eyebrow="Choose a region" title="Where to next?" />
+          </div>
           <RegionPackages tours={tours} />
         </Container>
       </section>
 
       <section className="bg-sand-50 py-16 lg:py-20">
         <Container className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1fr_1.6fr] lg:gap-14">
-          <div className="flex flex-col gap-4">
+          <div data-reveal className="flex flex-col gap-4">
             <Eyebrow>Why Let&apos;s Fly</Eyebrow>
             <h2 className="text-[30px] leading-[1.18] font-bold tracking-[-0.01em] sm:text-[36px]">
               One team for your whole trip
@@ -51,9 +54,13 @@ export default function OutboundPage() {
             </p>
           </div>
           <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {reasons.map((r) => (
-              <li key={r.title} className="flex items-start gap-4 rounded-xl border border-sand-300 bg-white p-5">
-                <span className="flex size-11 flex-none items-center justify-center rounded-tile bg-sand-200 text-ocean-600">
+            {reasons.map((r, i) => (
+              <li
+                key={r.title}
+                data-reveal={i * 100}
+                className="group flex items-start gap-4 rounded-xl border border-sand-300 bg-white p-5 transition-[translate,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-ocean-600 hover:shadow-lf-card-hover"
+              >
+                <span className="flex size-11 flex-none items-center justify-center rounded-tile bg-sand-200 text-ocean-600 transition-[background-color,color,scale] duration-300 group-hover:scale-110 group-hover:bg-ocean-600 group-hover:text-white">
                   <Icon name={r.icon} size={22} />
                 </span>
                 <span className="flex flex-col gap-1">
@@ -67,6 +74,7 @@ export default function OutboundPage() {
       </section>
 
       <CtaBand tone="sand" />
+      <RevealOnScroll />
     </>
   );
 }

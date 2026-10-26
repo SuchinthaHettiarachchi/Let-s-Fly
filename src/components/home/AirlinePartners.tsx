@@ -33,8 +33,8 @@ export function AirlinePartners() {
         </Link>
       </Container>
       <Container data-reveal="120">
-        <div className="overflow-hidden mask-[linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
-          <div className="flex w-max animate-marquee gap-5">
+        <div className="group overflow-hidden mask-[linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+          <div className="flex w-max animate-marquee gap-5 group-hover:[animation-play-state:paused]">
             {track.map((a, i) => (
               <LogoTile key={i} {...a} copy={i >= airlines.length} />
             ))}

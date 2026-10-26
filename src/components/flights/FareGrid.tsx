@@ -16,8 +16,12 @@ export function FareGrid({ fares }: { fares: Fare[] }) {
 
   return (
     <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {fares.map((f) => (
-        <li key={f.city} className="group relative h-[220px] overflow-hidden rounded-xl bg-navy-900">
+      {fares.map((f, i) => (
+        <li
+          key={f.city}
+          data-reveal={(i % 3) * 100}
+          className="group relative h-[220px] overflow-hidden rounded-xl bg-navy-900 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lf-card-hover"
+        >
           {f.image ? (
             <Image
               src={f.image}

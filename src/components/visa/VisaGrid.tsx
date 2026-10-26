@@ -51,7 +51,7 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
 
       {visible.length ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {visible.map((v) => {
+          {visible.map((v, i) => {
             const hasPage = Boolean(v.documentGroups?.length);
             const body = (
               <>
@@ -80,14 +80,16 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
                 </span>
               </>
             );
-            const card = "group relative block h-[360px] overflow-hidden rounded-xl bg-navy-900 text-left";
+            const card =
+              "group relative block h-[360px] overflow-hidden rounded-xl bg-navy-900 text-left transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lf-card-hover";
             return hasPage ? (
-              <Link key={v.slug} href={`/visa/${v.slug}`} className={card} aria-label={`${v.city} ${v.type}`}>
+              <Link key={v.slug} href={`/visa/${v.slug}`} data-reveal={(i % 3) * 100} className={card} aria-label={`${v.city} ${v.type}`}>
                 {body}
               </Link>
             ) : (
               <button
                 key={v.slug}
+                data-reveal={(i % 3) * 100}
                 type="button"
                 onClick={() => openInquiry({ service: "Visa services", destination: v.city })}
                 className={`${card} cursor-pointer`}
