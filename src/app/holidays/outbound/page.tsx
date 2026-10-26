@@ -28,9 +28,9 @@ export default function OutboundPage() {
       <PageHero
         image="/images/hero/dubai.jpg"
         crumbs={[{ label: "Home", href: "/" }, { label: "Holidays" }, { label: "Outbound Travels" }]}
-        eyebrow="Outbound travels"
-        title="The world, planned from Colombo"
-        sub="Flights, visas, hotels and tours bundled into one easy package for families, couples and groups."
+        eyebrow="Outbound travel"
+        title="Holiday packages from Sri Lanka, fully planned"
+        sub="Group and private holidays to Asia, the Middle East and Europe, with flights, hotels and visas arranged together."
       />
 
       <section className="py-16 lg:py-20">

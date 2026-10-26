@@ -21,9 +21,9 @@ export default function SriLankaPage() {
         imagePosition="object-[50%_55%]"
         overlay={false}
         crumbs={[{ label: "Home", href: "/" }, { label: "Holidays" }, { label: "Travel Sri Lanka + Hotels" }]}
-        eyebrow="Travel Sri Lanka"
-        title="See Sri Lanka your way"
-        sub="Ancient cities, misty tea country, wild parks and golden beaches. Private tours with a driver-guide and stays we know well."
+        eyebrow="Inbound tours"
+        title="Sri Lanka tour packages and hotel bookings"
+        sub="Trending and seasonal island packages designed for everyone, from Sigiriya to the south coast, with drivers and stays."
       />
       {/* The masks photo starts right under the hero and covers the rest of the page, under a 50% ocean-blue wash */}
       <div className="bg-[url(/images/hero/sri-lanka-masks.jpg)] bg-cover bg-top bg-no-repeat">

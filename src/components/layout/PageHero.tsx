@@ -15,13 +15,22 @@ type PageHeroProps = {
   crumbs: Crumb[];
   /** Small visual before the title text, e.g. a flag. */
   titleIcon?: React.ReactNode;
+  /** How far the next section's cards overlap the hero bottom (they use a matching negative margin), so the text stays centred in the visible part. */
+  overlap?: keyof typeof overlapPadding;
   children?: React.ReactNode;
+};
+
+/** Bottom padding = the usual 56px + the overlap, paired with -mt-16 (md) and -mt-20 lg:-mt-24 (lg). */
+const overlapPadding = {
+  none: "pb-14",
+  md: "pb-[120px]",
+  lg: "pb-[136px] lg:pb-[152px]",
 };
 
 const heroGradient =
   "bg-[linear-gradient(90deg,rgba(11,37,69,.94)_0%,rgba(11,37,69,.78)_35%,rgba(19,87,155,.35)_70%,rgba(19,87,155,.1)_100%)]";
 
-/** Navy banner at the top of inner pages: photo + Ocean gradient, breadcrumb, eyebrow, title. Same height as the Home hero, text pinned top-left. */
+/** Navy banner at the top of inner pages: photo + Ocean gradient, breadcrumb, eyebrow, title. Same height as the Home hero, text left-aligned and centred vertically. */
 export function PageHero({
   eyebrow,
   title,
@@ -31,6 +40,7 @@ export function PageHero({
   overlay = true,
   crumbs,
   titleIcon,
+  overlap = "none",
   children,
 }: PageHeroProps) {
   return (
@@ -38,7 +48,7 @@ export function PageHero({
       {image && <Image src={image} alt="" fill preload sizes="100vw" className={`animate-zoom object-cover ${imagePosition}`} />}
       {overlay && <div className={`absolute inset-0 ${heroGradient}`} />}
       <Container
-        className={`relative flex min-h-[600px] flex-col justify-start gap-4 py-14 text-white sm:min-h-[640px] lg:min-h-[660px] ${
+        className={`relative flex min-h-[600px] flex-col justify-center gap-4 pt-14 ${overlapPadding[overlap]} text-white sm:min-h-[640px] lg:min-h-[660px] ${
           overlay ? "" : "[text-shadow:0_2px_12px_rgba(11,37,69,.7)]"
         }`}
       >

@@ -16,9 +16,9 @@ export default function ProjectsPage() {
     <>
       <PageHero
         crumbs={[{ label: "Home", href: "/" }, { label: "Projects" }]}
-        eyebrow="Our projects"
-        title="Projects"
-        sub="CSR initiatives, events and group journeys our team has planned and delivered for communities, companies and travellers."
+        eyebrow="MICE tourism"
+        title="Corporate MICE tourism, events and incentive travel"
+        sub="Meetings, incentive trips, conferences and exhibitions planned end to end, from venues and flights to seamless group transfers."
       />
       <section className="py-14 lg:py-20">
         <Container>

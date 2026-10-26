@@ -21,9 +21,9 @@ export default function GalleryPage() {
       <PageHero
         image="/images/packages/bali-honeymoon.jpg"
         crumbs={[{ label: "Home", href: "/" }, { label: "Travellers Gallery" }]}
-        eyebrow="Travellers gallery"
-        title="Moments from our travellers"
-        sub="Real trips, real smiles. Share yours with LetsFlyLK and you might see it here."
+        eyebrow="Tour gallery"
+        title="Photos and videos from our latest tours"
+        sub="See real moments from our Sri Lanka round trips, overseas holidays and group tours, captured by our travellers."
       />
 
       <section className="py-14 lg:py-20">

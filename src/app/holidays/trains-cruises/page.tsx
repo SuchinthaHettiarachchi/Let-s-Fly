@@ -17,10 +17,10 @@ export default function TrainsCruisesPage() {
     <>
       <PageHero
         image="/images/hero/hill-country-rail.jpg"
-        crumbs={[{ label: "Home", href: "/" }, { label: "Holidays" }, { label: "Trains + Cruises" }]}
-        eyebrow="Trains + Cruises"
-        title="Slow travel, big views"
-        sub="Reserved seats on Sri Lanka's most scenic rail routes, and ocean cruises across Asia and the Gulf."
+        crumbs={[{ label: "Home", href: "/" }, { label: "Holidays" }, { label: "Trains & Cruise Adventures" }]}
+        eyebrow="Scenic journeys"
+        title="Scenic train tickets and cruise holiday packages"
+        sub="Reserved train seats on scenic routes like Kandy to Ella, plus ocean cruise holidays across Asia and beyond."
       />
 
       <section className="py-14 lg:py-20">
