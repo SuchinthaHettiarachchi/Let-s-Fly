@@ -34,7 +34,7 @@ export const underOneRoof = [
   { icon: "flight", title: "Flights", text: "Best-value fares on trusted airlines, with changes handled for you." },
   { icon: "badge", title: "Visas", text: "Document checks, forms and appointments for 30+ countries." },
   { icon: "apartment", title: "Hotels", text: "Stays matched to your budget, with exclusive partner rates." },
-  { icon: "explore", title: "Travel Packages", text: "Ready-made and tailored tours, from Dubai to Europe." },
+  { icon: "explore", title: "Travel Packages", text: "Ready-made or custom tours, from Dubai to Europe." },
   { icon: "business_center", title: "Corporate Travel", text: "Managed bookings, invoicing and support for business teams." },
   { icon: "headset_mic", title: "Travel Support", text: "Insurance, transfers and a real person to message while you're away." },
 ];

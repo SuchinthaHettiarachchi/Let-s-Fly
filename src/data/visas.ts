@@ -27,7 +27,7 @@ export const visas: Visa[] = [
     summary:
       "UAE tourist visa for holidays and family visits to Dubai. We check your documents, apply on your behalf and send your eVisa straight to WhatsApp.",
     facts: [
-      { icon: "schedule", label: "Processing 3–5 working days" },
+      { icon: "schedule", label: "Processing 3 to 5 working days" },
       { icon: "calendar_month", label: "30 or 60 day stay" },
       { icon: "badge", label: "eVisa · single entry" },
     ],

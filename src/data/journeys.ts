@@ -64,7 +64,7 @@ export const journeys: Journey[] = [
     label: "Arabian Gulf",
     title: "Dubai → Muscat → Doha",
     text: "A week around the Gulf with a night in Dubai before boarding. Ideal for families in the cooler months.",
-    chips: ["7 nights", "All meals on board", "Nov – Mar"],
+    chips: ["7 nights", "All meals on board", "Nov to Mar"],
     price: 285000,
     priceNote: "per person, twin cabin",
     image: "/images/packages/dubai-family-escape.jpg",

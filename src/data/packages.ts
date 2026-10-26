@@ -102,7 +102,7 @@ export const packages: Package[] = [
       days: [
         {
           category: "Arrival",
-          title: "Colombo to Dubai – check in & Dubai Mall evening",
+          title: "Colombo to Dubai, check in & Dubai Mall evening",
           meta: [
             { icon: "location_on", label: "Downtown Dubai" },
             { icon: "hotel", label: "4★ hotel" },
@@ -229,7 +229,7 @@ export const packages: Package[] = [
       days: [
         {
           category: "Arrival",
-          title: "Colombo to Kandy – Temple of the Tooth & cultural show",
+          title: "Colombo to Kandy, Temple of the Tooth & cultural show",
           meta: [
             { icon: "location_on", label: "Kandy" },
             { icon: "hotel", label: "Hill-view hotel" },
@@ -299,7 +299,7 @@ export const packages: Package[] = [
       days: [
         {
           category: "Arrival & safari",
-          title: "Drive to Yala – afternoon game drive",
+          title: "Drive to Yala and afternoon game drive",
           meta: [
             { icon: "location_on", label: "Yala National Park" },
             { icon: "schedule", label: "3-hour safari" },
@@ -617,7 +617,7 @@ export const packages: Package[] = [
     image: "/images/packages/bangkok-phuket.jpg",
   },
   {
-    slug: "singapore-malaysia-cruise", title: "Singapore–Malaysia Cruise", region: "Singapore", location: "Singapore · Malaysia",
+    slug: "singapore-malaysia-cruise", title: "Singapore & Malaysia Cruise", region: "Singapore", location: "Singapore · Malaysia",
     category: "outbound", outboundRegion: "asia", featured: true, days: 5, nights: 4, price: 240000,
     image: "/images/packages/singapore-malaysia-cruise.jpg",
   },

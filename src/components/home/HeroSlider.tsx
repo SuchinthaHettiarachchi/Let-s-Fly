@@ -50,7 +50,7 @@ export function HeroSlider() {
           Your journey · Our passion
         </Eyebrow>
         <h1 className="max-w-[640px] animate-rise [animation-delay:120ms] text-[40px] leading-[1.08] font-bold tracking-[-0.02em] text-pretty sm:text-[52px] lg:text-[64px]">
-          Plan your ultimate travel experience today
+          Plan your next trip with us today
         </h1>
         <p className="max-w-[520px] animate-rise text-base [animation-delay:240ms] leading-[1.6] text-white/85 sm:text-lg">
           Discover cheap flights, visa assistance, customised holiday tours, and complete travel management

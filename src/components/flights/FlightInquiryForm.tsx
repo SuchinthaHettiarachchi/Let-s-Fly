@@ -133,7 +133,7 @@ export function FlightInquiryForm() {
           <input name="adults" type="number" min={1} max={30} required defaultValue={2} className={fieldClass} />
         </label>
         <label className={labelClass}>
-          Children (2–11)
+          Children (2 to 11)
           <input name="children" type="number" min={0} max={30} defaultValue={0} className={fieldClass} />
         </label>
         <label className={labelClass}>

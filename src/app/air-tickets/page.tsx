@@ -8,8 +8,8 @@ import { Icon } from "@/components/ui/Icon";
 import { PortalCard } from "@/components/flights/PortalCard";
 import { FareGrid } from "@/components/flights/FareGrid";
 import { FlightInquiryForm } from "@/components/flights/FlightInquiryForm";
-import { flightFeatures, topFares } from "@/data/flights";
 import { AirlineLogos } from "@/components/flights/AirlineLogos";
+import { flightFeatures, topFares } from "@/data/flights";
 
 export const metadata: Metadata = {
   title: { absolute: "Air Tickets Sri Lanka | Book Cheap Flights | Let's Fly" },
@@ -88,7 +88,7 @@ export default function AirTicketsPage() {
         <CtaBand
           tone="sand"
           title="Planning more than a flight?"
-          text="Add hotels, visas and tours, and we'll put together one tailored quote."
+          text="Add hotels, visas and tours, and we'll send one quote for the whole trip."
         />
       </div>
       <RevealOnScroll />

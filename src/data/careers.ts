@@ -19,7 +19,7 @@ export const jobs: Job[] = [
     meta: [
       { icon: "work", label: "Full-time" },
       { icon: "location_on", label: "Rajagiriya" },
-      { icon: "schedule", label: "1–3 yrs" },
+      { icon: "schedule", label: "1 to 3 yrs" },
     ],
     text: "Plan holidays, quote packages and look after travellers from first inquiry to safe return. Strong English and customer service skills required.",
     posted: "Posted 3 days ago",
@@ -32,7 +32,7 @@ export const jobs: Job[] = [
     meta: [
       { icon: "work", label: "Full-time" },
       { icon: "location_on", label: "Rajagiriya" },
-      { icon: "schedule", label: "1–2 yrs" },
+      { icon: "schedule", label: "1 to 2 yrs" },
     ],
     text: "Run our social channels, ads and email campaigns, and create content that inspires Sri Lankans to travel more.",
     posted: "Posted 1 week ago",
@@ -66,7 +66,7 @@ export const jobs: Job[] = [
 ];
 
 export const officeHours = [
-  { days: "Monday – Friday", hours: "9.00am – 6.00pm" },
-  { days: "Saturday", hours: "9.00am – 1.00pm" },
+  { days: "Monday to Friday", hours: "9.00am to 6.00pm" },
+  { days: "Saturday", hours: "9.00am to 1.00pm" },
   { days: "Sunday & Poya days", hours: "Closed" },
 ];

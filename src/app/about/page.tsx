@@ -330,7 +330,7 @@ export default function AboutPage() {
             Ready to Plan Your Next Journey?
           </h2>
           <p className="max-w-[520px] text-base leading-relaxed">
-            Tell us where you&apos;re dreaming of going. We&apos;ll handle the planning and send you a tailored quote
+            Tell us where you&apos;re dreaming of going. We&apos;ll handle the planning and send you a quote
             within the day.
           </p>
           <div aria-hidden="true" className="flex w-full max-w-[520px] items-center gap-3 font-mono text-sm font-semibold">

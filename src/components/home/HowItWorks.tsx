@@ -13,7 +13,7 @@ export function HowItWorks() {
           <h2 className="text-[30px] leading-[1.18] font-bold tracking-[-0.01em] sm:text-[36px] lg:text-[42px]">
             We make travel <em className="text-ocean-600">simple for you</em>
           </h2>
-          <p className="text-base leading-[1.75] text-ink-600">From dreaming to departure, we handle every detail.</p>
+          <p className="text-base leading-[1.75] text-ink-600">From the first call to the flight home, we handle the bookings.</p>
           <Link href="/about" className="flex items-center gap-1.5 self-start text-[15px] font-semibold">
             Learn more about us
             <Icon name="arrow_forward" />

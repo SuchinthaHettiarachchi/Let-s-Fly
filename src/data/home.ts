@@ -35,9 +35,9 @@ export const services: Service[] = [
 ];
 
 export const howItWorks = [
-  { icon: "chat", title: "Tell Us Your Dream", text: "Share your destination, preferences and budget." },
-  { icon: "map", title: "We Craft Your Journey", text: "Our travel experts create a flexible, tailor-made itinerary." },
-  { icon: "luggage", title: "Enjoy Stress-Free Travel", text: "We take care of flights, visas, hotels and transportation." },
+  { icon: "chat", title: "Tell Us Your Plans", text: "Share your destination, preferences and budget." },
+  { icon: "map", title: "We Plan Your Trip", text: "Our travel experts build the itinerary around you." },
+  { icon: "luggage", title: "Enjoy Your Trip", text: "We take care of flights, visas, hotels and transportation." },
 ];
 
 export const rentalPerks = [
