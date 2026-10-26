@@ -51,11 +51,11 @@ export function AboutIntro() {
         <div data-reveal="150" className="flex flex-col gap-5">
           <Eyebrow>Who we are</Eyebrow>
           <h2 className="text-[30px] leading-[1.18] font-bold tracking-[-0.01em] text-pretty sm:text-[36px] lg:text-[42px]">
-            Sri Lankan travel experts who plan the whole trip for you
+            Your journey, our expertise. Smart travel starts here.
           </h2>
           <p className="text-base leading-[1.75] text-ink-600">
-            From a weekend in Ella to a family week in Dubai, our Rajagiriya team handles your tickets, visas, hotels
-            and transfers, so all you have to do is pack.
+            At Let&apos;s Fly, we bring every travel need under one roof. Our team handles your corporate trip, family
+            holiday or luxury escape from start to finish for air tickets, visas, hotels, tour packages and transfers.
           </p>
           <div className="mt-2.5 mb-2 grid grid-cols-3 gap-3 sm:gap-4">
             {stats.map((s) => (

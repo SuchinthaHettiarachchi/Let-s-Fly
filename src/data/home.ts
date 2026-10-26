@@ -1,10 +1,13 @@
-/** Background photos the home hero cycles through; the title labels each slide dot. */
-export type HeroSlide = { image: string; title: string };
+/**
+ * Background photos the home hero cycles through; the title labels each slide dot.
+ * `image` is the landscape photo from `sm` up; `mobileImage` is a 9:16 photo for phones.
+ */
+export type HeroSlide = { image: string; mobileImage: string; title: string };
 
 export const heroSlides: HeroSlide[] = [
-  { image: "/images/hero/maldives-beach.jpg", title: "Maldives Beach Retreat" },
-  { image: "/images/hero/dubai.jpg", title: "Dubai Family Escape" },
-  { image: "/images/hero/hill-country-rail.jpg", title: "Hill Country by Rail" },
+  { image: "/images/hero/maldives-beach.jpg", mobileImage: "/images/hero/mobile/maldives-beach.jpg", title: "Maldives Beach Retreat" },
+  { image: "/images/hero/dubai.jpg", mobileImage: "/images/hero/mobile/dubai.jpg", title: "Dubai Family Escape" },
+  { image: "/images/hero/hill-country-rail.jpg", mobileImage: "/images/hero/mobile/hill-country-rail.jpg", title: "Hill Country by Rail" },
 ];
 
 export const stats = [
@@ -25,13 +28,13 @@ export type Service = {
 };
 
 export const services: Service[] = [
-  { icon: "landscape", title: "Travel Sri Lanka", line: "Island tours from Sigiriya to the south coast, with drivers and stays.", link: "Explore tours", linkIcon: "arrow_forward", href: "/holidays/sri-lanka" },
-  { icon: "hotel", title: "Hotel Bookings", line: "Best rates on 2,000+ hotels, booked through our partner Aahaas.", link: "Book on Aahaas", linkIcon: "north_east", href: "/holidays/sri-lanka#hotels" },
-  { icon: "travel_explore", title: "Outbound Travels", line: "Group and private holidays to Asia, the Middle East and Europe.", link: "See destinations", linkIcon: "arrow_forward", href: "/holidays/outbound" },
-  { icon: "flight", title: "Air Tickets", line: "Compare fares across major airlines and book instantly via Aahaas.", link: "Book on Aahaas", linkIcon: "north_east", href: "/air-tickets" },
-  { icon: "train", title: "Trains + Cruises", line: "Scenic rail seats in Sri Lanka and ocean cruises across Asia.", link: "View options", linkIcon: "arrow_forward", href: "/holidays/trains-cruises" },
-  { icon: "description", title: "Visa Services", line: "Document checks and submissions for 30+ countries, done for you.", link: "Check requirements", linkIcon: "arrow_forward", href: "/visa" },
-  { icon: "health_and_safety", title: "Travel Insurance", line: "Medical, baggage and trip-delay cover for every journey, arranged before you fly.", link: "Get a quote", linkIcon: "arrow_forward", inquiry: "Travel insurance" },
+  { icon: "landscape", title: "Travel Sri Lanka", line: "Trending and seasonal island packages designed for everyone, with drivers, guides and stays.", link: "Explore Packages", linkIcon: "arrow_forward", href: "/holidays/sri-lanka" },
+  { icon: "hotel", title: "Hotel Bookings", line: "Search, compare and self-book hotels at the best rates through our online portal.", link: "Book a Hotel", linkIcon: "north_east", href: "/holidays/sri-lanka#hotels" },
+  { icon: "travel_explore", title: "Outbound Travels", line: "Group and private holidays to Asia, the Middle East and Europe, fully planned.", link: "See Destinations", linkIcon: "arrow_forward", href: "/holidays/outbound" },
+  { icon: "flight", title: "Air Tickets", line: "Self-book flights on our portal or send requirements and we'll book for you.", link: "Book Flights", linkIcon: "arrow_forward", href: "/air-tickets" },
+  { icon: "train", title: "Trains + Cruises", line: "Reserved seats on Sri Lanka's scenic rail routes and ocean cruises across Asia.", link: "View Options", linkIcon: "arrow_forward", href: "/holidays/trains-cruises" },
+  { icon: "description", title: "Visa Services", line: "Document checks and application submissions for 30+ countries, handled by our visa team.", link: "Check Requirements", linkIcon: "arrow_forward", href: "/visa" },
+  { icon: "health_and_safety", title: "Travel Insurance", line: "Medical, baggage and trip-delay cover for every journey, arranged well before you fly.", link: "Get a Quote", linkIcon: "arrow_forward", inquiry: "Travel insurance" },
 ];
 
 export const howItWorks = [
