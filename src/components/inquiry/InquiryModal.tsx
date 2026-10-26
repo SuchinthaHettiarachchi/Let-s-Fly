@@ -44,7 +44,7 @@ export function InquiryModal({ prefill, onClose }: Props) {
           </button>
         </InquiryHeader>
         <div className="px-6 pt-6 pb-7 sm:px-8">
-          <InquiryForm prefill={prefill} onNavigate={onClose} autoFocus />
+          <InquiryForm prefill={prefill} autoFocus />
         </div>
       </div>
     </div>

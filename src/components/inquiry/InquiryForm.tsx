@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { Button, ButtonLink } from "@/components/ui/Button";
+import { ConsentBlock } from "@/components/forms/ConsentBlock";
 import { FormSent } from "@/components/forms/FormSent";
+import { SocialIcon } from "@/components/ui/SocialIcon";
 import { fieldClass, labelClass, serviceOptions, textareaClass, titleOptions } from "@/components/forms/styles";
 import { contact } from "@/data/site";
 
@@ -17,8 +18,6 @@ function today() {
 
 type Props = {
   prefill?: InquiryPrefill;
-  /** Called when a link inside the form navigates away (the modal closes itself). */
-  onNavigate?: () => void;
   autoFocus?: boolean;
 };
 
@@ -26,7 +25,7 @@ type Props = {
  * The general "Send us an inquiry" form used by the modal and the inline
  * sidebar cards. Lays out in two columns once its container is wide enough.
  */
-export function InquiryForm({ prefill = {}, onNavigate, autoFocus = false }: Props) {
+export function InquiryForm({ prefill = {}, autoFocus = false }: Props) {
   const [sent, setSent] = useState(false);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -99,16 +98,7 @@ export function InquiryForm({ prefill = {}, onNavigate, autoFocus = false }: Pro
             className={textareaClass}
           />
         </label>
-        <label className="flex cursor-pointer items-start gap-2.5 text-[12.5px] leading-normal text-ink-400 @xs:col-span-2">
-          <input type="checkbox" required className="mt-px size-[18px] flex-none accent-ocean-600" />
-          <span>
-            I agree to Let&apos;s Fly.lk storing my details to respond to this inquiry, as described in the{" "}
-            <Link href="/privacy" onClick={onNavigate}>
-              Privacy Policy
-            </Link>
-            .
-          </span>
-        </label>
+        <ConsentBlock className="@xs:col-span-2" />
         <Button type="submit" variant="primary" size="lg" icon="arrow_forward" className="h-[52px] w-full @xs:col-span-2">
           Inquire Now · Send Inquiry
         </Button>
@@ -118,9 +108,11 @@ export function InquiryForm({ prefill = {}, onNavigate, autoFocus = false }: Pro
           rel="noopener noreferrer"
           variant="outline"
           size="lg"
-          leadingIcon="chat"
           className="h-[52px] w-full @xs:col-span-2"
         >
+          <span className="flex size-6 items-center justify-center rounded-full bg-[#25d366] text-white">
+            <SocialIcon name="WhatsApp" size={14} />
+          </span>
           WhatsApp Us
         </ButtonLink>
       </form>
