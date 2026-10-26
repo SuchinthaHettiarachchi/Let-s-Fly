@@ -9,8 +9,9 @@ import { contact } from "@/data/site";
 import { jobs, officeHours, type Job } from "@/data/careers";
 
 export const metadata: Metadata = {
-  title: "Contact",
-  description: "Call, message or drop by our Rajagiriya office. We usually reply within two working hours.",
+  title: { absolute: "Contact Let's Fly | Travel Agency in Colombo, Sri Lanka" },
+  description:
+    "Call, email or visit our team for air tickets, visas and inbound or outbound tours. Each service has its own dedicated specialist, ready to help.",
 };
 
 const contactCards = [

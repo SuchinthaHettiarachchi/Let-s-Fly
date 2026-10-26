@@ -23,9 +23,9 @@ import {
 } from "@/data/about";
 
 export const metadata: Metadata = {
-  title: "About Us",
+  title: { absolute: "About Us | Trusted Travel Agency in Colombo | Let's Fly" },
   description:
-    "A Sri Lankan travel team that handles the tickets, the visas and the hundred small details, so you can focus on the trip itself.",
+    "Meet the Let's Fly team, a Colombo-based, SLTDA-registered travel agency helping Sri Lankans and visitors plan flights, tours, visas and corporate travel.",
 };
 
 const gradient =

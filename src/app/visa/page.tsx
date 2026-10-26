@@ -7,9 +7,9 @@ import { VisaTabs } from "@/components/visa/VisaTabs";
 import { visaSteps, visas } from "@/data/visas";
 
 export const metadata: Metadata = {
-  title: "Visa Services",
+  title: { absolute: "Visa Services Sri Lanka | Tourist & Visit Visas | Let's Fly" },
   description:
-    "We check your documents, fill the forms, book the appointment and track your application for 30+ countries.",
+    "Hassle-free visa assistance from Colombo for Malaysia, Singapore, the UK, USA and more. We help with document checks, appointments and applications.",
 };
 
 export default function VisaServicesPage() {

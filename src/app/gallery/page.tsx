@@ -9,8 +9,9 @@ import { contact, socials } from "@/data/site";
 import { galleryPhotos } from "@/data/gallery";
 
 export const metadata: Metadata = {
-  title: "Travellers Gallery",
-  description: "Real trips, real smiles. Moments from Let's Fly.lk travellers around Sri Lanka and the world.",
+  title: { absolute: "Tour Photos & Videos | Travel Gallery | Let's Fly" },
+  description:
+    "Browse photos and videos from Let's Fly tours, including Sri Lanka round trips, overseas holidays and group journeys. See where our travellers have been.",
 };
 
 export default function GalleryPage() {

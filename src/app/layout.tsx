@@ -14,11 +14,11 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: {
-    default: "Let's Fly.lk | Air tickets, tour packages & visas",
-    template: "%s · Let's Fly.lk",
+    default: "Sri Lanka Travel Agency | Flights, Tours & Visas | Let's Fly",
+    template: "%s | Let's Fly",
   },
   description:
-    "Handpicked holidays, air tickets and visas, planned end-to-end by our Colombo travel team.",
+    "SLTDA-registered travel agency in Colombo, Sri Lanka. Book air tickets, holiday packages, visas, hotels and transfers. Pay later with KOKO.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -7,9 +7,9 @@ import { HotelBookings } from "@/components/holidays/HotelBookings";
 import { packages } from "@/data/packages";
 
 export const metadata: Metadata = {
-  title: "Travel Sri Lanka + Hotels",
+  title: { absolute: "Sri Lanka Tour Packages & Hotel Bookings | Let's Fly" },
   description:
-    "Private Sri Lanka tours with a driver-guide and hand-picked stays. Ancient cities, tea country, wildlife and beaches.",
+    "Explore Sri Lanka with tailor-made tour packages, round trips and hotel deals. Private drivers, guides and resort specials from an SLTDA-registered agency.",
 };
 
 export default function SriLankaPage() {

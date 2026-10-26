@@ -6,9 +6,9 @@ import { ProjectGrid } from "@/components/projects/ProjectGrid";
 import { projects } from "@/data/projects";
 
 export const metadata: Metadata = {
-  title: "Our Projects",
+  title: { absolute: "MICE Tourism Sri Lanka | Corporate Events & Incentive Tours" },
   description:
-    "CSR initiatives, events and group journeys our team has planned and delivered for communities, companies and travellers.",
+    "Corporate meetings, incentive trips, conferences and events handled end to end. See Let's Fly's MICE projects in Sri Lanka and overseas.",
 };
 
 export default function ProjectsPage() {

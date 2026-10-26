@@ -11,9 +11,9 @@ import { flightFeatures, topFares } from "@/data/flights";
 import { AirlineLogos } from "@/components/flights/AirlineLogos";
 
 export const metadata: Metadata = {
-  title: "Air Tickets",
+  title: { absolute: "Air Tickets Sri Lanka | Book Cheap Flights | Let's Fly" },
   description:
-    "Search fares across 40+ airlines and book instantly on our booking portal, or let our ticketing desk find the best route for you.",
+    "Book international air tickets from Colombo on SriLankan, Emirates, Qatar, Singapore Airlines and more. Great fares, expert help, and pay later with KOKO.",
 };
 
 export default function AirTicketsPage() {

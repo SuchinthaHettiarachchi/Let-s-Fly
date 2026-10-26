@@ -8,8 +8,9 @@ import { RegionPackages } from "@/components/holidays/RegionPackages";
 import { packages } from "@/data/packages";
 
 export const metadata: Metadata = {
-  title: "Outbound Travels",
-  description: "Flights, visas, hotels and tours bundled into one easy package for families, couples and groups.",
+  title: { absolute: "Holiday Packages from Sri Lanka | Outbound Tours | Let's Fly" },
+  description:
+    "Overseas tour packages from Sri Lanka to Singapore, Malaysia and beyond. Flights, hotels and visas bundled in one, with easy KOKO instalments.",
 };
 
 const reasons = [

@@ -7,8 +7,9 @@ import { JourneyList } from "@/components/holidays/JourneyList";
 import { journeyPerks, journeys } from "@/data/journeys";
 
 export const metadata: Metadata = {
-  title: "Trains + Cruises",
-  description: "Reserved seats on Sri Lanka's most scenic rail routes, and ocean cruises across Asia and the Gulf.",
+  title: { absolute: "Train Tickets & Cruise Packages Sri Lanka | Let's Fly" },
+  description:
+    "Book scenic train journeys like Kandy to Ella, plus international cruise holidays. Reserved seats and cruise packages arranged by Let's Fly, Colombo.",
 };
 
 export default function TrainsCruisesPage() {

@@ -7,8 +7,9 @@ import { Fleet } from "@/components/rentals/Fleet";
 import { rentalEssentials, vehicles } from "@/data/rentals";
 
 export const metadata: Metadata = {
-  title: "Car & Bike Rental",
-  description: "Self-drive or chauffeur-driven. Insured vehicles delivered to your hotel or the airport, island-wide.",
+  title: { absolute: "Car & Bike Rental Sri Lanka | Airport Transfers | Let's Fly" },
+  description:
+    "Rent cars, vans and motorbikes across Sri Lanka, self-drive or with a driver. Airport pickups, day trips and island tours at fair daily rates.",
 };
 
 export default function RentalsPage() {
