@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { getImageProps } from "next/image";
 import { useEffect, useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/SectionHeading";
@@ -29,20 +29,32 @@ export function HeroSlider() {
       aria-label="Featured holidays"
       className="relative h-[600px] overflow-hidden bg-navy-900 sm:h-[640px] lg:h-[660px]"
     >
-      {heroSlides.map((s, i) => (
-        <Image
-          key={s.image}
-          src={s.image}
-          alt=""
-          fill
-          sizes="100vw"
-          preload={i === 0}
-          // The showing photo slowly zooms in (a gentle Ken Burns effect).
-          className={`object-cover transition-[opacity,scale] ease-out ${
-            i === index ? "scale-110 opacity-100 duration-[800ms,3000ms]" : "scale-100 opacity-0 duration-[800ms,0ms] [transition-delay:0ms,800ms]"
-          }`}
-        />
-      ))}
+      {heroSlides.map((s, i) => {
+        // Art direction: phones get the portrait photo, `sm` (40rem) and up the landscape one.
+        const first = i === 0;
+        const common = {
+          alt: "",
+          fill: true,
+          sizes: "100vw",
+          loading: first ? "eager" : "lazy",
+          fetchPriority: first ? "high" : "auto",
+        } as const;
+        const { props: { srcSet: landscape } } = getImageProps({ ...common, src: s.image });
+        const { props: portrait } = getImageProps({ ...common, src: s.mobileImage });
+        return (
+          <picture key={s.image}>
+            <source media="(min-width: 40rem)" srcSet={landscape} sizes="100vw" />
+            {/* eslint-disable-next-line jsx-a11y/alt-text -- alt="" comes from getImageProps */}
+            <img
+              {...portrait}
+              // The showing photo slowly zooms in (a gentle Ken Burns effect).
+              className={`object-cover transition-[opacity,scale] ease-out ${
+                i === index ? "scale-110 opacity-100 duration-[800ms,3000ms]" : "scale-100 opacity-0 duration-[800ms,0ms] [transition-delay:0ms,800ms]"
+              }`}
+            />
+          </picture>
+        );
+      })}
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(11,37,69,.94)_0%,rgba(11,37,69,.78)_35%,rgba(19,87,155,.35)_70%,rgba(19,87,155,.1)_100%)]" />
 
       <Container className="relative flex h-full flex-col justify-center gap-[22px] pb-16 text-white">
