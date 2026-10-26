@@ -1,20 +1,22 @@
 "use client";
 
-import Link from "next/link";
 import { useRef, useState } from "react";
-import { Button } from "@/components/ui/Button";
+import { Button, ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { ConsentBlock } from "@/components/forms/ConsentBlock";
 import { FormSent } from "@/components/forms/FormSent";
+import { SocialIcon } from "@/components/ui/SocialIcon";
+import { contact } from "@/data/site";
 import { errorClass, fieldClass, labelClass, serviceOptions, textareaClass } from "@/components/forms/styles";
 
 const MESSAGE_MIN = 10;
 const MESSAGE_MAX = 1000;
 
-type Field = "name" | "phone" | "email" | "message" | "agree";
-type Values = Record<Exclude<Field, "agree">, string> & { agree: boolean };
+type Field = "name" | "phone" | "email" | "message";
+type Values = Record<Field, string>;
 type Errors = Partial<Record<Field, string>>;
 
-const order: Field[] = ["name", "phone", "email", "message", "agree"];
+const order: Field[] = ["name", "phone", "email", "message"];
 
 /** Returns the error for one field, or undefined when it is valid. */
 function check(field: Field, v: Values): string | undefined {
@@ -46,15 +48,22 @@ function check(field: Field, v: Values): string | undefined {
       if (message.length > MESSAGE_MAX) return `Message must be ${MESSAGE_MAX} characters or fewer.`;
       return;
     }
-    case "agree":
-      return v.agree ? undefined : "Please agree to the Privacy Policy.";
   }
 }
 
-/** "How can we help?" message form on the Contact page. */
-export function ContactForm() {
+const empty: Values = { name: "", phone: "", email: "", message: "" };
+
+type ContactFormProps = {
+  /** Sent with the message and used as the WhatsApp opener, e.g. "Visa enquiry". */
+  subject?: string;
+  /** Service picked in the dropdown when the form loads. */
+  service?: (typeof serviceOptions)[number];
+};
+
+/** "How can we help?" message form, with a WhatsApp alternative under the submit button. */
+export function ContactForm({ subject = "General enquiry", service = serviceOptions[0] }: ContactFormProps) {
   const [sent, setSent] = useState(false);
-  const [values, setValues] = useState<Values>({ name: "", phone: "", email: "", message: "", agree: false });
+  const [values, setValues] = useState<Values>(empty);
   // Errors appear once a field is left (or on submit), then update as the visitor types.
   const [touched, setTouched] = useState<Partial<Record<Field, boolean>>>({});
   const formRef = useRef<HTMLFormElement>(null);
@@ -62,12 +71,12 @@ export function ContactForm() {
   const errors: Errors = {};
   for (const f of order) if (touched[f]) errors[f] = check(f, values);
 
-  const set = (field: Field, value: string | boolean) => setValues((v) => ({ ...v, [field]: value }));
+  const set = (field: Field, value: string) => setValues((v) => ({ ...v, [field]: value }));
   const touch = (field: Field) => setTouched((t) => ({ ...t, [field]: true }));
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setTouched({ name: true, phone: true, email: true, message: true, agree: true });
+    setTouched({ name: true, phone: true, email: true, message: true });
     const firstBad = order.find((f) => check(f, values));
     if (firstBad) {
       formRef.current?.querySelector<HTMLElement>(`[name="${firstBad}"]`)?.focus();
@@ -78,7 +87,7 @@ export function ContactForm() {
   }
 
   function reset() {
-    setValues({ name: "", phone: "", email: "", message: "", agree: false });
+    setValues(empty);
     setTouched({});
     setSent(false);
   }
@@ -88,7 +97,7 @@ export function ContactForm() {
   }
 
   /** Props shared by each validated text field. */
-  const field = (name: Exclude<Field, "agree">) => ({
+  const field = (name: Field) => ({
     name,
     value: values[name],
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => set(name, e.target.value),
@@ -101,6 +110,7 @@ export function ContactForm() {
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} noValidate className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <input type="hidden" name="subject" value={subject} />
       <label className={labelClass}>
         <span>
           Full Name <Required />
@@ -124,7 +134,7 @@ export function ContactForm() {
       </label>
       <label className={labelClass}>
         Service
-        <select name="service" className={fieldClass}>
+        <select name="service" defaultValue={service} className={fieldClass}>
           {serviceOptions.map((s) => (
             <option key={s}>{s}</option>
           ))}
@@ -147,29 +157,23 @@ export function ContactForm() {
           </span>
         </span>
       </label>
-      <div className="flex flex-col gap-1.5 sm:col-span-2">
-        <label className="flex cursor-pointer items-center gap-2.5 text-[12.5px] text-ink-400">
-          <input
-            type="checkbox"
-            name="agree"
-            checked={values.agree}
-            onChange={(e) => {
-              set("agree", e.target.checked);
-              touch("agree");
-            }}
-            aria-invalid={!!errors.agree}
-            aria-describedby={errors.agree ? "contact-agree-error" : undefined}
-            className="size-[18px] flex-none accent-ocean-600"
-          />
-          <span>
-            I agree to the <Link href="/privacy">Privacy Policy</Link>. <Required />
-          </span>
-        </label>
-        <FieldError id="contact-agree-error" message={errors.agree} />
-      </div>
+      <ConsentBlock className="sm:col-span-2" />
       <Button type="submit" variant="primary" size="lg" icon="send" className="w-full sm:col-span-2">
         Send Message
       </Button>
+      <ButtonLink
+        href={`${contact.whatsappHref}?text=${encodeURIComponent(`Hi Let's Fly, ${subject}: `)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        variant="outline"
+        size="lg"
+        className="w-full sm:col-span-2"
+      >
+        <span className="flex size-6 items-center justify-center rounded-full bg-[#25d366] text-white">
+          <SocialIcon name="WhatsApp" size={14} />
+        </span>
+        WhatsApp Us
+      </ButtonLink>
     </form>
   );
 }

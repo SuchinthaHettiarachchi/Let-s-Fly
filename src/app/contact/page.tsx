@@ -31,12 +31,11 @@ export default function ContactPage() {
     <>
       <PageHero
         crumbs={[{ label: "Home", href: "/" }, { label: "Contact" }]}
-        eyebrow="Contact"
-        title="Let's plan your trip together"
-        sub="Call, message or drop by our office. We usually reply within two working hours."
-      >
-        <div className="h-14" />
-      </PageHero>
+        eyebrow="Contact us"
+        title="Let's plan your next trip together today"
+        sub="Call, message or visit our office for flights, visas and tours. We usually reply within two working hours."
+        overlap="md"
+      />
 
       <Container className="relative -mt-16">
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
