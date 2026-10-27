@@ -55,10 +55,10 @@ export function TeamSection({ team }: { team: typeof teamData }) {
                   </span>
                 )}
                 <span className="absolute inset-x-0 bottom-0 flex flex-col bg-[linear-gradient(180deg,rgba(11,37,69,0)_0%,rgba(11,37,69,.85)_100%)] px-6 pt-16 pb-5 text-white">
-                  <span className="text-lg font-semibold">{isPlaceholder(m) ? "Team member" : m.name}</span>
-                  <span className="text-sm text-white/80">{m.role}</span>
+                  <span className="text-h4">{isPlaceholder(m) ? "Team member" : m.name}</span>
+                  <span className="text-small text-white/80">{m.role}</span>
                   {(m.email || m.phone) && (
-                    <span className="mt-3 flex flex-col gap-1 border-t border-white/20 pt-3 text-sm text-white/90">
+                    <span className="mt-3 flex flex-col gap-1 border-t border-white/20 pt-3 text-small text-white/90">
                       {m.email && (
                         <span className="flex items-center gap-2">
                           <Icon name="mail" size={16} className="text-sun-400" />
@@ -104,25 +104,25 @@ export function TeamSection({ team }: { team: typeof teamData }) {
                 {m.photo ? (
                   <Image src={m.photo} alt="" fill sizes="56px" className="object-cover" />
                 ) : (
-                  <span className="flex h-full items-center justify-center text-base font-bold text-ocean-600">
+                  <span className="flex h-full items-center justify-center text-body font-bold text-ocean-600">
                     {initials(m)}
                   </span>
                 )}
               </span>
               <span
-                className={`col-span-2 text-xl tracking-[-0.01em] sm:col-span-1 transition-[color,translate] duration-300 sm:text-2xl lg:text-[26px] ${
+                className={`col-span-2 font-display text-h3 sm:col-span-1 transition-[color,translate] duration-300 ${
                   on ? "translate-x-1.5" : ""
                 } ${isPlaceholder(m) ? "font-medium text-ink-400 italic" : `font-semibold ${on ? "text-ocean-600" : "text-ink-900"}`}`}
               >
                 {m.name}
               </span>
               <span className="col-span-2 col-start-2 row-start-2 flex flex-col sm:col-span-1 sm:col-start-3 sm:row-start-1 lg:col-start-2">
-                <span className="text-[15px] text-ink-900">{m.role}</span>
-                <span className="text-xs text-ink-400">{m.department}</span>
+                <span className="text-body text-ink-900">{m.role}</span>
+                <span className="text-caption font-normal text-ink-400">{m.department}</span>
               </span>
               {/* Contact details as text on phones and tablets; desktop shows them in the portrait */}
               {(m.email || m.phone) && (
-                <span className="col-start-2 row-start-3 mt-1 flex flex-col gap-0.5 text-[13px] sm:col-[2/4] sm:row-start-2 sm:flex-row sm:flex-wrap sm:gap-x-5 lg:hidden">
+                <span className="col-start-2 row-start-3 mt-1 flex flex-col gap-0.5 text-small sm:col-[2/4] sm:row-start-2 sm:flex-row sm:flex-wrap sm:gap-x-5 lg:hidden">
                   {m.email && (
                     <a href={`mailto:${m.email}`} className="break-all">
                       {m.email}
@@ -188,12 +188,12 @@ export function TeamSection({ team }: { team: typeof teamData }) {
 
 function TalkToUs() {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-navy-900 px-6 py-5 text-white">
+    <div className="flex flex-wrap items-center justify-between gap-4 on-dark rounded-2xl bg-navy-900 px-6 py-5 text-white">
       <div className="flex items-center gap-3">
         <Icon name="support_agent" size={30} className="text-sun-400" />
         <span className="flex flex-col">
           <span className="font-semibold">Talk to us</span>
-          <span className="text-[13px] text-white/75">Call our travel experts for information and bookings.</span>
+          <span className="text-small text-white/75">Call our travel experts for information and bookings.</span>
         </span>
       </div>
       <a href={contact.phoneHref} className="font-semibold text-white hover:text-sun-400">

@@ -27,11 +27,11 @@ export default function VisaServicesPage() {
 
       <VisaTabs visas={visas} />
 
-      <section className="bg-navy-900 py-16 text-white lg:py-20">
+      <section className="on-dark bg-navy-900 py-16 text-white lg:py-20">
         <Container className="flex flex-col gap-10">
           <div data-reveal className="flex flex-col items-center gap-2.5 text-center">
             <Eyebrow onDark>How it works</Eyebrow>
-            <h2 className="text-[30px] font-bold tracking-[-0.01em] sm:text-[36px]">Four steps to your visa</h2>
+            <h2>Four steps to your visa</h2>
           </div>
           <ol className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {visaSteps.map((s, i) => (
@@ -40,11 +40,11 @@ export default function VisaServicesPage() {
                 data-reveal={i * 100}
                 className="group flex flex-col gap-3 rounded-xl border border-white/12 bg-white/4 p-6 transition-[translate,background-color,border-color] duration-300 hover:-translate-y-1 hover:border-white/30 hover:bg-white/8"
               >
-                <span className="flex size-9 transition-transform duration-300 group-hover:scale-110 items-center justify-center rounded-full bg-sun-400 text-sm font-bold text-navy-900">
+                <span className="flex size-9 transition-transform duration-300 group-hover:scale-110 items-center justify-center rounded-full bg-sun-400 text-small font-bold text-navy-900">
                   {i + 1}
                 </span>
-                <span className="text-base font-semibold">{s.title}</span>
-                <span className="text-[13px] leading-relaxed text-white/70">{s.text}</span>
+                <span className="text-h5">{s.title}</span>
+                <span className="text-small text-white/70">{s.text}</span>
               </li>
             ))}
           </ol>

@@ -68,8 +68,8 @@ export function VisaTabs({ visas }: { visas: Visa[] }) {
                   <Icon name={t.icon} size={22} />
                 </span>
                 <span className="flex flex-col">
-                  <span className="text-[15px] font-semibold">{t.title}</span>
-                  <span className={`text-xs ${on ? "text-white/75" : "text-ink-400"}`}>{t.sub}</span>
+                  <span className="text-h5">{t.title}</span>
+                  <span className={`text-caption font-normal ${on ? "text-white/75" : "text-ink-400"}`}>{t.sub}</span>
                 </span>
               </button>
             );
@@ -108,7 +108,7 @@ function SriLankaVisas() {
     <>
       <div className="grid grid-cols-1 items-end gap-4 lg:grid-cols-[1.2fr_1fr] lg:gap-12">
         <SectionHeading eyebrow="Sri Lankan visa types" title="Coming to Sri Lanka? Find the right visa" />
-        <p className="text-[15px] leading-relaxed text-ink-600">
+        <p className="text-lead text-ink-600">
           Whether you&apos;re here for a holiday, a business trip or a longer stay, we&apos;ll match you to the right
           visa, prepare your application and keep you updated until it&apos;s approved.
         </p>
@@ -137,12 +137,12 @@ function SriLankaVisas() {
             </div>
             <div className="flex flex-1 flex-col gap-5 px-6 pt-10 pb-6 sm:px-7">
               <div className="flex flex-col gap-1.5">
-                <h3 className="text-[21px] font-bold">{v.name}</h3>
-                <p className="text-sm text-ink-600">{v.text}</p>
+                <h3 className="font-sans text-h4">{v.name}</h3>
+                <p className="text-small text-ink-600">{v.text}</p>
               </div>
               <ul className="flex flex-wrap gap-2">
                 {v.purposes.map((p) => (
-                  <li key={p} className="rounded-full bg-ocean-600/8 px-3 py-1 text-xs font-semibold text-ocean-600">
+                  <li key={p} className="rounded-full bg-ocean-600/8 px-3 py-1 text-caption text-ocean-600">
                     {p}
                   </li>
                 ))}
@@ -153,8 +153,8 @@ function SriLankaVisas() {
                     key={f.label}
                     className="flex flex-col border-sand-300 px-4 py-3 not-first:border-t sm:not-first:border-t-0 sm:not-first:border-l"
                   >
-                    <dt className="text-[11px] text-ink-400">{f.label}</dt>
-                    <dd className="text-[15px] font-bold text-ocean-600">{f.value}</dd>
+                    <dt className="text-caption font-normal text-ink-400">{f.label}</dt>
+                    <dd className="num text-h5 font-bold text-ocean-600">{f.value}</dd>
                   </div>
                 ))}
               </dl>
@@ -165,7 +165,7 @@ function SriLankaVisas() {
                 <button
                   type="button"
                   onClick={() => ask(v.name, `Please send me the requirements for a Sri Lanka ${v.name}.`)}
-                  className="flex cursor-pointer items-center gap-1.5 text-sm font-semibold text-ocean-600 hover:text-navy-900"
+                  className="flex cursor-pointer items-center gap-1.5 text-small font-semibold text-ocean-600 hover:text-navy-900"
                 >
                   Check requirements
                   <Icon name="arrow_forward" size={18} />
@@ -176,24 +176,24 @@ function SriLankaVisas() {
         ))}
       </div>
 
-      <div data-reveal className="relative overflow-hidden rounded-2xl bg-navy-900 px-6 py-9 text-white sm:px-10 sm:py-11">
+      <div data-reveal className="relative overflow-hidden on-dark rounded-2xl bg-navy-900 px-6 py-9 text-white sm:px-10 sm:py-11">
         <span
           aria-hidden="true"
           className="absolute -top-40 -right-36 size-[420px] rounded-full border-[60px] border-white/4"
         />
         <div className="relative mb-8 flex flex-col justify-between gap-6 lg:flex-row lg:items-start">
           <div className="flex flex-col gap-2">
-            <span className="flex items-center gap-2 text-[11px] font-semibold tracking-[0.18em] text-sun-400 uppercase">
+            <span className="flex items-center gap-2 eyebrow text-sun-400">
               <Icon name="home" size={16} />
               Long-term stay
             </span>
-            <h3 className="text-[26px] font-bold sm:text-[30px]">Residence Visa</h3>
-            <p className="max-w-[560px] text-sm leading-relaxed text-white/75">
+            <h3 className="text-h2">Residence Visa</h3>
+            <p className="max-w-[560px] text-body text-white/75">
               Designed for foreign nationals who wish to stay in Sri Lanka for an extended period. Choose the category
               that matches your reason for staying.
             </p>
           </div>
-          <div className="flex max-w-[300px] flex-none gap-3 rounded-xl border border-white/14 bg-white/8 px-5 py-4 text-[13px]">
+          <div className="flex max-w-[300px] flex-none gap-3 rounded-xl border border-white/14 bg-white/8 px-5 py-4 text-small">
             <Icon name="autorenew" size={20} className="mt-0.5 text-sun-400" />
             <span className="flex flex-col">
               <span className="font-semibold">Renewed annually</span>
@@ -213,17 +213,17 @@ function SriLankaVisas() {
               <span className="mb-4 flex size-10 items-center justify-center rounded-[9px] bg-sand-100 text-ocean-600 transition-[background-color,color,scale] duration-300 group-hover:scale-110 group-hover:bg-ocean-600 group-hover:text-white">
                 <Icon name={c.icon} size={20} />
               </span>
-              <h4 className="text-[15px] leading-snug font-semibold">{c.title}</h4>
-              <p className="mt-2 mb-3.5 flex-1 text-[12.5px] leading-relaxed text-ink-600">{c.text}</p>
+              <h4 className="text-h5">{c.title}</h4>
+              <p className="mt-2 mb-3.5 flex-1 text-small text-ink-600">{c.text}</p>
               {c.highlight && (
-                <span className="mb-3 self-start rounded bg-sun-400 px-2 py-0.5 text-[11px] font-semibold text-navy-900">
+                <span className="mb-3 self-start rounded bg-sun-400 px-2 py-0.5 text-caption text-navy-900">
                   {c.highlight}
                 </span>
               )}
               <button
                 type="button"
                 onClick={() => ask(`Residence Visa, ${c.title}`)}
-                className="flex cursor-pointer items-center gap-1.5 self-start text-[13px] font-semibold text-ocean-600 hover:text-navy-900"
+                className="flex cursor-pointer items-center gap-1.5 self-start text-small font-semibold text-ocean-600 hover:text-navy-900"
               >
                 Enquire
                 <Icon name="arrow_forward" size={16} />
@@ -233,7 +233,7 @@ function SriLankaVisas() {
         </ul>
       </div>
 
-      <p data-reveal className="flex gap-3 rounded-md border-l-[3px] border-sun-400 bg-sun-400/15 px-4 py-3.5 text-[13px] text-ink-900">
+      <p data-reveal className="flex gap-3 rounded-md border-l-[3px] border-sun-400 bg-sun-400/15 px-4 py-3.5 text-small text-ink-900">
         <Icon name="info" size={18} className="mt-0.5 text-ocean-600" />
         <span>
           Visa rules and fees are set by Sri Lanka&apos;s Department of Immigration &amp; Emigration and can change. We

@@ -40,7 +40,7 @@ export function FareGrid({ fares }: { fares: Fare[] }) {
                 href={portal}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={buttonClasses("outline", "md", "h-8 px-3 text-xs")}
+                className={buttonClasses("outline", "md", "h-8 px-3 text-caption")}
               >
                 Book on Portal
                 <Icon name="north_east" size={14} />
@@ -49,22 +49,22 @@ export function FareGrid({ fares }: { fares: Fare[] }) {
             <button
               type="button"
               onClick={() => openInquiry({ service: "Air tickets", destination: f.city })}
-              className={buttonClasses("primary", "md", "h-8 px-3 text-xs")}
+              className={buttonClasses("primary", "md", "h-8 px-3 text-caption")}
             >
               Ask for this fare
             </button>
           </div>
           <div className="absolute inset-x-4 bottom-4 flex items-end justify-between text-white">
             <div className="flex flex-col">
-              <span className="text-xs text-white/75">Colombo</span>
-              <span className="flex items-center gap-1.5 text-xl font-semibold">
+              <span className="text-caption font-normal text-white/75">Colombo</span>
+              <span className="flex items-center gap-1.5 text-h4">
                 <Icon name="flight" size={20} className="text-sun-400" />
                 {f.city}
               </span>
             </div>
             <div className="flex flex-col items-end">
-              <span className="text-xs text-white/75">from</span>
-              <span className="text-lg font-bold">{formatLKR(f.price)}</span>
+              <span className="text-caption font-normal text-white/75">from</span>
+              <span className="num text-h4 font-bold">{formatLKR(f.price)}</span>
             </div>
           </div>
         </li>

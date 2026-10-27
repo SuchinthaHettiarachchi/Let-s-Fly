@@ -25,10 +25,10 @@ function CardBody({ s }: { s: Service }) {
         <div className="flex size-[60px] flex-none items-center justify-center rounded-tile bg-sand-200 text-ocean-600 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-12">
           <Icon name={s.icon} size={30} />
         </div>
-        <div className="text-xl font-semibold transition-colors duration-300 group-hover:text-ocean-600">{s.title}</div>
+        <div className="text-h4 transition-colors duration-300 group-hover:text-ocean-600">{s.title}</div>
       </div>
-      <div className="text-[14.5px] leading-[1.6] text-ink-600">{s.line}</div>
-      <div className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-ocean-600">
+      <div className="text-small text-ink-600">{s.line}</div>
+      <div className="mt-1 flex items-center gap-1.5 text-small font-semibold text-ocean-600">
         {s.link}
         <Icon name={s.linkIcon} size={18} className="transition-transform duration-300 group-hover:translate-x-1" />
       </div>

@@ -42,18 +42,18 @@ export function AboutIntro() {
               ))}
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-semibold">4.9 on Google</span>
-              <span className="text-xs text-ink-400">from 800+ reviews</span>
+              <span className="text-small font-semibold">4.9 on Google</span>
+              <span className="text-caption font-normal text-ink-400">from 800+ reviews</span>
             </div>
           </div>
         </div>
 
         <div data-reveal="150" className="flex flex-col gap-5">
           <Eyebrow>Who we are</Eyebrow>
-          <h2 className="text-[30px] leading-[1.18] font-bold tracking-[-0.01em] text-pretty sm:text-[36px] lg:text-[42px]">
+          <h2>
             Your journey, our expertise. Smart travel starts here.
           </h2>
-          <p className="text-base leading-[1.75] text-ink-600">
+          <p className="text-lead text-ink-600">
             At Let&apos;s Fly, we bring every travel need under one roof. Our team handles your corporate trip, family
             holiday or luxury escape from start to finish for air tickets, visas, hotels, tour packages and transfers.
           </p>
@@ -69,9 +69,9 @@ export function AboutIntro() {
                 />
                 <CountUp
                   value={s.value}
-                  className="text-2xl font-bold text-ocean-600 tabular-nums transition-transform duration-300 group-hover:scale-105 sm:text-[32px]"
+                  className="num text-stat text-ocean-600 transition-transform duration-300 group-hover:scale-105"
                 />
-                <span className="text-xs text-ink-600 sm:text-[13px]">{s.label}</span>
+                <span className="text-small text-ink-600">{s.label}</span>
               </div>
             ))}
           </div>

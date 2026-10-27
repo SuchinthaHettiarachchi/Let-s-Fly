@@ -22,7 +22,7 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
   const visible = visas.filter((v) => (!type || v.type === type) && (!country || v.country === country));
 
   const pill =
-    "h-10 cursor-pointer appearance-none rounded-full border-[1.5px] border-sand-300 bg-white pr-9 pl-4 text-[13px] font-medium text-ink-900 hover:border-ocean-600 focus:border-ocean-600 focus:outline-none";
+    "h-10 cursor-pointer appearance-none rounded-full border-[1.5px] border-sand-300 bg-white pr-9 pl-4 font-medium text-ink-900 hover:border-ocean-600 focus:border-ocean-600 focus:outline-none";
 
   return (
     <div className="flex flex-col gap-8">
@@ -68,13 +68,13 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
                 )}
                 <span className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,37,69,.55)_0%,rgba(11,37,69,0)_40%,rgba(11,37,69,0)_70%,rgba(11,37,69,.55)_100%)]" />
                 <span className="absolute top-4 left-4 flex flex-col text-white">
-                  <span className="text-xs text-white/85">{v.type}</span>
-                  <span className="flex items-center gap-1.5 text-xl font-semibold">
+                  <span className="text-caption font-normal text-white/85">{v.type}</span>
+                  <span className="flex items-center gap-1.5 text-h4">
                     <Icon name="flight" size={20} className="text-sun-400" />
                     {v.city}
                   </span>
                 </span>
-                <span className={buttonClasses("primary", "md", "absolute right-4 bottom-4 h-10 px-4 text-[13px]")}>
+                <span className={buttonClasses("primary", "md", "absolute right-4 bottom-4 h-10 px-4 text-small")}>
                   {hasPage ? "View More" : "Ask about this visa"}
                   <Icon name="arrow_forward" size={18} />
                 </span>

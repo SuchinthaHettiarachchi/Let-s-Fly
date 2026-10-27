@@ -36,7 +36,7 @@ export default function AirTicketsPage() {
         <Container className="flex flex-col gap-8">
           <div data-reveal className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-end">
             <SectionHeading eyebrow="Popular routes" title="Top fares from Colombo" />
-            <p className="text-xs text-ink-400">Return fares per person, incl. taxes · Prices indicative</p>
+            <p className="text-caption font-normal text-ink-400">Return fares per person, incl. taxes · Prices indicative</p>
           </div>
           <FareGrid fares={topFares} />
         </Container>
@@ -59,8 +59,8 @@ export default function AirTicketsPage() {
                 <span className="flex size-11 items-center justify-center rounded-tile bg-sand-200 text-ocean-600 transition-[background-color,color,scale] duration-300 group-hover:scale-110 group-hover:bg-ocean-600 group-hover:text-white">
                   <Icon name={f.icon} size={22} />
                 </span>
-                <span className="text-base font-semibold">{f.title}</span>
-                <span className="text-[13px] leading-relaxed text-ink-600">{f.text}</span>
+                <span className="text-h5">{f.title}</span>
+                <span className="text-small text-ink-600">{f.text}</span>
               </li>
             ))}
           </ul>

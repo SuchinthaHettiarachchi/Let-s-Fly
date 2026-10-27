@@ -17,15 +17,15 @@ export function RentalsTeaser() {
       <Container className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1fr_1.05fr] lg:gap-[72px]">
         <div data-reveal className="flex flex-col gap-5">
           <Eyebrow>Car &amp; bike rental</Eyebrow>
-          <h2 className="text-[30px] leading-[1.18] font-bold tracking-[-0.01em] text-pretty sm:text-[36px] lg:text-[42px]">
+          <h2>
             Explore Sri Lanka at your own pace
           </h2>
-          <p className="text-base leading-[1.75] text-ink-600">
+          <p className="text-lead text-ink-600">
             Self-drive or with a chauffeur. Clean, insured vehicles delivered to your hotel or the airport.
           </p>
           <ul className="flex flex-col gap-3">
             {rentalPerks.map((perk) => (
-              <li key={perk} className="flex items-center gap-3 text-[15px]">
+              <li key={perk} className="flex items-center gap-3 text-body">
                 <Icon name="check_circle" size={22} fill className="text-ocean-600" />
                 {perk}
               </li>
@@ -72,8 +72,8 @@ export function RentalsTeaser() {
             ))}
           </div>
           <div className="absolute bottom-6 left-4 flex flex-col rounded-xl bg-sun-400 px-5 py-4 text-navy-900 shadow-[0_18px_40px_rgba(11,37,69,.18)] sm:bottom-9 lg:-left-7">
-            <span className="text-xs font-medium">{current.label} from</span>
-            <span className="text-2xl font-bold">{current.price}</span>
+            <span className="text-caption font-medium">{current.label} from</span>
+            <span className="num text-h3">{current.price}</span>
           </div>
         </div>
       </Container>

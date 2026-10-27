@@ -53,7 +53,7 @@ export default async function VisaDetailPage({ params }: PageProps<"/visa/[slug]
             {visa.facts.map((f) => (
               <li
                 key={f.label}
-                className="flex items-center gap-1.5 rounded-full border border-white/25 bg-white/12 px-3.5 py-1.5 text-[13px] text-white"
+                className="flex items-center gap-1.5 rounded-full border border-white/25 bg-white/12 px-3.5 py-1.5 text-small text-white"
               >
                 <Icon name={f.icon} size={16} className="text-sun-400" />
                 {f.label}
@@ -67,8 +67,8 @@ export default async function VisaDetailPage({ params }: PageProps<"/visa/[slug]
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-2.5">
             <Eyebrow>Documents checklist</Eyebrow>
-            <h2 className="text-[28px] font-bold tracking-[-0.01em] sm:text-[32px]">What you&apos;ll need</h2>
-            <p className="text-[15px] leading-relaxed text-ink-600">
+            <h2>What you&apos;ll need</h2>
+            <p className="text-lead text-ink-600">
               Send us clear scans or photos of the documents below. We&apos;ll check everything and flag any gaps before we
               submit. <span className="text-ink-400">({total} documents in total)</span>
             </p>
@@ -77,13 +77,13 @@ export default async function VisaDetailPage({ params }: PageProps<"/visa/[slug]
           {visa.documentGroups.map((group, gi) => (
             <section key={group.title} className="rounded-xl border border-sand-300 bg-white p-5 sm:p-6">
               <div className="mb-4 flex items-center justify-between gap-3 border-b border-sand-300 pb-4">
-                <h3 className="flex items-center gap-3 text-[17px] font-semibold">
-                  <span className="flex size-8 flex-none items-center justify-center rounded-full bg-sun-400 text-sm font-bold text-navy-900">
+                <h3 className="flex items-center gap-3 font-sans text-h4">
+                  <span className="flex size-8 flex-none items-center justify-center rounded-full bg-sun-400 text-small font-bold text-navy-900">
                     {gi + 1}
                   </span>
                   {group.title}
                 </h3>
-                <span className="flex-none rounded-full bg-sand-50 px-2.5 py-1 text-[11.5px] font-semibold text-ocean-600">
+                <span className="flex-none rounded-full bg-sand-50 px-2.5 py-1 text-caption text-ocean-600">
                   {group.items.length} documents
                 </span>
               </div>
@@ -92,8 +92,8 @@ export default async function VisaDetailPage({ params }: PageProps<"/visa/[slug]
                   <li key={item.title} className="flex gap-3">
                     <span aria-hidden="true" className="mt-[7px] size-2 flex-none rounded-full bg-ocean-600" />
                     <span className="flex flex-col gap-0.5">
-                      <span className="text-[14.5px]">{item.title}</span>
-                      {item.note && <span className="text-[12.5px] text-ink-400">{item.note}</span>}
+                      <span className="text-body">{item.title}</span>
+                      {item.note && <span className="text-caption font-normal text-ink-400">{item.note}</span>}
                     </span>
                   </li>
                 ))}
@@ -102,7 +102,7 @@ export default async function VisaDetailPage({ params }: PageProps<"/visa/[slug]
           ))}
 
           {visa.warning && (
-            <p className="flex gap-2.5 rounded-lg border-l-4 border-sun-400 bg-sun-400/12 px-4 py-3.5 text-[13.5px] leading-relaxed text-ink-900">
+            <p className="flex gap-2.5 rounded-lg border-l-4 border-sun-400 bg-sun-400/12 px-4 py-3.5 text-small text-ink-900">
               <Icon name="info" size={18} className="mt-px text-navy-900" />
               {visa.warning}
             </p>

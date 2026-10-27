@@ -36,7 +36,7 @@ export default function AboutPage() {
   return (
     <>
       {/* 1. Hero */}
-      <section className="relative overflow-hidden bg-navy-900">
+      <section className="on-dark relative overflow-hidden bg-navy-900">
         <Image src="/images/hero/dubai.jpg" alt="" fill preload sizes="100vw" className="animate-zoom object-cover" />
         <div className={`absolute inset-0 ${gradient}`} />
         <Container className="relative flex min-h-[600px] flex-col justify-center gap-5 py-14 text-white sm:min-h-[640px] lg:min-h-[660px]">
@@ -44,13 +44,13 @@ export default function AboutPage() {
           <Eyebrow onDark className="animate-rise">
             About Us
           </Eyebrow>
-          <h1 className="max-w-[860px] animate-rise text-[34px] [animation-delay:120ms] leading-[1.1] font-bold tracking-[-0.02em] text-pretty sm:text-[48px] lg:text-[60px]">
+          <h1 className="max-w-[18ch] animate-rise [animation-delay:120ms] text-display">
             Sri Lankan travel experts who plan everything
           </h1>
-          <p className="max-w-[560px] animate-rise text-base leading-relaxed text-white/85 [animation-delay:240ms] sm:text-lg">
+          <p className="max-w-[52ch] animate-rise text-lead text-white/85 [animation-delay:240ms]">
             A Sri Lankan team handling your flights, visas, hotels and tours with professionalism, efficiency and a personal touch.
           </p>
-          <span className="flex animate-rise items-center gap-2 self-start rounded-full [animation-delay:360ms] border border-white/25 bg-white/12 px-4 py-2 text-sm">
+          <span className="flex animate-rise items-center gap-2 self-start rounded-full [animation-delay:360ms] border border-white/25 bg-white/12 px-4 py-2 text-small">
             <Icon name="groups" size={18} className="text-sun-400" />
             15,000+ travellers since 2016
           </span>
@@ -76,8 +76,8 @@ export default function AboutPage() {
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,37,69,.15)_0%,rgba(11,37,69,.55)_45%,rgba(11,37,69,.94)_100%)]" />
               <div className="relative flex flex-col gap-4 p-7 sm:p-10">
                 <Eyebrow onDark>Our</Eyebrow>
-                <h2 className="text-[38px] leading-[1.05] font-bold tracking-[-0.02em] sm:text-[48px]">{v.title}</h2>
-                <p className="text-base leading-[1.75] text-white/88">{v.text}</p>
+                <h2 className="text-h1">{v.title}</h2>
+                <p className="text-lead text-white/88">{v.text}</p>
               </div>
             </div>
           ))}
@@ -89,25 +89,25 @@ export default function AboutPage() {
         <Container className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.1fr_1fr]">
           <div data-reveal className="flex flex-col gap-5">
             <Eyebrow>Who we are</Eyebrow>
-            <h2 className="text-[32px] leading-[1.15] font-bold tracking-[-0.01em] sm:text-[42px]">
+            <h2>
               More Than <span className="text-ocean-600">Just Travel</span>
             </h2>
             {aboutParagraphs.map((p) => (
-              <p key={p.slice(0, 20)} className="text-[15px] leading-[1.8] text-ink-600">
+              <p key={p.slice(0, 20)} className="text-body text-ink-600">
                 {p}
               </p>
             ))}
             <figure className="mt-2 flex gap-4 border-t border-sand-300 pt-6">
-              <span className="flex size-12 flex-none items-center justify-center rounded-full bg-ocean-600 text-sm font-bold text-white">
+              <span className="flex size-12 flex-none items-center justify-center rounded-full bg-ocean-600 text-small font-bold text-white">
                 {founderQuote.initials}
               </span>
               <div className="flex flex-col gap-2">
-                <blockquote className="text-[16px] leading-relaxed font-medium text-ink-900">
+                <blockquote className="text-lead font-medium text-ink-900">
                   “{founderQuote.quote}”
                 </blockquote>
-                <figcaption className="text-sm">
+                <figcaption className="text-small">
                   <span className="font-semibold">{founderQuote.name}</span>
-                  <span className="block text-xs text-ink-400">{founderQuote.role}</span>
+                  <span className="block text-caption font-normal text-ink-400">{founderQuote.role}</span>
                 </figcaption>
               </div>
             </figure>
@@ -118,8 +118,8 @@ export default function AboutPage() {
               <Image src="/images/packages/kandy-ella-rail.jpg" alt="" fill sizes="230px" className="object-cover" />
             </div>
             <div className="absolute top-8 right-0 flex animate-float flex-col rounded-xl bg-white px-5 py-4 shadow-lf-md">
-              <CountUp value="14+" className="text-[32px] font-bold text-ocean-600" />
-              <span className="text-xs leading-snug text-ink-600">
+              <CountUp value="14+" className="num text-stat text-ocean-600" />
+              <span className="text-caption font-normal text-ink-600">
                 years helping
                 <br />
                 Sri Lankans travel
@@ -134,7 +134,7 @@ export default function AboutPage() {
         <Container className="flex flex-col gap-10 lg:gap-14">
           <div data-reveal className="grid grid-cols-1 items-end gap-4 lg:grid-cols-2 lg:gap-16">
             <SectionHeading eyebrow="Our approach" title="Travel, The Way It Should Be" />
-            <p className="text-base leading-relaxed text-ink-600">
+            <p className="text-lead text-ink-600">
               Five things guide every trip we plan, whether it&apos;s a weekend in Malé or a three-week tour of Europe.
             </p>
           </div>
@@ -147,7 +147,7 @@ export default function AboutPage() {
               className="relative order-1 aspect-[16/10] overflow-hidden rounded-2xl lg:sticky lg:top-[170px] lg:order-2 lg:aspect-[3/4]"
             >
               <Image src="/images/about/approach.jpg" alt="A traveller hiking through a green mountain valley" fill sizes="(min-width: 1280px) 420px, (min-width: 1024px) 340px, 100vw" className="object-cover" />
-              <div className="absolute inset-x-4 bottom-4 flex items-center gap-3 rounded-xl bg-white/95 px-4 py-3.5 text-[13px] text-ink-900 backdrop-blur-sm">
+              <div className="absolute inset-x-4 bottom-4 flex items-center gap-3 rounded-xl bg-white/95 px-4 py-3.5 text-small text-ink-900 backdrop-blur-sm">
                 <span className="flex size-9 flex-none items-center justify-center rounded-full bg-sun-400 text-navy-900">
                   <Icon name="check" size={18} />
                 </span>
@@ -159,15 +159,15 @@ export default function AboutPage() {
       </section>
 
       {/* 5. Why we do it */}
-      <section className="relative overflow-hidden bg-navy-900">
+      <section className="on-dark relative overflow-hidden bg-navy-900">
         <Image src="/images/hero/hill-country-rail.jpg" alt="" fill sizes="100vw" className="animate-zoom object-cover [animation-direction:alternate] [animation-iteration-count:infinite]" />
         <div className={`absolute inset-0 ${gradient}`} />
         <Container data-reveal className="relative flex min-h-[460px] flex-col justify-center gap-5 py-16 text-white">
           <Eyebrow onDark>Why we do it</Eyebrow>
-          <h2 className="max-w-[720px] text-[32px] leading-[1.15] font-bold tracking-[-0.01em] sm:text-[48px]">
+          <h2 className="max-w-[720px] text-h1">
             Because Every Journey Means Something
           </h2>
-          <p className="max-w-[520px] text-base leading-relaxed text-white/85">
+          <p className="max-w-[520px] text-lead text-white/85">
             A ticket is never just a ticket. Behind every booking is a reason to go and someone waiting at the other end.
             That&apos;s why we take the details personally.
           </p>
@@ -177,8 +177,8 @@ export default function AboutPage() {
       <section className="py-14 lg:py-20">
         <Container className="flex flex-col gap-6">
           <div data-reveal className="flex items-end justify-between gap-4">
-            <h3 className="text-xl font-bold sm:text-2xl">The journeys we&apos;ve helped with this year</h3>
-            <span className="hidden text-[13px] text-ink-400 sm:block lg:hidden">Swipe to see more →</span>
+            <h3>The journeys we&apos;ve helped with this year</h3>
+            <span className="hidden text-small text-ink-400 sm:block lg:hidden">Swipe to see more →</span>
           </div>
           <ul className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 lg:mx-0 lg:grid lg:grid-cols-5 lg:px-0">
             {journeysThisYear.map((j, i) => (
@@ -196,8 +196,8 @@ export default function AboutPage() {
                 />
                 <span className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,37,69,0)_45%,rgba(11,37,69,.88)_100%)]" />
                 <span className="absolute inset-x-4 bottom-4 flex flex-col text-white">
-                  <span className="text-base font-semibold">{j.place}</span>
-                  <span className="text-xs text-white/75">{j.caption}</span>
+                  <span className="text-h5">{j.place}</span>
+                  <span className="text-caption font-normal text-white/75">{j.caption}</span>
                 </span>
               </li>
             ))}
@@ -206,7 +206,7 @@ export default function AboutPage() {
       </section>
 
       {/* 6. Under one roof */}
-      <section className="relative overflow-hidden bg-navy-900 py-20 text-white lg:py-28">
+      <section className="on-dark relative overflow-hidden bg-navy-900 py-20 text-white lg:py-28">
         {/* Faint orbit rings behind the content */}
         <span
           aria-hidden="true"
@@ -219,10 +219,10 @@ export default function AboutPage() {
         <Container className="relative flex flex-col gap-14">
           <div data-reveal className="mx-auto flex max-w-[680px] flex-col items-center gap-4 text-center">
             <Eyebrow onDark>What we bring together</Eyebrow>
-            <h2 className="text-[32px] leading-[1.12] font-bold tracking-[-0.01em] text-balance sm:text-[44px] lg:text-[48px]">
+            <h2>
               Everything You Need, Under One Roof
             </h2>
-            <p className="text-[15px] leading-relaxed text-white/75 sm:text-base">
+            <p className="text-lead text-white/75">
               Each part of your trip is handled by a specialist, and all of it is coordinated by one team that knows your
               plans.
             </p>
@@ -243,12 +243,12 @@ export default function AboutPage() {
                   height={76}
                   className="mb-2 size-[76px] rounded-full"
                 />
-                <span className="text-lg leading-tight font-bold">
+                <span className="text-h4 font-bold">
                   One team.
                   <br />
                   One plan.
                 </span>
-                <span className="text-xs text-white/75">Your journey</span>
+                <span className="text-caption font-normal text-white/75">Your journey</span>
               </div>
             </div>
             <ul className="order-3 flex flex-col gap-5">
@@ -266,22 +266,22 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.3fr]">
             <div data-reveal className="flex flex-col gap-4">
               <Eyebrow>Our commitment</Eyebrow>
-              <h2 className="text-[32px] leading-[1.15] font-bold tracking-[-0.01em] sm:text-[42px]">
+              <h2>
                 Your Journey.
                 <br />
                 <span className="text-ocean-600">Our Responsibility.</span>
               </h2>
-              <p className="text-[15px] leading-relaxed text-ink-600">
+              <p className="text-lead text-ink-600">
                 When you trust us with your travel, we take that seriously. These are the promises we hold ourselves to.
               </p>
             </div>
             <ol className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
               {commitments.map((c, i) => (
                 <li key={c.title} data-reveal={(i % 2) * 110} className="group flex gap-4">
-                  <span className="flex size-9 flex-none items-center justify-center rounded-full bg-sand-100 text-sm font-bold text-ocean-600 transition-[background-color,color,scale] duration-300 group-hover:scale-110 group-hover:bg-ocean-600 group-hover:text-white">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="flex size-9 flex-none items-center justify-center rounded-full bg-sand-100 text-small font-bold text-ocean-600 transition-[background-color,color,scale] duration-300 group-hover:scale-110 group-hover:bg-ocean-600 group-hover:text-white">{String(i + 1).padStart(2, "0")}</span>
                   <span className="flex flex-col gap-1">
-                    <span className="text-[15px] font-semibold transition-colors group-hover:text-ocean-600">{c.title}</span>
-                    <span className="text-[13px] leading-relaxed text-ink-600">{c.text}</span>
+                    <span className="text-h5 transition-colors group-hover:text-ocean-600">{c.title}</span>
+                    <span className="text-small text-ink-600">{c.text}</span>
                   </span>
                 </li>
               ))}
@@ -295,8 +295,8 @@ export default function AboutPage() {
                   i > 1 ? "border-t border-sand-300 lg:border-t-0" : ""
                 } ${i === 2 ? "lg:border-l" : ""}`}
               >
-                <dt className="order-2 text-[13px] text-ink-600">{s.label}</dt>
-                <dd className="text-[34px] font-bold text-ocean-600 transition-transform duration-300 group-hover:-translate-y-0.5">
+                <dt className="order-2 text-small text-ink-600">{s.label}</dt>
+                <dd className="num text-stat text-ocean-600 transition-transform duration-300 group-hover:-translate-y-0.5">
                   {/^[\d,]+\+?$/.test(s.value) ? <CountUp value={s.value} /> : s.value}
                 </dd>
               </div>
@@ -310,7 +310,7 @@ export default function AboutPage() {
         <Container className="flex flex-col gap-10">
           <div data-reveal className="mx-auto flex max-w-[620px] flex-col items-center gap-3 text-center">
             <SectionHeading eyebrow="The people behind your trip" title="Meet Our Team" centered />
-            <p className="text-[15px] leading-relaxed text-ink-600">
+            <p className="text-lead text-ink-600">
               Behind every journey is a team that cares about getting the details right.
             </p>
           </div>
@@ -325,15 +325,15 @@ export default function AboutPage() {
         <span aria-hidden="true" className="absolute -top-[200px] -left-[160px] size-[640px] rounded-full border-[60px] border-navy-900/5" />
         <span aria-hidden="true" className="absolute -right-[120px] -bottom-[240px] size-[480px] rounded-full border-[50px] border-navy-900/5" />
         <Container data-reveal className="relative flex flex-col items-center gap-6 text-center text-navy-900">
-          <span className="text-[13px] font-semibold tracking-[0.2em] uppercase">Your story, next</span>
-          <h2 className="max-w-[780px] text-[34px] leading-[1.1] font-bold tracking-[-0.01em] sm:text-[52px]">
+          <span className="eyebrow">Your story, next</span>
+          <h2 className="max-w-[780px] text-h1">
             Ready to Plan Your Next Journey?
           </h2>
-          <p className="max-w-[520px] text-base leading-relaxed">
+          <p className="max-w-[520px] text-lead">
             Tell us where you&apos;re dreaming of going. We&apos;ll handle the planning and send you a quote
             within the day.
           </p>
-          <div aria-hidden="true" className="flex w-full max-w-[520px] items-center gap-3 font-mono text-sm font-semibold">
+          <div aria-hidden="true" className="flex w-full max-w-[520px] items-center gap-3 font-mono text-small font-semibold">
             <span>CMB</span>
             <span className="h-px flex-1 border-t-2 border-dashed border-navy-900/40" />
             <Icon name="flight" size={22} className="animate-glide rotate-90" />
@@ -392,8 +392,8 @@ function RoofItem({
         <Icon name={icon} size={24} />
       </span>
       <span className="flex flex-col gap-1">
-        <span className="text-[17px] font-semibold">{title}</span>
-        <span className="text-[13.5px] leading-relaxed text-white/70">{text}</span>
+        <span className="text-h4">{title}</span>
+        <span className="text-small text-white/70">{text}</span>
       </span>
     </li>
   );

@@ -53,7 +53,7 @@ export function LatestPackages() {
                     type="button"
                     aria-pressed={i === active}
                     onClick={() => setActive(i)}
-                    className={`h-10 flex-none cursor-pointer rounded-full border-[1.5px] px-[18px] text-[13.5px] font-semibold whitespace-nowrap transition-colors ${
+                    className={`h-10 flex-none cursor-pointer rounded-full border-[1.5px] px-[18px] text-small font-semibold whitespace-nowrap transition-colors ${
                       i === active
                         ? "border-navy-900 bg-navy-900 text-white"
                         : "border-sand-300 bg-white text-ink-600 hover:border-ocean-600 hover:text-ocean-600"
@@ -65,7 +65,7 @@ export function LatestPackages() {
               </div>
               <PillArrow direction="next" onClick={() => scrollPills(1)} />
             </div>
-            <Link href={href} className="flex flex-none items-center gap-1.5 text-[15px] font-semibold">
+            <Link href={href} className="flex flex-none items-center gap-1.5 text-body font-semibold">
               View all
               <Icon name="arrow_forward" />
             </Link>

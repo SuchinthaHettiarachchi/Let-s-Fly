@@ -27,7 +27,7 @@ export function HeroSlider() {
     <section
       aria-roledescription="carousel"
       aria-label="Featured holidays"
-      className="relative h-[600px] overflow-hidden bg-navy-900 sm:h-[640px] lg:h-[660px]"
+      className="on-dark relative h-[600px] overflow-hidden bg-navy-900 sm:h-[640px] lg:h-[660px]"
     >
       {heroSlides.map((s, i) => {
         // Art direction: phones get the portrait photo, `sm` (40rem) and up the landscape one.
@@ -58,17 +58,17 @@ export function HeroSlider() {
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(11,37,69,.94)_0%,rgba(11,37,69,.78)_35%,rgba(19,87,155,.35)_70%,rgba(19,87,155,.1)_100%)]" />
 
       <Container className="relative flex h-full flex-col justify-center gap-[22px] pb-16 text-white">
-        <Eyebrow onDark className="animate-rise tracking-[0.28em]">
+        <Eyebrow onDark className="animate-rise">
           Your journey · Our passion
         </Eyebrow>
-        <h1 className="max-w-[640px] animate-rise [animation-delay:120ms] text-[40px] leading-[1.08] font-bold tracking-[-0.02em] text-pretty sm:text-[52px] lg:text-[64px]">
+        <h1 className="max-w-[18ch] animate-rise [animation-delay:120ms] text-display">
           Plan your next trip with us today
         </h1>
-        <p className="max-w-[520px] animate-rise text-base [animation-delay:240ms] leading-[1.6] text-white/85 sm:text-lg">
+        <p className="max-w-[52ch] animate-rise text-lead [animation-delay:240ms] text-white/85">
           Discover cheap flights, visa assistance, customised holiday tours, and complete travel management
           solutions.
         </p>
-        <div className="flex animate-rise items-center gap-2 text-sm text-white/80 [animation-delay:340ms]">
+        <div className="flex animate-rise items-center gap-2 text-small text-white/80 [animation-delay:340ms]">
           <Icon name="verified" size={20} fill className="text-sun-400" />
           Most trusted travel agency in Sri Lanka
         </div>

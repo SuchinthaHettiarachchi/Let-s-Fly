@@ -52,7 +52,7 @@ export function Testimonials() {
                 </div>
                 <Icon name="format_quote" size={40} fill className="text-sand-200" />
               </div>
-              <blockquote className="flex-1 text-[15.5px] leading-[1.7] text-ink-600">“{r.quote}”</blockquote>
+              <blockquote className="flex-1 text-body text-ink-600">“{r.quote}”</blockquote>
               <figcaption className="flex items-center gap-3.5 border-t border-sand-300 pt-[18px]">
                 <Image
                   src={r.image}
@@ -62,10 +62,10 @@ export function Testimonials() {
                   className="size-12 rounded-full bg-sand-200 object-cover"
                 />
                 <div className="flex flex-1 flex-col">
-                  <span className="text-[15px] font-semibold">{r.name}</span>
-                  <span className="text-[12.5px] text-ink-400">{r.trip}</span>
+                  <span className="text-h5">{r.name}</span>
+                  <span className="text-caption font-normal text-ink-400">{r.trip}</span>
                 </div>
-                <span className="rounded-full bg-sand-50 px-2.5 py-[5px] text-[11.5px] font-semibold text-ocean-600">
+                <span className="rounded-full bg-sand-50 px-2.5 py-[5px] text-caption text-ocean-600">
                   Google review
                 </span>
               </figcaption>
