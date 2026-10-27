@@ -26,14 +26,14 @@ export function Footer() {
     <>
       <Newsletter />
       <footer className="on-dark relative isolate overflow-hidden bg-navy-900 text-small text-white/75">
-        {/* Covers the top 640px on phones so the rock stays in frame; from 900px it spans the width and the gradient takes over below it. */}
+        {/* Covers the top 640px on phones so the rock stays in frame; from 900px it covers the whole footer. */}
         <div className="absolute inset-x-0 top-0 -z-20 h-[640px] min-[900px]:h-full">
           <Image
             src="/images/footer/sigiriya.jpg"
             alt=""
             fill
             sizes="100vw"
-            className="object-cover object-[58%_top] min-[900px]:object-contain min-[900px]:object-top"
+            className="object-cover object-[58%_top] min-[900px]:object-center"
           />
           <div className="absolute inset-x-0 bottom-0 h-48 bg-linear-to-b from-transparent to-navy-900 min-[900px]:hidden" />
         </div>
@@ -42,8 +42,8 @@ export function Footer() {
           className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(11,37,69,.3)_0%,rgba(11,37,69,0)_12%,rgba(11,37,69,.18)_28%,rgba(11,37,69,.55)_46%,rgba(11,37,69,.85)_64%,rgba(11,37,69,.97)_78%,#0b2545_100%),linear-gradient(90deg,rgba(11,37,69,.45)_0%,rgba(11,37,69,0)_55%)]"
         />
 
-        <section aria-label="Smart travel starts here" className="flex min-h-[400px] items-end sm:min-h-[clamp(340px,36vw,520px)]">
-          <Container className="flex flex-wrap items-end justify-between gap-6 pb-9 sm:pb-12">
+        <section aria-label="Smart travel starts here">
+          <Container className="flex flex-wrap items-end justify-between gap-6 pt-14 pb-9 sm:pt-16 sm:pb-12">
             <div>
               <h2 className="max-w-[620px] text-h1 text-white">Smart travel starts here.</h2>
               <p className="mt-4 max-w-[460px] text-body text-white/85">
