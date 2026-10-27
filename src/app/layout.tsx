@@ -1,15 +1,24 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { DM_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFab } from "@/components/layout/WhatsAppFab";
 import { InquiryProvider } from "@/components/inquiry/InquiryProvider";
 import "./globals.css";
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+// Headings in Plus Jakarta Sans, everything else in DM Sans (the Walkers Tours body font).
+const heading = Plus_Jakarta_Sans({
+  variable: "--font-heading",
+  subsets: ["latin", "latin-ext"],
+  weight: ["600", "700"],
+  display: "swap",
+});
+
+const body = DM_Sans({
+  variable: "--font-body",
   subsets: ["latin", "latin-ext"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -24,7 +33,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     // data-scroll-behavior lets Next jump straight to the top on route changes; in-page anchors keep smooth scrolling.
-    <html lang="en" data-scroll-behavior="smooth" className={`${poppins.variable} antialiased`}>
+    <html lang="en" data-scroll-behavior="smooth" className={`${heading.variable} ${body.variable} antialiased`}>
       <head>
         {/* Icon font: variable axes so FILL can be toggled per icon.
             display=block keeps ligature names ("arrow_forward") from flashing before it loads. */}
