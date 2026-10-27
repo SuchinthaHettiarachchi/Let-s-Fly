@@ -12,8 +12,8 @@ function Label({ children }: { children: React.ReactNode }) {
 }
 
 /**
- * Walkers Tours layout on our navy: phone, email and hours on the left, then the "Quick Links & Services"
- * and "Legal & Policies" columns, then address with the map, payments and socials.
+ * Walkers Tours layout on our navy: phone, email, hours and address on the left, then the "Quick Links & Services"
+ * and "Legal & Policies" columns, then the map, payments and socials.
  */
 export function Footer() {
   return (
@@ -42,6 +42,18 @@ export function Footer() {
             <Label>Office hours</Label>
             <span className="text-white">{contact.hours}</span>
           </div>
+          <div>
+            <Label>Address</Label>
+            <a
+              href={contact.mapHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex max-w-[300px] items-start gap-2 leading-relaxed text-white hover:text-sun-400"
+            >
+              <Icon name="location_on" size={18} className="mt-0.5 flex-none text-sun-400" />
+              {contact.address}
+            </a>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-x-8">
@@ -63,22 +75,13 @@ export function Footer() {
 
         <div className="flex flex-col gap-7 sm:col-span-2 lg:col-span-1">
           <div>
-            <Label>Address</Label>
-            <a
-              href={contact.mapHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-start gap-2 leading-relaxed text-white hover:text-sun-400"
-            >
-              <Icon name="location_on" size={18} className="mt-0.5 flex-none text-sun-400" />
-              {contact.address}
-            </a>
+            <Label>Find us</Label>
             <iframe
               src={contact.mapEmbedHref}
               title="Let's Fly.lk office on Google Maps"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              className="mt-3 h-[150px] w-full rounded-xl border-0"
+              className="mt-1 h-[150px] w-full rounded-xl border-0"
             />
             <a
               href={contact.mapHref}
