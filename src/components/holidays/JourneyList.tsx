@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Button } from "@/components/ui/Button";
+import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Placeholder } from "@/components/ui/Placeholder";
-import { useInquiry } from "@/components/inquiry/InquiryProvider";
+import { contact } from "@/data/site";
 import { formatLKR } from "@/data/packages";
 import type { Journey } from "@/data/journeys";
 
@@ -58,8 +58,6 @@ export function JourneyList({ journeys }: { journeys: Journey[] }) {
 
 /** One train or cruise row, also shown under the home page's "Train & Cruise" filter. */
 export function JourneyCard({ journey: j }: { journey: Journey }) {
-  const { openInquiry } = useInquiry();
-
   return (
     <div className="grid grid-cols-1 overflow-hidden rounded-xl border border-sand-300 bg-white transition-[border-color,box-shadow] hover:border-ocean-600 hover:shadow-lf-card-hover md:grid-cols-[260px_1fr_220px]">
       <div className="relative h-[180px] bg-sand-200 md:h-auto md:min-h-[180px]">
@@ -87,14 +85,16 @@ export function JourneyCard({ journey: j }: { journey: Journey }) {
           <span className="text-[22px] font-bold text-ocean-600">{formatLKR(j.price)}</span>
           <span className="text-xs text-ink-400">{j.priceNote}</span>
         </div>
-        <Button
+        <ButtonLink
+          href={`${contact.whatsappHref}?text=${encodeURIComponent(`Hi Let's Fly, I'd like to book: ${j.title}`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
           variant="primary"
           size="md"
           icon="arrow_forward"
-          onClick={() => openInquiry({ service: "Trains & Cruises", destination: j.title })}
         >
           Book Now
-        </Button>
+        </ButtonLink>
       </div>
     </div>
   );

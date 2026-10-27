@@ -2,11 +2,10 @@
 
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/SectionHeading";
-import { Button, ButtonLink } from "@/components/ui/Button";
+import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Placeholder } from "@/components/ui/Placeholder";
-import { useInquiry } from "@/components/inquiry/InquiryProvider";
-import { bookingPortals } from "@/data/site";
+import { bookingPortals, contact } from "@/data/site";
 
 const stats = [
   { value: "2,000+", label: "Hotels & villas" },
@@ -25,7 +24,6 @@ export function HotelBookings() {
 
 /** The hotel promo card, also shown under the home page's "Hotel bookings" filter. */
 export function HotelBookingCard() {
-  const { openInquiry } = useInquiry();
   const portal = bookingPortals.hotels;
 
   return (
@@ -59,9 +57,16 @@ export function HotelBookingCard() {
               </span>
             </>
           ) : (
-            <Button variant="primary" size="lg" icon="arrow_forward" onClick={() => openInquiry({ service: "Hotels" })}>
+            <ButtonLink
+              href={`${contact.whatsappHref}?text=${encodeURIComponent("Hi Let's Fly, I'd like to book a hotel.")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="primary"
+              size="lg"
+              icon="arrow_forward"
+            >
               Book Hotel
-            </Button>
+            </ButtonLink>
           )}
         </div>
       </div>

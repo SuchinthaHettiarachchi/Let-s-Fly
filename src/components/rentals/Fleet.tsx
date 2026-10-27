@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Button } from "@/components/ui/Button";
+import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Placeholder } from "@/components/ui/Placeholder";
-import { useInquiry } from "@/components/inquiry/InquiryProvider";
+import { contact } from "@/data/site";
 import { vehicleTypes, type DriveMode, type Vehicle, type VehicleType } from "@/data/rentals";
 
 const modes: { id: DriveMode; label: string }[] = [
@@ -16,7 +16,6 @@ const modes: { id: DriveMode; label: string }[] = [
 export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
   const [type, setType] = useState<VehicleType | "all">("all");
   const [mode, setMode] = useState<DriveMode>("self-drive");
-  const { openInquiry } = useInquiry();
 
   const visible = vehicles.filter((v) => (type === "all" || v.type === type) && v.modes.includes(mode));
   const chips = [{ id: "all" as const, label: "All", icon: "apps" }, ...vehicleTypes];
@@ -99,14 +98,16 @@ export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
                   </li>
                 </ul>
                 <div className="mt-auto border-t border-sand-300 pt-4">
-                  <Button
+                  <ButtonLink
+                    href={`${contact.whatsappHref}?text=${encodeURIComponent(`Hi Let's Fly, I'd like to book the ${v.name} (${modeLabel}).`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     variant="primary"
                     size="md"
                     className="h-10 px-5 text-[13.5px]"
-                    onClick={() => openInquiry({ service: "Rentals", destination: v.name, details: modeLabel })}
                   >
                     Book Now
-                  </Button>
+                  </ButtonLink>
                 </div>
               </div>
             </li>
