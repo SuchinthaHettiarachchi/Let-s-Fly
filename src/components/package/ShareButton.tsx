@@ -23,7 +23,7 @@ export function ShareButton({ title }: { title: string }) {
   }
 
   return (
-    <Button variant="outline" size="md" leadingIcon={copied ? "check" : "share"} onClick={share} className="h-10 px-4 text-[13.5px]">
+    <Button variant="outline" size="md" leadingIcon={copied ? "check" : "share"} onClick={share} className="h-10 px-4 text-small">
       <span aria-live="polite">{copied ? "Link copied" : "Share"}</span>
     </Button>
   );

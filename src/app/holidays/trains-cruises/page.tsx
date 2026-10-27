@@ -38,8 +38,8 @@ export default function TrainsCruisesPage() {
                   <Icon name={p.icon} size={22} />
                 </span>
                 <span className="flex flex-col gap-1">
-                  <span className="text-[15px] font-semibold">{p.title}</span>
-                  <span className="text-[13px] leading-relaxed text-ink-600">{p.text}</span>
+                  <span className="text-h5">{p.title}</span>
+                  <span className="text-small text-ink-600">{p.text}</span>
                 </span>
               </li>
             ))}

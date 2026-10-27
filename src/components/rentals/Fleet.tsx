@@ -33,7 +33,7 @@ export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
                 type="button"
                 aria-pressed={on}
                 onClick={() => setType(c.id)}
-                className={`flex h-10 flex-none cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] px-[18px] text-sm font-medium transition-colors ${
+                className={`flex h-10 flex-none cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] px-[18px] text-small font-medium transition-colors ${
                   on ? "border-ocean-600 bg-ocean-600 text-white" : "border-sand-300 bg-white text-ink-900 hover:border-ocean-600"
                 }`}
               >
@@ -53,7 +53,7 @@ export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
                 role="radio"
                 aria-checked={on}
                 onClick={() => setMode(m.id)}
-                className={`h-9 cursor-pointer rounded-lg px-4 text-[13px] font-semibold transition-colors ${
+                className={`h-9 cursor-pointer rounded-lg px-4 text-small font-semibold transition-colors ${
                   on ? "bg-white text-ocean-600 shadow-lf-header" : "text-ink-600 hover:text-ocean-600"
                 }`}
               >
@@ -77,13 +77,13 @@ export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
                 ) : (
                   <Placeholder label="PHOTO" className="absolute inset-0 rounded-none border-0" />
                 )}
-                <span className="absolute top-3.5 left-3.5 rounded-full bg-white px-3 py-1.5 text-[11.5px] font-semibold text-ocean-600">
+                <span className="absolute top-3.5 left-3.5 rounded-full bg-white px-3 py-1.5 text-caption text-ocean-600">
                   {vehicleTypes.find((t) => t.id === v.type)?.label}
                 </span>
               </div>
               <div className="flex flex-1 flex-col gap-3 p-5">
-                <h3 className="text-[17px] font-semibold">{v.name}</h3>
-                <ul className="flex flex-wrap gap-x-4 gap-y-1 text-[13px] text-ink-400">
+                <h3 className="font-sans text-h4">{v.name}</h3>
+                <ul className="flex flex-wrap gap-x-4 gap-y-1 text-small text-ink-400">
                   <li className="flex items-center gap-1" title="Seats">
                     <Icon name="airline_seat_recline_normal" size={17} className="text-ocean-600" />
                     <span className="sr-only">Seats:</span> {v.seats}
@@ -104,7 +104,7 @@ export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
                     rel="noopener noreferrer"
                     variant="primary"
                     size="md"
-                    className="h-10 px-5 text-[13.5px]"
+                    className="h-10 px-5 text-small"
                   >
                     Book Now
                   </ButtonLink>

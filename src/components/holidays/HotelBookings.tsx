@@ -30,18 +30,18 @@ export function HotelBookingCard() {
     <div className="grid grid-cols-1 items-center gap-12 rounded-2xl border border-sand-300 bg-sand-50 p-6 sm:p-10 lg:grid-cols-2 lg:p-14">
       <div className="flex flex-col gap-5">
         <Eyebrow>Hotel bookings</Eyebrow>
-        <h2 className="text-[30px] leading-[1.18] font-bold tracking-[-0.01em] text-pretty sm:text-[36px]">
+        <h2>
           Stay somewhere special, anywhere in Sri Lanka
         </h2>
-        <p className="text-[15px] leading-[1.75] text-ink-600">
+        <p className="text-lead text-ink-600">
           From boutique villas in Galle to tea-estate bungalows in Ella, book 2,000+ hand-checked hotels at our
           partner rates, instantly, through our booking portal.
         </p>
         <div className="flex gap-6">
           {stats.map((s, i) => (
             <div key={s.label} className={`flex flex-col ${i ? "border-l border-sand-300 pl-6" : ""}`}>
-              <span className="text-[26px] font-bold text-ocean-600">{s.value}</span>
-              <span className="text-xs text-ink-400">{s.label}</span>
+              <span className="num text-stat text-ocean-600">{s.value}</span>
+              <span className="text-caption font-normal text-ink-400">{s.label}</span>
             </div>
           ))}
         </div>
@@ -51,7 +51,7 @@ export function HotelBookingCard() {
               <ButtonLink href={portal} target="_blank" rel="noopener noreferrer" variant="primary" size="lg" icon="north_east">
                 Book Hotel
               </ButtonLink>
-              <span className="flex items-center gap-1.5 text-xs text-ink-400">
+              <span className="flex items-center gap-1.5 text-caption font-normal text-ink-400">
                 <Icon name="open_in_new" size={16} />
                 Opens our booking portal
               </span>
@@ -79,9 +79,9 @@ export function HotelBookingCard() {
           className="absolute bottom-0 left-0 h-[200px] w-[62%] rounded-2xl border-4 border-solid border-white bg-sand-100 shadow-lf-md"
         />
         <div className="absolute right-4 bottom-6 flex flex-col rounded-xl bg-sun-400 px-4 py-3 text-navy-900 shadow-lf-md">
-          <span className="text-[11px] font-medium">Rooms from</span>
-          <span className="text-xl font-bold">LKR 18,500</span>
-          <span className="text-[11px] font-medium">per night</span>
+          <span className="text-caption font-medium">Rooms from</span>
+          <span className="num text-h4 font-bold">LKR 18,500</span>
+          <span className="text-caption font-medium">per night</span>
         </div>
       </div>
     </div>

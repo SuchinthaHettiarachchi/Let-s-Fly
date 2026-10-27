@@ -39,7 +39,7 @@ export function PhotoWall({ photos }: { photos: GalleryPhoto[] }) {
                   setCategory(c.id);
                   setLimit(PAGE_SIZE);
                 }}
-                className={`h-10 flex-none cursor-pointer rounded-full border-[1.5px] px-[18px] text-sm font-medium transition-colors ${
+                className={`h-10 flex-none cursor-pointer rounded-full border-[1.5px] px-[18px] text-small font-medium transition-colors ${
                   on ? "border-ocean-600 bg-ocean-600 text-white" : "border-sand-300 bg-white text-ink-900 hover:border-ocean-600"
                 }`}
               >
@@ -48,7 +48,7 @@ export function PhotoWall({ photos }: { photos: GalleryPhoto[] }) {
             );
           })}
         </div>
-        <span aria-live="polite" className="text-[13px] text-ink-400">
+        <span aria-live="polite" className="text-small text-ink-400">
           {filtered.length} photos
         </span>
       </div>
@@ -57,7 +57,7 @@ export function PhotoWall({ photos }: { photos: GalleryPhoto[] }) {
         {shown.map((p, i) => {
           const tile = `relative mb-4 block w-full break-inside-avoid overflow-hidden rounded-xl bg-sand-200 ${heights[i % heights.length]}`;
           const caption = (
-            <span className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-ink-900">
+            <span className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-caption text-ink-900">
               <Icon name="location_on" size={14} className="text-ocean-600" />
               {p.place}
             </span>

@@ -34,14 +34,14 @@ export default function GalleryPage() {
 
       <section className="pb-16 lg:pb-20">
         <Container>
-          <div className="flex flex-col items-start justify-between gap-6 rounded-2xl bg-navy-900 p-8 text-white sm:p-12 lg:flex-row lg:items-center">
+          <div className="flex flex-col items-start justify-between gap-6 on-dark rounded-2xl bg-navy-900 p-8 text-white sm:p-12 lg:flex-row lg:items-center">
             <div className="flex items-start gap-4">
               <span className="flex size-12 flex-none items-center justify-center rounded-full bg-sun-400 text-navy-900">
                 <Icon name="photo_camera" size={24} />
               </span>
               <div className="flex flex-col gap-1.5">
-                <h2 className="text-2xl font-bold">Share your trip with #LetsFlyLK</h2>
-                <p className="max-w-[520px] text-[15px] text-white/75">
+                <h2 className="text-h3">Share your trip with #LetsFlyLK</h2>
+                <p className="max-w-[520px] text-body text-white/75">
                   Tag us on Instagram or send your favourite photos on WhatsApp. We feature new travellers every month.
                 </p>
               </div>

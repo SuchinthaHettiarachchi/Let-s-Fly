@@ -24,7 +24,7 @@ export function ProjectCover({ images, total, title }: Props) {
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="absolute right-4 bottom-4 flex cursor-pointer items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[13px] font-semibold text-ink-900 shadow-lf-md hover:text-ocean-600"
+            className="absolute right-4 bottom-4 flex cursor-pointer items-center gap-1.5 rounded-full bg-white px-4 py-2 text-small font-semibold text-ink-900 shadow-lf-md hover:text-ocean-600"
           >
             <Icon name="open_in_full" size={16} />
             View all {total} photos

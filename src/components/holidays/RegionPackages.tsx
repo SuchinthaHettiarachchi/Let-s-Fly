@@ -46,8 +46,8 @@ export function RegionPackages({ tours }: { tours: Package[] }) {
               )}
               <span className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,37,69,.1)_0%,rgba(11,37,69,.85)_100%)]" />
               <span className="absolute bottom-3.5 left-4 flex flex-col text-white">
-                <span className="text-lg font-semibold">{r.label}</span>
-                <span className="text-xs text-white/80">
+                <span className="text-h4">{r.label}</span>
+                <span className="text-caption font-normal text-white/80">
                   {n ? `${n} ${n === 1 ? "package" : "packages"}` : "Ask for a quote"}
                 </span>
               </span>
@@ -66,7 +66,7 @@ export function RegionPackages({ tours }: { tours: Package[] }) {
         </div>
       ) : (
         <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-sand-400 bg-sand-50 px-6 py-12 text-center">
-          <p className="max-w-md text-[15px] text-ink-600">
+          <p className="max-w-md text-body text-ink-600">
             We don&apos;t have ready-made {regionLabel} packages listed yet, but we plan custom trips there all the time.
           </p>
           <Button

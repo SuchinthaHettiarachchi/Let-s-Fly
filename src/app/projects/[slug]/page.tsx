@@ -34,21 +34,21 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
         <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Projects", href: "/projects" }, { label: project.title }]} />
         <div className="flex items-center gap-3">
           <CategoryPill category={project.category} />
-          <span className="flex items-center gap-1.5 text-[13px] text-ink-400">
+          <span className="flex items-center gap-1.5 text-small text-ink-400">
             <Icon name="calendar_month" size={16} />
             {projectDate(project)}
           </span>
         </div>
-        <h1 className="max-w-[760px] text-[30px] leading-[1.12] font-bold tracking-[-0.02em] sm:text-[44px]">{project.title}</h1>
+        <h1 className="max-w-[760px]">{project.title}</h1>
         <ProjectCover images={images} total={total} title={project.title} />
       </Container>
 
       <Container className="mt-14 grid grid-cols-1 gap-8 lg:grid-cols-[260px_1fr] lg:gap-14">
         <div className="flex flex-col items-start gap-3">
           <Eyebrow>About the project</Eyebrow>
-          <h2 className="text-[26px] font-bold">Overview</h2>
+          <h2 className="text-h3">Overview</h2>
           {total > 0 && (
-            <span className="flex items-center gap-1.5 rounded-full border border-sand-300 px-3 py-1 text-xs font-semibold text-ocean-600">
+            <span className="flex items-center gap-1.5 rounded-full border border-sand-300 px-3 py-1 text-caption text-ocean-600">
               <Icon name="photo_library" size={15} />
               {total} photos
             </span>
@@ -56,7 +56,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
         </div>
         <div className="flex max-w-[720px] flex-col gap-5">
           {body.map((p, i) => (
-            <p key={i} className={i === 0 ? "text-[17px] leading-[1.75] text-ink-900" : "text-[15px] leading-[1.8] text-ink-600"}>
+            <p key={i} className={i === 0 ? "text-lead text-ink-900" : "text-body text-ink-600"}>
               {p}
             </p>
           ))}
@@ -69,9 +69,9 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
             <div className="mb-6 flex items-end justify-between">
               <div className="flex flex-col gap-2">
                 <Eyebrow>Photos</Eyebrow>
-                <h2 className="text-[26px] font-bold">Project gallery</h2>
+                <h2 className="text-h3">Project gallery</h2>
               </div>
-              <span className="text-[13px] text-ink-400">{total} photos</span>
+              <span className="text-small text-ink-400">{total} photos</span>
             </div>
             <ProjectGallery images={images} total={total} title={project.title} />
           </div>

@@ -9,7 +9,7 @@ export function RelatedPackages({ items }: { items: Package[] }) {
   return (
     <section className="bg-sand-50 py-16 lg:py-20">
       <Container>
-        <h2 data-reveal className="mb-8 text-[26px] font-bold tracking-[-0.01em] sm:text-[32px]">You may also like</h2>
+        <h2 data-reveal className="mb-8">You may also like</h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((p, i) => (
             <Link
@@ -26,11 +26,11 @@ export function RelatedPackages({ items }: { items: Package[] }) {
                 )}
               </div>
               <div className="flex flex-col gap-1.5 px-5 pt-4 pb-5">
-                <span className="text-xs font-semibold text-ocean-600">{p.region}</span>
-                <span className="text-base font-semibold">{p.title}</span>
+                <span className="text-caption text-ocean-600">{p.region}</span>
+                <span className="text-h5">{p.title}</span>
                 <div className="mt-1 flex items-center justify-between">
-                  <span className="text-[13px] text-ink-400">{durationShort(p)}</span>
-                  <span className="text-base font-bold text-ocean-600">{formatLKR(p.price)}</span>
+                  <span className="text-small text-ink-400">{durationShort(p)}</span>
+                  <span className="num text-h5 font-bold text-ocean-600">{formatLKR(p.price)}</span>
                 </div>
               </div>
               <div className="mt-auto h-1.5 bg-sun-400" />

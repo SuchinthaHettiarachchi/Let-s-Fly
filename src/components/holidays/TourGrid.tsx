@@ -45,7 +45,7 @@ export function TourGrid({ tours }: { tours: Package[] }) {
                   setTheme(c.id);
                   setLimit(PAGE_SIZE);
                 }}
-                className={`h-10 flex-none cursor-pointer rounded-full border-[1.5px] px-[18px] text-sm font-medium transition-colors ${
+                className={`h-10 flex-none cursor-pointer rounded-full border-[1.5px] px-[18px] text-small font-medium transition-colors ${
                   on ? "border-ocean-600 bg-ocean-600 text-white" : "border-sand-300 bg-white text-ink-900 hover:border-ocean-600"
                 }`}
               >
@@ -55,7 +55,7 @@ export function TourGrid({ tours }: { tours: Package[] }) {
           })}
         </div>
         <div className="flex items-center justify-between gap-4 px-1 lg:justify-end">
-          <span aria-live="polite" className="text-[13px] text-ink-400">
+          <span aria-live="polite" className="text-small text-ink-400">
             {visible.length} {visible.length === 1 ? "tour" : "tours"}
           </span>
           <label className="relative flex items-center">
@@ -63,7 +63,7 @@ export function TourGrid({ tours }: { tours: Package[] }) {
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortKey)}
-              className="h-10 cursor-pointer appearance-none rounded-lg border border-sand-300 bg-white pr-9 pl-3.5 text-[13px] font-medium text-ink-900 focus:border-ocean-600 focus:outline-none"
+              className="h-10 cursor-pointer appearance-none rounded-lg border border-sand-300 bg-white pr-9 pl-3.5 font-medium text-ink-900 focus:border-ocean-600 focus:outline-none"
             >
               {Object.entries(sorts).map(([key, s]) => (
                 <option key={key} value={key}>

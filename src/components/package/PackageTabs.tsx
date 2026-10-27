@@ -55,7 +55,7 @@ export function PackageTabs({ tabs }: { tabs: Tab[] }) {
               tabIndex={on ? 0 : -1}
               onClick={() => select(t.id)}
               onKeyDown={(e) => onKeyDown(e, i)}
-              className={`-mb-px cursor-pointer border-b-2 px-4 py-3.5 text-[14.5px] font-medium whitespace-nowrap transition-colors ${
+              className={`-mb-px cursor-pointer border-b-2 px-4 py-3.5 text-[0.9375rem] font-medium whitespace-nowrap transition-colors ${
                 on ? "border-ocean-600 text-ocean-600" : "border-transparent text-ink-600 hover:text-ocean-600"
               }`}
             >

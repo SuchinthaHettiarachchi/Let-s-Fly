@@ -30,7 +30,7 @@ export function JourneyList({ journeys }: { journeys: Journey[] }) {
                 role="tab"
                 aria-selected={on}
                 onClick={() => setKind(k.id)}
-                className={`flex h-11 cursor-pointer items-center gap-2 rounded-lg px-5 text-sm font-semibold transition-colors ${
+                className={`flex h-11 cursor-pointer items-center gap-2 rounded-lg px-5 text-small font-semibold transition-colors ${
                   on ? "bg-white text-ocean-600 shadow-lf-header" : "text-ink-600 hover:text-ocean-600"
                 }`}
               >
@@ -40,7 +40,7 @@ export function JourneyList({ journeys }: { journeys: Journey[] }) {
             );
           })}
         </div>
-        <p className="text-[13px] text-ink-400">{current.note}</p>
+        <p className="text-small text-ink-400">{current.note}</p>
       </div>
 
       <ul role="tabpanel" aria-label={current.label} className="flex flex-col gap-4">
@@ -68,12 +68,12 @@ export function JourneyCard({ journey: j }: { journey: Journey }) {
         )}
       </div>
       <div className="flex flex-col gap-2.5 p-6">
-        <span className="text-[11px] font-semibold tracking-[0.14em] text-ocean-600 uppercase">{j.label}</span>
-        <h3 className="text-xl font-semibold">{j.title}</h3>
-        <p className="text-sm leading-relaxed text-ink-600">{j.text}</p>
+        <span className="eyebrow text-ocean-600">{j.label}</span>
+        <h3 className="font-sans text-h4">{j.title}</h3>
+        <p className="text-body text-ink-600">{j.text}</p>
         <ul className="mt-1 flex flex-wrap gap-2">
           {j.chips.map((c) => (
-            <li key={c} className="rounded-full bg-sand-50 px-3 py-1 text-xs font-medium text-ocean-600">
+            <li key={c} className="rounded-full bg-sand-50 px-3 py-1 text-caption font-medium text-ocean-600">
               {c}
             </li>
           ))}
@@ -81,9 +81,9 @@ export function JourneyCard({ journey: j }: { journey: Journey }) {
       </div>
       <div className="flex flex-row items-end justify-between gap-4 border-t border-sand-300 p-6 md:flex-col md:items-start md:justify-center md:border-t-0 md:border-l">
         <div className="flex flex-col">
-          <span className="text-xs text-ink-400">From</span>
-          <span className="text-[22px] font-bold text-ocean-600">{formatLKR(j.price)}</span>
-          <span className="text-xs text-ink-400">{j.priceNote}</span>
+          <span className="text-caption font-normal text-ink-400">From</span>
+          <span className="num font-sans text-h3 font-bold text-ocean-600">{formatLKR(j.price)}</span>
+          <span className="text-caption font-normal text-ink-400">{j.priceNote}</span>
         </div>
         <ButtonLink
           href={`${contact.whatsappHref}?text=${encodeURIComponent(`Hi Let's Fly, I'd like to book: ${j.title}`)}`}

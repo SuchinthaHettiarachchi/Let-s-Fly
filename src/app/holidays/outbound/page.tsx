@@ -46,10 +46,10 @@ export default function OutboundPage() {
         <Container className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1fr_1.6fr] lg:gap-14">
           <div data-reveal className="flex flex-col gap-4">
             <Eyebrow>Why Let&apos;s Fly</Eyebrow>
-            <h2 className="text-[30px] leading-[1.18] font-bold tracking-[-0.01em] sm:text-[36px]">
+            <h2>
               One team for your whole trip
             </h2>
-            <p className="text-[15px] leading-[1.75] text-ink-600">
+            <p className="text-lead text-ink-600">
               No juggling five websites. We handle it all and stay on WhatsApp while you travel.
             </p>
           </div>
@@ -64,8 +64,8 @@ export default function OutboundPage() {
                   <Icon name={r.icon} size={22} />
                 </span>
                 <span className="flex flex-col gap-1">
-                  <span className="text-[15px] font-semibold">{r.title}</span>
-                  <span className="text-[13px] leading-relaxed text-ink-600">{r.text}</span>
+                  <span className="text-h5">{r.title}</span>
+                  <span className="text-small text-ink-600">{r.text}</span>
                 </span>
               </li>
             ))}

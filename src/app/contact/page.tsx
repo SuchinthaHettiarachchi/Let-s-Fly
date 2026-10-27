@@ -51,8 +51,8 @@ export default function ContactPage() {
                   <Icon name={c.icon} size={22} />
                 </span>
                 <span className="flex flex-col">
-                  <span className="text-xs text-ink-400">{c.label}</span>
-                  <span className="text-[15px] font-semibold group-hover:text-ocean-600">{c.value}</span>
+                  <span className="text-caption font-normal text-ink-400">{c.label}</span>
+                  <span className="text-h5 group-hover:text-ocean-600">{c.value}</span>
                 </span>
               </a>
             </li>
@@ -64,7 +64,7 @@ export default function ContactPage() {
         <Container className="flex flex-col gap-10">
           <div className="mx-auto flex max-w-[620px] flex-col items-center gap-3 text-center">
             <SectionHeading eyebrow="Join our team" title="Build your career with us" centered />
-            <p className="text-[15px] leading-relaxed text-ink-600">
+            <p className="text-body text-ink-600">
               We&apos;re always looking for passionate, talented people to join the Let&apos;s Fly.lk family. Find a role
               below and send us your application.
             </p>
@@ -80,13 +80,13 @@ export default function ContactPage() {
                     <span className="flex size-11 items-center justify-center rounded-tile bg-sand-200 text-ocean-600">
                       <Icon name={job.icon} size={22} />
                     </span>
-                    <span className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11.5px] font-semibold ${statusStyle[job.status]}`}>
+                    <span className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-caption ${statusStyle[job.status]}`}>
                       <span className="size-1.5 rounded-full bg-current" />
                       {job.status}
                     </span>
                   </div>
-                  <h3 className="text-lg font-semibold">{job.title}</h3>
-                  <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-400">
+                  <h3 className="font-sans text-h4">{job.title}</h3>
+                  <ul className="flex flex-wrap gap-x-4 gap-y-1 text-caption font-normal text-ink-400">
                     {job.meta.map((m) => (
                       <li key={m.label} className="flex items-center gap-1">
                         <Icon name={m.icon} size={15} className="text-ocean-600" />
@@ -94,15 +94,15 @@ export default function ContactPage() {
                       </li>
                     ))}
                   </ul>
-                  <p className="text-[13.5px] leading-relaxed text-ink-600">{job.text}</p>
+                  <p className="text-small text-ink-600">{job.text}</p>
                   <div className="mt-auto flex items-center justify-between border-t border-sand-300 pt-4">
-                    <span className="text-xs text-ink-400">{job.posted}</span>
+                    <span className="text-caption font-normal text-ink-400">{job.posted}</span>
                     <ButtonLink
                       href={`mailto:${contact.email}?subject=${encodeURIComponent(`Application: ${job.title}`)}`}
                       variant="primary"
                       size="md"
                       icon="arrow_forward"
-                      className="h-10 px-4 text-[13.5px]"
+                      className="h-10 px-4 text-small"
                     >
                       Apply Now
                     </ButtonLink>
@@ -112,7 +112,7 @@ export default function ContactPage() {
               </li>
             ))}
           </ul>
-          <p className="flex items-center justify-center gap-2 text-sm text-ink-600">
+          <p className="flex items-center justify-center gap-2 text-small text-ink-600">
             <Icon name="mail" size={18} className="text-ocean-600" />
             Don&apos;t see your role? Send your CV to{" "}
             <a href={`mailto:${contact.email}?subject=CV`} className="font-semibold">
@@ -126,7 +126,7 @@ export default function ContactPage() {
         <Container className="grid grid-cols-1 gap-8 lg:grid-cols-[1.1fr_1fr]">
           <div className="rounded-2xl border border-sand-300 bg-white p-6 sm:p-8">
             <Eyebrow>Send a message</Eyebrow>
-            <h2 className="mt-2 mb-6 text-[26px] font-bold tracking-[-0.01em]">How can we help?</h2>
+            <h2 className="mt-2 mb-6 text-h3">How can we help?</h2>
             <ContactForm />
           </div>
           <div className="flex flex-col gap-5">
@@ -142,17 +142,17 @@ export default function ContactPage() {
                 href={contact.mapHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[13px] font-semibold shadow-lf-md"
+                className="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-small font-semibold shadow-lf-md"
               >
                 Open in Google Maps
                 <Icon name="north_east" size={16} />
               </a>
             </div>
             <div className="rounded-2xl border border-sand-300 bg-white p-6">
-              <h3 className="mb-3 text-base font-semibold">Office hours</h3>
+              <h3 className="mb-3 font-sans text-h5">Office hours</h3>
               <dl className="flex flex-col">
                 {officeHours.map((o) => (
-                  <div key={o.days} className="flex justify-between border-b border-sand-300 py-3 text-sm last:border-0">
+                  <div key={o.days} className="flex justify-between border-b border-sand-300 py-3 text-small last:border-0">
                     <dt className="text-ink-600">{o.days}</dt>
                     <dd className="font-semibold">{o.hours}</dd>
                   </div>

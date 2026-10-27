@@ -45,7 +45,7 @@ export function PackageGallery({ images, title }: { images: string[]; title: str
           <button
             type="button"
             onClick={() => setViewing(0)}
-            className="absolute right-3.5 bottom-3.5 flex cursor-pointer items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-[13px] font-semibold text-ink-900 shadow-lf-md hover:text-ocean-600"
+            className="absolute right-3.5 bottom-3.5 flex cursor-pointer items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-small font-semibold text-ink-900 shadow-lf-md hover:text-ocean-600"
           >
             <Icon name="photo_library" size={18} />
             All {images.length} photos
