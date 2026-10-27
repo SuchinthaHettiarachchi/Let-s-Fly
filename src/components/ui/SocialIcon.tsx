@@ -33,12 +33,3 @@ export function SocialIcon({ name, size = 18 }: { name: IconName; size?: number 
     </svg>
   );
 }
-
-/** Brand background for each network's round button (white icon on top). */
-export const socialBrandClass: Record<IconName, string> = {
-  Facebook: "bg-[#1877f2]",
-  Instagram: "bg-[radial-gradient(circle_at_30%_107%,#fdf497_0%,#fd5949_45%,#d6249f_60%,#285aeb_90%)]",
-  TikTok: "bg-black ring-1 ring-white/25",
-  LinkedIn: "bg-[#0a66c2]",
-  WhatsApp: "bg-[#25d366]",
-};

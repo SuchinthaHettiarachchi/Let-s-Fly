@@ -1,145 +1,188 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Fragment } from "react";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { PaymentLogo } from "@/components/ui/PaymentLogo";
-import { SocialIcon, socialBrandClass } from "@/components/ui/SocialIcon";
+import { SocialIcon } from "@/components/ui/SocialIcon";
+import { Newsletter } from "@/components/layout/Newsletter";
 import { contact, footerColumns, paymentMethodsAccepted, socials } from "@/data/site";
 
-/** Small uppercase label over each footer block, as on the Walkers Tours footer. */
+/** Small uppercase label over each footer block. */
 function Label({ children }: { children: React.ReactNode }) {
-  return <div className="mb-2 text-[11.5px] font-semibold tracking-[0.16em] text-white/50 uppercase">{children}</div>;
+  return <div className="mb-2 eyebrow text-white/50">{children}</div>;
 }
 
+const [quickLinks, legalLinks] = footerColumns;
+const half = Math.ceil(quickLinks.links.length / 2);
+const linkColumns = [quickLinks.links.slice(0, half), quickLinks.links.slice(half)];
+
 /**
- * Walkers Tours layout on our navy: phone, email, hours and address on the left, then the "Quick Links & Services"
- * and "Legal & Policies" columns, then the map, payments and socials.
+ * Newsletter card, then a Sigiriya photo scene with the tagline and Contact Us, fading into navy behind
+ * contact details, quick links, the map, payments and socials. Legal links sit in the bottom bar.
  */
 export function Footer() {
   return (
-    <footer className="bg-navy-900 text-sm text-white/75">
-      <Container className="grid grid-cols-1 gap-12 pt-16 pb-12 sm:grid-cols-2 lg:grid-cols-[1.1fr_1.5fr_1.1fr] lg:gap-16 lg:pt-20 lg:pb-14">
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-4">
-            <Image src="/images/logo.png" alt="Let's Fly.lk" width={96} height={96} className="size-[96px]" />
-            <p className="max-w-[300px] leading-[1.7]">
-              Smart travel starts here. Flights, visas, hotels and holidays, planned with care and a personal touch.
-            </p>
-          </div>
-          <div>
-            <Label>Phone</Label>
-            <a href={contact.phoneHref} className="text-white hover:text-sun-400">
-              {contact.phone}
-            </a>
-          </div>
-          <div>
-            <Label>Email</Label>
-            <a href={`mailto:${contact.email}`} className="text-white hover:text-sun-400">
-              {contact.email}
-            </a>
-          </div>
-          <div>
-            <Label>Office hours</Label>
-            <span className="text-white">{contact.hours}</span>
-          </div>
-          <div>
-            <Label>Address</Label>
-            <a
-              href={contact.mapHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex max-w-[300px] items-start gap-2 leading-relaxed text-white hover:text-sun-400"
-            >
-              <Icon name="location_on" size={18} className="mt-0.5 flex-none text-sun-400" />
-              {contact.address}
-            </a>
-          </div>
+    <>
+      <Newsletter />
+      <footer className="on-dark relative isolate overflow-hidden bg-navy-900 text-small text-white/75">
+        {/* Covers the top 640px on phones so the rock stays in frame; from 900px it spans the width and the gradient takes over below it. */}
+        <div className="absolute inset-x-0 top-0 -z-20 h-[640px] min-[900px]:h-full">
+          <Image
+            src="/images/footer/sigiriya.jpg"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-[58%_top] min-[900px]:object-contain min-[900px]:object-top"
+          />
+          <div className="absolute inset-x-0 bottom-0 h-48 bg-linear-to-b from-transparent to-navy-900 min-[900px]:hidden" />
         </div>
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(11,37,69,.3)_0%,rgba(11,37,69,0)_12%,rgba(11,37,69,.18)_28%,rgba(11,37,69,.55)_46%,rgba(11,37,69,.85)_64%,rgba(11,37,69,.97)_78%,#0b2545_100%),linear-gradient(90deg,rgba(11,37,69,.45)_0%,rgba(11,37,69,0)_55%)]"
+        />
 
-        <div className="grid grid-cols-2 gap-x-8">
-          {footerColumns.map((col) => (
-            <nav key={col.title} aria-label={col.title}>
-              <h2 className="mb-4 text-[15px] font-semibold text-white">{col.title}</h2>
-              <ul className="flex flex-col gap-3">
-                {col.links.map((l) => (
-                  <li key={l.href}>
-                    <Link href={l.href} className="text-white/75 hover:text-sun-400">
-                      {l.label}
-                    </Link>
+        <section aria-label="Smart travel starts here" className="flex min-h-[400px] items-end sm:min-h-[clamp(340px,36vw,520px)]">
+          <Container className="flex flex-wrap items-end justify-between gap-6 pb-9 sm:pb-12">
+            <div>
+              <h2 className="max-w-[620px] text-h1 text-white">Smart travel starts here.</h2>
+              <p className="mt-4 max-w-[460px] text-body text-white/85">
+                Flights, visas, hotels and holidays, planned with care and a personal touch.
+              </p>
+            </div>
+            <Link
+              href="/contact"
+              className="rounded-lg bg-white px-[26px] py-[13px] text-small font-semibold tracking-[0.06em] text-navy-900! uppercase transition-colors hover:bg-sand-100"
+            >
+              Contact Us
+            </Link>
+          </Container>
+        </section>
+
+        <Container className="grid grid-cols-1 gap-11 pt-6 pb-12 sm:grid-cols-2 lg:grid-cols-[1.15fr_1.25fr_1.15fr] lg:gap-16 lg:pb-14">
+          <div className="flex flex-col gap-[22px]">
+            <Image src="/images/logo.png" alt="Let's Fly.lk" width={96} height={96} className="size-[96px]" />
+            <div className="grid gap-[18px]">
+              <div>
+                <Label>Address</Label>
+                <a href={contact.mapHref} target="_blank" rel="noopener noreferrer" className="text-white hover:text-sun-400">
+                  <address className="max-w-[260px] not-italic">{contact.address}</address>
+                </a>
+              </div>
+              <div>
+                <Label>Phone</Label>
+                <a href={contact.phoneHref} className="text-white hover:text-sun-400">
+                  {contact.phone}
+                </a>
+              </div>
+              <div>
+                <Label>Email</Label>
+                <a href={`mailto:${contact.email}`} className="text-white hover:text-sun-400">
+                  {contact.email}
+                </a>
+              </div>
+              <div>
+                <Label>Office hours</Label>
+                <span className="text-white">{contact.hours}</span>
+              </div>
+            </div>
+          </div>
+
+          <nav aria-label="Quick links">
+            <Label>Quick links</Label>
+            <div className="mt-1.5 grid grid-cols-2 gap-x-7">
+              {linkColumns.map((links, i) => (
+                <ul key={i} className="flex flex-col gap-3.5 border-l-2 border-sun-400/55 py-0.5 pl-4">
+                  {links.map((l) => (
+                    <li key={l.href}>
+                      <Link href={l.href} className="text-white/80 hover:text-sun-400">
+                        {l.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ))}
+            </div>
+          </nav>
+
+          <div className="flex flex-col gap-7 sm:col-span-2 lg:col-span-1">
+            <div>
+              <Label>Find us</Label>
+              <iframe
+                src={contact.mapEmbedHref}
+                title="Let's Fly.lk office on Google Maps"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="mt-1 h-[150px] w-full rounded-xl border-0 saturate-90"
+              />
+              <a
+                href={contact.mapHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-flex items-center gap-1.5 text-white/75 hover:text-sun-400"
+              >
+                Open in Google Maps
+                <Icon name="north_east" size={16} />
+              </a>
+            </div>
+            <div>
+              <Label>We accept</Label>
+              <ul className="mt-1 flex flex-wrap gap-2">
+                {paymentMethodsAccepted.map((m) => (
+                  <li key={m}>
+                    <PaymentLogo name={m} />
                   </li>
                 ))}
               </ul>
-            </nav>
-          ))}
-        </div>
-
-        <div className="flex flex-col gap-7 sm:col-span-2 lg:col-span-1">
-          <div>
-            <Label>Find us</Label>
-            <iframe
-              src={contact.mapEmbedHref}
-              title="Let's Fly.lk office on Google Maps"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className="mt-1 h-[150px] w-full rounded-xl border-0"
-            />
-            <a
-              href={contact.mapHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 flex items-center gap-1.5 text-[13px] text-white/75 hover:text-sun-400"
-            >
-              Open in Google Maps
-              <Icon name="north_east" size={16} />
-            </a>
-          </div>
-          <div>
-            <Label>We accept</Label>
-            <ul className="mt-1 flex flex-wrap gap-2">
-              {paymentMethodsAccepted.map((m) => (
-                <li key={m}>
-                  <PaymentLogo name={m} />
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <Label>Follow us</Label>
-            <div className="mt-1 flex gap-2.5">
-              {socials.map((s) => (
-                <a
-                  key={s.name}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={s.name}
-                  title={s.name}
-                  className={`flex size-10 items-center justify-center rounded-full text-white transition-transform hover:-translate-y-0.5 hover:text-white ${socialBrandClass[s.name]}`}
-                >
-                  <SocialIcon name={s.name} size={19} />
-                </a>
-              ))}
+            </div>
+            <div>
+              <Label>Follow us</Label>
+              <div className="mt-1.5 flex gap-4">
+                {socials.map((s) => (
+                  <a
+                    key={s.name}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.name}
+                    title={s.name}
+                    className="text-white transition-opacity hover:text-white hover:opacity-70"
+                  >
+                    <SocialIcon name={s.name} size={28} />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </Container>
-
-      <div className="border-t border-white/12">
-        <Container className="flex flex-col items-start gap-3 py-5 text-[13px] text-white/60 lg:flex-row lg:items-center lg:justify-between">
-          <span>© {new Date().getFullYear()} Let&apos;s Fly.lk · All rights reserved.</span>
-          <span>
-            Designed &amp; developed by{" "}
-            <a
-              href="https://www.karalliyaddaone.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold text-white/85 hover:text-sun-400"
-            >
-              karalliyaddaone
-            </a>
-          </span>
         </Container>
-      </div>
-    </footer>
+
+        <div className="border-t border-white/14">
+          <Container className="flex flex-col items-start gap-3 py-5 text-white/70 lg:flex-row lg:items-center lg:justify-between">
+            <span>© {new Date().getFullYear()} Let&apos;s Fly.lk · All rights reserved.</span>
+            <nav aria-label={legalLinks.title} className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              {legalLinks.links.map((l, i) => (
+                <Fragment key={l.href}>
+                  {i > 0 && <span aria-hidden="true" className="h-3 w-px bg-white/30" />}
+                  <Link href={l.href} className="text-white/70 hover:text-sun-400">
+                    {l.label}
+                  </Link>
+                </Fragment>
+              ))}
+            </nav>
+            <span>
+              Designed &amp; developed by{" "}
+              <a
+                href="https://www.karalliyaddaone.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-white/85 hover:text-sun-400"
+              >
+                karalliyaddaone
+              </a>
+            </span>
+          </Container>
+        </div>
+      </footer>
+    </>
   );
 }
