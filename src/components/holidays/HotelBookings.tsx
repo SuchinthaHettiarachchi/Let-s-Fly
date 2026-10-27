@@ -31,7 +31,7 @@ export function HotelBookingCard() {
   return (
     <div className="grid grid-cols-1 items-center gap-12 rounded-2xl border border-sand-300 bg-sand-50 p-6 sm:p-10 lg:grid-cols-2 lg:p-14">
       <div className="flex flex-col gap-5">
-        <Eyebrow rule>Hotel bookings</Eyebrow>
+        <Eyebrow>Hotel bookings</Eyebrow>
         <h2 className="text-[30px] leading-[1.18] font-bold tracking-[-0.01em] text-pretty sm:text-[36px]">
           Stay somewhere special, anywhere in Sri Lanka
         </h2>
