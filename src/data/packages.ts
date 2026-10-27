@@ -9,8 +9,8 @@ export type Highlight = { icon: string; label: string };
 export type ItineraryDay = {
   category: string;
   title: string;
-  /** Short facts under the title, e.g. location, duration. */
-  meta: { icon: string; label: string }[];
+  /** Short facts under the title, e.g. location, duration. Not shown on the page at the moment. */
+  meta?: { icon: string; label: string }[];
   body: string;
 };
 
@@ -62,6 +62,9 @@ export type Package = {
 
 const sriLankaFootnote =
   "Driving times are indicative and the order of visits may change with weather, train schedules and availability. Your final itinerary is confirmed with your booking.";
+
+const outboundFootnote =
+  "Flight times are indicative and the order of activities may change with weather, schedules and availability. Your final itinerary is confirmed with your booking.";
 
 export const packages: Package[] = [
   {
@@ -194,15 +197,208 @@ export const packages: Package[] = [
   {
     slug: "abu-dhabi-dubai-combo", title: "Abu Dhabi & Dubai Combo", region: "UAE", location: "UAE · Abu Dhabi · Dubai",
     category: "outbound", outboundRegion: "middle-east", badge: "New", flightsIncluded: true, days: 6, nights: 5, price: 178000,
+    image: "/images/packages/abu-dhabi-dubai-combo.jpg",
+    // Outbound detail copy below is draft; confirm hotels, timings and inclusions with the travel team.
+    priceNote: "Twin share · flights, hotels & visa",
+    overview: {
+      summary:
+        "Two emirates in one trip: two nights in Abu Dhabi for the Sheikh Zayed Grand Mosque, the Louvre and Yas Island, then three nights in Dubai for the Burj Khalifa, a desert safari and the Marina. Flights from Colombo, 4★ hotels, transfers between the cities and your UAE visa are all arranged.",
+      highlights: [
+        { icon: "mosque", label: "Sheikh Zayed Grand Mosque" },
+        { icon: "museum", label: "Louvre Abu Dhabi" },
+        { icon: "attractions", label: "Yas Island theme park" },
+        { icon: "apartment", label: "Burj Khalifa at the Top" },
+        { icon: "landscape", label: "Desert safari & BBQ dinner" },
+        { icon: "description", label: "UAE tourist visa" },
+      ],
+    },
+    itinerary: {
+      endpoints: "Colombo ⇄ Abu Dhabi · Dubai",
+      route: ["Colombo", "Abu Dhabi", "Yas Island", "Dubai", "Colombo"],
+      footnote: outboundFootnote,
+      days: [
+        {
+          category: "Arrival",
+          title: "Colombo to Abu Dhabi & Corniche evening",
+          body: "Fly to Abu Dhabi, where our representative meets you and drives you to your hotel. In the evening, walk along the Corniche and watch the city lights over the water.",
+        },
+        {
+          category: "City sightseeing",
+          title: "Grand Mosque, Louvre Abu Dhabi & Qasr Al Watan",
+          body: "Start at the Sheikh Zayed Grand Mosque, then see the Louvre Abu Dhabi under its famous dome and the presidential palace at Qasr Al Watan.",
+        },
+        {
+          category: "Theme park",
+          title: "Yas Island, then transfer to Dubai",
+          body: "Spend the day at Ferrari World or Warner Bros. World on Yas Island, then take a private transfer to your Dubai hotel in the evening.",
+        },
+        {
+          category: "City sightseeing",
+          title: "Old Dubai, souks & Burj Khalifa at sunset",
+          body: "Cross the creek by abra to the gold and spice souks, visit the Dubai Frame, and ride up the Burj Khalifa in time for sunset.",
+        },
+        {
+          category: "Adventure",
+          title: "Desert safari with dune bashing & BBQ dinner",
+          body: "A free morning, then a 4×4 picks you up for dune bashing, sandboarding and a camel ride, with dinner and live shows at a desert camp.",
+        },
+        {
+          category: "Departure",
+          title: "Dubai Marina & flight home",
+          body: "Walk along Dubai Marina and JBR for some last shopping before your transfer to the airport and the flight back to Colombo.",
+        },
+      ],
+    },
+    inclusions: {
+      intro: "Everything below is covered in the package price of LKR 178,000 per person.",
+      included: [
+        { title: "Return economy flights Colombo ⇄ UAE", note: "30 kg checked baggage per person" },
+        { title: "2 nights in Abu Dhabi and 3 nights in Dubai", note: "4★ hotels, twin share" },
+        { title: "Daily breakfast" },
+        { title: "Airport and intercity transfers" },
+        { title: "Abu Dhabi city tour with Louvre entry" },
+        { title: "Theme park day pass", note: "Ferrari World or Warner Bros. World" },
+        { title: "Burj Khalifa tickets and desert safari with BBQ dinner" },
+        { title: "UAE 30-day tourist visa" },
+      ],
+      excluded: [
+        { title: "Travel insurance", note: "We can arrange a policy" },
+        { title: "Tourism Dirham fee", note: "Paid at the hotels" },
+        { title: "Lunches and dinners not mentioned" },
+        { title: "Tips and personal expenses" },
+      ],
+    },
+    related: ["dubai-family-escape", "muscat-desert-coast", "maldives-overwater-villa"],
   },
   {
     slug: "muscat-desert-coast", title: "Muscat Desert & Coast", region: "Oman", location: "Oman · Muscat",
     category: "outbound", outboundRegion: "middle-east", badge: "Adventure", flightsIncluded: true, days: 5, nights: 4, price: 165000,
+    image: "/images/packages/muscat-desert-coast.jpg",
+    priceNote: "Twin share · flights, hotel & visa",
+    overview: {
+      summary:
+        "Oman's quieter side in five days: Muscat's grand mosque and old souk, a night under the stars in the Wahiba Sands, swimming in the turquoise pools of Wadi Shab and a dolphin cruise along the coast. Flights from Colombo, hotels, a desert camp, a driver-guide and your Oman e-visa are included.",
+      highlights: [
+        { icon: "mosque", label: "Sultan Qaboos Grand Mosque" },
+        { icon: "storefront", label: "Mutrah Souk & Corniche" },
+        { icon: "landscape", label: "Wahiba Sands desert camp" },
+        { icon: "water", label: "Wadi Shab swim & hike" },
+        { icon: "sailing", label: "Dolphin-watching cruise" },
+        { icon: "description", label: "Oman e-visa" },
+      ],
+    },
+    itinerary: {
+      endpoints: "Colombo ⇄ Muscat",
+      route: ["Colombo", "Muscat", "Wahiba Sands", "Wadi Shab", "Muscat", "Colombo"],
+      footnote: outboundFootnote,
+      days: [
+        {
+          category: "Arrival",
+          title: "Colombo to Muscat & Mutrah Corniche",
+          body: "Fly to Muscat and transfer to your hotel. In the evening, stroll the Mutrah Corniche and browse the lanes of the old souk.",
+        },
+        {
+          category: "City sightseeing",
+          title: "Grand Mosque, Royal Opera House & Old Muscat",
+          body: "Visit the Sultan Qaboos Grand Mosque in the morning, then the Royal Opera House and the forts and palace of Old Muscat.",
+        },
+        {
+          category: "Adventure",
+          title: "Wadi Bani Khalid & a night in the Wahiba Sands",
+          body: "Drive inland for a swim at Wadi Bani Khalid, then 4×4 into the Wahiba Sands for dune driving, sunset on the dunes and dinner at a desert camp.",
+        },
+        {
+          category: "Nature",
+          title: "Wadi Shab, Bimmah Sinkhole & back to Muscat",
+          body: "Follow the coast road to the Bimmah Sinkhole and hike into Wadi Shab to swim in its green pools, before returning to Muscat for the night.",
+        },
+        {
+          category: "Departure",
+          title: "Dolphin cruise & flight home",
+          body: "An early boat trip to watch dolphins off the Muscat coast, then transfer to the airport for your flight back to Colombo.",
+        },
+      ],
+    },
+    inclusions: {
+      intro: "Everything below is covered in the package price of LKR 165,000 per person.",
+      included: [
+        { title: "Return economy flights Colombo ⇄ Muscat" },
+        { title: "3 nights in a 4★ Muscat hotel and 1 night in a desert camp", note: "Twin share" },
+        { title: "Daily breakfast and dinner at the desert camp" },
+        { title: "Private 4×4 with driver-guide" },
+        { title: "Dolphin-watching cruise" },
+        { title: "Oman e-visa" },
+      ],
+      excluded: [
+        { title: "Travel insurance", note: "We can arrange a policy" },
+        { title: "Lunches and other dinners" },
+        { title: "Tips and personal expenses" },
+      ],
+    },
+    related: ["dubai-family-escape", "abu-dhabi-dubai-combo", "maldives-overwater-villa"],
   },
   {
     slug: "maldives-overwater-villa", title: "Maldives Overwater Villa", region: "Maldives", location: "Maldives",
     category: "outbound", outboundRegion: "maldives", featured: true, days: 4, nights: 3, price: 185000,
     image: "/images/packages/maldives-overwater-villa.jpg",
+    priceNote: "Twin share · flights, villa & transfers",
+    flightsIncluded: true,
+    overview: {
+      summary:
+        "A short island escape an hour's flight from Colombo: three nights in an overwater villa with a ladder straight into the lagoon, half board, a snorkelling trip to the house reef and a sunset cruise. Flights, speedboat transfers and the Maldives arrival visa are covered.",
+      highlights: [
+        { icon: "cottage", label: "Overwater villa stay" },
+        { icon: "scuba_diving", label: "Guided snorkelling trip" },
+        { icon: "sailing", label: "Sunset dolphin cruise" },
+        { icon: "restaurant", label: "Half board meals" },
+        { icon: "directions_boat", label: "Speedboat transfers" },
+        { icon: "description", label: "Free arrival visa" },
+      ],
+    },
+    itinerary: {
+      endpoints: "Colombo ⇄ Malé",
+      route: ["Colombo", "Malé", "Resort island", "Colombo"],
+      footnote: outboundFootnote,
+      days: [
+        {
+          category: "Arrival",
+          title: "Colombo to Malé & speedboat to your resort",
+          body: "A short flight to Malé, where the resort team meets you for the speedboat ride. Check in to your overwater villa and spend the afternoon in the lagoon.",
+        },
+        {
+          category: "Ocean",
+          title: "Snorkelling on the house reef",
+          body: "Join a guided snorkelling trip to see reef fish, turtles and rays, then relax on the beach or at the spa.",
+        },
+        {
+          category: "Leisure & cruise",
+          title: "Free day & sunset dolphin cruise",
+          body: "A day at your own pace, ending with a sunset cruise to look for spinner dolphins.",
+        },
+        {
+          category: "Departure",
+          title: "Breakfast in the villa & flight home",
+          body: "A slow breakfast over the water, then the speedboat back to Malé for your flight to Colombo.",
+        },
+      ],
+    },
+    inclusions: {
+      intro: "Everything below is covered in the package price of LKR 185,000 per person.",
+      included: [
+        { title: "Return economy flights Colombo ⇄ Malé" },
+        { title: "3 nights in an overwater villa", note: "Twin share" },
+        { title: "Breakfast and dinner daily" },
+        { title: "Return speedboat transfers" },
+        { title: "Guided snorkelling trip and sunset cruise" },
+      ],
+      excluded: [
+        { title: "Travel insurance", note: "We can arrange a policy" },
+        { title: "Green tax", note: "Paid at the resort, approx. USD 6 per person per night" },
+        { title: "Lunches, drinks and spa treatments" },
+        { title: "Tips and personal expenses" },
+      ],
+    },
+    related: ["bali-honeymoon", "dubai-family-escape", "singapore-malaysia-cruise"],
   },
   // Sri Lanka tours. All detail copy below is draft; confirm hotels, timings and inclusions with the travel team.
   {
@@ -610,16 +806,223 @@ export const packages: Package[] = [
     slug: "bali-honeymoon", title: "Bali Honeymoon Special", region: "Indonesia", location: "Indonesia · Bali",
     category: "outbound", outboundRegion: "asia", featured: true, days: 6, nights: 5, price: 210000,
     image: "/images/packages/bali-honeymoon.jpg",
+    priceNote: "Per person · flights, villa & visa",
+    flightsIncluded: true,
+    overview: {
+      summary:
+        "Six days in Bali made for two: a private pool villa in Ubud among the rice terraces, a candlelit dinner, a couples' spa session and sunset at Uluwatu, then beach days in Seminyak. Flights from Colombo, private transfers and your Indonesia visa on arrival are arranged.",
+      highlights: [
+        { icon: "pool", label: "Private pool villa in Ubud" },
+        { icon: "spa", label: "Couples' Balinese massage" },
+        { icon: "restaurant", label: "Candlelit dinner" },
+        { icon: "temple_hindu", label: "Uluwatu sunset & Kecak dance" },
+        { icon: "landscape", label: "Tegallalang rice terraces" },
+        { icon: "description", label: "Visa on arrival" },
+      ],
+    },
+    itinerary: {
+      endpoints: "Colombo ⇄ Denpasar",
+      route: ["Colombo", "Ubud", "Uluwatu", "Seminyak", "Colombo"],
+      footnote: outboundFootnote,
+      days: [
+        {
+          category: "Arrival",
+          title: "Colombo to Bali & check in to your Ubud villa",
+          body: "Fly to Denpasar, where a private driver takes you up to Ubud. Settle in to your pool villa with a welcome drink and flower bath.",
+        },
+        {
+          category: "Culture",
+          title: "Rice terraces, Tirta Empul & Ubud market",
+          body: "See the Tegallalang rice terraces and the holy spring temple of Tirta Empul, then browse Ubud's art market. A couples' massage ends the day.",
+        },
+        {
+          category: "Leisure",
+          title: "A free day & candlelit dinner",
+          body: "A slow day by the pool or a swing over the jungle, followed by a private candlelit dinner at the villa.",
+        },
+        {
+          category: "Sightseeing",
+          title: "Move to Seminyak & sunset at Uluwatu",
+          body: "Check in to your Seminyak hotel, then drive to the clifftop Uluwatu temple for sunset and the Kecak fire dance.",
+        },
+        {
+          category: "Beach",
+          title: "Beach day in Seminyak",
+          body: "Spend the day on the beach and in Seminyak's cafés and boutiques, with sunset drinks by the sea.",
+        },
+        {
+          category: "Departure",
+          title: "Flight home to Colombo",
+          body: "Check out after breakfast and transfer to the airport for your flight back to Colombo.",
+        },
+      ],
+    },
+    inclusions: {
+      intro: "Everything below is covered in the package price of LKR 210,000 per person.",
+      included: [
+        { title: "Return economy flights Colombo ⇄ Denpasar" },
+        { title: "3 nights in a private pool villa in Ubud and 2 nights in Seminyak", note: "Double room" },
+        { title: "Daily breakfast" },
+        { title: "Private airport and hotel transfers" },
+        { title: "Couples' massage and candlelit dinner" },
+        { title: "Ubud and Uluwatu tours with entry fees" },
+        { title: "Indonesia visa on arrival" },
+      ],
+      excluded: [
+        { title: "Travel insurance", note: "We can arrange a policy" },
+        { title: "Bali tourist levy", note: "Approx. IDR 150,000 per person, paid online" },
+        { title: "Lunches and other dinners" },
+        { title: "Tips and personal expenses" },
+      ],
+    },
+    related: ["maldives-overwater-villa", "bangkok-phuket", "singapore-malaysia-cruise"],
   },
   {
     slug: "bangkok-phuket", title: "Bangkok & Phuket Highlights", region: "Thailand", location: "Thailand",
     category: "outbound", outboundRegion: "asia", featured: true, days: 7, nights: 6, price: 175000,
     image: "/images/packages/bangkok-phuket.jpg",
+    priceNote: "Twin share · flights & hotels",
+    flightsIncluded: true,
+    overview: {
+      summary:
+        "Seven days split between Bangkok and Phuket: temples, river boats and night markets in the city, then a domestic flight south for beaches and a speedboat day to the Phi Phi Islands. Flights from Colombo, 4★ hotels and all transfers are included.",
+      highlights: [
+        { icon: "temple_buddhist", label: "Grand Palace & Wat Pho" },
+        { icon: "sailing", label: "Chao Phraya river cruise" },
+        { icon: "storefront", label: "Night markets" },
+        { icon: "beach_access", label: "Phuket beach stay" },
+        { icon: "directions_boat", label: "Phi Phi Islands speedboat" },
+        { icon: "flight", label: "Bangkok to Phuket flight" },
+      ],
+    },
+    itinerary: {
+      endpoints: "Colombo ⇄ Bangkok · Phuket",
+      route: ["Colombo", "Bangkok", "Phuket", "Phi Phi Islands", "Colombo"],
+      footnote: outboundFootnote,
+      days: [
+        {
+          category: "Arrival",
+          title: "Colombo to Bangkok & evening river cruise",
+          body: "Fly to Bangkok and transfer to your hotel. In the evening, board a dinner cruise along the Chao Phraya past the lit-up temples.",
+        },
+        {
+          category: "City sightseeing",
+          title: "Grand Palace, Wat Pho & Wat Arun",
+          body: "See the Grand Palace and the Emerald Buddha, the reclining Buddha at Wat Pho, and cross the river to Wat Arun.",
+        },
+        {
+          category: "Shopping",
+          title: "Free day for markets & malls",
+          body: "Shop at Chatuchak weekend market or the malls around Siam, with the evening free for a night market.",
+        },
+        {
+          category: "Beach",
+          title: "Fly to Phuket & sunset at Promthep Cape",
+          body: "A short domestic flight to Phuket and check in to your beach hotel. Watch the sunset from Promthep Cape.",
+        },
+        {
+          category: "Island tour",
+          title: "Speedboat to the Phi Phi Islands",
+          body: "A full day by speedboat to Maya Bay, Pileh Lagoon and Bamboo Island, with snorkelling and lunch on board.",
+        },
+        {
+          category: "Leisure",
+          title: "Old Phuket Town & beach time",
+          body: "Walk the colourful streets of Old Phuket Town, visit the Big Buddha, and spend the afternoon on the beach.",
+        },
+        {
+          category: "Departure",
+          title: "Flight home to Colombo",
+          body: "Check out after breakfast and transfer to Phuket airport for your flight back to Colombo.",
+        },
+      ],
+    },
+    inclusions: {
+      intro: "Everything below is covered in the package price of LKR 175,000 per person.",
+      included: [
+        { title: "Return economy flights Colombo ⇄ Thailand and the Bangkok to Phuket flight" },
+        { title: "3 nights in Bangkok and 3 nights in Phuket", note: "4★ hotels, twin share" },
+        { title: "Daily breakfast" },
+        { title: "All airport transfers" },
+        { title: "Chao Phraya dinner cruise and Bangkok temples tour" },
+        { title: "Phi Phi Islands speedboat tour with lunch" },
+      ],
+      excluded: [
+        { title: "Travel insurance", note: "We can arrange a policy" },
+        { title: "National park fees", note: "Paid on the Phi Phi tour" },
+        { title: "Lunches and dinners not mentioned" },
+        { title: "Tips and personal expenses" },
+      ],
+    },
+    related: ["singapore-malaysia-cruise", "bali-honeymoon", "dubai-family-escape"],
   },
   {
     slug: "singapore-malaysia-cruise", title: "Singapore & Malaysia Cruise", region: "Singapore", location: "Singapore · Malaysia",
     category: "outbound", outboundRegion: "asia", featured: true, days: 5, nights: 4, price: 240000,
     image: "/images/packages/singapore-malaysia-cruise.jpg",
+    priceNote: "Twin share · flights, hotel & cruise",
+    flightsIncluded: true,
+    overview: {
+      summary:
+        "Two nights in Singapore for Gardens by the Bay, Sentosa and the Marina Bay lights, then a two-night cruise to Penang in Malaysia with meals and shows on board. Flights from Colombo, a 4★ city hotel, an ocean-view cabin and transfers are arranged.",
+      highlights: [
+        { icon: "park", label: "Gardens by the Bay" },
+        { icon: "attractions", label: "Sentosa Island" },
+        { icon: "directions_boat", label: "2-night cruise to Penang" },
+        { icon: "bed", label: "Ocean-view cabin" },
+        { icon: "restaurant", label: "Meals on board" },
+        { icon: "airport_shuttle", label: "All transfers" },
+      ],
+    },
+    itinerary: {
+      endpoints: "Colombo ⇄ Singapore",
+      route: ["Colombo", "Singapore", "Penang", "Singapore", "Colombo"],
+      footnote: outboundFootnote,
+      days: [
+        {
+          category: "Arrival",
+          title: "Colombo to Singapore & Marina Bay lights",
+          body: "Fly to Singapore and transfer to your hotel. In the evening, watch the Spectra light and water show at Marina Bay.",
+        },
+        {
+          category: "City sightseeing",
+          title: "Gardens by the Bay & Sentosa",
+          body: "Explore the Flower Dome and Supertree Grove at Gardens by the Bay, then take the cable car to Sentosa for the afternoon.",
+        },
+        {
+          category: "Cruise",
+          title: "Board your cruise ship",
+          body: "Check out and transfer to Marina Bay Cruise Centre. Settle into your ocean-view cabin as the ship sails for Malaysia.",
+        },
+        {
+          category: "Shore day",
+          title: "A day in Penang",
+          body: "Go ashore in George Town for its street art, temples and hawker food, then back on board for dinner and the evening show.",
+        },
+        {
+          category: "Departure",
+          title: "Back in Singapore & flight home",
+          body: "The ship returns to Singapore in the morning. Transfer to Changi for your flight back to Colombo.",
+        },
+      ],
+    },
+    inclusions: {
+      intro: "Everything below is covered in the package price of LKR 240,000 per person.",
+      included: [
+        { title: "Return economy flights Colombo ⇄ Singapore" },
+        { title: "2 nights in a 4★ Singapore hotel", note: "Twin share, with breakfast" },
+        { title: "2-night cruise in an ocean-view cabin", note: "All main meals and shows on board" },
+        { title: "Gardens by the Bay and Sentosa cable car tickets" },
+        { title: "Airport, hotel and port transfers" },
+      ],
+      excluded: [
+        { title: "Travel insurance", note: "We can arrange a policy" },
+        { title: "Singapore visa fee", note: "We handle the application" },
+        { title: "Cruise gratuities and drinks packages" },
+        { title: "Shore excursions and personal expenses" },
+      ],
+    },
+    related: ["bangkok-phuket", "bali-honeymoon", "maldives-overwater-villa"],
   },
 ];
 
