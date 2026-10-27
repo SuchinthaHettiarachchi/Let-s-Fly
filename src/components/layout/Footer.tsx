@@ -17,8 +17,8 @@ function Label({ children }: { children: React.ReactNode }) {
 }
 
 /**
- * Walkers Tours layout on our navy: contact details on the left, quick links in two columns,
- * then map, payments and socials; legal links sit in the bottom bar.
+ * Walkers Tours layout on our navy: phone, email and hours on the left, quick links in two columns,
+ * then address with the map, payments and socials; legal links sit in the bottom bar.
  */
 export function Footer() {
   return (
@@ -30,17 +30,6 @@ export function Footer() {
             <p className="max-w-[300px] leading-[1.7]">
               Smart travel starts here. Flights, visas, hotels and holidays, planned with care and a personal touch.
             </p>
-          </div>
-          <div>
-            <Label>Address</Label>
-            <a
-              href={contact.mapHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block max-w-[260px] leading-relaxed text-white hover:text-sun-400"
-            >
-              {contact.address}
-            </a>
           </div>
           <div>
             <Label>Phone</Label>
@@ -79,13 +68,22 @@ export function Footer() {
 
         <div className="flex flex-col gap-7 sm:col-span-2 lg:col-span-1">
           <div>
-            <Label>Find us</Label>
+            <Label>Address</Label>
+            <a
+              href={contact.mapHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-start gap-2 leading-relaxed text-white hover:text-sun-400"
+            >
+              <Icon name="location_on" size={18} className="mt-0.5 flex-none text-sun-400" />
+              {contact.address}
+            </a>
             <iframe
               src={contact.mapEmbedHref}
               title="Let's Fly.lk office on Google Maps"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              className="mt-1 h-[150px] w-full rounded-xl border-0"
+              className="mt-3 h-[150px] w-full rounded-xl border-0"
             />
             <a
               href={contact.mapHref}
