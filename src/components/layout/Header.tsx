@@ -6,8 +6,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
-import { Button } from "@/components/ui/Button";
-import { useInquiry } from "@/components/inquiry/InquiryProvider";
+import { ButtonLink } from "@/components/ui/Button";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { contact, navGroups, socials, type NavLink } from "@/data/site";
 
@@ -32,7 +31,6 @@ const navState = (on: boolean) =>
 export function Header() {
   const pathname = usePathname();
   const active = activeKey(pathname);
-  const { openInquiry } = useInquiry();
   // The menu remembers the path it was opened on, so navigating closes it.
   const [menuPath, setMenuPath] = useState<string | null>(null);
   const mobileOpen = menuPath === pathname;
@@ -61,22 +59,19 @@ export function Header() {
             {navGroups.map((g) => (
               <Dropdown key={g.key} label={g.label} links={g.links} on={active === g.key} width="w-[250px]" />
             ))}
-            <Link href="/contact" className={`${navItem} ${navState(active === "contact")}`}>
-              Contact Us
-            </Link>
           </nav>
 
           <div className="flex items-center gap-2">
             <div className="hidden sm:block">
-              <Button
+              <ButtonLink
+                href="/contact"
                 variant="primary"
                 size="md"
                 icon="arrow_forward"
-                onClick={() => openInquiry()}
                 className="shadow-[0_6px_16px_rgba(19,87,155,.3)]"
               >
-                Inquire Now
-              </Button>
+                Contact Us
+              </ButtonLink>
             </div>
             <button
               type="button"
@@ -90,7 +85,7 @@ export function Header() {
           </div>
         </Container>
 
-        {mobileOpen && <MobileMenu active={active} onInquire={() => openInquiry()} />}
+        {mobileOpen && <MobileMenu active={active} />}
       </header>
     </div>
   );
@@ -189,7 +184,7 @@ function Dropdown({
   );
 }
 
-function MobileMenu({ active, onInquire }: { active: string | null; onInquire: () => void }) {
+function MobileMenu({ active }: { active: string | null }) {
   const item = (on: boolean) =>
     `flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-medium ${
       on ? "bg-sand-50 text-ocean-600" : "text-ink-900 hover:bg-sand-50"
@@ -210,10 +205,9 @@ function MobileMenu({ active, onInquire }: { active: string | null; onInquire: (
           </div>
         ))}
         <div className="my-2 h-px bg-sand-300" />
-        <Link href="/contact" className={item(active === "contact")}>Contact Us</Link>
-        <Button variant="primary" size="lg" icon="arrow_forward" onClick={onInquire} className="mt-3 w-full">
-          Inquire Now
-        </Button>
+        <ButtonLink href="/contact" variant="primary" size="lg" icon="arrow_forward" className="mt-3 w-full">
+          Contact Us
+        </ButtonLink>
         <a href={contact.phoneHref} className="mt-2 flex items-center justify-center gap-2 py-2 text-sm">
           <Icon name="call" size={18} />
           {contact.phone}
