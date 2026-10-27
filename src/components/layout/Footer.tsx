@@ -1,15 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment } from "react";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { PaymentLogo } from "@/components/ui/PaymentLogo";
 import { SocialIcon, socialBrandClass } from "@/components/ui/SocialIcon";
 import { contact, footerColumns, paymentMethodsAccepted, socials } from "@/data/site";
-
-const [quickLinks, legalLinks] = footerColumns;
-const half = Math.ceil(quickLinks.links.length / 2);
-const quickLinkColumns = [quickLinks.links.slice(0, half), quickLinks.links.slice(half)];
 
 /** Small uppercase label over each footer block, as on the Walkers Tours footer. */
 function Label({ children }: { children: React.ReactNode }) {
@@ -17,13 +12,13 @@ function Label({ children }: { children: React.ReactNode }) {
 }
 
 /**
- * Walkers Tours layout on our navy: phone, email and hours on the left, quick links in two columns,
- * then address with the map, payments and socials; legal links sit in the bottom bar.
+ * Walkers Tours layout on our navy: phone, email and hours on the left, then the "Quick Links & Services"
+ * and "Legal & Policies" columns, then address with the map, payments and socials.
  */
 export function Footer() {
   return (
     <footer className="bg-navy-900 text-sm text-white/75">
-      <Container className="grid grid-cols-1 gap-12 pt-16 pb-12 sm:grid-cols-2 lg:grid-cols-[1.25fr_1.2fr_1.15fr] lg:gap-16 lg:pt-20 lg:pb-14">
+      <Container className="grid grid-cols-1 gap-12 pt-16 pb-12 sm:grid-cols-2 lg:grid-cols-[1.1fr_1.5fr_1.1fr] lg:gap-16 lg:pt-20 lg:pb-14">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-4">
             <Image src="/images/logo.png" alt="Let's Fly.lk" width={96} height={96} className="size-[96px]" />
@@ -49,12 +44,12 @@ export function Footer() {
           </div>
         </div>
 
-        <nav aria-label="Quick links">
-          <Label>Quick links</Label>
-          <div className="mt-1 grid grid-cols-2 gap-x-8">
-            {quickLinkColumns.map((links, i) => (
-              <ul key={i} className="flex flex-col gap-3">
-                {links.map((l) => (
+        <div className="grid grid-cols-2 gap-x-8">
+          {footerColumns.map((col) => (
+            <nav key={col.title} aria-label={col.title}>
+              <h2 className="mb-4 text-[15px] font-semibold text-white">{col.title}</h2>
+              <ul className="flex flex-col gap-3">
+                {col.links.map((l) => (
                   <li key={l.href}>
                     <Link href={l.href} className="text-white/75 hover:text-sun-400">
                       {l.label}
@@ -62,9 +57,9 @@ export function Footer() {
                   </li>
                 ))}
               </ul>
-            ))}
-          </div>
-        </nav>
+            </nav>
+          ))}
+        </div>
 
         <div className="flex flex-col gap-7 sm:col-span-2 lg:col-span-1">
           <div>
@@ -129,16 +124,6 @@ export function Footer() {
       <div className="border-t border-white/12">
         <Container className="flex flex-col items-start gap-3 py-5 text-[13px] text-white/60 lg:flex-row lg:items-center lg:justify-between">
           <span>© {new Date().getFullYear()} Let&apos;s Fly.lk · All rights reserved.</span>
-          <nav aria-label={legalLinks.title} className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            {legalLinks.links.map((l, i) => (
-              <Fragment key={l.href}>
-                {i > 0 && <span aria-hidden="true" className="h-3 w-px bg-white/30" />}
-                <Link href={l.href} className="text-white/60 hover:text-sun-400">
-                  {l.label}
-                </Link>
-              </Fragment>
-            ))}
-          </nav>
           <span>
             Designed &amp; developed by{" "}
             <a
