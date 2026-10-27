@@ -4,6 +4,7 @@ import { CtaBand } from "@/components/layout/CtaBand";
 import { Container } from "@/components/ui/Container";
 import { TourGrid } from "@/components/holidays/TourGrid";
 import { HotelBookings } from "@/components/holidays/HotelBookings";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { packages } from "@/data/packages";
 
 export const metadata: Metadata = {
@@ -37,6 +38,7 @@ export default function SriLankaPage() {
           <CtaBand tone="clear" />
         </div>
       </div>
+      <RevealOnScroll />
     </>
   );
 }

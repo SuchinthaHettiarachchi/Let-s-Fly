@@ -63,7 +63,7 @@ export function PhotoWall({ photos }: { photos: GalleryPhoto[] }) {
             </span>
           );
           return (
-            <li key={p.place} className="break-inside-avoid">
+            <li key={p.place} data-reveal={(i % 4) * 80} className="break-inside-avoid">
               {p.image ? (
                 <button
                   type="button"

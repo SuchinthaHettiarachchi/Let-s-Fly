@@ -4,6 +4,7 @@ import { CtaBand } from "@/components/layout/CtaBand";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { JourneyList } from "@/components/holidays/JourneyList";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { journeyPerks, journeys } from "@/data/journeys";
 
 export const metadata: Metadata = {
@@ -32,8 +33,8 @@ export default function TrainsCruisesPage() {
       <section className="bg-sand-50 py-12 lg:py-14">
         <Container>
           <ul className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {journeyPerks.map((p) => (
-              <li key={p.title} className="flex items-start gap-4">
+            {journeyPerks.map((p, i) => (
+              <li key={p.title} data-reveal={i * 100} className="flex items-start gap-4">
                 <span className="flex size-11 flex-none items-center justify-center rounded-full bg-sun-400 text-navy-900">
                   <Icon name={p.icon} size={22} />
                 </span>
@@ -48,6 +49,7 @@ export default function TrainsCruisesPage() {
       </section>
 
       <CtaBand tone="sand" />
+      <RevealOnScroll />
     </>
   );
 }

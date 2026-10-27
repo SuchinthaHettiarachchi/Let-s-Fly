@@ -8,6 +8,7 @@ import { Eyebrow } from "@/components/ui/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { InquiryCard } from "@/components/inquiry/InquiryCard";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { contact } from "@/data/site";
 import { detailVisas, getVisa } from "@/data/visas";
 
@@ -65,7 +66,7 @@ export default async function VisaDetailPage({ params }: PageProps<"/visa/[slug]
 
       <Container className="grid grid-cols-1 gap-10 py-14 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-12 lg:py-20">
         <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-2.5">
+          <div data-reveal className="flex flex-col gap-2.5">
             <Eyebrow>Documents checklist</Eyebrow>
             <h2>What you&apos;ll need</h2>
             <p className="text-lead text-ink-600">
@@ -75,7 +76,7 @@ export default async function VisaDetailPage({ params }: PageProps<"/visa/[slug]
           </div>
 
           {visa.documentGroups.map((group, gi) => (
-            <section key={group.title} className="rounded-xl border border-sand-300 bg-white p-5 sm:p-6">
+            <section key={group.title} data-reveal className="rounded-xl border border-sand-300 bg-white p-5 sm:p-6">
               <div className="mb-4 flex items-center justify-between gap-3 border-b border-sand-300 pb-4">
                 <h3 className="flex items-center gap-3 font-sans text-h4">
                   <span className="flex size-8 flex-none items-center justify-center rounded-full bg-sun-400 text-small font-bold text-navy-900">
@@ -102,14 +103,14 @@ export default async function VisaDetailPage({ params }: PageProps<"/visa/[slug]
           ))}
 
           {visa.warning && (
-            <p className="flex gap-2.5 rounded-lg border-l-4 border-sun-400 bg-sun-400/12 px-4 py-3.5 text-small text-ink-900">
+            <p data-reveal className="flex gap-2.5 rounded-lg border-l-4 border-sun-400 bg-sun-400/12 px-4 py-3.5 text-small text-ink-900">
               <Icon name="info" size={18} className="mt-px text-navy-900" />
               {visa.warning}
             </p>
           )}
         </div>
 
-        <aside className="flex flex-col gap-3 lg:sticky lg:top-[160px] lg:self-start">
+        <aside data-reveal="150" className="flex flex-col gap-3 lg:sticky lg:top-[160px] lg:self-start">
           <InquiryCard prefill={{ service: "Visa services", destination: visa.city }} />
           <ButtonLink
             href={`${contact.whatsappHref}?text=${encodeURIComponent(`Hi Let's Fly, I need help with a ${visa.city} visa.`)}`}
@@ -126,6 +127,7 @@ export default async function VisaDetailPage({ params }: PageProps<"/visa/[slug]
       </Container>
 
       <CtaBand />
+      <RevealOnScroll />
     </>
   );
 }

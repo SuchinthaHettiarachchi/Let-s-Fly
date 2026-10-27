@@ -7,6 +7,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { CategoryPill } from "@/components/projects/CategoryPill";
 import { ProjectCover, ProjectGallery } from "@/components/projects/ProjectMedia";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { getProject, projectDate, projects } from "@/data/projects";
 
 export const dynamicParams = false;
@@ -32,19 +33,21 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
     <article className="pt-8 pb-20 lg:pb-24">
       <Container className="flex flex-col gap-6">
         <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Projects", href: "/projects" }, { label: project.title }]} />
-        <div className="flex items-center gap-3">
+        <div className="flex animate-rise items-center gap-3">
           <CategoryPill category={project.category} />
           <span className="flex items-center gap-1.5 text-small text-ink-400">
             <Icon name="calendar_month" size={16} />
             {projectDate(project)}
           </span>
         </div>
-        <h1 className="max-w-[760px]">{project.title}</h1>
-        <ProjectCover images={images} total={total} title={project.title} />
+        <h1 className="max-w-[760px] animate-rise [animation-delay:80ms]">{project.title}</h1>
+        <div className="animate-rise [animation-delay:160ms]">
+          <ProjectCover images={images} total={total} title={project.title} />
+        </div>
       </Container>
 
       <Container className="mt-14 grid grid-cols-1 gap-8 lg:grid-cols-[260px_1fr] lg:gap-14">
-        <div className="flex flex-col items-start gap-3">
+        <div data-reveal className="flex flex-col items-start gap-3">
           <Eyebrow>About the project</Eyebrow>
           <h2 className="text-h3">Overview</h2>
           {total > 0 && (
@@ -54,7 +57,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
             </span>
           )}
         </div>
-        <div className="flex max-w-[720px] flex-col gap-5">
+        <div data-reveal="120" className="flex max-w-[720px] flex-col gap-5">
           {body.map((p, i) => (
             <p key={i} className={i === 0 ? "text-lead text-ink-900" : "text-body text-ink-600"}>
               {p}
@@ -65,7 +68,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
 
       {total > 0 && (
         <Container className="mt-14">
-          <div className="border-t border-sand-300 pt-12">
+          <div data-reveal className="border-t border-sand-300 pt-12">
             <div className="mb-6 flex items-end justify-between">
               <div className="flex flex-col gap-2">
                 <Eyebrow>Photos</Eyebrow>
@@ -78,11 +81,12 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
         </Container>
       )}
 
-      <Container className="mt-12">
+      <Container data-reveal className="mt-12">
         <ButtonLink href="/projects" variant="outline" size="lg" leadingIcon="arrow_back">
           Back to Projects
         </ButtonLink>
       </Container>
+      <RevealOnScroll />
     </article>
   );
 }

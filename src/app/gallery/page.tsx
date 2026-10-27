@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { PhotoWall } from "@/components/gallery/PhotoWall";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { contact, socials } from "@/data/site";
 import { galleryPhotos } from "@/data/gallery";
 
@@ -34,7 +35,7 @@ export default function GalleryPage() {
 
       <section className="pb-16 lg:pb-20">
         <Container>
-          <div className="flex flex-col items-start justify-between gap-6 on-dark rounded-2xl bg-navy-900 p-8 text-white sm:p-12 lg:flex-row lg:items-center">
+          <div data-reveal className="flex flex-col items-start justify-between gap-6 on-dark rounded-2xl bg-navy-900 p-8 text-white sm:p-12 lg:flex-row lg:items-center">
             <div className="flex items-start gap-4">
               <span className="flex size-12 flex-none items-center justify-center rounded-full bg-sun-400 text-navy-900">
                 <Icon name="photo_camera" size={24} />
@@ -59,6 +60,7 @@ export default function GalleryPage() {
       </section>
 
       <CtaBand />
+      <RevealOnScroll />
     </>
   );
 }

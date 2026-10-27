@@ -66,9 +66,10 @@ export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
 
       {visible.length ? (
         <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {visible.map((v) => (
+          {visible.map((v, i) => (
             <li
               key={v.id}
+              data-reveal={(i % 3) * 90}
               className="flex flex-col overflow-hidden rounded-xl border border-sand-300 bg-white transition-[border-color,box-shadow] hover:border-ocean-600 hover:shadow-lf-card-hover"
             >
               <div className="relative h-[200px] bg-sand-200">

@@ -5,6 +5,7 @@ import { Eyebrow, SectionHeading } from "@/components/ui/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { ContactForm } from "@/components/contact/ContactForm";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { contact } from "@/data/site";
 import { jobs, officeHours, type Job } from "@/data/careers";
 
@@ -39,8 +40,8 @@ export default function ContactPage() {
 
       <Container className="relative -mt-16">
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
-          {contactCards.map((c) => (
-            <li key={c.label}>
+          {contactCards.map((c, i) => (
+            <li key={c.label} data-reveal={i * 100}>
               <a
                 href={c.href}
                 target={c.icon === "location_on" ? "_blank" : undefined}
@@ -62,7 +63,7 @@ export default function ContactPage() {
 
       <section id="careers" className="scroll-mt-[110px] lg:scroll-mt-[156px] py-16 lg:py-24">
         <Container className="flex flex-col gap-10">
-          <div className="mx-auto flex max-w-[620px] flex-col items-center gap-3 text-center">
+          <div data-reveal className="mx-auto flex max-w-[620px] flex-col items-center gap-3 text-center">
             <SectionHeading eyebrow="Join our team" title="Build your career with us" centered />
             <p className="text-body text-ink-600">
               We&apos;re always looking for passionate, talented people to join the Let&apos;s Fly.lk family. Find a role
@@ -70,9 +71,10 @@ export default function ContactPage() {
             </p>
           </div>
           <ul className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            {jobs.map((job) => (
+            {jobs.map((job, i) => (
               <li
                 key={job.id}
+                data-reveal={(i % 2) * 110}
                 className="flex flex-col overflow-hidden rounded-xl border border-sand-300 bg-white transition-[border-color,box-shadow] hover:border-ocean-600 hover:shadow-lf-card-hover"
               >
                 <div className="flex flex-1 flex-col gap-3 p-6">
@@ -112,7 +114,7 @@ export default function ContactPage() {
               </li>
             ))}
           </ul>
-          <p className="flex items-center justify-center gap-2 text-small text-ink-600">
+          <p data-reveal className="flex items-center justify-center gap-2 text-small text-ink-600">
             <Icon name="mail" size={18} className="text-ocean-600" />
             Don&apos;t see your role? Send your CV to{" "}
             <a href={`mailto:${contact.email}?subject=CV`} className="font-semibold">
@@ -124,12 +126,12 @@ export default function ContactPage() {
 
       <section className="bg-sand-50 py-16 lg:py-24">
         <Container className="grid grid-cols-1 gap-8 lg:grid-cols-[1.1fr_1fr]">
-          <div className="rounded-2xl border border-sand-300 bg-white p-6 sm:p-8">
+          <div data-reveal className="rounded-2xl border border-sand-300 bg-white p-6 sm:p-8">
             <Eyebrow>Send a message</Eyebrow>
             <h2 className="mt-2 mb-6 text-h3">How can we help?</h2>
             <ContactForm />
           </div>
-          <div className="flex flex-col gap-5">
+          <div data-reveal="150" className="flex flex-col gap-5">
             <div className="relative flex-1 overflow-hidden rounded-2xl border border-sand-300 bg-white">
               <iframe
                 src={contact.mapEmbedHref}
@@ -162,6 +164,7 @@ export default function ContactPage() {
           </div>
         </Container>
       </section>
+      <RevealOnScroll />
     </>
   );
 }

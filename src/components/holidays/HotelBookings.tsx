@@ -15,7 +15,7 @@ const stats = [
 export function HotelBookings() {
   return (
     <section id="hotels" className="scroll-mt-[110px] lg:scroll-mt-[156px] pb-20 lg:pb-[110px]">
-      <Container>
+      <Container data-reveal>
         <HotelBookingCard />
       </Container>
     </section>

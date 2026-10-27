@@ -3,6 +3,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { CtaBand } from "@/components/layout/CtaBand";
 import { Container } from "@/components/ui/Container";
 import { ProjectGrid } from "@/components/projects/ProjectGrid";
+import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { projects } from "@/data/projects";
 
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ export default function ProjectsPage() {
         </Container>
       </section>
       <CtaBand />
+      <RevealOnScroll />
     </>
   );
 }

@@ -71,8 +71,8 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
       </div>
 
       <ul className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-        {visible.map((p) => (
-          <li key={p.slug}>
+        {visible.map((p, i) => (
+          <li key={p.slug} data-reveal={(i % 3) * 90}>
             <Link href={`/projects/${p.slug}`} className="group flex flex-col gap-3 text-ink-900 hover:text-ink-900">
               <div className="relative h-[200px] overflow-hidden rounded-xl bg-sand-200">
                 {p.image ? (

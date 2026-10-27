@@ -46,8 +46,8 @@ export function JourneyList({ journeys }: { journeys: Journey[] }) {
       <ul role="tabpanel" aria-label={current.label} className="flex flex-col gap-4">
         {journeys
           .filter((j) => j.kind === kind)
-          .map((j) => (
-            <li key={j.id}>
+          .map((j, i) => (
+            <li key={j.id} data-reveal={(i % 3) * 90}>
               <JourneyCard journey={j} />
             </li>
           ))}

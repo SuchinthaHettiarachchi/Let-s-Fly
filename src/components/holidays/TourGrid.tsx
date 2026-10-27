@@ -78,8 +78,10 @@ export function TourGrid({ tours }: { tours: Package[] }) {
 
       {visible.length ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {visible.slice(0, limit).map((t) => (
-            <PackageCard key={t.slug} pkg={t} />
+          {visible.slice(0, limit).map((t, i) => (
+            <div key={t.slug} data-reveal={(i % 3) * 90}>
+              <PackageCard pkg={t} />
+            </div>
           ))}
         </div>
       ) : (
