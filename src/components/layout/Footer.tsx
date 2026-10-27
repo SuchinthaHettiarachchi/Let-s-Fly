@@ -43,19 +43,19 @@ export function Footer() {
         />
 
         <section aria-label="Smart travel starts here">
-          <Container className="flex flex-wrap items-end justify-between gap-6 pt-14 pb-9 sm:pt-16 sm:pb-12">
-            <div>
-              <h2 className="max-w-[620px] text-h1 text-white">Smart travel starts here.</h2>
-              <p className="mt-4 max-w-[460px] text-body text-white/85">
-                Flights, visas, hotels and holidays, planned with care and a personal touch.
-              </p>
+          <Container className="pt-14 pb-9 sm:pt-16 sm:pb-12">
+            <div className="flex flex-wrap items-center justify-between gap-6">
+              <h2 className="m-0 max-w-[620px] text-h1 text-white">Smart travel starts here.</h2>
+              <Link
+                href="/contact"
+                className="shrink-0 rounded-lg bg-white px-[26px] py-[13px] text-small font-semibold tracking-[0.06em] text-navy-900! uppercase transition-colors hover:bg-sand-100"
+              >
+                Contact Us
+              </Link>
             </div>
-            <Link
-              href="/contact"
-              className="rounded-lg bg-white px-[26px] py-[13px] text-small font-semibold tracking-[0.06em] text-navy-900! uppercase transition-colors hover:bg-sand-100"
-            >
-              Contact Us
-            </Link>
+            <p className="mt-4 max-w-[460px] text-body text-white/85">
+              Flights, visas, hotels and holidays, planned with care and a personal touch.
+            </p>
           </Container>
         </section>
 
