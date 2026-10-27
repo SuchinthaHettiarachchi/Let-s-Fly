@@ -9,7 +9,6 @@ import { OverviewPanel } from "@/components/package/OverviewPanel";
 import { ItineraryPanel } from "@/components/package/ItineraryPanel";
 import { InclusionsPanel } from "@/components/package/InclusionsPanel";
 import { PaymentPanel } from "@/components/package/PaymentPanel";
-import { BookingCard } from "@/components/package/BookingCard";
 import { MessageSection } from "@/components/contact/MessageSection";
 import { RelatedPackages } from "@/components/package/RelatedPackages";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
@@ -61,15 +60,10 @@ export default async function PackagePage({ params }: PageProps<"/packages/[slug
         </div>
       </Container>
 
-      <Container className="grid grid-cols-1 gap-10 pt-8 pb-16 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-12 lg:pb-24">
+      <Container className="pt-8 pb-16 lg:pb-24">
         <div className="min-w-0 animate-rise [animation-delay:240ms]">
           <PackageTabs tabs={tabs} />
         </div>
-        <aside className="lg:sticky lg:top-[160px] lg:self-start">
-          <div className="animate-rise [animation-delay:360ms]">
-            <BookingCard pkg={pkg} />
-          </div>
-        </aside>
       </Container>
 
       <MessageSection
