@@ -11,7 +11,8 @@ function subscribeHash(cb: () => void) {
 
 /**
  * Tabs whose selection lives in the URL hash (#itinerary), so a tab can be
- * linked to directly. All panels stay in the HTML; inactive ones are hidden.
+ * linked to directly. All panels stay in the HTML; inactive ones are hidden, and
+ * a panel rises in again each time it is shown.
  */
 export function PackageTabs({ tabs }: { tabs: Tab[] }) {
   const hash = useSyncExternalStore(
@@ -70,7 +71,7 @@ export function PackageTabs({ tabs }: { tabs: Tab[] }) {
           id={`panel-${t.id}`}
           aria-labelledby={`tab-${t.id}`}
           hidden={t.id !== active}
-          className="pt-7"
+          className="animate-rise pt-7 [animation-duration:500ms]"
         >
           {t.content}
         </div>

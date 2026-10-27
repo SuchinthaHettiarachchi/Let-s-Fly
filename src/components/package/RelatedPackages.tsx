@@ -9,11 +9,12 @@ export function RelatedPackages({ items }: { items: Package[] }) {
   return (
     <section className="bg-sand-50 py-16 lg:py-20">
       <Container>
-        <h2 className="mb-8 text-[26px] font-bold tracking-[-0.01em] sm:text-[32px]">You may also like</h2>
+        <h2 data-reveal className="mb-8 text-[26px] font-bold tracking-[-0.01em] sm:text-[32px]">You may also like</h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {items.map((p) => (
+          {items.map((p, i) => (
             <Link
               key={p.slug}
+              data-reveal={i * 120}
               href={`/packages/${p.slug}`}
               className="group flex flex-col overflow-hidden rounded-xl border border-sand-300 bg-white text-ink-900 transition-[transform,box-shadow,border-color] duration-250 hover:-translate-y-1 hover:border-ocean-600 hover:text-ink-900 hover:shadow-lf-card-hover"
             >
