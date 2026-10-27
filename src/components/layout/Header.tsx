@@ -52,7 +52,7 @@ export function Header() {
             />
           </Link>
 
-          <nav aria-label="Main" className="hidden items-center gap-1 text-[14.5px] font-medium lg:flex">
+          <nav aria-label="Main" className="hidden items-center gap-1 text-[0.9375rem] font-medium lg:flex">
             <Link href="/" className={`${navItem} ${navState(active === "home")}`}>
               Home
             </Link>
@@ -93,7 +93,7 @@ export function Header() {
 
 function TopBar() {
   return (
-    <div className="hidden bg-navy-900 text-[13px] text-white/85 md:block">
+    <div className="on-dark hidden bg-navy-900 text-small text-white/85 md:block">
       <Container className="flex h-[42px] items-center justify-between gap-6">
         <div className="flex items-center gap-7">
           <a href={contact.phoneHref} className="flex items-center gap-1.5 text-white/85 hover:text-white">
@@ -171,7 +171,7 @@ function Dropdown({
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-3 rounded-lg px-3.5 py-3 text-ink-900 hover:bg-sand-50 hover:text-ocean-600"
+                className="flex items-center gap-3 rounded-lg px-3.5 py-3 text-[0.9375rem] text-ink-900 hover:bg-sand-50 hover:text-ocean-600"
               >
                 {l.icon && <Icon name={l.icon} className="text-ocean-600" />}
                 {l.label}
@@ -186,7 +186,7 @@ function Dropdown({
 
 function MobileMenu({ active }: { active: string | null }) {
   const item = (on: boolean) =>
-    `flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-medium ${
+    `flex items-center gap-3 rounded-lg px-3 py-3 text-body font-medium ${
       on ? "bg-sand-50 text-ocean-600" : "text-ink-900 hover:bg-sand-50"
     }`;
   return (
@@ -195,7 +195,7 @@ function MobileMenu({ active }: { active: string | null }) {
         <Link href="/" className={item(active === "home")}>Home</Link>
         {navGroups.map((g) => (
           <div key={g.key} className="flex flex-col gap-1">
-            <div className="mt-3 px-3 text-xs font-semibold tracking-[0.2em] text-ink-400 uppercase">{g.label}</div>
+            <div className="mt-3 px-3 eyebrow text-ink-400">{g.label}</div>
             {g.links.map((l) => (
               <Link key={l.href} href={l.href} className={item(false)}>
                 {l.icon && <Icon name={l.icon} className="text-ocean-600" />}
@@ -208,7 +208,7 @@ function MobileMenu({ active }: { active: string | null }) {
         <ButtonLink href="/contact" variant="primary" size="lg" icon="arrow_forward" className="mt-3 w-full">
           Contact Us
         </ButtonLink>
-        <a href={contact.phoneHref} className="mt-2 flex items-center justify-center gap-2 py-2 text-sm">
+        <a href={contact.phoneHref} className="mt-2 flex items-center justify-center gap-2 py-2 text-small font-semibold">
           <Icon name="call" size={18} />
           {contact.phone}
         </a>

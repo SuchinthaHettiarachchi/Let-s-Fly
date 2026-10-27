@@ -16,8 +16,8 @@ export function FormSent({
       <div className="flex size-16 items-center justify-center rounded-full bg-sun-400 text-navy-900">
         <Icon name="check" size={34} />
       </div>
-      <div className="text-xl font-semibold">{title}</div>
-      <p className="max-w-[340px] text-sm text-ink-600">{text}</p>
+      <div className="font-display text-h3">{title}</div>
+      <p className="max-w-[340px] text-body text-ink-600">{text}</p>
       <Button variant="outline" size="md" className="mt-2" onClick={onReset}>
         Send another
       </Button>

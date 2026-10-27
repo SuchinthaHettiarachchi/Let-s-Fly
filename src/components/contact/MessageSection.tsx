@@ -35,8 +35,8 @@ export function MessageSection({
       <Container className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14">
         <div data-reveal className="flex flex-col gap-4 lg:sticky lg:top-[170px]">
           <Eyebrow>Send a message</Eyebrow>
-          <h2 className="text-[28px] font-bold tracking-[-0.01em] sm:text-[36px]">{title}</h2>
-          <p className="text-[15px] leading-relaxed text-ink-600">{text}</p>
+          <h2>{title}</h2>
+          <p className="text-lead text-ink-600">{text}</p>
           <ul className="mt-2 flex flex-col gap-3">
             {reach.map((r) => {
               const body = (
@@ -45,8 +45,8 @@ export function MessageSection({
                     <Icon name={r.icon} size={20} />
                   </span>
                   <span className="flex flex-col">
-                    <span className="text-xs text-ink-400">{r.label}</span>
-                    <span className="text-[15px] font-semibold text-ink-900 group-hover:text-ocean-600">{r.value}</span>
+                    <span className="text-caption font-normal text-ink-400">{r.label}</span>
+                    <span className="text-h5 text-ink-900 group-hover:text-ocean-600">{r.value}</span>
                   </span>
                 </>
               );

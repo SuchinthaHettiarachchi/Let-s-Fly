@@ -4,11 +4,11 @@ import { Icon } from "./Icon";
 export type Crumb = { label: string; href?: string };
 
 export function Breadcrumb({ items, onDark = false }: { items: Crumb[]; onDark?: boolean }) {
-  const muted = onDark ? "text-white/70 hover:text-white" : "text-ink-400 hover:text-ocean-600";
+  const muted = onDark ? "text-white/70 hover:text-sun-400" : "text-ink-400 hover:text-ocean-600";
   const current = onDark ? "text-white" : "text-ink-900";
   return (
     <nav aria-label="Breadcrumb">
-      <ol className="flex flex-wrap items-center gap-1 text-[13px]">
+      <ol className="flex flex-wrap items-center gap-1 text-small">
         {items.map((item, i) => {
           const last = i === items.length - 1;
           return (

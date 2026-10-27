@@ -152,7 +152,7 @@ export function ContactForm({ subject = "General enquiry", service = serviceOpti
         />
         <span className="flex items-start justify-between gap-3">
           <FieldError id="contact-message-error" message={errors.message} />
-          <span className={`ml-auto flex-none text-xs font-normal ${messageLength > MESSAGE_MAX - 50 ? "text-red-600" : "text-ink-400"}`}>
+          <span className={`ml-auto flex-none text-caption font-normal ${messageLength > MESSAGE_MAX - 50 ? "text-red-600" : "text-ink-400"}`}>
             {messageLength}/{MESSAGE_MAX}
           </span>
         </span>

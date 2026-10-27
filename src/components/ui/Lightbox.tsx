@@ -45,7 +45,7 @@ export function Lightbox({ images, start, title, captions, onClose }: LightboxPr
       className="fixed inset-0 z-100 flex flex-col bg-navy-900/95"
       onClick={onClose}
     >
-      <div className="flex items-center justify-between p-4 text-sm text-white/80">
+      <div className="flex items-center justify-between p-4 text-small text-white/80">
         <span>
           {index + 1} / {count}
           {captions?.[index] && <span className="ml-3 text-white">{captions[index]}</span>}

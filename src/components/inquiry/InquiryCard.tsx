@@ -5,11 +5,11 @@ export function InquiryHeader({ titleId, children }: { titleId?: string; childre
   return (
     <div className="flex items-start justify-between gap-4 bg-linear-[120deg] from-navy-900 to-ocean-600 px-6 py-6">
       <div className="flex flex-col gap-1.5">
-        <div className="text-[11px] font-semibold tracking-[0.18em] text-sun-400">PLAN MY TRIP</div>
-        <h2 id={titleId} className="text-2xl font-semibold text-white">
+        <div className="eyebrow text-sun-400">PLAN MY TRIP</div>
+        <h2 id={titleId} className="text-h3 text-white">
           Send us an inquiry
         </h2>
-        <p className="text-[13px] text-white/80">Our travel team replies within 2 working hours.</p>
+        <p className="text-small text-white/80">Our travel team replies within 2 working hours.</p>
       </div>
       {children}
     </div>

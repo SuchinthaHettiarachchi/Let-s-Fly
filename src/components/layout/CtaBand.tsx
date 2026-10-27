@@ -26,10 +26,10 @@ export function CtaBand({
             className="absolute -top-[90px] -right-[60px] size-[300px] rounded-full border-[40px] border-navy-900/6"
           />
           <div className="relative flex flex-col gap-2.5">
-            <h2 className="text-[28px] font-bold tracking-[-0.01em] text-navy-900 sm:text-[34px] lg:text-[40px]">
+            <h2 className="text-navy-900">
               {title}
             </h2>
-            <p className="text-base text-navy-900">{text}</p>
+            <p className="text-lead text-navy-900">{text}</p>
           </div>
           <div className="relative flex flex-none flex-wrap gap-3.5">
             <ButtonLink href="/contact" variant="navy" size="xl" icon="arrow_forward">

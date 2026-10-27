@@ -9,7 +9,7 @@ const styles: Record<ProjectCategory, string> = {
 
 export function CategoryPill({ category }: { category: ProjectCategory }) {
   return (
-    <span className={`inline-block rounded-full px-2.5 py-1 text-[10.5px] font-bold tracking-[0.12em] uppercase ${styles[category]}`}>
+    <span className={`inline-block rounded-full px-2.5 py-1 text-caption font-bold tracking-[0.12em] uppercase ${styles[category]}`}>
       {categoryLabel(category)}
     </span>
   );

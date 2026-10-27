@@ -19,19 +19,19 @@ export function PackageCard({ pkg, className = "", imageSizes = "(min-width: 102
         ) : (
           <Placeholder label="PHOTO" className="absolute inset-0 rounded-none border-0" />
         )}
-        <span className="absolute top-3.5 left-3.5 flex items-center gap-1 rounded-full bg-white px-[11px] py-1.5 text-[11.5px] font-semibold text-ocean-600">
+        <span className="absolute top-3.5 left-3.5 flex items-center gap-1 rounded-full bg-white px-[11px] py-1.5 text-caption text-ocean-600">
           <Icon name="location_on" size={14} />
           {pkg.area ?? pkg.region}
         </span>
         {pkg.badge && (
-          <span className="absolute top-3.5 right-3.5 rounded-full bg-sun-400 px-[11px] py-1.5 text-[11.5px] font-semibold text-navy-900">
+          <span className="absolute top-3.5 right-3.5 rounded-full bg-sun-400 px-[11px] py-1.5 text-caption text-navy-900">
             {pkg.badge}
           </span>
         )}
       </div>
       <div className={`flex flex-1 flex-col ${compact ? "gap-2 px-4 pt-4 pb-4" : "gap-2.5 px-5 pt-5 pb-[22px]"}`}>
-        <div className={`leading-[1.35] font-semibold ${compact ? "text-[15px]" : "text-[17px]"}`}>{pkg.title}</div>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-ink-400">
+        <div className={compact ? "text-h5" : "text-h4"}>{pkg.title}</div>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-small text-ink-400">
           <span className="flex items-center gap-1.5">
             <Icon name="schedule" size={17} className="text-ocean-600" />
             {pkg.flightsIncluded ? durationShort(pkg) : durationLabel(pkg)}
@@ -46,11 +46,11 @@ export function PackageCard({ pkg, className = "", imageSizes = "(min-width: 102
         <div className="my-1 h-px bg-sand-300" />
         <div className="mt-auto flex items-end justify-between">
           <div className="flex flex-col">
-            <span className="text-[11.5px] text-ink-400">From</span>
-            <span className={`font-bold text-ocean-600 ${compact ? "text-[17px]" : "text-[19px]"}`}>{formatLKR(pkg.price)}</span>
-            <span className="text-[11.5px] text-ink-400">per person</span>
+            <span className="text-caption font-normal text-ink-400">From</span>
+            <span className={`num font-bold text-ocean-600 ${compact ? "text-h5" : "text-h4"}`}>{formatLKR(pkg.price)}</span>
+            <span className="text-caption font-normal text-ink-400">per person</span>
           </div>
-          <span className="flex items-center gap-0.5 text-[13.5px] font-semibold text-ocean-600">
+          <span className="flex items-center gap-0.5 text-small font-semibold text-ocean-600">
             View More
             <Icon name="arrow_forward" size={18} className="transition-transform group-hover:translate-x-0.5" />
           </span>

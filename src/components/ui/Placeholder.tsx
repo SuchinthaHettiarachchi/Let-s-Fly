@@ -16,7 +16,7 @@ export function Placeholder({ label, icon = "image", dark = false, className = "
       } ${className}`}
     >
       <Icon name={icon} size={26} />
-      <span className="font-mono text-[10.5px] font-semibold tracking-[0.1em]">{label}</span>
+      <span className="font-mono text-caption tracking-[0.1em]">{label}</span>
     </div>
   );
 }

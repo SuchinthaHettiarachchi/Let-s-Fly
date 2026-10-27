@@ -44,7 +44,7 @@ export function PageHero({
   children,
 }: PageHeroProps) {
   return (
-    <section className="relative overflow-hidden bg-navy-900">
+    <section className="on-dark relative overflow-hidden bg-navy-900">
       {image && <Image src={image} alt="" fill preload sizes="100vw" className={`animate-zoom object-cover ${imagePosition}`} />}
       {overlay && <div className={`absolute inset-0 ${heroGradient}`} />}
       <Container
@@ -58,11 +58,11 @@ export function PageHero({
         <Eyebrow onDark className="mt-1 animate-rise [animation-delay:120ms]">
           {eyebrow}
         </Eyebrow>
-        <h1 className="max-w-[640px] animate-rise text-[34px] [animation-delay:240ms] leading-[1.1] font-bold tracking-[-0.02em] text-pretty sm:text-[44px] lg:text-[52px]">
+        <h1 className="max-w-[20ch] animate-rise [animation-delay:240ms]">
           {titleIcon && <span className="mr-3.5 inline-block align-middle">{titleIcon}</span>}
           {title}
         </h1>
-        {sub && <p className="max-w-[520px] animate-rise text-base [animation-delay:360ms] leading-[1.6] text-white/85">{sub}</p>}
+        {sub && <p className="max-w-[52ch] animate-rise text-lead [animation-delay:360ms] text-white/85">{sub}</p>}
         {children}
       </Container>
     </section>

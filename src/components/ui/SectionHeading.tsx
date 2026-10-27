@@ -9,7 +9,7 @@ type EyebrowProps = {
 export function Eyebrow({ children, onDark = false, rule = false, className = "" }: EyebrowProps) {
   return (
     <div
-      className={`flex items-center gap-3 text-[13px] font-semibold uppercase tracking-[0.2em] ${
+      className={`flex items-center gap-3 eyebrow ${
         onDark ? "text-sun-400" : "text-ocean-600"
       } ${className}`}
     >
@@ -30,7 +30,7 @@ export function SectionHeading({ eyebrow, title, centered = false, className = "
   return (
     <div className={`flex flex-col gap-2.5 ${centered ? "items-center text-center" : ""} ${className}`}>
       <Eyebrow>{eyebrow}</Eyebrow>
-      <h2 className="m-0 text-[30px] font-bold leading-[1.18] tracking-[-0.01em] text-pretty sm:text-[36px] lg:text-[42px]">
+      <h2 className="m-0">
         {title}
       </h2>
     </div>
