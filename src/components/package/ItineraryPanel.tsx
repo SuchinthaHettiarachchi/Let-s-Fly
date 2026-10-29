@@ -35,7 +35,7 @@ export function ItineraryPanel({ itinerary, days, nights }: Props) {
         <button
           type="button"
           onClick={() => setOpen(allOpen ? new Set() : new Set(itinerary.days.map((_, i) => i)))}
-          className="flex h-9 flex-none cursor-pointer items-center gap-1.5 rounded-lg border-[1.5px] border-sand-300 bg-white px-3 text-small font-semibold text-ocean-600 transition-[border-color,scale] duration-200 hover:border-ocean-600 press"
+          className="flex h-11 flex-none sm:h-9 cursor-pointer items-center gap-1.5 rounded-lg border-[1.5px] border-sand-300 bg-white px-3 text-small font-semibold text-ocean-600 transition-[border-color,scale] duration-200 hover:border-ocean-600 press"
         >
           <Icon name={allOpen ? "unfold_less" : "unfold_more"} size={18} />
           {allOpen ? "Collapse all" : "Expand all"}
@@ -54,7 +54,7 @@ export function ItineraryPanel({ itinerary, days, nights }: Props) {
 
       <ol className="relative flex flex-col gap-3">
         {/* Dotted timeline behind the day badges. */}
-        <span aria-hidden="true" className="absolute top-6 bottom-6 left-[37px] border-l-2 border-dotted border-sand-300" />
+        <span aria-hidden="true" className="absolute top-6 bottom-6 left-[40px] sm:left-[44px] border-l-2 border-dotted border-sand-300" />
         {itinerary.days.map((day, i) => {
           const isOpen = open.has(i);
           const n = String(i + 1).padStart(2, "0");          return (
@@ -93,7 +93,7 @@ export function ItineraryPanel({ itinerary, days, nights }: Props) {
                   <Icon name="expand_more" size={20} className={`transition-transform ${isOpen ? "rotate-180" : ""}`} />
                 </span>
               </button>
-              <div id={`day-${i}`} hidden={!isOpen} className="px-4 pb-5 sm:pr-16 sm:pl-[76px]">
+              <div id={`day-${i}`} hidden={!isOpen} className="px-4 pb-5 sm:pr-16 sm:pl-[84px]">
                 <p className="border-t border-dashed border-sand-300 pt-4 text-body text-ink-600">
                   {day.body}
                 </p>

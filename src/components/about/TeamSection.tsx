@@ -20,7 +20,7 @@ const initials = (m: TeamMember) =>
 
 const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
 
-const iconLink = "flex size-9 items-center justify-center rounded-md text-ink-400 transition-colors";
+const iconLink = "flex size-11 items-center sm:size-9 justify-center rounded-md text-ink-400 transition-colors";
 
 /**
  * "Meet Our Team": one list of names. Hovering (or focusing) a name shows that person's

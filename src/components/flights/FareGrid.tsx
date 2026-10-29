@@ -40,7 +40,7 @@ export function FareGrid({ fares }: { fares: Fare[] }) {
                 href={portal}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={buttonClasses("outline", "md", "h-8 px-3 text-caption")}
+                className={buttonClasses("outline", "md", "h-10 px-3 text-caption lg:h-8")}
               >
                 Book on Portal
                 <Icon name="north_east" size={14} />
@@ -49,7 +49,7 @@ export function FareGrid({ fares }: { fares: Fare[] }) {
             <button
               type="button"
               onClick={() => openInquiry({ service: "Air tickets", destination: f.city })}
-              className={buttonClasses("primary", "md", "h-8 px-3 text-caption")}
+              className={buttonClasses("primary", "md", "h-10 px-3 text-caption lg:h-8")}
             >
               Ask for this fare
             </button>

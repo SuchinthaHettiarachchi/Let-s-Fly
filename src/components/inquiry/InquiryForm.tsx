@@ -38,8 +38,8 @@ export function InquiryForm({ prefill = {}, autoFocus = false }: Props) {
 
   return (
     <div className="@container">
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 @xs:grid-cols-2">
-        <div className="grid grid-cols-[100px_1fr] gap-4 @xs:col-span-2 @xs:grid-cols-[120px_1fr]">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 @min-[21rem]:grid-cols-2">
+        <div className="grid grid-cols-[100px_1fr] gap-4 @min-[21rem]:col-span-2 @min-[21rem]:grid-cols-[120px_1fr]">
           <label className={labelClass}>
             Title *
             <select name="title" autoFocus={autoFocus} className={fieldClass}>
@@ -89,7 +89,7 @@ export function InquiryForm({ prefill = {}, autoFocus = false }: Props) {
             className={`${fieldClass} bg-sand-50 text-ink-600`}
           />
         </label>
-        <label className={`${labelClass} @xs:col-span-2`}>
+        <label className={`${labelClass} @min-[21rem]:col-span-2`}>
           Inquiry details
           <textarea
             name="details"
@@ -98,8 +98,8 @@ export function InquiryForm({ prefill = {}, autoFocus = false }: Props) {
             className={textareaClass}
           />
         </label>
-        <ConsentBlock className="@xs:col-span-2" />
-        <Button type="submit" variant="primary" size="lg" icon="arrow_forward" className="h-[52px] w-full @xs:col-span-2">
+        <ConsentBlock className="@min-[21rem]:col-span-2" />
+        <Button type="submit" variant="primary" size="lg" icon="arrow_forward" className="h-[52px] w-full @min-[21rem]:col-span-2">
           Inquire Now · Send Inquiry
         </Button>
         <ButtonLink
@@ -108,7 +108,7 @@ export function InquiryForm({ prefill = {}, autoFocus = false }: Props) {
           rel="noopener noreferrer"
           variant="outline"
           size="lg"
-          className="h-[52px] w-full @xs:col-span-2"
+          className="h-[52px] w-full @min-[21rem]:col-span-2"
         >
           <span className="flex size-6 items-center justify-center rounded-full bg-[#25d366] text-white">
             <SocialIcon name="WhatsApp" size={14} />

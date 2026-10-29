@@ -12,6 +12,7 @@ import { PaymentPanel } from "@/components/package/PaymentPanel";
 import { MessageSection } from "@/components/contact/MessageSection";
 import { RelatedPackages } from "@/components/package/RelatedPackages";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { MobileActionBar } from "@/components/layout/MobileActionBar";
 import { detailPackages, durationLabel, formatLKR, getPackage, relatedPackages } from "@/data/packages";
 
 // Only packages with full content get a page; anything else 404s.
@@ -74,6 +75,11 @@ export default async function PackagePage({ params }: PageProps<"/packages/[slug
 
       <RelatedPackages items={relatedPackages(pkg)} />
       <CtaBand tone="sand" />
+      <MobileActionBar
+        label="From, per person"
+        value={formatLKR(pkg.price)}
+        prefill={{ service: "Tour package", destination: pkg.title }}
+      />
       <RevealOnScroll />
     </>
   );

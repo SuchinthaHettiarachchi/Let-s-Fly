@@ -22,7 +22,7 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
   const visible = visas.filter((v) => (!type || v.type === type) && (!country || v.country === country));
 
   const pill =
-    "h-10 cursor-pointer appearance-none rounded-full border-[1.5px] border-sand-300 bg-white pr-9 pl-4 font-medium text-ink-900 hover:border-ocean-600 focus:border-ocean-600 focus:outline-none";
+    "h-11 cursor-pointer appearance-none rounded-full sm:h-10 border-[1.5px] border-sand-300 bg-white pr-9 pl-4 font-medium text-ink-900 hover:border-ocean-600 focus:border-ocean-600 focus:outline-none";
 
   return (
     <div className="flex flex-col gap-8">
@@ -81,7 +81,7 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
               </>
             );
             const card =
-              "group relative block h-[360px] overflow-hidden rounded-xl bg-navy-900 text-left transition-[translate,box-shadow,scale] duration-300 ease-lf press-card hover:-translate-y-1 hover:shadow-lf-card-hover";
+              "group relative block h-[300px] overflow-hidden sm:h-[360px] rounded-xl bg-navy-900 text-left transition-[translate,box-shadow,scale] duration-300 ease-lf press-card hover:-translate-y-1 hover:shadow-lf-card-hover";
             return hasPage ? (
               <Link key={v.slug} href={`/visa/${v.slug}`} data-reveal={(i % 3) * 100} className={card} aria-label={`${v.city} ${v.type}`}>
                 {body}

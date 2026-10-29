@@ -39,7 +39,7 @@ export function PackageHeader({ pkg }: { pkg: Package }) {
             )}
           </ul>
         </div>
-        <div className="flex gap-2.5">
+        <div className="flex gap-2.5 *:flex-1 sm:*:flex-none">
           <ShareButton title={pkg.title} />
           {pkg.brochureUrl && (
             <ButtonLink

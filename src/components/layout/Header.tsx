@@ -41,7 +41,7 @@ export function Header() {
     <div className="sticky top-0 z-50 md:-top-[42px]">
       <TopBar />
       <header className="border-b border-sand-300 bg-white shadow-lf-header">
-        <Container className="flex h-[88px] items-center justify-between lg:h-[136px]">
+        <Container className="flex h-16 items-center justify-between md:h-[88px] lg:h-[136px]">
           <Link href="/" aria-label="Let's Fly.lk home" className="flex items-center">
             <Image
               src="/images/logo.png"
@@ -49,7 +49,7 @@ export function Header() {
               width={120}
               height={120}
               preload
-              className="size-[76px] lg:size-[120px]"
+              className="size-[52px] md:size-[76px] lg:size-[120px]"
             />
           </Link>
 
@@ -201,7 +201,7 @@ function MobileMenu({ active, pathname }: { active: string | null; pathname: str
       on ? "bg-sand-50 font-semibold text-ocean-600 shadow-[inset_3px_0_0_var(--color-ocean-600)]" : "text-ink-900 hover:bg-sand-50"
     }`;
   return (
-    <nav aria-label="Mobile" className="max-h-[calc(100dvh-88px)] overflow-y-auto border-t border-sand-300 bg-white lg:hidden">
+    <nav aria-label="Mobile" className="max-h-[calc(100dvh-64px)] overflow-y-auto overscroll-contain border-t border-sand-300 bg-white pb-[env(safe-area-inset-bottom)] md:max-h-[calc(100dvh-88px)] lg:hidden">
       <Container className="flex flex-col gap-1 py-4">
         <Link href="/" className={item(active === "home")}>Home</Link>
         {navGroups.map((g) => (

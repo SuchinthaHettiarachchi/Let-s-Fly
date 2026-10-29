@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon } from "./Icon";
 
 type LightboxProps = {
@@ -18,6 +18,7 @@ export function Lightbox({ images, start, title, captions, onClose }: LightboxPr
   const [index, setIndex] = useState(start);
   const count = images.length;
   const go = useCallback((d: number) => setIndex((i) => (i + d + count) % count), [count]);
+  const touchX = useRef<number | null>(null);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -45,7 +46,7 @@ export function Lightbox({ images, start, title, captions, onClose }: LightboxPr
       className="fixed inset-0 z-100 flex flex-col bg-navy-900/95"
       onClick={onClose}
     >
-      <div className="flex items-center justify-between p-4 text-small text-white/80">
+      <div className="flex items-center justify-between p-4 pt-[max(1rem,env(safe-area-inset-top))] text-small text-white/80">
         <span>
           {index + 1} / {count}
           {captions?.[index] && <span className="ml-3 text-white">{captions[index]}</span>}
@@ -54,11 +55,21 @@ export function Lightbox({ images, start, title, captions, onClose }: LightboxPr
           <Icon name="close" />
         </button>
       </div>
-      <div className="relative flex-1" onClick={(e) => e.stopPropagation()}>
+      <div
+          className="relative flex-1 touch-pan-y"
+          onClick={(e) => e.stopPropagation()}
+          onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
+          onTouchEnd={(e) => {
+            if (touchX.current === null) return;
+            const dx = e.changedTouches[0].clientX - touchX.current;
+            if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+            touchX.current = null;
+          }}
+        >
         <Image src={images[index]} alt={`${title}, photo ${index + 1}`} fill sizes="100vw" className="object-contain" />
       </div>
       {count > 1 && (
-        <div className="flex justify-center gap-3 p-4" onClick={(e) => e.stopPropagation()}>
+        <div className="flex justify-center gap-3 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]" onClick={(e) => e.stopPropagation()}>
           <button type="button" aria-label="Previous photo" onClick={() => go(-1)} className={roundBtn}>
             <Icon name="chevron_left" size={24} />
           </button>

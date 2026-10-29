@@ -31,7 +31,7 @@ export function CtaBand({
             </h2>
             <p className="text-lead text-navy-900">{text}</p>
           </div>
-          <div className="relative flex flex-none flex-wrap gap-3.5">
+          <div className="relative flex w-full flex-col gap-3 *:w-full sm:w-auto sm:flex-none sm:flex-row sm:flex-wrap sm:gap-3.5 sm:*:w-auto">
             <ButtonLink href="/contact" variant="navy" size="xl" icon="arrow_forward">
               Plan My Trip
             </ButtonLink>

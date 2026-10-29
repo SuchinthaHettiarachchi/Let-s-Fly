@@ -23,14 +23,14 @@ export function InquiryModal({ prefill, onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-100 flex items-center justify-center overflow-y-auto bg-navy-900/55 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-100 flex items-end justify-center overflow-y-auto overscroll-contain bg-navy-900/55 backdrop-blur-sm sm:items-center sm:p-4"
       onClick={onClose}
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="inquiry-title"
-        className="my-auto w-full max-w-[600px] overflow-hidden rounded-2xl bg-white text-ink-900 shadow-[0_30px_80px_rgba(11,37,69,.28)]"
+        className="mt-auto w-full max-w-[600px] overflow-hidden rounded-t-2xl sm:my-auto sm:rounded-2xl bg-white text-ink-900 shadow-[0_30px_80px_rgba(11,37,69,.28)]"
         onClick={(e) => e.stopPropagation()}
       >
         <InquiryHeader titleId="inquiry-title">
@@ -38,12 +38,12 @@ export function InquiryModal({ prefill, onClose }: Props) {
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="flex size-9 flex-none cursor-pointer items-center justify-center rounded-full border border-white/30 text-white transition-[background-color,scale] duration-200 hover:bg-white/12 press"
+            className="flex size-11 flex-none sm:size-9 cursor-pointer items-center justify-center rounded-full border border-white/30 text-white transition-[background-color,scale] duration-200 hover:bg-white/12 press"
           >
             <Icon name="close" />
           </button>
         </InquiryHeader>
-        <div className="px-6 pt-6 pb-7 sm:px-8">
+        <div className="px-5 pt-5 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:px-8 sm:pt-6 sm:pb-7">
           <InquiryForm prefill={prefill} autoFocus />
         </div>
       </div>

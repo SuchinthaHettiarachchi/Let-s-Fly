@@ -33,7 +33,7 @@ export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
                 type="button"
                 aria-pressed={on}
                 onClick={() => setType(c.id)}
-                className={`flex h-10 flex-none cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] px-[18px] text-small font-medium transition-[color,background-color,border-color,scale] duration-200 press ${
+                className={`flex h-11 flex-none sm:h-10 cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] px-[18px] text-small font-medium transition-[color,background-color,border-color,scale] duration-200 press ${
                   on ? "border-ocean-600 bg-ocean-600 text-white" : "border-sand-300 bg-white text-ink-900 hover:border-ocean-600"
                 }`}
               >
@@ -43,7 +43,7 @@ export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
             );
           })}
         </div>
-        <div role="radiogroup" aria-label="Driving option" className="inline-flex self-start rounded-xl bg-sand-50 p-1">
+        <div role="radiogroup" aria-label="Driving option" className="grid w-full grid-cols-2 rounded-xl bg-sand-50 p-1 sm:inline-flex sm:w-auto sm:self-start">
           {modes.map((m) => {
             const on = m.id === mode;
             return (
@@ -53,7 +53,7 @@ export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
                 role="radio"
                 aria-checked={on}
                 onClick={() => setMode(m.id)}
-                className={`h-9 cursor-pointer rounded-lg px-4 text-small font-semibold transition-[color,background-color,box-shadow,scale] duration-200 press ${
+                className={`h-11 cursor-pointer rounded-lg sm:h-9 px-4 text-small font-semibold transition-[color,background-color,box-shadow,scale] duration-200 press ${
                   on ? "bg-white text-ocean-600 shadow-lf-header ring-1 ring-ocean-600/30" : "text-ink-600 hover:text-ocean-600"
                 }`}
               >

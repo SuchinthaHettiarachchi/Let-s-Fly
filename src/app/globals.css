@@ -221,9 +221,21 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%; /* stops iOS enlarging text in landscape */
+  }
+
+  /* Taps: no grey flash, no double-tap zoom delay on controls */
+  a,
+  button,
+  [role="tab"],
+  select,
+  label {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   body {
+    overflow-x: clip; /* no sideways wobble from decorative circles and negative margins */
     background: var(--color-surface);
     color: var(--color-ink-900);
     font-family: var(--font-sans);
@@ -361,6 +373,16 @@
   scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
+  }
+}
+
+/* Phones: make room for the bottom action bar and lift the WhatsApp button above it */
+@media (width < 64rem) {
+  body:has([data-mobile-bar]) {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+  body:has([data-mobile-bar]) .wa-fab {
+    bottom: calc(88px + env(safe-area-inset-bottom));
   }
 }
 

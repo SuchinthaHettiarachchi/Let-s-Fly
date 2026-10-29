@@ -40,7 +40,7 @@ export function PackageTabs({ tabs }: { tabs: Tab[] }) {
 
   return (
     <div>
-      <div role="tablist" aria-label="Package details" className="no-scrollbar sticky top-[88px] z-20 flex overflow-x-auto border-b border-sand-300 bg-white lg:top-[136px]">
+      <div role="tablist" aria-label="Package details" className="no-scrollbar sticky top-16 z-20 md:top-[88px] flex overflow-x-auto border-b border-sand-300 bg-white lg:top-[136px]">
         {tabs.map((t, i) => {
           const on = t.id === active;
           return (

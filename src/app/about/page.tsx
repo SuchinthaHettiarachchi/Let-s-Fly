@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 };
 
 const gradient =
-  "bg-[linear-gradient(90deg,rgba(11,37,69,.94)_0%,rgba(11,37,69,.78)_35%,rgba(19,87,155,.35)_70%,rgba(19,87,155,.1)_100%)]";
+  "bg-[linear-gradient(180deg,rgba(11,37,69,.55)_0%,rgba(11,37,69,.9)_100%)] sm:bg-[linear-gradient(90deg,rgba(11,37,69,.94)_0%,rgba(11,37,69,.78)_35%,rgba(19,87,155,.35)_70%,rgba(19,87,155,.1)_100%)]";
 
 export default function AboutPage() {
   return (
@@ -39,7 +39,7 @@ export default function AboutPage() {
       <section className="on-dark relative overflow-hidden bg-navy-900">
         <Image src="/images/hero/dubai.jpg" alt="" fill preload sizes="100vw" className="animate-zoom object-cover" />
         <div className={`absolute inset-0 ${gradient}`} />
-        <Container className="relative flex min-h-[600px] flex-col justify-center gap-5 py-14 text-white sm:min-h-[640px] lg:min-h-[660px]">
+        <Container className="relative flex min-h-[480px] flex-col justify-center gap-5 py-14 text-white sm:min-h-[640px] lg:min-h-[660px]">
           <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "About Us" }]} onDark />
           <Eyebrow onDark className="animate-rise">
             About Us
@@ -64,7 +64,7 @@ export default function AboutPage() {
             <div
               key={v.title}
               data-reveal={i * 120}
-              className="group relative flex min-h-[420px] items-end overflow-hidden rounded-2xl bg-navy-900 text-white lg:min-h-[520px]"
+              className="group relative flex min-h-[340px] items-end overflow-hidden rounded-2xl bg-navy-900 text-white md:min-h-[420px] lg:min-h-[520px]"
             >
               <Image
                 src={v.image}
@@ -162,7 +162,7 @@ export default function AboutPage() {
       <section className="on-dark relative overflow-hidden bg-navy-900">
         <Image src="/images/hero/hill-country-rail.jpg" alt="" fill sizes="100vw" className="animate-zoom object-cover [animation-direction:alternate] [animation-iteration-count:infinite]" />
         <div className={`absolute inset-0 ${gradient}`} />
-        <Container data-reveal className="relative flex min-h-[460px] flex-col justify-center gap-5 py-16 text-white">
+        <Container data-reveal className="relative flex min-h-[380px] flex-col sm:min-h-[460px] justify-center gap-5 py-16 text-white">
           <Eyebrow onDark>Why we do it</Eyebrow>
           <h2 className="max-w-[720px] text-h1">
             Because Every Journey Means Something
@@ -178,7 +178,7 @@ export default function AboutPage() {
         <Container className="flex flex-col gap-6">
           <div data-reveal className="flex items-end justify-between gap-4">
             <h3>The journeys we&apos;ve helped with this year</h3>
-            <span className="hidden text-small text-ink-400 sm:block lg:hidden">Swipe to see more →</span>
+            <span className="text-small text-ink-400 lg:hidden">Swipe to see more →</span>
           </div>
           <ul className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 lg:mx-0 lg:grid lg:grid-cols-5 lg:px-0">
             {journeysThisYear.map((j, i) => (

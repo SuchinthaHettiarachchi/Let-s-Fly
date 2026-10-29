@@ -10,7 +10,7 @@ import { galleryCategories, type GalleryCategory, type GalleryPhoto } from "@/da
 
 const PAGE_SIZE = 12;
 // Alternating tile heights give the masonry rhythm.
-const heights = ["h-[260px]", "h-[200px]", "h-[320px]", "h-[220px]"];
+const heights = ["h-[180px] sm:h-[260px]", "h-[140px] sm:h-[200px]", "h-[220px] sm:h-[320px]", "h-[160px] sm:h-[220px]"];
 
 export function PhotoWall({ photos }: { photos: GalleryPhoto[] }) {
   const [category, setCategory] = useState<GalleryCategory | "all">("all");
@@ -39,7 +39,7 @@ export function PhotoWall({ photos }: { photos: GalleryPhoto[] }) {
                   setCategory(c.id);
                   setLimit(PAGE_SIZE);
                 }}
-                className={`h-10 flex-none cursor-pointer rounded-full border-[1.5px] px-[18px] text-small font-medium transition-[color,background-color,border-color,scale] duration-200 press ${
+                className={`h-11 flex-none sm:h-10 cursor-pointer rounded-full border-[1.5px] px-[18px] text-small font-medium transition-[color,background-color,border-color,scale] duration-200 press ${
                   on ? "border-ocean-600 bg-ocean-600 text-white" : "border-sand-300 bg-white text-ink-900 hover:border-ocean-600"
                 }`}
               >
@@ -53,11 +53,11 @@ export function PhotoWall({ photos }: { photos: GalleryPhoto[] }) {
         </span>
       </div>
 
-      <ul className="columns-1 gap-4 sm:columns-2 lg:columns-4">
+      <ul className="columns-2 gap-3 sm:gap-4 lg:columns-4">
         {shown.map((p, i) => {
-          const tile = `relative mb-4 block w-full break-inside-avoid overflow-hidden rounded-xl bg-sand-200 ${heights[i % heights.length]}`;
+          const tile = `relative mb-3 block w-full sm:mb-4 break-inside-avoid overflow-hidden rounded-xl bg-sand-200 ${heights[i % heights.length]}`;
           const caption = (
-            <span className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-caption text-ink-900">
+            <span className="absolute bottom-2 left-2 flex max-w-[calc(100%-1rem)] items-center gap-1 truncate sm:bottom-3 sm:left-3 rounded-full bg-white/95 px-2.5 py-1 text-caption text-ink-900">
               <Icon name="location_on" size={14} className="text-ocean-600" />
               {p.place}
             </span>

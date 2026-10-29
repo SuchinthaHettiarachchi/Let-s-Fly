@@ -163,7 +163,7 @@ export function Footer() {
               {legalLinks.links.map((l, i) => (
                 <Fragment key={l.href}>
                   {i > 0 && <span aria-hidden="true" className="h-3 w-px bg-white/30" />}
-                  <Link href={l.href} className="text-white/70 transition-colors duration-200 hover:text-sun-400">
+                  <Link href={l.href} className="inline-block py-1.5 text-white/70 transition-colors duration-200 hover:text-sun-400">
                     {l.label}
                   </Link>
                 </Fragment>

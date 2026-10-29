@@ -35,7 +35,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
               type="button"
               aria-pressed={on}
               onClick={() => setCategory(c.id)}
-              className={`flex h-10 cursor-pointer items-center gap-2 rounded-full border-[1.5px] px-4 text-small font-medium transition-[color,background-color,border-color,scale] duration-200 press ${
+              className={`flex h-11 cursor-pointer sm:h-10 items-center gap-2 rounded-full border-[1.5px] px-4 text-small font-medium transition-[color,background-color,border-color,scale] duration-200 press ${
                 on ? "border-ocean-600 bg-ocean-600 text-white" : "border-sand-300 bg-white text-ink-900 hover:border-ocean-600"
               }`}
             >
@@ -57,7 +57,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as Sort)}
-              className="h-10 cursor-pointer appearance-none rounded-full border-[1.5px] border-sand-300 bg-white pr-9 pl-4 font-medium text-ink-900 focus:border-ocean-600 focus:outline-none"
+              className="h-11 cursor-pointer appearance-none rounded-full sm:h-10 border-[1.5px] border-sand-300 bg-white pr-9 pl-4 font-medium text-ink-900 focus:border-ocean-600 focus:outline-none"
             >
               <option value="newest">Newest to Oldest</option>
               <option value="oldest">Oldest to Newest</option>

@@ -52,9 +52,9 @@ export default function ContactPage() {
                 <span className="flex size-12 flex-none items-center justify-center rounded-full bg-ocean-600 text-white">
                   <Icon name={c.icon} size={22} />
                 </span>
-                <span className="flex flex-col">
+                <span className="flex min-w-0 flex-col">
                   <span className="text-caption font-normal text-ink-400">{c.label}</span>
-                  <span className="text-h5 group-hover:text-ocean-600">{c.value}</span>
+                  <span className="text-h5 break-words group-hover:text-ocean-600">{c.value}</span>
                 </span>
               </a>
             </li>

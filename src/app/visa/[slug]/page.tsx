@@ -9,6 +9,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { InquiryCard } from "@/components/inquiry/InquiryCard";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { MobileActionBar } from "@/components/layout/MobileActionBar";
 import { contact } from "@/data/site";
 import { detailVisas, getVisa } from "@/data/visas";
 
@@ -127,6 +128,11 @@ export default async function VisaDetailPage({ params }: PageProps<"/visa/[slug]
       </Container>
 
       <CtaBand />
+      <MobileActionBar
+        value={`${visa.city} visa`}
+        prefill={{ service: "Visa services", destination: visa.city }}
+        cta="Ask about this visa"
+      />
       <RevealOnScroll />
     </>
   );

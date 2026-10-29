@@ -27,7 +27,7 @@ export function HeroSlider() {
     <section
       aria-roledescription="carousel"
       aria-label="Featured holidays"
-      className="on-dark relative h-[600px] overflow-hidden bg-navy-900 sm:h-[640px] lg:h-[660px]"
+      className="on-dark relative min-h-[560px] overflow-hidden bg-navy-900 sm:h-[640px] lg:h-[660px]"
     >
       {heroSlides.map((s, i) => {
         // Art direction: phones get the portrait photo, `sm` (40rem) and up the landscape one.
@@ -55,9 +55,9 @@ export function HeroSlider() {
           </picture>
         );
       })}
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(11,37,69,.94)_0%,rgba(11,37,69,.78)_35%,rgba(19,87,155,.35)_70%,rgba(19,87,155,.1)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,37,69,.5)_0%,rgba(11,37,69,.9)_100%)] sm:bg-[linear-gradient(90deg,rgba(11,37,69,.94)_0%,rgba(11,37,69,.78)_35%,rgba(19,87,155,.35)_70%,rgba(19,87,155,.1)_100%)]" />
 
-      <Container className="relative flex h-full flex-col justify-center gap-[22px] pb-16 text-white">
+      <Container className="relative flex h-full min-h-[560px] flex-col justify-center gap-5 py-16 text-white sm:min-h-0 sm:gap-[22px] sm:pt-0">
         <Eyebrow onDark className="animate-rise">
           Your journey · Our passion
         </Eyebrow>
@@ -72,7 +72,7 @@ export function HeroSlider() {
           <Icon name="verified" size={20} fill className="text-sun-400" />
           Most trusted travel agency in Sri Lanka
         </div>
-        <div className="mt-1.5 flex animate-rise flex-wrap gap-3.5 [animation-delay:440ms]">
+        <div className="mt-1.5 flex animate-rise flex-col gap-3 *:w-full [animation-delay:440ms] sm:flex-row sm:flex-wrap sm:gap-3.5 sm:*:w-auto">
           <Button
             variant="primary"
             size="xl"
@@ -90,6 +90,7 @@ export function HeroSlider() {
             target="_blank"
             rel="noopener noreferrer"
             variant="sand"
+            className="max-sm:hidden"
             size="xl"
             icon="forum"
           >

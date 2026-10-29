@@ -20,7 +20,7 @@ export function HowItWorks() {
           </Link>
         </div>
 
-        <ol data-reveal="150" className="grid grid-cols-1 divide-y divide-sand-300 overflow-hidden rounded-2xl border border-sand-300 bg-white sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        <ol data-reveal="150" className="grid grid-cols-1 divide-y divide-sand-300 overflow-hidden rounded-2xl border border-sand-300 bg-white md:grid-cols-3 md:divide-x md:divide-y-0">
           {howItWorks.map((step, i) => (
             <li
               key={step.title}

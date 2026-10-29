@@ -37,7 +37,7 @@ export function ProjectCover({ images, total, title }: Props) {
 }
 
 // Mosaic pattern for the gallery grid: wide, narrow / narrow, wide / three narrow, then repeat.
-const spans = ["sm:col-span-2", "", "", "sm:col-span-2", "", "", ""];
+const spans = ["col-span-2", "", "", "col-span-2", "", "", ""];
 
 /** Photo mosaic; slots without a photo yet show placeholders. */
 export function ProjectGallery({ images, total, title }: Props) {
@@ -45,7 +45,7 @@ export function ProjectGallery({ images, total, title }: Props) {
   const slots = Array.from({ length: Math.max(total, images.length) }, (_, i) => images[i]);
   return (
     <>
-      <ul className="grid auto-rows-[200px] grid-cols-1 gap-3 sm:grid-cols-3 sm:auto-rows-[220px]">
+      <ul className="grid auto-rows-[140px] grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 sm:auto-rows-[220px]">
         {slots.map((src, i) => (
           <li key={i} className={`relative overflow-hidden rounded-xl bg-sand-200 ${spans[i % spans.length]}`}>
             {src ? (

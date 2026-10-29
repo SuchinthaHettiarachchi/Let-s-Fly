@@ -53,7 +53,7 @@ export function LatestPackages() {
                     type="button"
                     aria-pressed={i === active}
                     onClick={() => setActive(i)}
-                    className={`h-10 flex-none cursor-pointer rounded-full border-[1.5px] px-[18px] text-small font-semibold whitespace-nowrap transition-[color,background-color,border-color,scale] duration-200 press ${
+                    className={`h-11 flex-none sm:h-10 cursor-pointer rounded-full border-[1.5px] px-[18px] text-small font-semibold whitespace-nowrap transition-[color,background-color,border-color,scale] duration-200 press ${
                       i === active
                         ? "border-navy-900 bg-navy-900 text-white"
                         : "border-sand-300 bg-white text-ink-600 hover:border-ocean-600 hover:text-ocean-600"
@@ -105,7 +105,7 @@ function PillArrow({ direction, onClick }: { direction: "prev" | "next"; onClick
       type="button"
       aria-label={direction === "next" ? "Scroll filters right" : "Scroll filters left"}
       onClick={onClick}
-      className="flex size-9 flex-none cursor-pointer items-center justify-center rounded-full border-[1.5px] border-sand-300 bg-white text-ocean-600 transition-[border-color,scale] duration-200 hover:border-ocean-600 press lg:hidden"
+      className="flex size-11 flex-none cursor-pointer items-center justify-center rounded-full border-[1.5px] border-sand-300 bg-white text-ocean-600 transition-[border-color,scale] duration-200 hover:border-ocean-600 press lg:hidden"
     >
       <Icon name={direction === "next" ? "chevron_right" : "chevron_left"} size={20} />
     </button>

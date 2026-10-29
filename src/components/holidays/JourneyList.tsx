@@ -21,7 +21,7 @@ export function JourneyList({ journeys }: { journeys: Journey[] }) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div role="tablist" aria-label="Journey type" className="inline-flex self-start rounded-xl bg-sand-50 p-1.5">
+        <div role="tablist" aria-label="Journey type" className="grid w-full grid-cols-2 rounded-xl bg-sand-50 p-1.5 sm:inline-flex sm:w-auto sm:self-start">
           {kinds.map((k) => {
             const on = k.id === kind;
             return (
@@ -30,7 +30,7 @@ export function JourneyList({ journeys }: { journeys: Journey[] }) {
                 role="tab"
                 aria-selected={on}
                 onClick={() => setKind(k.id)}
-                className={`flex h-11 cursor-pointer items-center gap-2 rounded-lg px-5 text-small font-semibold transition-[color,background-color,box-shadow,scale] duration-200 press ${
+                className={`flex h-11 cursor-pointer items-center justify-center gap-2 rounded-lg px-5 text-small font-semibold transition-[color,background-color,box-shadow,scale] duration-200 press ${
                   on ? "bg-white text-ocean-600 shadow-lf-header ring-1 ring-ocean-600/30" : "text-ink-600 hover:text-ocean-600"
                 }`}
               >

@@ -37,7 +37,7 @@ export function HotelBookingCard() {
           From boutique villas in Galle to tea-estate bungalows in Ella, book 2,000+ hand-checked hotels at our
           partner rates, instantly, through our booking portal.
         </p>
-        <div className="flex gap-6">
+        <div className="flex flex-wrap gap-x-6 gap-y-4">
           {stats.map((s, i) => (
             <div key={s.label} className={`flex flex-col ${i ? "border-l border-sand-300 pl-6" : ""}`}>
               <span className="num text-stat text-ocean-600">{s.value}</span>

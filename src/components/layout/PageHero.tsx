@@ -28,7 +28,7 @@ const overlapPadding = {
 };
 
 const heroGradient =
-  "bg-[linear-gradient(90deg,rgba(11,37,69,.94)_0%,rgba(11,37,69,.78)_35%,rgba(19,87,155,.35)_70%,rgba(19,87,155,.1)_100%)]";
+  "bg-[linear-gradient(180deg,rgba(11,37,69,.55)_0%,rgba(11,37,69,.9)_100%)] sm:bg-[linear-gradient(90deg,rgba(11,37,69,.94)_0%,rgba(11,37,69,.78)_35%,rgba(19,87,155,.35)_70%,rgba(19,87,155,.1)_100%)]";
 
 /** Navy banner at the top of inner pages: photo + Ocean gradient, breadcrumb, eyebrow, title. Same height as the Home hero, text left-aligned and centred vertically. */
 export function PageHero({
@@ -48,7 +48,7 @@ export function PageHero({
       {image && <Image src={image} alt="" fill preload sizes="100vw" className={`animate-zoom object-cover ${imagePosition}`} />}
       {overlay && <div className={`absolute inset-0 ${heroGradient}`} />}
       <Container
-        className={`relative flex min-h-[600px] flex-col justify-center gap-4 pt-14 ${overlapPadding[overlap]} text-white sm:min-h-[640px] lg:min-h-[660px] ${
+        className={`relative flex min-h-[460px] flex-col justify-center gap-4 pt-14 ${overlapPadding[overlap]} text-white sm:min-h-[640px] lg:min-h-[660px] ${
           overlay ? "" : "[text-shadow:0_2px_12px_rgba(11,37,69,.7)]"
         }`}
       >
