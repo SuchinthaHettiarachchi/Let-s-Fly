@@ -3,6 +3,7 @@ import { DM_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFab } from "@/components/layout/WhatsAppFab";
+import { PageTransition } from "@/components/layout/PageTransition";
 import { InquiryProvider } from "@/components/inquiry/InquiryProvider";
 import "./globals.css";
 
@@ -55,7 +56,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-screen bg-surface">
         <InquiryProvider>
           <Header />
-          <main>{children}</main>
+          <main>
+            <PageTransition>{children}</PageTransition>
+          </main>
           <WhatsAppFab />
           <Footer />
         </InquiryProvider>

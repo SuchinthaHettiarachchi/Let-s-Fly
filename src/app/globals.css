@@ -54,6 +54,12 @@
       transform: none;
     }
   }
+  --animate-page: lf-page 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  @keyframes lf-page {
+    from {
+      opacity: 0;
+    }
+  }
   --animate-float: lf-float 4s ease-in-out infinite;
   @keyframes lf-float {
     0%,
