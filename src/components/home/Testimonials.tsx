@@ -57,7 +57,7 @@ export function Testimonials() {
           {reviews.map((r) => (
             <figure
               key={r.name}
-              className="flex w-[85vw] max-w-[384px] flex-none snap-start flex-col gap-[18px] rounded-xl border border-sand-300 bg-white p-7 sm:w-[384px] sm:p-8"
+              className="flex w-[85vw] max-w-[384px] flex-none snap-start flex-col gap-[18px] rounded-xl border border-sand-300 bg-white p-7 sm:w-[384px] sm:p-8 transition-colors duration-300 hover:border-ocean-600/50"
             >
               <div className="flex items-center justify-between">
                 <div className="flex gap-0.5 text-ocean-600" aria-label="5 out of 5 stars">

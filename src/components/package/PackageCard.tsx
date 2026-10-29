@@ -11,11 +11,11 @@ export function PackageCard({ pkg, className = "", imageSizes = "(min-width: 102
   return (
     <Link
       href={`/packages/${pkg.slug}`}
-      className={`group flex flex-col overflow-hidden rounded-xl border border-sand-300 bg-white text-ink-900 transition-[transform,box-shadow,border-color] duration-250 hover:-translate-y-1.5 hover:border-ocean-600 hover:text-ink-900 hover:shadow-lf-lg ${className}`}
+      className={`group flex flex-col overflow-hidden rounded-xl border border-sand-300 bg-white text-ink-900 transition-[translate,box-shadow,border-color,scale] duration-300 ease-lf press-card hover:-translate-y-1.5 hover:border-ocean-600 hover:text-ink-900 hover:shadow-lf-lg ${className}`}
     >
-      <div className={`relative bg-sand-200 ${compact ? "h-[150px]" : "h-[210px]"}`}>
+      <div className={`relative overflow-hidden bg-sand-200 ${compact ? "h-[150px]" : "h-[210px]"}`}>
         {pkg.image ? (
-          <Image src={pkg.image} alt={pkg.title} fill sizes={imageSizes} className="object-cover" />
+          <Image src={pkg.image} alt={pkg.title} fill sizes={imageSizes} className="object-cover transition-transform duration-500 ease-out group-hover:scale-105" />
         ) : (
           <Placeholder label="PHOTO" className="absolute inset-0 rounded-none border-0" />
         )}
@@ -52,7 +52,7 @@ export function PackageCard({ pkg, className = "", imageSizes = "(min-width: 102
           </div>
           <span className="flex items-center gap-0.5 text-small font-semibold text-ocean-600">
             View More
-            <Icon name="arrow_forward" size={18} className="transition-transform group-hover:translate-x-0.5" />
+            <Icon name="arrow_forward" size={18} className="transition-transform duration-200 ease-lf group-hover:translate-x-1" />
           </span>
         </div>
       </div>

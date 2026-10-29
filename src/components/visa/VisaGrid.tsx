@@ -81,7 +81,7 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
               </>
             );
             const card =
-              "group relative block h-[360px] overflow-hidden rounded-xl bg-navy-900 text-left transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lf-card-hover";
+              "group relative block h-[360px] overflow-hidden rounded-xl bg-navy-900 text-left transition-[translate,box-shadow,scale] duration-300 ease-lf press-card hover:-translate-y-1 hover:shadow-lf-card-hover";
             return hasPage ? (
               <Link key={v.slug} href={`/visa/${v.slug}`} data-reveal={(i % 3) * 100} className={card} aria-label={`${v.city} ${v.type}`}>
                 {body}

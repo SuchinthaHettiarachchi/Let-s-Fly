@@ -42,7 +42,7 @@ export function RentalsTeaser() {
                   aria-label={t.label}
                   title={t.label}
                   onClick={() => setSelected(i)}
-                  className={`flex h-[52px] w-16 cursor-pointer items-center justify-center rounded-full border-[1.5px] transition-colors ${
+                  className={`flex h-[52px] w-16 cursor-pointer items-center justify-center rounded-full border-[1.5px] transition-[color,background-color,border-color,scale] duration-200 press ${
                     on
                       ? "border-ocean-600 bg-ocean-600 text-white"
                       : "border-sand-300 bg-white text-ink-900 hover:border-ocean-600"

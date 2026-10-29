@@ -41,6 +41,7 @@
   --shadow-lf-ring: 0 0 0 12px rgba(19, 87, 155, 0.12);
 
   /* Motion */
+  --ease-lf: cubic-bezier(0.2, 0.7, 0.2, 1);
   --animate-marquee: lf-marquee 60s linear infinite;
   --animate-rise: lf-rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   @keyframes lf-rise {
@@ -320,6 +321,20 @@
 /* Tabular digits for prices, counters and fares */
 @utility num {
   font-variant-numeric: tabular-nums;
+}
+
+/* Click feedback: buttons and chips press in slightly while held */
+@utility press {
+  &:active:not(:disabled) {
+    scale: 0.97;
+  }
+}
+
+/* Softer press for whole clickable cards */
+@utility press-card {
+  &:active {
+    scale: 0.985;
+  }
 }
 
 @utility icon {

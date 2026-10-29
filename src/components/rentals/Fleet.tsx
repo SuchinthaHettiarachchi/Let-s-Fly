@@ -33,7 +33,7 @@ export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
                 type="button"
                 aria-pressed={on}
                 onClick={() => setType(c.id)}
-                className={`flex h-10 flex-none cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] px-[18px] text-small font-medium transition-colors ${
+                className={`flex h-10 flex-none cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] px-[18px] text-small font-medium transition-[color,background-color,border-color,scale] duration-200 press ${
                   on ? "border-ocean-600 bg-ocean-600 text-white" : "border-sand-300 bg-white text-ink-900 hover:border-ocean-600"
                 }`}
               >
@@ -53,8 +53,8 @@ export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
                 role="radio"
                 aria-checked={on}
                 onClick={() => setMode(m.id)}
-                className={`h-9 cursor-pointer rounded-lg px-4 text-small font-semibold transition-colors ${
-                  on ? "bg-white text-ocean-600 shadow-lf-header" : "text-ink-600 hover:text-ocean-600"
+                className={`h-9 cursor-pointer rounded-lg px-4 text-small font-semibold transition-[color,background-color,box-shadow,scale] duration-200 press ${
+                  on ? "bg-white text-ocean-600 shadow-lf-header ring-1 ring-ocean-600/30" : "text-ink-600 hover:text-ocean-600"
                 }`}
               >
                 {m.label}
@@ -70,11 +70,11 @@ export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
             <li
               key={v.id}
               data-reveal={(i % 3) * 90}
-              className="flex flex-col overflow-hidden rounded-xl border border-sand-300 bg-white transition-[border-color,box-shadow] hover:border-ocean-600 hover:shadow-lf-card-hover"
+              className="group flex flex-col overflow-hidden rounded-xl border border-sand-300 bg-white transition-[translate,border-color,box-shadow] duration-300 ease-lf hover:-translate-y-1 hover:border-ocean-600 hover:shadow-lf-card-hover"
             >
-              <div className="relative h-[200px] bg-sand-200">
+              <div className="relative h-[200px] overflow-hidden bg-sand-200">
                 {v.image ? (
-                  <Image src={v.image} alt={v.name} fill sizes="(min-width: 1024px) 400px, 100vw" className="object-cover" />
+                  <Image src={v.image} alt={v.name} fill sizes="(min-width: 1024px) 400px, 100vw" className="object-cover transition-transform duration-500 ease-out group-hover:scale-105" />
                 ) : (
                   <Placeholder label="PHOTO" className="absolute inset-0 rounded-none border-0" />
                 )}

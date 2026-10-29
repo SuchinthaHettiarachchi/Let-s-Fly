@@ -39,7 +39,7 @@ export function PhotoWall({ photos }: { photos: GalleryPhoto[] }) {
                   setCategory(c.id);
                   setLimit(PAGE_SIZE);
                 }}
-                className={`h-10 flex-none cursor-pointer rounded-full border-[1.5px] px-[18px] text-small font-medium transition-colors ${
+                className={`h-10 flex-none cursor-pointer rounded-full border-[1.5px] px-[18px] text-small font-medium transition-[color,background-color,border-color,scale] duration-200 press ${
                   on ? "border-ocean-600 bg-ocean-600 text-white" : "border-sand-300 bg-white text-ink-900 hover:border-ocean-600"
                 }`}
               >

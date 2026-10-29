@@ -30,8 +30,8 @@ export function JourneyList({ journeys }: { journeys: Journey[] }) {
                 role="tab"
                 aria-selected={on}
                 onClick={() => setKind(k.id)}
-                className={`flex h-11 cursor-pointer items-center gap-2 rounded-lg px-5 text-small font-semibold transition-colors ${
-                  on ? "bg-white text-ocean-600 shadow-lf-header" : "text-ink-600 hover:text-ocean-600"
+                className={`flex h-11 cursor-pointer items-center gap-2 rounded-lg px-5 text-small font-semibold transition-[color,background-color,box-shadow,scale] duration-200 press ${
+                  on ? "bg-white text-ocean-600 shadow-lf-header ring-1 ring-ocean-600/30" : "text-ink-600 hover:text-ocean-600"
                 }`}
               >
                 <Icon name={k.icon} size={20} />
@@ -59,10 +59,10 @@ export function JourneyList({ journeys }: { journeys: Journey[] }) {
 /** One train or cruise row, also shown under the home page's "Train & Cruise" filter. */
 export function JourneyCard({ journey: j }: { journey: Journey }) {
   return (
-    <div className="grid grid-cols-1 overflow-hidden rounded-xl border border-sand-300 bg-white transition-[border-color,box-shadow] hover:border-ocean-600 hover:shadow-lf-card-hover md:grid-cols-[260px_1fr_220px]">
-      <div className="relative h-[180px] bg-sand-200 md:h-auto md:min-h-[180px]">
+    <div className="group grid grid-cols-1 overflow-hidden rounded-xl border border-sand-300 bg-white transition-[translate,border-color,box-shadow] duration-300 ease-lf hover:-translate-y-1 hover:border-ocean-600 hover:shadow-lf-card-hover md:grid-cols-[260px_1fr_220px]">
+      <div className="relative h-[180px] overflow-hidden bg-sand-200 md:h-auto md:min-h-[180px]">
         {j.image ? (
-          <Image src={j.image} alt="" fill sizes="(min-width: 768px) 260px, 100vw" className="object-cover" />
+          <Image src={j.image} alt="" fill sizes="(min-width: 768px) 260px, 100vw" className="object-cover transition-transform duration-500 ease-out group-hover:scale-105" />
         ) : (
           <Placeholder label="PHOTO" className="absolute inset-0 rounded-none border-0" />
         )}

@@ -26,6 +26,7 @@ export function PackageTabs({ tabs }: { tabs: Tab[] }) {
   function select(id: string) {
     history.replaceState(null, "", `#${id}`);
     window.dispatchEvent(new HashChangeEvent("hashchange"));
+    tabRefs.current[tabs.findIndex((t) => t.id === id)]?.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
   }
 
   function onKeyDown(e: React.KeyboardEvent, i: number) {
@@ -39,7 +40,7 @@ export function PackageTabs({ tabs }: { tabs: Tab[] }) {
 
   return (
     <div>
-      <div role="tablist" aria-label="Package details" className="no-scrollbar flex overflow-x-auto border-b border-sand-300">
+      <div role="tablist" aria-label="Package details" className="no-scrollbar sticky top-[88px] z-20 flex overflow-x-auto border-b border-sand-300 bg-white lg:top-[136px]">
         {tabs.map((t, i) => {
           const on = t.id === active;
           return (
@@ -55,8 +56,10 @@ export function PackageTabs({ tabs }: { tabs: Tab[] }) {
               tabIndex={on ? 0 : -1}
               onClick={() => select(t.id)}
               onKeyDown={(e) => onKeyDown(e, i)}
-              className={`-mb-px cursor-pointer border-b-2 px-4 py-3.5 text-[0.9375rem] font-medium whitespace-nowrap transition-colors ${
-                on ? "border-ocean-600 text-ocean-600" : "border-transparent text-ink-600 hover:text-ocean-600"
+              className={`-mb-px cursor-pointer rounded-t-lg border-b-[3px] px-4 py-3.5 text-[0.9375rem] whitespace-nowrap transition-[color,background-color,border-color] duration-200 ${
+                on
+                  ? "border-ocean-600 bg-sand-50 font-semibold text-ocean-600"
+                  : "border-transparent font-medium text-ink-600 hover:border-sand-300 hover:bg-sand-50/60 hover:text-ocean-600"
               }`}
             >
               {t.label}

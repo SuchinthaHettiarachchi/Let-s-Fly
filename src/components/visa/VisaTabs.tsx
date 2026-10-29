@@ -56,7 +56,7 @@ export function VisaTabs({ visas }: { visas: Visa[] }) {
                 aria-selected={on}
                 aria-controls={`panel-${t.id}`}
                 onClick={() => choose(t.id)}
-                className={`flex cursor-pointer items-center gap-3.5 rounded-xl px-4 py-3.5 text-left transition-colors duration-200 ${
+                className={`flex cursor-pointer items-center gap-3.5 rounded-xl px-4 py-3.5 text-left transition-[color,background-color,scale] duration-200 press ${
                   on ? "bg-ocean-600 text-white" : "text-ink-900 hover:bg-sand-50"
                 }`}
               >

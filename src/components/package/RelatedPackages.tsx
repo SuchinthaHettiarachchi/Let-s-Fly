@@ -16,11 +16,11 @@ export function RelatedPackages({ items }: { items: Package[] }) {
               key={p.slug}
               data-reveal={i * 120}
               href={`/packages/${p.slug}`}
-              className="group flex flex-col overflow-hidden rounded-xl border border-sand-300 bg-white text-ink-900 transition-[transform,box-shadow,border-color] duration-250 hover:-translate-y-1 hover:border-ocean-600 hover:text-ink-900 hover:shadow-lf-card-hover"
+              className="group flex flex-col overflow-hidden rounded-xl border border-sand-300 bg-white text-ink-900 transition-[translate,box-shadow,border-color,scale] duration-300 ease-lf press-card hover:-translate-y-1 hover:border-ocean-600 hover:text-ink-900 hover:shadow-lf-card-hover"
             >
-              <div className="relative h-[200px] bg-sand-200">
+              <div className="relative h-[200px] overflow-hidden bg-sand-200">
                 {p.image ? (
-                  <Image src={p.image} alt={p.title} fill sizes="(min-width: 1024px) 400px, 100vw" className="object-cover" />
+                  <Image src={p.image} alt={p.title} fill sizes="(min-width: 1024px) 400px, 100vw" className="object-cover transition-transform duration-500 ease-out group-hover:scale-105" />
                 ) : (
                   <Placeholder label="PHOTO" className="absolute inset-0 rounded-none border-0" />
                 )}

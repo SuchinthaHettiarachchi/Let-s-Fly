@@ -46,7 +46,7 @@ export function MessageSection({
                   </span>
                   <span className="flex flex-col">
                     <span className="text-caption font-normal text-ink-400">{r.label}</span>
-                    <span className="text-h5 text-ink-900 group-hover:text-ocean-600">{r.value}</span>
+                    <span className="text-h5 text-ink-900 transition-colors duration-200 group-hover:text-ocean-600">{r.value}</span>
                   </span>
                 </>
               );

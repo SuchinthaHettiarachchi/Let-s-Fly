@@ -35,7 +35,7 @@ export function ItineraryPanel({ itinerary, days, nights }: Props) {
         <button
           type="button"
           onClick={() => setOpen(allOpen ? new Set() : new Set(itinerary.days.map((_, i) => i)))}
-          className="flex h-9 flex-none cursor-pointer items-center gap-1.5 rounded-lg border-[1.5px] border-sand-300 bg-white px-3 text-small font-semibold text-ocean-600 hover:border-ocean-600"
+          className="flex h-9 flex-none cursor-pointer items-center gap-1.5 rounded-lg border-[1.5px] border-sand-300 bg-white px-3 text-small font-semibold text-ocean-600 transition-[border-color,scale] duration-200 hover:border-ocean-600 press"
         >
           <Icon name={allOpen ? "unfold_less" : "unfold_more"} size={18} />
           {allOpen ? "Collapse all" : "Expand all"}
@@ -69,7 +69,7 @@ export function ItineraryPanel({ itinerary, days, nights }: Props) {
                 aria-expanded={isOpen}
                 aria-controls={`day-${i}`}
                 onClick={() => toggle(i)}
-                className="flex w-full cursor-pointer items-start gap-4 p-4 text-left sm:p-5"
+                className="group flex w-full cursor-pointer items-start gap-4 rounded-xl p-4 text-left sm:p-5"
               >
                 <span
                   className={`flex size-12 flex-none flex-col items-center justify-center rounded-lg leading-none transition-colors ${
@@ -83,11 +83,11 @@ export function ItineraryPanel({ itinerary, days, nights }: Props) {
                   <span className="eyebrow text-ocean-600">
                     {day.category}
                   </span>
-                  <span className="text-h5 text-ink-900">{day.title}</span>
+                  <span className={`text-h5 transition-colors duration-200 ${isOpen ? "text-ocean-600" : "text-ink-900 group-hover:text-ocean-600"}`}>{day.title}</span>
                 </span>
                 <span
                   className={`flex size-8 flex-none items-center justify-center rounded-full transition-colors ${
-                    isOpen ? "bg-ocean-600 text-white" : "border border-sand-300 text-ink-600"
+                    isOpen ? "bg-ocean-600 text-white" : "border border-sand-300 text-ink-600 group-hover:border-ocean-600 group-hover:text-ocean-600"
                   }`}
                 >
                   <Icon name="expand_more" size={20} className={`transition-transform ${isOpen ? "rotate-180" : ""}`} />

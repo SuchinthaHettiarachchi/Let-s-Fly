@@ -35,7 +35,7 @@ export function Lightbox({ images, start, title, captions, onClose }: LightboxPr
   }, [go, onClose]);
 
   const roundBtn =
-    "flex size-12 cursor-pointer items-center justify-center rounded-full border-[1.5px] border-white/50 bg-navy-900/30 text-white hover:bg-white hover:text-navy-900";
+    "flex size-12 cursor-pointer items-center justify-center rounded-full border-[1.5px] border-white/50 bg-navy-900/30 text-white hover:bg-white hover:text-navy-900 transition-[background-color,color,scale] duration-200 press";
 
   return (
     <div

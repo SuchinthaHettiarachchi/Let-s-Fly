@@ -25,9 +25,9 @@ function activeKey(pathname: string): string | null {
 }
 
 const navItem =
-  "flex items-center gap-1 border-b-[3px] px-3.5 py-2.5 transition-colors hover:text-ocean-600";
+  "flex items-center gap-1 border-b-[3px] px-3.5 py-2.5 transition-[color,border-color] duration-200 hover:text-ocean-600";
 const navState = (on: boolean) =>
-  on ? "border-sun-400 text-ocean-600" : "border-transparent text-ink-900";
+  on ? "border-sun-400 text-ocean-600" : "border-transparent text-ink-900 hover:border-sand-300";
 
 export function Header() {
   const pathname = usePathname();
@@ -54,11 +54,11 @@ export function Header() {
           </Link>
 
           <nav aria-label="Main" className="hidden items-center gap-1 text-[0.9375rem] font-medium lg:flex">
-            <Link href="/" className={`${navItem} ${navState(active === "home")}`}>
+            <Link href="/" aria-current={active === "home" ? "page" : undefined} className={`${navItem} ${navState(active === "home")}`}>
               Home
             </Link>
             {navGroups.map((g) => (
-              <Dropdown key={g.key} label={g.label} links={g.links} on={active === g.key} width="w-[250px]" />
+              <Dropdown key={g.key} label={g.label} links={g.links} on={active === g.key} pathname={pathname} width="w-[250px]" />
             ))}
           </nav>
 
@@ -86,7 +86,7 @@ export function Header() {
           </div>
         </Container>
 
-        {mobileOpen && <MobileMenu active={active} />}
+        {mobileOpen && <MobileMenu active={active} pathname={pathname} />}
       </header>
     </div>
   );
@@ -135,11 +135,13 @@ function Dropdown({
   label,
   links,
   on,
+  pathname,
   width,
 }: {
   label: string;
   links: NavLink[];
   on: boolean;
+  pathname: string;
   width: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -167,17 +169,25 @@ function Dropdown({
       {open && (
         <div className={`absolute top-full z-10 pt-2.5 left-0`}>
           <div className={`${width} flex flex-col rounded-xl border border-sand-300 bg-white p-2 shadow-lf-md`}>
-            {links.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-3 rounded-lg px-3.5 py-3 text-[0.9375rem] text-ink-900 hover:bg-sand-50 hover:text-ocean-600"
-              >
-                {l.icon && <Icon name={l.icon} className="text-ocean-600" />}
-                {l.label}
-              </Link>
-            ))}
+            {links.map((l) => {
+              const here = pathname === l.href;
+              return (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  aria-current={here ? "page" : undefined}
+                  onClick={() => setOpen(false)}
+                  className={`flex items-center gap-3 rounded-lg px-3.5 py-3 text-[0.9375rem] transition-colors duration-150 ${
+                    here
+                      ? "bg-sand-50 font-semibold text-ocean-600 shadow-[inset_3px_0_0_var(--color-ocean-600)]"
+                      : "text-ink-900 hover:bg-sand-50 hover:text-ocean-600"
+                  }`}
+                >
+                  {l.icon && <Icon name={l.icon} className="text-ocean-600" />}
+                  {l.label}
+                </Link>
+              );
+            })}
           </div>
         </div>
       )}
@@ -185,10 +195,10 @@ function Dropdown({
   );
 }
 
-function MobileMenu({ active }: { active: string | null }) {
+function MobileMenu({ active, pathname }: { active: string | null; pathname: string }) {
   const item = (on: boolean) =>
     `flex items-center gap-3 rounded-lg px-3 py-3 text-body font-medium ${
-      on ? "bg-sand-50 text-ocean-600" : "text-ink-900 hover:bg-sand-50"
+      on ? "bg-sand-50 font-semibold text-ocean-600 shadow-[inset_3px_0_0_var(--color-ocean-600)]" : "text-ink-900 hover:bg-sand-50"
     }`;
   return (
     <nav aria-label="Mobile" className="max-h-[calc(100dvh-88px)] overflow-y-auto border-t border-sand-300 bg-white lg:hidden">
@@ -198,7 +208,7 @@ function MobileMenu({ active }: { active: string | null }) {
           <div key={g.key} className="flex flex-col gap-1">
             <div className="mt-3 px-3 eyebrow text-ink-400">{g.label}</div>
             {g.links.map((l) => (
-              <Link key={l.href} href={l.href} className={item(false)}>
+              <Link key={l.href} href={l.href} aria-current={pathname === l.href ? "page" : undefined} className={item(pathname === l.href)}>
                 {l.icon && <Icon name={l.icon} className="text-ocean-600" />}
                 {l.label}
               </Link>

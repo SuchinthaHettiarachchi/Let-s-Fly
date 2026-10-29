@@ -61,7 +61,7 @@ export function AboutIntro() {
             {stats.map((s) => (
               <div
                 key={s.label}
-                className="group relative flex flex-col gap-0.5 overflow-hidden rounded-xl bg-sand-50 p-4 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-lf-card-hover sm:p-5"
+                className="group relative flex flex-col gap-0.5 overflow-hidden rounded-xl bg-sand-50 p-4 transition-[translate,background-color,box-shadow] duration-300 ease-lf hover:-translate-y-1 hover:bg-white hover:shadow-lf-card-hover sm:p-5"
               >
                 <span
                   aria-hidden="true"

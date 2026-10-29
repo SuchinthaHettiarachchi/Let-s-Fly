@@ -47,7 +47,7 @@ export default function ContactPage() {
                 href={c.href}
                 target={c.icon === "location_on" ? "_blank" : undefined}
                 rel={c.icon === "location_on" ? "noopener noreferrer" : undefined}
-                className="group flex h-full items-center gap-4 overflow-hidden rounded-xl border border-sand-300 border-b-[5px] border-b-sun-400 bg-white p-5 text-ink-900 shadow-lf-md transition-transform hover:-translate-y-1 hover:text-ink-900"
+                className="group flex h-full items-center gap-4 overflow-hidden rounded-xl border border-sand-300 border-b-[5px] border-b-sun-400 bg-white p-5 text-ink-900 shadow-lf-md transition-[translate,box-shadow,scale] duration-300 ease-lf hover:-translate-y-1 hover:shadow-lf-lg press-card hover:text-ink-900"
               >
                 <span className="flex size-12 flex-none items-center justify-center rounded-full bg-ocean-600 text-white">
                   <Icon name={c.icon} size={22} />
@@ -76,7 +76,7 @@ export default function ContactPage() {
               <li
                 key={job.id}
                 data-reveal={(i % 2) * 110}
-                className="flex flex-col overflow-hidden rounded-xl border border-sand-300 bg-white transition-[border-color,box-shadow] hover:border-ocean-600 hover:shadow-lf-card-hover"
+                className="flex flex-col overflow-hidden rounded-xl border border-sand-300 bg-white transition-[translate,border-color,box-shadow] duration-300 ease-lf hover:-translate-y-1 hover:border-ocean-600 hover:shadow-lf-card-hover"
               >
                 <div className="flex flex-1 flex-col gap-3 p-6">
                   <div className="flex items-start justify-between">

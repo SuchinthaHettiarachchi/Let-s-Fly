@@ -8,7 +8,7 @@ import { useInquiry } from "@/components/inquiry/InquiryProvider";
 import { services, type Service } from "@/data/home";
 
 const cardClass =
-  "group relative flex flex-col gap-3.5 overflow-hidden rounded-xl border border-sand-300 bg-white p-7 text-left text-ink-900 transition-all duration-300 hover:-translate-y-1 hover:bg-sand-50 hover:border-ocean-600 hover:text-ink-900 hover:shadow-lf-card-hover lg:p-8";
+  "group relative flex flex-col gap-3.5 overflow-hidden rounded-xl border border-sand-300 bg-white p-7 text-left text-ink-900 transition-[translate,background-color,border-color,box-shadow,scale] duration-300 ease-lf press-card hover:-translate-y-1 hover:bg-sand-50 hover:border-ocean-600 hover:text-ink-900 hover:shadow-lf-card-hover lg:p-8";
 
 // With 7 cards the last one sits alone, so it is centred under the row above.
 const lastCardClass = "sm:col-span-2 sm:mx-auto sm:w-[calc(50%-12px)] lg:col-span-1 lg:col-start-2 lg:w-auto";

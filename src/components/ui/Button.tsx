@@ -14,7 +14,7 @@ import { Icon } from "./Icon";
  * Yellow is never a button colour.
  */
 const variants = {
-  primary: "bg-ocean-600 text-white hover:bg-ocean-500 hover:text-white",
+  primary: "bg-ocean-600 text-white hover:bg-ocean-500 hover:text-white hover:shadow-[0_8px_20px_rgba(19,87,155,0.28)]",
   primaryOnDark: "bg-ocean-600 text-white hover:bg-navy-900 hover:text-white",
   outline:
     "bg-white text-ocean-600 border-[1.5px] border-sand-300 hover:border-ocean-600 hover:text-ocean-600",
@@ -36,7 +36,7 @@ type Variant = keyof typeof variants;
 type Size = keyof typeof sizes;
 
 export function buttonClasses(variant: Variant = "primary", size: Size = "lg", className = "") {
-  return `inline-flex items-center justify-center gap-2 rounded-lg font-semibold whitespace-nowrap transition-colors duration-200 cursor-pointer ${variants[variant]} ${sizes[size]} ${className}`;
+  return `group/btn inline-flex items-center justify-center gap-2 rounded-lg font-semibold whitespace-nowrap cursor-pointer transition-[background-color,border-color,color,box-shadow,translate,scale] duration-200 ease-lf hover:-translate-y-px press disabled:pointer-events-none disabled:opacity-60 ${variants[variant]} ${sizes[size]} ${className}`;
 }
 
 type Common = {
@@ -59,7 +59,7 @@ export function ButtonLink({
     <Link className={buttonClasses(variant, size, className)} {...props}>
       {leadingIcon && <Icon name={leadingIcon} />}
       {children}
-      {icon && <Icon name={icon} />}
+      {icon && <Icon name={icon} className="transition-transform duration-200 ease-lf group-hover/btn:translate-x-0.5" />}
     </Link>
   );
 }
@@ -78,7 +78,7 @@ export function Button({
     <button type={type} className={buttonClasses(variant, size, className)} {...props}>
       {leadingIcon && <Icon name={leadingIcon} />}
       {children}
-      {icon && <Icon name={icon} />}
+      {icon && <Icon name={icon} className="transition-transform duration-200 ease-lf group-hover/btn:translate-x-0.5" />}
     </button>
   );
 }
@@ -102,7 +102,7 @@ export function ArrowButton({
     <button
       type="button"
       aria-label={isNext ? "Next" : "Previous"}
-      className={`flex items-center justify-center rounded-full transition-colors cursor-pointer ${look}`}
+      className={`flex items-center justify-center rounded-full cursor-pointer transition-[background-color,border-color,color,scale] duration-200 ease-lf press ${look}`}
       {...props}
     >
       <Icon name={isNext ? "chevron_right" : "chevron_left"} size={24} />

@@ -29,8 +29,8 @@ export function RegionPackages({ tours }: { tours: Package[] }) {
               aria-pressed={on}
               data-reveal={i * 90}
               onClick={() => setRegion(r.id)}
-              className={`group relative h-[120px] cursor-pointer overflow-hidden rounded-xl bg-navy-900 text-left outline-offset-2 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lf-card-hover sm:h-[140px] ${
-                on ? "ring-[3px] ring-sun-400" : ""
+              className={`group relative h-[120px] cursor-pointer overflow-hidden rounded-xl bg-navy-900 text-left outline-offset-2 transition-[translate,box-shadow,scale] duration-300 ease-lf press-card hover:-translate-y-1 hover:shadow-lf-card-hover sm:h-[140px] ${
+                on ? "-translate-y-1 shadow-lf-card-hover ring-[3px] ring-sun-400" : ""
               }`}
             >
               {r.image ? (

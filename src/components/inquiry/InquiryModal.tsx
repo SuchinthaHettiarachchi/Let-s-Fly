@@ -38,7 +38,7 @@ export function InquiryModal({ prefill, onClose }: Props) {
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="flex size-9 flex-none cursor-pointer items-center justify-center rounded-full border border-white/30 text-white hover:bg-white/12"
+            className="flex size-9 flex-none cursor-pointer items-center justify-center rounded-full border border-white/30 text-white transition-[background-color,scale] duration-200 hover:bg-white/12 press"
           >
             <Icon name="close" />
           </button>

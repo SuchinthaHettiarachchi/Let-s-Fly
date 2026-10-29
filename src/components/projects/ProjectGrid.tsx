@@ -35,7 +35,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
               type="button"
               aria-pressed={on}
               onClick={() => setCategory(c.id)}
-              className={`flex h-10 cursor-pointer items-center gap-2 rounded-full border-[1.5px] px-4 text-small font-medium transition-colors ${
+              className={`flex h-10 cursor-pointer items-center gap-2 rounded-full border-[1.5px] px-4 text-small font-medium transition-[color,background-color,border-color,scale] duration-200 press ${
                 on ? "border-ocean-600 bg-ocean-600 text-white" : "border-sand-300 bg-white text-ink-900 hover:border-ocean-600"
               }`}
             >
@@ -73,7 +73,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
       <ul className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
         {visible.map((p, i) => (
           <li key={p.slug} data-reveal={(i % 3) * 90}>
-            <Link href={`/projects/${p.slug}`} className="group flex flex-col gap-3 text-ink-900 hover:text-ink-900">
+            <Link href={`/projects/${p.slug}`} className="group flex flex-col gap-3 rounded-xl text-ink-900 transition-[scale] duration-200 hover:text-ink-900 press-card">
               <div className="relative h-[200px] overflow-hidden rounded-xl bg-sand-200">
                 {p.image ? (
                   <Image

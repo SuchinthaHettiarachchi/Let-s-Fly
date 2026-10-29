@@ -48,7 +48,7 @@ export function Footer() {
               <h2 className="m-0 max-w-[620px] text-h1 text-white">Smart travel starts here.</h2>
               <Link
                 href="/contact"
-                className="shrink-0 rounded-lg bg-white px-[26px] py-[13px] text-small font-semibold tracking-[0.06em] text-navy-900! uppercase transition-colors hover:bg-sand-100"
+                className="shrink-0 rounded-lg bg-white px-[26px] py-[13px] text-small font-semibold tracking-[0.06em] text-navy-900! uppercase transition-[background-color,scale] duration-200 hover:bg-sand-100 press"
               >
                 Contact Us
               </Link>
@@ -95,7 +95,7 @@ export function Footer() {
                 <ul key={i} className="flex flex-col gap-3.5 border-l-2 border-sun-400/55 py-0.5 pl-4">
                   {links.map((l) => (
                     <li key={l.href}>
-                      <Link href={l.href} className="text-white/80 hover:text-sun-400">
+                      <Link href={l.href} className="text-white/80 transition-colors duration-200 hover:text-sun-400">
                         {l.label}
                       </Link>
                     </li>
@@ -163,7 +163,7 @@ export function Footer() {
               {legalLinks.links.map((l, i) => (
                 <Fragment key={l.href}>
                   {i > 0 && <span aria-hidden="true" className="h-3 w-px bg-white/30" />}
-                  <Link href={l.href} className="text-white/70 hover:text-sun-400">
+                  <Link href={l.href} className="text-white/70 transition-colors duration-200 hover:text-sun-400">
                     {l.label}
                   </Link>
                 </Fragment>
