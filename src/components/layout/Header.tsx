@@ -8,6 +8,7 @@ import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { ButtonLink } from "@/components/ui/Button";
 import { SocialIcon } from "@/components/ui/SocialIcon";
+import { SocialLinks } from "@/components/ui/SocialLinks";
 import { contact, navGroups, socials, type NavLink } from "@/data/site";
 
 /** "home", "contact" or the key of the menu group whose links include this page. */
@@ -212,6 +213,10 @@ function MobileMenu({ active }: { active: string | null }) {
           <Icon name="call" size={18} />
           {contact.phone}
         </a>
+        <div className="mt-2 mb-20 flex flex-col items-center gap-3 border-t border-sand-300 pt-5">
+          <span className="eyebrow text-ink-400">Follow us</span>
+          <SocialLinks />
+        </div>
       </Container>
     </nav>
   );

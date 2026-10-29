@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow, SectionHeading } from "@/components/ui/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { SocialLinks } from "@/components/ui/SocialLinks";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { contact } from "@/data/site";
@@ -160,6 +161,13 @@ export default function ContactPage() {
                   </div>
                 ))}
               </dl>
+            </div>
+            <div className="flex flex-col gap-4 rounded-2xl border border-sand-300 bg-white p-6">
+              <div className="flex flex-col gap-1">
+                <h3 className="font-sans text-h5">Follow us</h3>
+                <p className="text-small text-ink-600">Tour photos, fare deals and travel updates.</p>
+              </div>
+              <SocialLinks />
             </div>
           </div>
         </Container>
