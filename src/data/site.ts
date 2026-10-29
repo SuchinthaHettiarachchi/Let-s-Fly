@@ -87,7 +87,7 @@ export const footerColumns: { title: string; links: NavLink[] }[] = [
     ],
   },
   {
-    // Only /privacy and /terms are planned so far; the rest need pages before launch.
+    // /privacy, /terms and /gdpr exist; FAQ and Refund Policy still need pages before launch.
     title: "Legal & Policies",
     links: [
       { label: "Privacy Policy", href: "/privacy" },
