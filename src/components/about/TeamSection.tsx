@@ -19,6 +19,8 @@ const initials = (m: TeamMember) =>
         .slice(0, 2);
 
 const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
+const waHref = (m: TeamMember) =>
+  `https://wa.me/${m.phone!.replace(/\D/g, "")}?text=${encodeURIComponent(`Hi ${m.name.split(" ")[0]}, I'm contacting you from the Let's Fly website.`)}`;
 
 const iconLink = "flex size-11 items-center sm:size-9 justify-center rounded-md text-ink-400 transition-colors";
 
@@ -100,7 +102,7 @@ export function TeamSection({ team }: { team: typeof teamData }) {
                   on ? "h-[3px] bg-ocean-600" : "h-px bg-sand-300"
                 }`}
               />
-              <span className="relative row-span-3 size-14 self-start overflow-hidden rounded-full bg-sand-200 sm:row-span-2 sm:self-center lg:hidden">
+              <span className="relative row-span-4 size-14 self-start overflow-hidden rounded-full bg-sand-200 sm:row-span-2 sm:self-center lg:hidden">
                 {m.photo ? (
                   <Image src={m.photo} alt="" fill sizes="56px" className="object-cover" />
                 ) : (
@@ -122,7 +124,7 @@ export function TeamSection({ team }: { team: typeof teamData }) {
               </span>
               {/* Contact details as text on phones and tablets; desktop shows them in the portrait */}
               {(m.email || m.phone) && (
-                <span className="col-start-2 row-start-3 mt-1 flex flex-col gap-0.5 text-small sm:col-[2/4] sm:row-start-2 sm:flex-row sm:flex-wrap sm:gap-x-5 lg:hidden">
+                <span className="col-[2/4] row-start-3 mt-1 flex flex-col gap-0.5 text-small sm:col-[2/4] sm:row-start-2 sm:flex-row sm:flex-wrap sm:gap-x-5 lg:hidden">
                   {m.email && (
                     <a href={`mailto:${m.email}`} className="break-all">
                       {m.email}
@@ -135,7 +137,7 @@ export function TeamSection({ team }: { team: typeof teamData }) {
                   )}
                 </span>
               )}
-              <span className="col-start-3 row-start-3 flex items-center gap-0.5 self-end sm:col-start-4 sm:row-span-2 sm:row-start-1 sm:self-center lg:col-start-3 lg:row-span-1">
+              <span className="col-start-2 row-start-4 -ml-3 flex items-center gap-0.5 sm:col-start-4 sm:ml-0 sm:row-span-2 sm:row-start-1 sm:self-center lg:col-start-3 lg:row-span-1">
                 {m.email && (
                   <a
                     href={`mailto:${m.email}`}
@@ -154,6 +156,17 @@ export function TeamSection({ team }: { team: typeof teamData }) {
                     <Icon name="call" size={18} />
                   </a>
                 )}
+                {m.phone && (
+                  <a
+                    href={waHref(m)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`WhatsApp ${m.name}`}
+                    className={`${iconLink} hover:bg-[#25d366] hover:text-white`}
+                  >
+                    <SocialIcon name="WhatsApp" size={18} />
+                  </a>
+                )}
                 {m.linkedin ? (
                   <a
                     href={m.linkedin}
@@ -165,7 +178,7 @@ export function TeamSection({ team }: { team: typeof teamData }) {
                     <SocialIcon name="LinkedIn" size={18} />
                   </a>
                 ) : (
-                  <span className="flex size-9 items-center justify-center">
+                  <span className="hidden size-9 items-center justify-center lg:flex">
                     <Icon
                       name="arrow_outward"
                       size={22}

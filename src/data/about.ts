@@ -1,7 +1,5 @@
 /** About Us page content. Items marked "draft" were not readable in the design and need confirming. */
 
-import { contact } from "./site";
-
 export const aboutParagraphs = [
   "Let's Fly started in a small Rajagiriya office with one simple idea: planning a trip abroad shouldn't feel harder than the trip itself.",
   "Today we're a team of travel consultants, visa specialists and ticketing experts. We book flights, prepare visa files, find the right hotel, build tour packages and look after companies whose people travel for work. But what people remember is the person who answered the phone, checked their documents twice and messaged them on the morning of their flight.",
@@ -68,43 +66,33 @@ export type TeamMember = {
   phone?: string;
 };
 
-// Draft: each member's own email and phone are to be confirmed. Until then every row
-// shows the main office contact. Replace per member once the real details arrive.
-const contactToConfirm = { email: contact.email, phone: contact.phone };
-
-// Draft: only the CEO is named in the design. Replace placeholders with real names and photos.
+// Names, numbers and desk emails from the department contacts on letsfly.lk. The old site gives
+// no job titles or personal emails, so roles describe the desk and emails are the shared desk inbox.
+// Kasun's number is also the 24-hour customer service line.
 export const team: { department: string; members: TeamMember[] }[] = [
   {
     department: "Leadership",
     members: [
-      { name: "Kasun Bulathsinhala", role: "Chief Executive Officer", ...contactToConfirm },
-      { name: "Name to confirm", role: "Head of Operations", ...contactToConfirm },
+      { name: "Kasun Bulathsinhala", role: "Chief Executive Officer", email: "inquiry@letsfly.lk", phone: "+94 77 831 6020" },
     ],
   },
   {
-    department: "Visa & Travel Counselors",
+    department: "Visa Services",
     members: [
-      { name: "Name to confirm", role: "Senior Visa Counselor", ...contactToConfirm },
-      { name: "Name to confirm", role: "Travel Counselor", ...contactToConfirm },
+      { name: "Chathuri", role: "Visa Consultant", email: "inquiry@letsfly.lk", phone: "+94 70 438 3933" },
+      { name: "Lakmini", role: "Visa Consultant", email: "inquiry@letsfly.lk", phone: "+94 71 746 6383" },
     ],
   },
   {
-    department: "Airline Ticketing & Reservations",
+    department: "Air Ticketing & Reservations",
     members: [
-      { name: "Name to confirm", role: "Ticketing Manager", ...contactToConfirm },
-      { name: "Name to confirm", role: "Reservations Executive", ...contactToConfirm },
+      { name: "Mihiran", role: "Ticketing & Reservations", email: "bookings@letsfly.lk", phone: "+94 71 746 6343" },
+      { name: "Tharushi", role: "Ticketing & Reservations", email: "bookings@letsfly.lk", phone: "+94 70 484 5520" },
     ],
   },
   {
     department: "Inbound & Outbound Tours",
-    members: [
-      { name: "Name to confirm", role: "Tours Manager", ...contactToConfirm },
-      { name: "Name to confirm", role: "Tour Coordinator", ...contactToConfirm },
-    ],
-  },
-  {
-    department: "Finance & Operations",
-    members: [{ name: "Name to confirm", role: "Finance Executive", ...contactToConfirm }],
+    members: [{ name: "Dishani", role: "Tours Consultant", email: "tours@letsfly.lk", phone: "+94 71 746 6342" }],
   },
 ];
 
