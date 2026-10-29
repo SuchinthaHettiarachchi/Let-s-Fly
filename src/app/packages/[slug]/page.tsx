@@ -68,7 +68,7 @@ export default async function PackagePage({ params }: PageProps<"/packages/[slug
       </Container>
 
       <MessageSection
-        subject={`Package enquiry: ${pkg.title}`}
+        subject={pkg.title}
         service="Tour package"
         text={`Questions about ${pkg.title}, or want to change dates, hotels or the route? Send us a message and we'll tailor it for you.`}
       />
@@ -78,7 +78,7 @@ export default async function PackagePage({ params }: PageProps<"/packages/[slug
       <MobileActionBar
         label="From, per person"
         value={formatLKR(pkg.price)}
-        prefill={{ service: "Tour package", destination: pkg.title }}
+        prefill={{ subject: pkg.title, service: "Tour package", destination: pkg.title }}
       />
       <RevealOnScroll />
     </>

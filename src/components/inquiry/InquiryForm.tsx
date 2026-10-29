@@ -5,10 +5,11 @@ import { Button, ButtonLink } from "@/components/ui/Button";
 import { ConsentBlock } from "@/components/forms/ConsentBlock";
 import { FormSent } from "@/components/forms/FormSent";
 import { SocialIcon } from "@/components/ui/SocialIcon";
+import { SubjectField } from "@/components/contact/ContactForm";
 import { fieldClass, labelClass, serviceOptions, textareaClass, titleOptions } from "@/components/forms/styles";
 import { contact } from "@/data/site";
 
-export type InquiryPrefill = { service?: string; destination?: string; details?: string };
+export type InquiryPrefill = { subject?: string; service?: string; destination?: string; details?: string };
 
 /** Today as YYYY-MM-DD in the visitor's time zone, for the read-only inquiry date. */
 function today() {
@@ -39,6 +40,7 @@ export function InquiryForm({ prefill = {}, autoFocus = false }: Props) {
   return (
     <div className="@container">
       <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 @min-[21rem]:grid-cols-2">
+        {prefill.subject && <SubjectField value={prefill.subject} className="@min-[21rem]:col-span-2" />}
         <div className="grid grid-cols-[100px_1fr] gap-4 @min-[21rem]:col-span-2 @min-[21rem]:grid-cols-[120px_1fr]">
           <label className={labelClass}>
             Title *
@@ -103,7 +105,11 @@ export function InquiryForm({ prefill = {}, autoFocus = false }: Props) {
           Inquire Now · Send Inquiry
         </Button>
         <ButtonLink
-          href={contact.whatsappHref}
+          href={
+            prefill.subject
+              ? `${contact.whatsappHref}?text=${encodeURIComponent(`Hi Let's Fly, ${prefill.subject}: `)}`
+              : contact.whatsappHref
+          }
           target="_blank"
           rel="noopener noreferrer"
           variant="outline"

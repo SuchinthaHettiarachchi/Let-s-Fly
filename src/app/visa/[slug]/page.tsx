@@ -112,7 +112,7 @@ export default async function VisaDetailPage({ params }: PageProps<"/visa/[slug]
         </div>
 
         <aside data-reveal="150" className="flex flex-col gap-3 lg:sticky lg:top-[160px] lg:self-start">
-          <InquiryCard prefill={{ service: "Visa services", destination: visa.city }} />
+          <InquiryCard prefill={{ subject: `${visa.city} visa`, service: "Visa services", destination: visa.city }} />
           <ButtonLink
             href={`${contact.whatsappHref}?text=${encodeURIComponent(`Hi Let's Fly, I need help with a ${visa.city} visa.`)}`}
             target="_blank"
@@ -130,7 +130,7 @@ export default async function VisaDetailPage({ params }: PageProps<"/visa/[slug]
       <CtaBand />
       <MobileActionBar
         value={`${visa.city} visa`}
-        prefill={{ service: "Visa services", destination: visa.city }}
+        prefill={{ subject: `${visa.city} visa`, service: "Visa services", destination: visa.city }}
         cta="Ask about this visa"
       />
       <RevealOnScroll />

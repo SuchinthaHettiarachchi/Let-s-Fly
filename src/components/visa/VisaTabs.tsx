@@ -102,7 +102,7 @@ export function VisaTabs({ visas }: { visas: Visa[] }) {
 function SriLankaVisas() {
   const { openInquiry } = useInquiry();
   const ask = (visa: string, details?: string) =>
-    openInquiry({ service: "Visa services", destination: `Sri Lanka (${visa})`, details });
+    openInquiry({ subject: `Sri Lanka ${visa}`, service: "Visa services", destination: `Sri Lanka (${visa})`, details });
 
   return (
     <>

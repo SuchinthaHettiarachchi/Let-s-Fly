@@ -91,7 +91,7 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
                 key={v.slug}
                 data-reveal={(i % 3) * 100}
                 type="button"
-                onClick={() => openInquiry({ service: "Visa services", destination: v.city })}
+                onClick={() => openInquiry({ subject: `${v.city} visa`, service: "Visa services", destination: v.city })}
                 className={`${card} cursor-pointer`}
                 aria-label={`Ask about a ${v.city} ${v.type}`}
               >

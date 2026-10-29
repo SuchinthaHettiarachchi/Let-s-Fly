@@ -54,14 +54,14 @@ function check(field: Field, v: Values): string | undefined {
 const empty: Values = { name: "", phone: "", email: "", message: "" };
 
 type ContactFormProps = {
-  /** Sent with the message and used as the WhatsApp opener, e.g. "Visa enquiry". */
+  /** Shown as a read-only Subject field, sent with the message and used as the WhatsApp opener, e.g. a package name. */
   subject?: string;
   /** Service picked in the dropdown when the form loads. */
   service?: (typeof serviceOptions)[number];
 };
 
 /** "How can we help?" message form, with a WhatsApp alternative under the submit button. */
-export function ContactForm({ subject = "General enquiry", service = serviceOptions[0] }: ContactFormProps) {
+export function ContactForm({ subject, service = serviceOptions[0] }: ContactFormProps) {
   const [sent, setSent] = useState(false);
   const [values, setValues] = useState<Values>(empty);
   // Errors appear once a field is left (or on submit), then update as the visitor types.
@@ -110,7 +110,7 @@ export function ContactForm({ subject = "General enquiry", service = serviceOpti
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} noValidate className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-      <input type="hidden" name="subject" value={subject} />
+      {subject && <SubjectField value={subject} className="sm:col-span-2" />}
       <label className={labelClass}>
         <span>
           Full Name <Required />
@@ -162,7 +162,7 @@ export function ContactForm({ subject = "General enquiry", service = serviceOpti
         Send Message
       </Button>
       <ButtonLink
-        href={`${contact.whatsappHref}?text=${encodeURIComponent(`Hi Let's Fly, ${subject}: `)}`}
+        href={`${contact.whatsappHref}?text=${encodeURIComponent(`Hi Let's Fly, ${subject ?? "General enquiry"}: `)}`}
         target="_blank"
         rel="noopener noreferrer"
         variant="outline"
@@ -175,6 +175,16 @@ export function ContactForm({ subject = "General enquiry", service = serviceOpti
         WhatsApp Us
       </ButtonLink>
     </form>
+  );
+}
+
+/** Auto-filled from the page (package or visa name); read-only so the enquiry stays tied to it. */
+export function SubjectField({ value, className = "" }: { value: string; className?: string }) {
+  return (
+    <label className={`${labelClass} ${className}`}>
+      Subject
+      <input name="subject" readOnly value={value} className={`${fieldClass} bg-sand-50 text-ink-600`} />
+    </label>
   );
 }
 
