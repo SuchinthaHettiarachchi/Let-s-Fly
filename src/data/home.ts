@@ -56,12 +56,73 @@ export const rentalTypes = [
   { label: "Scooters", icon: "moped", image: "/images/rentals/scooter.jpg", price: "LKR 3,000 / day" },
 ];
 
+/**
+ * Real Google reviews of Let's Fly.lk (5.0 from 25 reviews). Long reviews are trimmed to word-for-word
+ * excerpts, with "…" where text was left out. `topic` is what the review is about.
+ */
+export const googleRating = { score: "5.0", count: 25 };
+
 export const reviews = [
-  { name: "Dilini Fernando", trip: "Dubai Family Escape", image: "/images/people/dilini.jpg", quote: "Everything from visas to hotel transfers was sorted. Our kids still talk about the desert safari!" },
-  { name: "Kasun Jayawardena", trip: "Maldives Honeymoon", image: "/images/people/kasun.jpg", quote: "Great price, quick replies on WhatsApp and a surprise room upgrade. Highly recommend Let's Fly." },
-  { name: "Sarah Mitchell", trip: "Kandy to Ella Rail", image: "/images/people/sarah.jpg", quote: "They got us the observation-car seats everyone said were sold out. The views were unreal." },
-  { name: "Ruwan Silva", trip: "Bangkok & Phuket", image: "/images/people/ruwan.jpg", quote: "Smooth from start to finish. Our guide in Phuket was fantastic and flights were on time." },
-  { name: "Anjali Perera", trip: "Schengen Visa", image: "/images/people/anjali.jpg", quote: "My visa file was checked twice before submission and approved in 10 days. Stress-free." },
+  {
+    name: "Harsha Jayakody",
+    topic: "Schengen visa",
+    quote:
+      "Let’s Fly provided an excellent and stress-free experience for my family's Schengen visa application. … A special thanks to Kasun and the team, who were incredibly supportive, responsive, and knowledgeable throughout the Schengen visa process.",
+  },
+  {
+    name: "Aashna Lalka",
+    topic: "7-day Sri Lanka family tour",
+    quote:
+      "We had an amazing and unforgettable 7-day family trip to Sri Lanka planned by them. … Their ability to manage a large family, be flexible with the weather, and ensure we had a great experience was exceptional.",
+  },
+  {
+    name: "Britney Francis",
+    topic: "Maldives air tickets",
+    quote:
+      "They arranged my Maldives trip tickets within just two days, and the whole process was smooth and hassle-free. … I also really appreciated that they offered the Koko installment option, which made paying for my tickets much more convenient.",
+  },
+  {
+    name: "Huangao Huang",
+    topic: "Yala National Park trip",
+    quote:
+      "We have a wonderful experience with Let’s Fly in Yala National Park. The driver was very friendly and responsible throughout the trip, even taking us to the beach on the way back. … A very professional team.",
+  },
+  {
+    name: "Saman Hettige",
+    topic: "UK visa",
+    quote:
+      "The entire process was handled with professionalism, attention to detail, and genuine care. Mr. Kasun personally guided us step by step, ensuring our documentation was perfect and every requirement was met.",
+  },
+  {
+    name: "Alfred Torcal",
+    topic: "Sri Lanka tour",
+    quote:
+      "Highly recommended. We had the best possible guide on the most important trip of our life, the best possible driver, and definitely the best agency! Letsfly's service is incredible.",
+  },
+  {
+    name: "Prabhu Nilanga Udawatte",
+    topic: "Air tickets",
+    quote:
+      "I have been using Let's Fly for several years, and the service has always been exceptional. … I highly recommend Kasun and his company for anyone looking for reliable and cost-effective ticketing services.",
+  },
+  {
+    name: "Denista Perera",
+    topic: "Visa application",
+    quote:
+      "Took all the hustle of prepping docs and applying for visa on to their shoulders, all we had to do was make the visit to the visa center. … To top it all off we got the visas as well. Highly recommended.",
+  },
+  {
+    name: "Chandramali Premaratne",
+    topic: "Visa consultation",
+    quote:
+      "Let'sFly.lk provided very professional service on visa consultation to us. Keen and particular about all documents. Very helpful and friendly staff. Recommended for all.",
+  },
+  {
+    name: "Iraj Darshana",
+    topic: "Parents' visa",
+    quote:
+      "Your assistance made a big difference, and we deeply appreciate the way you guided us step by step until we achieved this happy outcome.",
+  },
 ];
 
 /** Airline partner logos for the home page carousel (from letsfly.lk). */

@@ -1,12 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ArrowButton, ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { useScroller } from "@/hooks/useScroller";
-import { reviews } from "@/data/home";
+import { googleRating, reviews } from "@/data/home";
 import { contact } from "@/data/site";
 
 export function Testimonials() {
@@ -15,7 +14,23 @@ export function Testimonials() {
     <section className="overflow-hidden bg-sand-50 py-20 lg:py-[110px]">
       <Container>
         <div data-reveal className="mb-10 flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-end">
-          <SectionHeading eyebrow="Testimonials" title="What our travellers say" />
+          <div className="flex flex-col gap-4">
+            <SectionHeading eyebrow="Testimonials" title="What our travellers say" />
+            <a
+              href={contact.googleReviewsHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-small font-medium text-ink-600 hover:text-ocean-600"
+            >
+              <span className="text-h5 text-ink-900">{googleRating.score}</span>
+              <span className="flex text-ocean-600" aria-hidden="true">
+                {Array.from({ length: 5 }, (_, i) => (
+                  <Icon key={i} name="star" size={18} fill />
+                ))}
+              </span>
+              <span>from {googleRating.count} Google reviews</span>
+            </a>
+          </div>
           <div className="flex flex-none items-center gap-2.5">
             <ButtonLink
               href={contact.googleWriteReviewHref}
@@ -54,16 +69,15 @@ export function Testimonials() {
               </div>
               <blockquote className="flex-1 text-body text-ink-600">“{r.quote}”</blockquote>
               <figcaption className="flex items-center gap-3.5 border-t border-sand-300 pt-[18px]">
-                <Image
-                  src={r.image}
-                  alt=""
-                  width={48}
-                  height={48}
-                  className="size-12 rounded-full bg-sand-200 object-cover"
-                />
-                <div className="flex flex-1 flex-col">
+                <span
+                  aria-hidden="true"
+                  className="flex size-12 flex-none items-center justify-center rounded-full bg-navy-900 font-display text-h5 text-white"
+                >
+                  {r.name[0]}
+                </span>
+                <div className="flex min-w-0 flex-1 flex-col">
                   <span className="text-h5">{r.name}</span>
-                  <span className="text-caption font-normal text-ink-400">{r.trip}</span>
+                  <span className="text-caption font-normal text-ink-400">{r.topic}</span>
                 </div>
                 <span className="rounded-full bg-sand-50 px-2.5 py-[5px] text-caption text-ocean-600">
                   Google review

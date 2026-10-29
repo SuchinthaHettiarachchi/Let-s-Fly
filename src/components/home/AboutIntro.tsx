@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
-import { stats } from "@/data/home";
+import { googleRating, stats } from "@/data/home";
 import { CountUp } from "./CountUp";
 
 const reviewerAvatars = [
@@ -42,8 +42,8 @@ export function AboutIntro() {
               ))}
             </div>
             <div className="flex flex-col">
-              <span className="text-small font-semibold">4.9 on Google</span>
-              <span className="text-caption font-normal text-ink-400">from 800+ reviews</span>
+              <span className="text-small font-semibold">{googleRating.score} on Google</span>
+              <span className="text-caption font-normal text-ink-400">from {googleRating.count} reviews</span>
             </div>
           </div>
         </div>
