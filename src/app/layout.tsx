@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFab } from "@/components/layout/WhatsAppFab";
 import { PageTransition } from "@/components/layout/PageTransition";
+import { RouteTransition } from "@/components/layout/RouteTransition";
 import { InquiryProvider } from "@/components/inquiry/InquiryProvider";
 import "./globals.css";
 
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </main>
           <WhatsAppFab />
           <Footer />
+          <RouteTransition />
         </InquiryProvider>
       </body>
     </html>
