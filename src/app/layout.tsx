@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     // data-scroll-behavior lets Next jump straight to the top on route changes; in-page anchors keep smooth scrolling.
-    <html lang="en" data-scroll-behavior="smooth" className={`${heading.variable} ${body.variable} antialiased`}>
+    <html lang="en" data-scroll-behavior="smooth" data-loading="" className={`${heading.variable} ${body.variable} antialiased`}>
       <head>
         {/* Icon font: variable axes so FILL can be toggled per icon.
             display=block keeps ligature names ("arrow_forward") from flashing before it loads. */}
@@ -53,6 +53,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block"
         />
+        {/* Without JS the loader would never lift. */}
+        <noscript>
+          <style>{"[data-route-transition]{display:none}"}</style>
+        </noscript>
       </head>
       <body className="min-h-screen bg-surface">
         <InquiryProvider>

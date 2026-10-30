@@ -392,6 +392,12 @@
   }
 }
 
+/* First-load loader (RouteTransition): hold the page's entrance animations until it lifts. */
+html[data-loading] main *,
+html[data-loading] main {
+  animation-play-state: paused !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
