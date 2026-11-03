@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalList, LegalP, LegalPage, LegalSection, LegalSubhead } from "@/components/legal/Legal";
 import { contact } from "@/data/site";
+import { cookieCategories } from "@/data/cookies";
+import { CookieSettingsButton } from "@/components/consent/CookieSettingsButton";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -331,6 +333,22 @@ export default function PrivacyPage() {
           recognise your preferences and tailor content to you. You can set your browser to refuse all or some cookies,
           or to alert you when websites set or access cookies. If you disable or refuse cookies, some parts of this
           website may become inaccessible or not function properly.
+        </LegalP>
+        <LegalP>
+          Apart from strictly necessary cookies, we only set cookies after you agree to them in our cookie banner. We
+          group them as follows:
+        </LegalP>
+        <LegalList
+          items={cookieCategories.map((c) => (
+            <span key={c.id}>
+              <strong>{c.title}.</strong> {c.description}
+            </span>
+          ))}
+        />
+        <LegalP>
+          You can change or withdraw your choice at any time from{" "}
+          <CookieSettingsButton className="font-semibold text-ocean-600 underline underline-offset-2 hover:text-navy-900" />{" "}
+          here or at the bottom of every page.
         </LegalP>
 
         <LegalSubhead>Change of purpose</LegalSubhead>

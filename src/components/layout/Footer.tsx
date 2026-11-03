@@ -6,6 +6,8 @@ import { Icon } from "@/components/ui/Icon";
 import { PaymentLogo } from "@/components/ui/PaymentLogo";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { Newsletter } from "@/components/layout/Newsletter";
+import { ConsentGate } from "@/components/consent/ConsentGate";
+import { CookieSettingsButton } from "@/components/consent/CookieSettingsButton";
 import { contact, footerColumns, paymentMethodsAccepted, socials } from "@/data/site";
 
 /** Small uppercase label over each footer block. */
@@ -108,13 +110,15 @@ export function Footer() {
           <div className="flex flex-col gap-7 sm:col-span-2 lg:col-span-1">
             <div>
               <Label>Find us</Label>
-              <iframe
-                src={contact.mapEmbedHref}
-                title="Let's Fly.lk office on Google Maps"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="mt-1 h-[150px] w-full rounded-xl border-0 saturate-90"
-              />
+              <ConsentGate category="functional" label="the map" tone="dark" className="mt-1 h-[150px] rounded-xl">
+                <iframe
+                  src={contact.mapEmbedHref}
+                  title="Let's Fly.lk office on Google Maps"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="mt-1 h-[150px] w-full rounded-xl border-0 saturate-90"
+                />
+              </ConsentGate>
               <a
                 href={contact.mapHref}
                 target="_blank"
@@ -168,6 +172,8 @@ export function Footer() {
                   </Link>
                 </Fragment>
               ))}
+              <span aria-hidden="true" className="h-3 w-px bg-white/30" />
+              <CookieSettingsButton className="inline-block py-1.5 text-white/70 transition-colors duration-200 hover:text-sun-400" />
             </nav>
             <span>
               Designed &amp; developed by{" "}

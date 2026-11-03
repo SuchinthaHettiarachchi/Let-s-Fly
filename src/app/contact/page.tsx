@@ -6,6 +6,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { ContactForm } from "@/components/contact/ContactForm";
+import { ConsentGate } from "@/components/consent/ConsentGate";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { contact } from "@/data/site";
 import { jobs, officeHours, type Job } from "@/data/careers";
@@ -134,13 +135,15 @@ export default function ContactPage() {
           </div>
           <div data-reveal="150" className="flex flex-col gap-5">
             <div className="relative flex-1 overflow-hidden rounded-2xl border border-sand-300 bg-white">
-              <iframe
-                src={contact.mapEmbedHref}
-                title="Let's Fly.lk office on Google Maps"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="block h-full min-h-[300px] w-full border-0"
-              />
+              <ConsentGate category="functional" label="the map" className="h-full min-h-[300px]">
+                <iframe
+                  src={contact.mapEmbedHref}
+                  title="Let's Fly.lk office on Google Maps"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="block h-full min-h-[300px] w-full border-0"
+                />
+              </ConsentGate>
               <a
                 href={contact.mapHref}
                 target="_blank"

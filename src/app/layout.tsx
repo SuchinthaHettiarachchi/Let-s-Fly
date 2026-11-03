@@ -6,6 +6,7 @@ import { WhatsAppFab } from "@/components/layout/WhatsAppFab";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { RouteTransition } from "@/components/layout/RouteTransition";
 import { InquiryProvider } from "@/components/inquiry/InquiryProvider";
+import { ConsentProvider } from "@/components/consent/ConsentProvider";
 import "./globals.css";
 
 // Headings in Plus Jakarta Sans, everything else in DM Sans (the Walkers Tours body font).
@@ -59,15 +60,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </noscript>
       </head>
       <body className="min-h-screen bg-surface">
-        <InquiryProvider>
-          <Header />
-          <main>
-            <PageTransition>{children}</PageTransition>
-          </main>
-          <WhatsAppFab />
-          <Footer />
-          <RouteTransition />
-        </InquiryProvider>
+        <ConsentProvider>
+          <InquiryProvider>
+            <Header />
+            <main>
+              <PageTransition>{children}</PageTransition>
+            </main>
+            <WhatsAppFab />
+            <Footer />
+            <RouteTransition />
+          </InquiryProvider>
+        </ConsentProvider>
       </body>
     </html>
   );
