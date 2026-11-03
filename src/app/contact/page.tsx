@@ -33,7 +33,7 @@ export default function ContactPage() {
   return (
     <>
       <PageHero
-        crumbs={[{ label: "Home", href: "/" }, { label: "Contact" }]}
+        crumbs={[{ label: "Home", href: "/" }, { label: "Contact Us" }]}
         eyebrow="Contact us"
         title="Let's plan your next trip together today"
         sub="Call, message or visit our office for flights, visas and tours. We usually reply within two working hours."

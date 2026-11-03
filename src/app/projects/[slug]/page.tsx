@@ -32,7 +32,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
   return (
     <article className="pt-8 pb-20 lg:pb-24">
       <Container className="flex flex-col gap-6">
-        <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Projects", href: "/projects" }, { label: project.title }]} />
+        <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Our Projects", href: "/projects" }, { label: project.title }]} />
         <div className="flex animate-rise items-center gap-3">
           <CategoryPill category={project.category} />
           <span className="flex items-center gap-1.5 text-small text-ink-400">

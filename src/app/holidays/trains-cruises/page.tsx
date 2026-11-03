@@ -18,7 +18,7 @@ export default function TrainsCruisesPage() {
     <>
       <PageHero
         image="/images/hero/hill-country-rail.jpg"
-        crumbs={[{ label: "Home", href: "/" }, { label: "Holidays" }, { label: "Trains & Cruise Adventures" }]}
+        crumbs={[{ label: "Home", href: "/" }, { label: "Trains & Cruise Adventures" }]}
         eyebrow="Scenic journeys"
         title="Scenic train tickets and cruise holiday packages"
         sub="Reserved train seats on scenic routes like Kandy to Ella, plus ocean cruise holidays across Asia and beyond."

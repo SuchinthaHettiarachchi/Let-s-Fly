@@ -18,7 +18,7 @@ export default function RentalsPage() {
     <>
       <PageHero
         image="/images/rentals/van.jpg"
-        crumbs={[{ label: "Home", href: "/" }, { label: "Rentals" }]}
+        crumbs={[{ label: "Home", href: "/" }, { label: "Car & Bike Rentals" }]}
         eyebrow="Vehicle rental"
         title="Car and bike rental across Sri Lanka"
         sub="Cars, vans and motorbikes for airport pickups, day trips and island tours, self-drive or with a trusted driver."

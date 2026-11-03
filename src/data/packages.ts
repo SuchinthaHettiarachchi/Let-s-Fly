@@ -1064,6 +1064,6 @@ export const durationShort = (p: Pick<Package, "days" | "nights">) => `${p.days}
 
 /** Breadcrumb parent for a package. */
 export const categoryCrumb = {
-  outbound: { label: "Outbound Travels", href: "/holidays/outbound" },
-  "sri-lanka": { label: "Travel Sri Lanka", href: "/holidays/sri-lanka" },
+  outbound: { label: "Outbound Packages", href: "/holidays/outbound" },
+  "sri-lanka": { label: "Sri Lanka Tours", href: "/holidays/sri-lanka" },
 } as const;

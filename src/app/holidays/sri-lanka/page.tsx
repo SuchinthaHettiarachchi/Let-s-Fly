@@ -21,7 +21,7 @@ export default function SriLankaPage() {
         image="/images/hero/sigiriya-sunset.jpg"
         imagePosition="object-[50%_55%]"
         overlay={false}
-        crumbs={[{ label: "Home", href: "/" }, { label: "Holidays" }, { label: "Travel Sri Lanka + Hotels" }]}
+        crumbs={[{ label: "Home", href: "/" }, { label: "Sri Lanka Tours" }]}
         eyebrow="Inbound tours"
         title="Sri Lanka tour packages and hotel bookings"
         sub="Trending and seasonal island packages designed for everyone, from Sigiriya to the south coast, with drivers and stays."

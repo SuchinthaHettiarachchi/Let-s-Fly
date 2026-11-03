@@ -16,7 +16,7 @@ export default function ProjectsPage() {
   return (
     <>
       <PageHero
-        crumbs={[{ label: "Home", href: "/" }, { label: "Projects" }]}
+        crumbs={[{ label: "Home", href: "/" }, { label: "Our Projects" }]}
         eyebrow="MICE tourism"
         title="Corporate MICE tourism, events and incentive travel"
         sub="Meetings, incentive trips, conferences and exhibitions planned end to end, from venues and flights to seamless group transfers."

@@ -27,7 +27,7 @@ export default function OutboundPage() {
     <>
       <PageHero
         image="/images/hero/dubai.jpg"
-        crumbs={[{ label: "Home", href: "/" }, { label: "Holidays" }, { label: "Outbound Travels" }]}
+        crumbs={[{ label: "Home", href: "/" }, { label: "Outbound Packages" }]}
         eyebrow="Outbound travel"
         title="Holiday packages from Sri Lanka, fully planned"
         sub="Group and private holidays to Asia, the Middle East and Europe, with flights, hotels and visas arranged together."
