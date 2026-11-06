@@ -8,6 +8,7 @@ import { Icon } from "./Icon";
  *  - primaryOnDark ocean bg, white text, hover navy (dark sections)
  *  - outline:      white bg, sand border, ocean text, border → ocean on hover
  *  - ghostOnDark:  translucent outline for imagery / navy backgrounds
+ *  - lightNavy:    softer navy for a standout action on a white card (Search & Book Flights)
  *  - navy:         the yellow CTA band's button; inverts to white on hover
  *  - outlineNavy:  secondary button inside the yellow CTA band
  *  - sand:         soft tertiary button on imagery (home hero)
@@ -20,6 +21,7 @@ const variants = {
     "bg-white text-ocean-600 border-[1.5px] border-sand-300 hover:border-ocean-600 hover:text-ocean-600",
   ghostOnDark:
     "text-white border-[1.5px] border-white/80 hover:bg-white/12 hover:text-white",
+  lightNavy: "bg-navy-700 text-white hover:bg-navy-900 hover:text-white hover:shadow-[0_8px_20px_rgba(11,37,69,0.28)]",
   navy: "bg-navy-900 text-white hover:bg-white hover:text-navy-900",
   outlineNavy:
     "text-navy-900 border-[1.5px] border-navy-900 hover:bg-navy-900 hover:text-white",
