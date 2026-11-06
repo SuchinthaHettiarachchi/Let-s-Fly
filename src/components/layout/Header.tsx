@@ -6,16 +6,16 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
-import { ButtonLink } from "@/components/ui/Button";
+import { ButtonLink, buttonClasses } from "@/components/ui/Button";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { SocialLinks } from "@/components/ui/SocialLinks";
-import { contact, navGroups, socials, type NavLink } from "@/data/site";
+import { contact, contactGroup, navGroups, socials, type NavLink } from "@/data/site";
 
-/** "home", "contact" or the key of the menu group whose links include this page. */
+/** "home", "contact" (also About, Projects, Gallery) or the key of the menu group whose links include this page. */
 function activeKey(pathname: string): string | null {
   if (pathname === "/") return "home";
   if (pathname.startsWith("/contact")) return "contact";
-  const group = navGroups.find((g) =>
+  const group = [...navGroups, contactGroup].find((g) =>
     g.links.some((l) => {
       const path = l.href.split("#")[0];
       return pathname === path || pathname.startsWith(`${path}/`);
@@ -64,15 +64,14 @@ export function Header() {
 
           <div className="flex items-center gap-2">
             <div className="hidden sm:block">
-              <ButtonLink
-                href="/contact"
-                variant="primary"
-                size="md"
-                icon="arrow_forward"
-                className="shadow-[0_6px_16px_rgba(19,87,155,.3)]"
-              >
-                Contact Us
-              </ButtonLink>
+              <Dropdown
+                label={contactGroup.label}
+                links={contactGroup.links}
+                on={false}
+                pathname={pathname}
+                width="w-[250px]"
+                cta
+              />
             </div>
             <button
               type="button"
@@ -137,12 +136,15 @@ function Dropdown({
   on,
   pathname,
   width,
+  cta = false,
 }: {
   label: string;
   links: NavLink[];
   on: boolean;
   pathname: string;
   width: string;
+  /** Draws the trigger as the blue Contact Us button, which still goes to /contact when clicked, and opens the menu to the right edge. */
+  cta?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   return (
@@ -155,7 +157,19 @@ function Dropdown({
       }}
       onKeyDown={(e) => e.key === "Escape" && setOpen(false)}
     >
-      {/* Click only opens: a mouse click also fires mouseenter, so toggling would shut it again. */}
+      {cta ? (
+        <Link
+          href="/contact"
+          aria-expanded={open}
+          aria-haspopup="true"
+          onFocus={() => setOpen(true)}
+          className={buttonClasses("primary", "md", "shadow-[0_6px_16px_rgba(19,87,155,.3)]")}
+        >
+          {label}
+          <Icon name="expand_more" size={20} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+        </Link>
+      ) : (
+      /* Click only opens: a mouse click also fires mouseenter, so toggling would shut it again. */
       <button
         type="button"
         aria-expanded={open}
@@ -166,8 +180,9 @@ function Dropdown({
         {label}
         <Icon name="expand_more" size={20} className={`transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
+      )}
       {open && (
-        <div className={`absolute top-full z-10 pt-2.5 left-0`}>
+        <div className={`absolute top-full z-10 pt-2.5 ${cta ? "right-0" : "left-0"}`}>
           <div className={`${width} flex flex-col rounded-xl border border-sand-300 bg-white p-2 shadow-lf-md`}>
             {links.map((l) => {
               const here = pathname === l.href;
@@ -204,7 +219,7 @@ function MobileMenu({ active, pathname }: { active: string | null; pathname: str
     <nav aria-label="Mobile" className="max-h-[calc(100dvh-64px)] overflow-y-auto overscroll-contain border-t border-sand-300 bg-white pb-[env(safe-area-inset-bottom)] md:max-h-[calc(100dvh-88px)] lg:hidden">
       <Container className="flex flex-col gap-1 py-4">
         <Link href="/" className={item(active === "home")}>Home</Link>
-        {navGroups.map((g) => (
+        {[...navGroups, contactGroup].map((g) => (
           <div key={g.key} className="flex flex-col gap-1">
             <div className="mt-3 px-3 eyebrow text-ink-400">{g.label}</div>
             {g.links.map((l) => (

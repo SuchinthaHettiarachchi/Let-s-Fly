@@ -40,7 +40,7 @@ export type NavLink = { label: string; href: string; icon?: string };
 
 export type NavGroup = { key: string; label: string; links: NavLink[] };
 
-/** Dropdowns in the main menu, between Home and Contact Us. */
+/** Dropdowns in the main menu, after Home. */
 export const navGroups: NavGroup[] = [
   {
     key: "sri-lanka",
@@ -52,25 +52,35 @@ export const navGroups: NavGroup[] = [
     ],
   },
   {
-    key: "outbound",
-    label: "Outbound Travel",
+    key: "overseas",
+    label: "Travel Overseas",
     links: [
       { label: "Outbound Packages", href: "/holidays/outbound", icon: "travel_explore" },
+      { label: "Trains & Cruise Adventures", href: "/holidays/trains-cruises", icon: "directions_boat" },
+    ],
+  },
+  {
+    key: "ticket-visa",
+    label: "Ticket / Visa",
+    links: [
       { label: "Air Tickets", href: "/air-tickets", icon: "flight" },
       { label: "Visa Services", href: "/visa", icon: "description" },
     ],
   },
-  {
-    key: "more",
-    label: "More Travel",
-    links: [
-      { label: "Trains & Cruise Adventures", href: "/holidays/trains-cruises", icon: "directions_boat" },
-      { label: "Our Projects", href: "/projects", icon: "work" },
-      { label: "Travellers Gallery", href: "/gallery", icon: "photo_library" },
-      { label: "About Us", href: "/about", icon: "info" },
-    ],
-  },
 ];
+
+/** The Contact Us menu: the button on desktop, a group in the phone menu. */
+export const contactGroup: NavGroup = {
+  key: "contact",
+  label: "Contact Us",
+  links: [
+    { label: "Contact Us", href: "/contact", icon: "call" },
+    { label: "About Us", href: "/about", icon: "info" },
+    { label: "Our Projects", href: "/projects", icon: "work" },
+    { label: "Travellers Gallery", href: "/gallery", icon: "photo_library" },
+    { label: "Join Our Team", href: "/contact#careers", icon: "badge" },
+  ],
+};
 
 export const footerColumns: { title: string; links: NavLink[] }[] = [
   {
