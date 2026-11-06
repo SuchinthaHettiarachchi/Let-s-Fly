@@ -63,6 +63,55 @@ export default function ContactPage() {
         </ul>
       </Container>
 
+      <section className="bg-sand-50 py-16 lg:py-24">
+        <Container className="grid grid-cols-1 gap-8 lg:grid-cols-[1.1fr_1fr]">
+          <div data-reveal className="rounded-2xl border border-sand-300 bg-white p-6 sm:p-8">
+            <Eyebrow>Send a message</Eyebrow>
+            <h2 className="mt-2 mb-6 text-h3">How can we help?</h2>
+            <ContactForm />
+          </div>
+          <div data-reveal="150" className="flex flex-col gap-5">
+            <div className="relative flex-1 overflow-hidden rounded-2xl border border-sand-300 bg-white">
+              <ConsentGate category="functional" label="the map" className="h-full min-h-[300px]">
+                <iframe
+                  src={contact.mapEmbedHref}
+                  title="Let's Fly.lk office on Google Maps"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="block h-full min-h-[300px] w-full border-0"
+                />
+              </ConsentGate>
+              <a
+                href={contact.mapHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-small font-semibold shadow-lf-md"
+              >
+                Open in Google Maps
+                <Icon name="north_east" size={16} />
+              </a>
+            </div>
+            <div className="rounded-2xl border border-sand-300 bg-white p-6">
+              <h3 className="mb-3 font-sans text-h5">Office hours</h3>
+              <dl className="flex flex-col">
+                {officeHours.map((o) => (
+                  <div key={o.days} className="flex justify-between border-b border-sand-300 py-3 text-small last:border-0">
+                    <dt className="text-ink-600">{o.days}</dt>
+                    <dd className="font-semibold">{o.hours}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+            <div className="flex flex-col gap-4 rounded-2xl border border-sand-300 bg-white p-6">
+              <div className="flex flex-col gap-1">
+                <h3 className="font-sans text-h5">Follow us</h3>
+                <p className="text-small text-ink-600">Tour photos, fare deals and travel updates.</p>
+              </div>
+              <SocialLinks />
+            </div>
+          </div>
+        </Container>
+      </section>
       <section id="careers" className="scroll-mt-[110px] lg:scroll-mt-[156px] py-16 lg:py-24">
         <Container className="flex flex-col gap-10">
           <div data-reveal className="mx-auto flex max-w-[620px] flex-col items-center gap-3 text-center">
@@ -126,55 +175,6 @@ export default function ContactPage() {
         </Container>
       </section>
 
-      <section className="bg-sand-50 py-16 lg:py-24">
-        <Container className="grid grid-cols-1 gap-8 lg:grid-cols-[1.1fr_1fr]">
-          <div data-reveal className="rounded-2xl border border-sand-300 bg-white p-6 sm:p-8">
-            <Eyebrow>Send a message</Eyebrow>
-            <h2 className="mt-2 mb-6 text-h3">How can we help?</h2>
-            <ContactForm />
-          </div>
-          <div data-reveal="150" className="flex flex-col gap-5">
-            <div className="relative flex-1 overflow-hidden rounded-2xl border border-sand-300 bg-white">
-              <ConsentGate category="functional" label="the map" className="h-full min-h-[300px]">
-                <iframe
-                  src={contact.mapEmbedHref}
-                  title="Let's Fly.lk office on Google Maps"
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="block h-full min-h-[300px] w-full border-0"
-                />
-              </ConsentGate>
-              <a
-                href={contact.mapHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-small font-semibold shadow-lf-md"
-              >
-                Open in Google Maps
-                <Icon name="north_east" size={16} />
-              </a>
-            </div>
-            <div className="rounded-2xl border border-sand-300 bg-white p-6">
-              <h3 className="mb-3 font-sans text-h5">Office hours</h3>
-              <dl className="flex flex-col">
-                {officeHours.map((o) => (
-                  <div key={o.days} className="flex justify-between border-b border-sand-300 py-3 text-small last:border-0">
-                    <dt className="text-ink-600">{o.days}</dt>
-                    <dd className="font-semibold">{o.hours}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-            <div className="flex flex-col gap-4 rounded-2xl border border-sand-300 bg-white p-6">
-              <div className="flex flex-col gap-1">
-                <h3 className="font-sans text-h5">Follow us</h3>
-                <p className="text-small text-ink-600">Tour photos, fare deals and travel updates.</p>
-              </div>
-              <SocialLinks />
-            </div>
-          </div>
-        </Container>
-      </section>
       <RevealOnScroll />
     </>
   );
