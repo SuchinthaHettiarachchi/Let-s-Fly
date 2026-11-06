@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
@@ -10,7 +10,16 @@ import { rentalPerks, rentalTypes } from "@/data/home";
 
 export function RentalsTeaser() {
   const [selected, setSelected] = useState(0);
+  const [paused, setPaused] = useState(false);
   const current = rentalTypes[selected];
+
+  // Image carousel: the vehicle photo changes on its own every few seconds. Picking a type
+  // restarts the timer, hovering the photo pauses it, and reduced motion turns it off.
+  useEffect(() => {
+    if (paused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setTimeout(() => setSelected((i) => (i + 1) % rentalTypes.length), 4000);
+    return () => window.clearTimeout(id);
+  }, [selected, paused]);
 
   return (
     <section id="rentals" className="scroll-mt-[110px] lg:scroll-mt-[156px] py-20 lg:py-[110px]">
@@ -58,7 +67,12 @@ export function RentalsTeaser() {
           </ButtonLink>
         </div>
 
-        <div data-reveal="150" className="relative">
+        <div
+          data-reveal="150"
+          className="relative"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+        >
           <div className="relative h-[320px] overflow-hidden rounded-2xl bg-sand-200 sm:h-[480px]">
             {rentalTypes.map((t, i) => (
               <Image
@@ -67,7 +81,7 @@ export function RentalsTeaser() {
                 alt={i === selected ? `${t.label} for rent` : ""}
                 fill
                 sizes="(min-width: 1024px) 600px, 100vw"
-                className={`object-cover transition-opacity duration-500 ${i === selected ? "opacity-100" : "opacity-0"}`}
+                className={`object-cover transition-opacity duration-700 ${i === selected ? "opacity-100" : "opacity-0"}`}
               />
             ))}
           </div>
