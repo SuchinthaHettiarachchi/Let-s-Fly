@@ -9,11 +9,11 @@ import { Icon } from "@/components/ui/Icon";
 import { ButtonLink, buttonClasses } from "@/components/ui/Button";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { SocialLinks } from "@/components/ui/SocialLinks";
-import { contact, contactGroup, navGroups, socials, type NavLink } from "@/data/site";
+import { aboutLink, contact, contactGroup, navGroups, socials, type NavLink } from "@/data/site";
 
-/** "home", "contact" (also About, Projects, Gallery) or the key of the menu group whose links include this page. */
+/** "about", "contact" or the key of the menu group whose links include this page. */
 function activeKey(pathname: string): string | null {
-  if (pathname === "/") return "home";
+  if (pathname === aboutLink.href) return "about";
   if (pathname.startsWith("/contact")) return "contact";
   const group = [...navGroups, contactGroup].find((g) =>
     g.links.some((l) => {
@@ -54,12 +54,16 @@ export function Header() {
           </Link>
 
           <nav aria-label="Main" className="hidden items-center gap-1 text-[0.9375rem] font-medium lg:flex">
-            <Link href="/" aria-current={active === "home" ? "page" : undefined} className={`${navItem} ${navState(active === "home")}`}>
-              Home
-            </Link>
             {navGroups.map((g) => (
               <Dropdown key={g.key} label={g.label} links={g.links} on={active === g.key} pathname={pathname} width="w-[250px]" />
             ))}
+            <Link
+              href={aboutLink.href}
+              aria-current={active === "about" ? "page" : undefined}
+              className={`${navItem} ${navState(active === "about")}`}
+            >
+              {aboutLink.label}
+            </Link>
           </nav>
 
           <div className="flex items-center gap-2">
@@ -85,7 +89,7 @@ export function Header() {
           </div>
         </Container>
 
-        {mobileOpen && <MobileMenu active={active} pathname={pathname} />}
+        {mobileOpen && <MobileMenu pathname={pathname} />}
       </header>
     </div>
   );
@@ -143,7 +147,7 @@ function Dropdown({
   on: boolean;
   pathname: string;
   width: string;
-  /** Draws the trigger as the blue Contact Us button, which still goes to /contact when clicked, and opens the menu to the right edge. */
+  /** Draws the trigger as the blue Inquire Us button, which still goes to /contact when clicked, and opens the menu to the right edge. */
   cta?: boolean;
 }) {
   const [open, setOpen] = useState(false);
@@ -210,7 +214,7 @@ function Dropdown({
   );
 }
 
-function MobileMenu({ active, pathname }: { active: string | null; pathname: string }) {
+function MobileMenu({ pathname }: { pathname: string }) {
   const item = (on: boolean) =>
     `flex items-center gap-3 rounded-lg px-3 py-3 text-body font-medium ${
       on ? "bg-sand-50 font-semibold text-ocean-600 shadow-[inset_3px_0_0_var(--color-ocean-600)]" : "text-ink-900 hover:bg-sand-50"
@@ -218,8 +222,7 @@ function MobileMenu({ active, pathname }: { active: string | null; pathname: str
   return (
     <nav aria-label="Mobile" className="max-h-[calc(100dvh-64px)] overflow-y-auto overscroll-contain border-t border-sand-300 bg-white pb-[env(safe-area-inset-bottom)] md:max-h-[calc(100dvh-88px)] lg:hidden">
       <Container className="flex flex-col gap-1 py-4">
-        <Link href="/" className={item(active === "home")}>Home</Link>
-        {[...navGroups, contactGroup].map((g) => (
+        {[...navGroups, { key: "about", label: aboutLink.label, links: [aboutLink] }, contactGroup].map((g) => (
           <div key={g.key} className="flex flex-col gap-1">
             <div className="mt-3 px-3 eyebrow text-ink-400">{g.label}</div>
             {g.links.map((l) => (

@@ -40,7 +40,7 @@ export type NavLink = { label: string; href: string; icon?: string };
 
 export type NavGroup = { key: string; label: string; links: NavLink[] };
 
-/** Dropdowns in the main menu, after Home. */
+/** Dropdowns in the main menu. There is no Home link: the logo goes home. */
 export const navGroups: NavGroup[] = [
   {
     key: "sri-lanka",
@@ -67,17 +67,25 @@ export const navGroups: NavGroup[] = [
       { label: "Visa Services", href: "/visa", icon: "description" },
     ],
   },
+  {
+    key: "journeys",
+    label: "Our Journeys",
+    links: [
+      { label: "Travellers Gallery", href: "/gallery", icon: "photo_library" },
+      { label: "Our Projects", href: "/projects", icon: "work" },
+    ],
+  },
 ];
 
-/** The Contact Us menu: the button on desktop, a group in the phone menu. */
+/** Plain link after the dropdowns. */
+export const aboutLink: NavLink = { label: "About Us", href: "/about", icon: "info" };
+
+/** The Inquire Us menu: the blue button on desktop, a group in the phone menu. */
 export const contactGroup: NavGroup = {
   key: "contact",
-  label: "Contact Us",
+  label: "Inquire Us",
   links: [
     { label: "Contact Us", href: "/contact", icon: "call" },
-    { label: "About Us", href: "/about", icon: "info" },
-    { label: "Our Projects", href: "/projects", icon: "work" },
-    { label: "Travellers Gallery", href: "/gallery", icon: "photo_library" },
     { label: "Join Our Team", href: "/contact#careers", icon: "badge" },
   ],
 };
