@@ -45,7 +45,7 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
 
   return (
     <div ref={top} className="flex scroll-mt-[110px] flex-col gap-8 lg:scroll-mt-[156px]">
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <label className="relative flex w-full items-center sm:w-[300px]">
           <span className="sr-only">Search country or city</span>
           <Icon name="search" size={20} className="pointer-events-none absolute left-4 text-ink-400" />
@@ -77,6 +77,30 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
           </select>
           <Icon name="expand_more" size={18} className="pointer-events-none absolute right-3 text-ink-400" />
         </label>
+        {/* Page arrows sit above the cards, so they're in reach without scrolling past 3 rows. */}
+        {pages > 1 && (
+          <nav aria-label="Visa pages" className="flex items-center gap-3 sm:ml-auto">
+            <ArrowButton direction="prev" disabled={current === 0} onClick={() => goTo(current - 1)} />
+            <ol className="flex flex-wrap items-center justify-center gap-1.5">
+              {Array.from({ length: pages }, (_, p) => (
+                <li key={p}>
+                  <button
+                    type="button"
+                    aria-label={`Page ${p + 1}`}
+                    aria-current={p === current ? "page" : undefined}
+                    onClick={() => goTo(p)}
+                    className={`flex size-9 cursor-pointer items-center justify-center rounded-full text-small font-semibold transition-colors ${
+                      p === current ? "bg-ocean-600 text-white" : "text-ink-600 hover:bg-sand-100"
+                    }`}
+                  >
+                    {p + 1}
+                  </button>
+                </li>
+              ))}
+            </ol>
+            <ArrowButton direction="next" disabled={current === pages - 1} onClick={() => goTo(current + 1)} />
+          </nav>
+        )}
       </div>
 
       {visible.length ? (
@@ -144,29 +168,6 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
         </div>
       )}
 
-      {pages > 1 && (
-        <nav aria-label="Visa pages" className="flex items-center justify-center gap-4">
-          <ArrowButton direction="prev" disabled={current === 0} onClick={() => goTo(current - 1)} />
-          <ol className="flex flex-wrap items-center justify-center gap-1.5">
-            {Array.from({ length: pages }, (_, p) => (
-              <li key={p}>
-                <button
-                  type="button"
-                  aria-label={`Page ${p + 1}`}
-                  aria-current={p === current ? "page" : undefined}
-                  onClick={() => goTo(p)}
-                  className={`flex size-9 cursor-pointer items-center justify-center rounded-full text-small font-semibold transition-colors ${
-                    p === current ? "bg-ocean-600 text-white" : "text-ink-600 hover:bg-sand-100"
-                  }`}
-                >
-                  {p + 1}
-                </button>
-              </li>
-            ))}
-          </ol>
-          <ArrowButton direction="next" disabled={current === pages - 1} onClick={() => goTo(current + 1)} />
-        </nav>
-      )}
     </div>
   );
 }
