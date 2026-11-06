@@ -144,4 +144,7 @@ export const airlines = [
   { name: "Saudia", logo: "/images/airlines/saudia.jpg" },
   { name: "Air New Zealand", logo: "/images/airlines/air-new-zealand.jpg" },
   { name: "Gulf Air", logo: "/images/airlines/gulf-air.jpg" },
+  { name: "Air Algérie", logo: "/images/airlines/air-algerie.jpg" },
+  { name: "Aegean Airlines", logo: "/images/airlines/aegean.jpg" },
+  { name: "Air Astana", logo: "/images/airlines/air-astana.jpg" },
 ];
