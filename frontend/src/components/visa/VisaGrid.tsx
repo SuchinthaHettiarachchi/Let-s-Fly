@@ -2,47 +2,77 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { Placeholder } from "@/components/ui/Placeholder";
-import { buttonClasses } from "@/components/ui/Button";
+import { ArrowButton, buttonClasses } from "@/components/ui/Button";
 import { useInquiry } from "@/components/inquiry/InquiryProvider";
 import type { Visa } from "@/data/visas";
 
 const ANY = "";
+/** Three rows of three on desktop. */
+const PAGE_SIZE = 9;
 
-/** "Where Sri Lankans are heading": visa cards with type and country filters. */
+/**
+ * "Where Sri Lankans are heading": visa cards with a country search and a type filter,
+ * shown 9 at a time with arrows and page dots (the list will grow to about 90 countries).
+ */
 export function VisaGrid({ visas }: { visas: Visa[] }) {
   const [type, setType] = useState(ANY);
-  const [country, setCountry] = useState(ANY);
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(0);
+  const top = useRef<HTMLDivElement>(null);
   const { openInquiry } = useInquiry();
 
   const types = [...new Set(visas.map((v) => v.type))];
-  const countries = [...new Set(visas.map((v) => v.country))].sort();
-  const visible = visas.filter((v) => (!type || v.type === type) && (!country || v.country === country));
+  const q = query.trim().toLowerCase();
+  const matches = visas.filter(
+    (v) => (!type || v.type === type) && (!q || v.country.toLowerCase().includes(q) || v.city.toLowerCase().includes(q)),
+  );
+  const pages = Math.max(1, Math.ceil(matches.length / PAGE_SIZE));
+  const current = Math.min(page, pages - 1);
+  const visible = matches.slice(current * PAGE_SIZE, current * PAGE_SIZE + PAGE_SIZE);
+
+  const goTo = (p: number) => {
+    setPage(p);
+    // Bring the top of the grid back into view when paging from further down.
+    const box = top.current?.getBoundingClientRect();
+    if (box && box.top < 0) top.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const pill =
     "h-11 cursor-pointer appearance-none rounded-full sm:h-10 border-[1.5px] border-sand-300 bg-white pr-9 pl-4 font-medium text-ink-900 hover:border-ocean-600 focus:border-ocean-600 focus:outline-none";
 
   return (
-    <div className="flex flex-col gap-8">
+    <div ref={top} className="flex scroll-mt-[110px] flex-col gap-8 lg:scroll-mt-[156px]">
       <div className="flex flex-wrap gap-3">
+        <label className="relative flex w-full items-center sm:w-[300px]">
+          <span className="sr-only">Search country or city</span>
+          <Icon name="search" size={20} className="pointer-events-none absolute left-4 text-ink-400" />
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setPage(0);
+            }}
+            placeholder="Search country or city"
+            className="h-11 w-full rounded-full border-[1.5px] border-sand-300 bg-white pr-4 pl-11 text-ink-900 placeholder:text-ink-400 hover:border-ocean-600 focus:border-ocean-600 focus:outline-none sm:h-10"
+          />
+        </label>
         <label className="relative flex items-center">
           <span className="sr-only">Visa type</span>
-          <select value={type} onChange={(e) => setType(e.target.value)} className={pill}>
+          <select
+            value={type}
+            onChange={(e) => {
+              setType(e.target.value);
+              setPage(0);
+            }}
+            className={pill}
+          >
             <option value={ANY}>Visa Type</option>
             {types.map((t) => (
               <option key={t}>{t}</option>
-            ))}
-          </select>
-          <Icon name="expand_more" size={18} className="pointer-events-none absolute right-3 text-ink-400" />
-        </label>
-        <label className="relative flex items-center">
-          <span className="sr-only">Country</span>
-          <select value={country} onChange={(e) => setCountry(e.target.value)} className={pill}>
-            <option value={ANY}>Country</option>
-            {countries.map((c) => (
-              <option key={c}>{c}</option>
             ))}
           </select>
           <Icon name="expand_more" size={18} className="pointer-events-none absolute right-3 text-ink-400" />
@@ -101,7 +131,41 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
           })}
         </div>
       ) : (
-        <p className="py-10 text-center text-ink-600">No visas match those filters. Ask us about your destination.</p>
+        <div className="flex flex-col items-center gap-4 py-10 text-center">
+          <p className="text-ink-600">No visas match your search. We can still help with your destination.</p>
+          <button
+            type="button"
+            onClick={() => openInquiry({ subject: "Visa enquiry", service: "Visa services", destination: query.trim() })}
+            className={buttonClasses("primary", "md")}
+          >
+            Ask about {query.trim() || "a visa"}
+            <Icon name="arrow_forward" size={18} />
+          </button>
+        </div>
+      )}
+
+      {pages > 1 && (
+        <nav aria-label="Visa pages" className="flex items-center justify-center gap-4">
+          <ArrowButton direction="prev" disabled={current === 0} onClick={() => goTo(current - 1)} />
+          <ol className="flex flex-wrap items-center justify-center gap-1.5">
+            {Array.from({ length: pages }, (_, p) => (
+              <li key={p}>
+                <button
+                  type="button"
+                  aria-label={`Page ${p + 1}`}
+                  aria-current={p === current ? "page" : undefined}
+                  onClick={() => goTo(p)}
+                  className={`flex size-9 cursor-pointer items-center justify-center rounded-full text-small font-semibold transition-colors ${
+                    p === current ? "bg-ocean-600 text-white" : "text-ink-600 hover:bg-sand-100"
+                  }`}
+                >
+                  {p + 1}
+                </button>
+              </li>
+            ))}
+          </ol>
+          <ArrowButton direction="next" disabled={current === pages - 1} onClick={() => goTo(current + 1)} />
+        </nav>
       )}
     </div>
   );

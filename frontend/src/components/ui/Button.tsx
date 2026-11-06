@@ -104,7 +104,7 @@ export function ArrowButton({
     <button
       type="button"
       aria-label={isNext ? "Next" : "Previous"}
-      className={`flex items-center justify-center rounded-full cursor-pointer transition-[background-color,border-color,color,scale] duration-200 ease-lf press ${look}`}
+      className={`flex items-center justify-center rounded-full cursor-pointer transition-[background-color,border-color,color,scale,opacity] duration-200 ease-lf press disabled:pointer-events-none disabled:opacity-40 ${look}`}
       {...props}
     >
       <Icon name={isNext ? "chevron_right" : "chevron_left"} size={24} />
