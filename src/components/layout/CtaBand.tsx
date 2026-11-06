@@ -1,6 +1,7 @@
 import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
 import { contact } from "@/data/site";
+import { PlanTripButton } from "./PlanTripButton";
 
 type CtaBandProps = {
   title?: string;
@@ -32,9 +33,7 @@ export function CtaBand({
             <p className="text-lead text-navy-900">{text}</p>
           </div>
           <div className="relative flex w-full flex-col gap-3 *:w-full sm:w-auto sm:flex-none sm:flex-row sm:flex-wrap sm:gap-3.5 sm:*:w-auto">
-            <ButtonLink href="/contact" variant="navy" size="xl" icon="arrow_forward">
-              Plan My Trip
-            </ButtonLink>
+            <PlanTripButton />
             <ButtonLink
               href={contact.whatsappHref}
               target="_blank"

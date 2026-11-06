@@ -10,6 +10,7 @@ import { TeamSection } from "@/components/about/TeamSection";
 import { ApproachList } from "@/components/about/ApproachList";
 import { CountUp } from "@/components/home/CountUp";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { PlanTripButton } from "@/components/layout/PlanTripButton";
 import { contact } from "@/data/site";
 import {
   aboutParagraphs,
@@ -341,9 +342,7 @@ export default function AboutPage() {
             <span>ANYWHERE</span>
           </div>
           <div className="flex flex-wrap justify-center gap-3.5">
-            <ButtonLink href="/contact" variant="navy" size="xl" icon="arrow_forward">
-              Plan My Trip
-            </ButtonLink>
+            <PlanTripButton />
             <ButtonLink
               href={contact.whatsappHref}
               target="_blank"
