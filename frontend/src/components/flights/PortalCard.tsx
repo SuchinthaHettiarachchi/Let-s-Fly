@@ -42,11 +42,11 @@ export function PortalCard() {
         </ol>
         <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
           {portal ? (
-            <ButtonLink href={portal} target="_blank" rel="noopener noreferrer" variant="lightNavy" size="lg" icon="north_east">
+            <ButtonLink href={portal} target="_blank" rel="noopener noreferrer" variant="paleNavy" size="lg" icon="north_east">
               Search &amp; Book Flights
             </ButtonLink>
           ) : (
-            <ButtonLink href="#flight-inquiry" variant="lightNavy" size="lg" icon="arrow_downward">
+            <ButtonLink href="#flight-inquiry" variant="paleNavy" size="lg" icon="arrow_downward">
               Search &amp; Book Flights
             </ButtonLink>
           )}
