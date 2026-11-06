@@ -64,7 +64,37 @@ export const visas: Visa[] = [
   },
   { slug: "maldives", country: "Maldives", city: "Malé", type: "Travel Visa", image: "/images/packages/maldives-overwater-villa.jpg" },
   { slug: "thailand", country: "Thailand", city: "Bangkok", type: "Travel Visa", image: "/images/packages/bangkok-phuket.jpg" },
+  ...dummyVisas(),
 ];
+
+/**
+ * TEMPORARY: 20 test countries to try the search and the 3x3 pages until the client sends the real list
+ * (about 90 countries). Delete this function and the `...dummyVisas()` line above when it arrives.
+ */
+function dummyVisas(): Visa[] {
+  return [
+    { slug: "singapore", country: "Singapore", city: "Singapore", type: "Tourist Visa" },
+    { slug: "malaysia", country: "Malaysia", city: "Kuala Lumpur", type: "Tourist Visa" },
+    { slug: "japan", country: "Japan", city: "Tokyo", type: "Tourist Visa" },
+    { slug: "south-korea", country: "South Korea", city: "Seoul", type: "Tourist Visa" },
+    { slug: "china", country: "China", city: "Beijing", type: "Business Visa" },
+    { slug: "india", country: "India", city: "New Delhi", type: "Travel Visa" },
+    { slug: "australia", country: "Australia", city: "Sydney", type: "Tourist Visa" },
+    { slug: "new-zealand", country: "New Zealand", city: "Auckland", type: "Tourist Visa" },
+    { slug: "united-kingdom", country: "United Kingdom", city: "London", type: "Tourist Visa" },
+    { slug: "france", country: "France", city: "Paris", type: "Tourist Visa" },
+    { slug: "germany", country: "Germany", city: "Berlin", type: "Business Visa" },
+    { slug: "italy", country: "Italy", city: "Rome", type: "Tourist Visa" },
+    { slug: "switzerland", country: "Switzerland", city: "Zurich", type: "Tourist Visa" },
+    { slug: "canada", country: "Canada", city: "Toronto", type: "Tourist Visa" },
+    { slug: "united-states", country: "United States", city: "New York", type: "Business Visa" },
+    { slug: "qatar", country: "Qatar", city: "Doha", type: "Travel Visa" },
+    { slug: "oman", country: "Oman", city: "Muscat", type: "Travel Visa" },
+    { slug: "saudi-arabia", country: "Saudi Arabia", city: "Riyadh", type: "Business Visa" },
+    { slug: "turkey", country: "Turkey", city: "Istanbul", type: "Tourist Visa" },
+    { slug: "vietnam", country: "Vietnam", city: "Hanoi", type: "Travel Visa" },
+  ];
+}
 
 export const getVisa = (slug: string) => visas.find((v) => v.slug === slug);
 
