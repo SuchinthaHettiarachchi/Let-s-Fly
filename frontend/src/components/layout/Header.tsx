@@ -42,7 +42,18 @@ export function Header() {
       <TopBar />
       <header className="border-b border-sand-300 bg-white shadow-lf-header">
         <Container className="flex h-16 items-center justify-between md:h-[88px] lg:h-[136px]">
-          <Link href="/" aria-label="Let's Fly.lk home" className="flex items-center">
+          <Link
+            href="/"
+            aria-label="Let's Fly.lk home"
+            className="flex items-center"
+            onClick={(e) => {
+              // Already on the home page: a link to "/" wouldn't move, so scroll back to the top instead.
+              if (pathname !== "/") return;
+              e.preventDefault();
+              const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+              window.scrollTo({ top: 0, behavior: smooth ? "smooth" : "auto" });
+            }}
+          >
             <Image
               src="/images/logo.png"
               alt="Let's Fly.lk"
