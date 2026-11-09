@@ -62,7 +62,7 @@ export function Newsletter() {
                 <label htmlFor="newsletter-email" className="sr-only">
                   Email address
                 </label>
-                <input
+                <input suppressHydrationWarning
                   id="newsletter-email"
                   type="email"
                   required
@@ -72,7 +72,7 @@ export function Newsletter() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="h-[52px] min-w-0 flex-1 rounded-full border border-sand-300 bg-white px-[22px] text-ink-900 placeholder:text-ink-400 focus:border-transparent focus:outline-2 focus:outline-offset-1 focus:outline-ocean-600"
                 />
-                <button
+                <button suppressHydrationWarning
                   type="submit"
                   className="h-[52px] cursor-pointer rounded-full bg-navy-900 px-[26px] text-[0.9375rem] font-semibold text-white transition-[background-color,scale] duration-200 hover:bg-ocean-600 press"
                 >

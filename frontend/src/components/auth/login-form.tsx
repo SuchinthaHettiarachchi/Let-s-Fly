@@ -102,7 +102,7 @@ export default function LoginForm() {
                     <circle cx="12" cy="8" r="4" />
                     <path d="M4 21a8 8 0 0 1 16 0" />
                   </svg>
-                  <input
+                  <input suppressHydrationWarning
                     autoComplete="username"
                     id="user"
                     name="user"
@@ -141,7 +141,7 @@ export default function LoginForm() {
                     <rect x="4" y="11" width="16" height="10" rx="2" />
                     <path d="M8 11V7a4 4 0 0 1 8 0v4" />
                   </svg>
-                  <input
+                  <input suppressHydrationWarning
                     autoComplete="current-password"
                     id="pass"
                     name="pass"
@@ -157,7 +157,7 @@ export default function LoginForm() {
                     aria-invalid={Boolean(errors.password)}
                     aria-describedby="pass-err"
                   />
-                  <button
+                  <button suppressHydrationWarning
                     aria-label={passwordVisible ? "Hide password" : "Show password"}
                     aria-pressed={passwordVisible}
                     className="toggle-pw"
@@ -203,7 +203,7 @@ export default function LoginForm() {
 
               <div className="row">
                 <label className="remember">
-                  <input
+                  <input suppressHydrationWarning
                     checked={remember}
                     onChange={(event) => setRemember(event.target.checked)}
                     type="checkbox"
@@ -212,7 +212,7 @@ export default function LoginForm() {
                 </label>
               </div>
 
-              <button
+              <button suppressHydrationWarning
                 className={`btn-signin${busy ? " loading" : ""}`}
                 disabled={busy}
                 id="signIn"

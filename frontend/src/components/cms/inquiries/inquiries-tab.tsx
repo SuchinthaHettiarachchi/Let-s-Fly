@@ -273,7 +273,7 @@ export default function InquiriesTab() {
           </div>
         </header>
         <nav aria-label="Filter inquiries by category" className="inquiry-category-tabs">
-          <button
+          <button suppressHydrationWarning
             aria-pressed={activeCategory === "All"}
             className={activeCategory === "All" ? "active" : ""}
             onClick={() => setActiveCategory("All")}
@@ -282,7 +282,7 @@ export default function InquiriesTab() {
             All <span>{inquiries.length}</span>
           </button>
           {categories.map((category) => (
-            <button
+            <button suppressHydrationWarning
               aria-pressed={activeCategory === category}
               className={activeCategory === category ? "active" : ""}
               key={category}
@@ -317,7 +317,7 @@ export default function InquiriesTab() {
                 </div>
                 <div aria-label={`Status for ${inquiry.customerName}`} className="inquiry-status-actions">
                   {statuses.map((status) => (
-                    <button
+                    <button suppressHydrationWarning
                       aria-pressed={inquiry.status === status}
                       className={`inquiry-status-button${inquiry.status === status ? " selected" : ""}`}
                       key={status}
@@ -327,11 +327,11 @@ export default function InquiriesTab() {
                       {status}
                     </button>
                   ))}
-                  <button className="inquiry-row-action" onClick={() => {
+                  <button suppressHydrationWarning className="inquiry-row-action" onClick={() => {
                     setCommentInquiryId(inquiry.id);
                     setCommentText("");
                   }} type="button">Add comment</button>
-                  <button className="inquiry-row-action" onClick={() => setSelectedInquiry(inquiry)} type="button">View details</button>
+                  <button suppressHydrationWarning className="inquiry-row-action" onClick={() => setSelectedInquiry(inquiry)} type="button">View details</button>
                 </div>
               </article>
             ))}
@@ -352,11 +352,11 @@ export default function InquiriesTab() {
                 <h2 id="inquiry-comment-title">Add a comment</h2>
                 <p>For {commentInquiry.customerName}</p>
               </div>
-              <button aria-label="Close" onClick={() => setCommentInquiryId(null)} type="button">×</button>
+              <button suppressHydrationWarning aria-label="Close" onClick={() => setCommentInquiryId(null)} type="button">×</button>
             </header>
             <form onSubmit={addComment}>
               <label htmlFor="inquiry-comment">Comment</label>
-              <textarea
+              <textarea suppressHydrationWarning
                 autoFocus
                 id="inquiry-comment"
                 onChange={(event) => setCommentText(event.target.value)}
@@ -366,8 +366,8 @@ export default function InquiriesTab() {
                 value={commentText}
               />
               <footer>
-                <button className="inquiry-row-action" onClick={() => setCommentInquiryId(null)} type="button">Cancel</button>
-                <button className="inquiry-modal-primary" type="submit">Save comment</button>
+                <button suppressHydrationWarning className="inquiry-row-action" onClick={() => setCommentInquiryId(null)} type="button">Cancel</button>
+                <button suppressHydrationWarning className="inquiry-modal-primary" type="submit">Save comment</button>
               </footer>
             </form>
           </section>
@@ -387,7 +387,7 @@ export default function InquiriesTab() {
                 <h2 id="inquiry-detail-title">Inquiry details</h2>
                 <p>{detailInquiry.category} · {formatDate(detailInquiry.createdAt)}</p>
               </div>
-              <button aria-label="Close" onClick={() => setSelectedInquiry(null)} type="button">×</button>
+              <button suppressHydrationWarning aria-label="Close" onClick={() => setSelectedInquiry(null)} type="button">×</button>
             </header>
             <dl className="inquiry-detail-fields">
               <div><dt>Customer</dt><dd>{detailInquiry.customerName}</dd></div>
@@ -403,8 +403,8 @@ export default function InquiriesTab() {
               ) : <p>No comments yet.</p>}
             </div>
             <footer>
-              <button className="inquiry-row-action" onClick={() => setSelectedInquiry(null)} type="button">Close</button>
-              <button className="inquiry-modal-primary" onClick={() => {
+              <button suppressHydrationWarning className="inquiry-row-action" onClick={() => setSelectedInquiry(null)} type="button">Close</button>
+              <button suppressHydrationWarning className="inquiry-modal-primary" onClick={() => {
                 setSelectedInquiry(null);
                 setCommentInquiryId(detailInquiry.id);
                 setCommentText("");

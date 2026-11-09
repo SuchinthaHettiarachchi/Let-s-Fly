@@ -7,6 +7,7 @@ import { PageTransition } from "@/components/layout/PageTransition";
 import { RouteTransition } from "@/components/layout/RouteTransition";
 import { InquiryProvider } from "@/components/inquiry/InquiryProvider";
 import { ConsentProvider } from "@/components/consent/ConsentProvider";
+import { ThemeProvider } from "./theme-provider";
 import "./globals.css";
 
 // Headings in Plus Jakarta Sans, everything else in DM Sans (the Walkers Tours body font).
@@ -43,7 +44,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     // data-scroll-behavior lets Next jump straight to the top on route changes; in-page anchors keep smooth scrolling.
-    <html lang="en" data-scroll-behavior="smooth" data-loading="" className={`${heading.variable} ${body.variable} antialiased`}>
+    // suppressHydrationWarning: browser extensions (1Password etc.) inject
+    // attributes into <html>/<body> before React hydrates.
+    <html lang="en" data-scroll-behavior="smooth" data-loading="" suppressHydrationWarning className={`${heading.variable} ${body.variable} antialiased`}>
       <head>
         {/* Icon font: variable axes so FILL can be toggled per icon.
             display=block keeps ligature names ("arrow_forward") from flashing before it loads. */}
@@ -59,18 +62,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <style>{"[data-route-transition]{display:none}"}</style>
         </noscript>
       </head>
-      <body className="min-h-screen bg-surface">
-        <ConsentProvider>
-          <InquiryProvider>
-            <Header />
-            <main>
-              <PageTransition>{children}</PageTransition>
-            </main>
-            <WhatsAppFab />
-            <Footer />
-            <RouteTransition />
-          </InquiryProvider>
-        </ConsentProvider>
+      <body className="min-h-screen bg-surface" suppressHydrationWarning>
+        <ThemeProvider>
+          <ConsentProvider>
+            <InquiryProvider>
+              <Header />
+              <main>
+                <PageTransition>{children}</PageTransition>
+              </main>
+              <WhatsAppFab />
+              <Footer />
+              <RouteTransition />
+            </InquiryProvider>
+          </ConsentProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

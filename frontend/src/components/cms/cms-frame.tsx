@@ -130,7 +130,7 @@ export default function CmsFrame() {
         <div className="cms-sidebar-caption">Menu</div>
         <nav aria-label="CMS sections" className="cms-app-nav">
           {sections.map((section) => (
-            <button
+            <button suppressHydrationWarning
               aria-current={activeSection === section.id ? "page" : undefined}
               className={activeSection === section.id ? "cms-app-nav-item active" : "cms-app-nav-item"}
               key={section.id}
@@ -142,10 +142,10 @@ export default function CmsFrame() {
             </button>
           ))}
         </nav>
-        <button className="cms-app-signout" disabled={loggingOut} onClick={() => void signOut()} type="button">
+        <button suppressHydrationWarning className="cms-app-signout" disabled={loggingOut} onClick={() => void signOut()} type="button">
           <span aria-hidden="true">↪</span>{loggingOut ? "Signing out…" : "Sign out"}
         </button>
-        <button
+        <button suppressHydrationWarning
           className="cms-app-nav-item"
           onClick={() => setMode(mode === "light" ? "dark" : "light")}
           type="button"
@@ -196,8 +196,8 @@ export default function CmsFrame() {
             title={`Let's Fly CMS — ${currentTitle}`}
           />
           <div className="cms-legacy-controls">
-            <button onClick={() => navigate("home")} type="button">Return to React Home</button>
-            <button disabled={loggingOut} onClick={() => void signOut()} type="button">
+            <button suppressHydrationWarning onClick={() => navigate("home")} type="button">Return to React Home</button>
+            <button suppressHydrationWarning disabled={loggingOut} onClick={() => void signOut()} type="button">
               {loggingOut ? "Signing out…" : "Sign out"}
             </button>
           </div>
@@ -206,7 +206,7 @@ export default function CmsFrame() {
       {logoutError && (
         <div className="cms-logout-error" role="alert">
           <span>{logoutError}</span>
-          <button disabled={loggingOut} onClick={() => void signOut()} type="button">Retry</button>
+          <button suppressHydrationWarning disabled={loggingOut} onClick={() => void signOut()} type="button">Retry</button>
         </div>
       )}
     </main>

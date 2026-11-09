@@ -222,14 +222,14 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
           <article className="home-hero-slot" key={slide.id}>
             <div className="home-slot-heading">
               <h3>Slot {index + 1}</h3>
-              <label className="home-visible"><input checked={slide.active} onChange={(event) => updateSlide(slide.id, "active", event.target.checked)} type="checkbox" /> Visible</label>
-              <button className="home-button home-button-ghost" disabled={index === 0} onClick={() => moveSlide(index, -1)} type="button" aria-label="Move slot up">↑</button>
-              <button className="home-button home-button-ghost" disabled={index === slides.length - 1} onClick={() => moveSlide(index, 1)} type="button" aria-label="Move slot down">↓</button>
-              <button className="home-button home-button-ghost" onClick={() => deleteSlide(slide.id)} type="button">Delete</button>
+              <label className="home-visible"><input suppressHydrationWarning checked={slide.active} onChange={(event) => updateSlide(slide.id, "active", event.target.checked)} type="checkbox" /> Visible</label>
+              <button suppressHydrationWarning className="home-button home-button-ghost" disabled={index === 0} onClick={() => moveSlide(index, -1)} type="button" aria-label="Move slot up">↑</button>
+              <button suppressHydrationWarning className="home-button home-button-ghost" disabled={index === slides.length - 1} onClick={() => moveSlide(index, 1)} type="button" aria-label="Move slot down">↓</button>
+              <button suppressHydrationWarning className="home-button home-button-ghost" onClick={() => deleteSlide(slide.id)} type="button">Delete</button>
             </div>
             <div className="home-hero-fields">
-              <label>Banner title (alt text)<input onChange={(event) => updateSlide(slide.id, "title", event.target.value)} placeholder="e.g. Summer in Maldives" type="text" value={slide.title} /></label>
-              <label>Link URL (optional)<input onChange={(event) => updateSlide(slide.id, "link", event.target.value)} placeholder="/holidays/maldives" type="text" value={slide.link} /></label>
+              <label>Banner title (alt text)<input suppressHydrationWarning onChange={(event) => updateSlide(slide.id, "title", event.target.value)} placeholder="e.g. Summer in Maldives" type="text" value={slide.title} /></label>
+              <label>Link URL (optional)<input suppressHydrationWarning onChange={(event) => updateSlide(slide.id, "link", event.target.value)} placeholder="/holidays/maldives" type="text" value={slide.link} /></label>
             </div>
             <div className="home-hero-images">
               {(["desktop", "mobile"] as const).map((kind) => {
@@ -242,9 +242,9 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
                     <div className="home-upload-actions">
                       <label className="home-button home-button-ghost">
                         {slide[kind] ? "Replace image" : "Upload image"}
-                        <input accept="image/webp,.webp" hidden onChange={(event) => void uploadImage(slide.id, kind, event.target.files?.[0])} type="file" />
+                        <input suppressHydrationWarning accept="image/webp,.webp" hidden onChange={(event) => void uploadImage(slide.id, kind, event.target.files?.[0])} type="file" />
                       </label>
-                      {slide[kind] && <button className="home-button home-button-ghost" onClick={() => removeImage(slide.id, kind)} type="button">Remove</button>}
+                      {slide[kind] && <button suppressHydrationWarning className="home-button home-button-ghost" onClick={() => removeImage(slide.id, kind)} type="button">Remove</button>}
                     </div>
                     <span className="home-error" role="alert">{errors[`${slide.id}:${kind}`] ?? ""}</span>
                   </div>
@@ -254,8 +254,8 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
           </article>
         )) : <div className="home-hero-empty">No hero slots yet. Add your first slot to get started.</div>}
         <div className="home-hero-footer">
-          <button className="home-button home-button-ghost" disabled={slides.length >= HERO_MAX} onClick={addSlide} type="button">+ Add slot</button>
-          <button className="home-button home-button-primary" onClick={saveSlides} type="button">Save hero slider</button>
+          <button suppressHydrationWarning className="home-button home-button-ghost" disabled={slides.length >= HERO_MAX} onClick={addSlide} type="button">+ Add slot</button>
+          <button suppressHydrationWarning className="home-button home-button-primary" onClick={saveSlides} type="button">Save hero slider</button>
           <span className="home-hint" aria-live="polite">{notice || (dirty ? "Unsaved changes" : "")}</span>
         </div>
       </section>
@@ -282,7 +282,7 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
       <div className="home-section-heading"><h2>Quick Access</h2><span>Jump straight into a section</span></div>
       <section className="home-quick">
         {quickLinks.map((item) => (
-          <button className="home-quick-card card" key={item.id} onClick={() => onNavigate(item.id)} type="button">
+          <button suppressHydrationWarning className="home-quick-card card" key={item.id} onClick={() => onNavigate(item.id)} type="button">
             <span className="home-quick-icon"><HomeIcon name={item.icon} /></span>
             <b>{item.title}</b>
             <p>{item.description}</p>

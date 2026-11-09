@@ -184,20 +184,31 @@ body:has(.auth-page) > footer{display:none!important}
 
 /* =========================================================
    NEWSLETTER / SUBSCRIPTION ON AUTH PAGES
-   Follows the auth theme (glass card, primary/yellow accents)
-   instead of the site's white/sand footer style. Scoped by
-   :has(.auth-page), so site pages keep their original design.
-   Existing Tailwind breakpoints keep it responsive on every
-   device (avatars >=900px, form stacks below 480px).
+   - Column aligned to the login .stack (640px + 20px gutter),
+     so the card edges line up with the form above on all widths.
+   - Auth theme: glass card (18px radius), Poppins text,
+     primary/yellow accents, 8px input/button radius.
+   - Decorative absolute avatars hidden (they overlap the text
+     at this narrower width); the inline avatar stack stays.
+   Scoped by :has(.auth-page) — site pages keep their design.
    ========================================================= */
 body:has(.auth-page) > section[aria-labelledby="newsletter-title"]{
   background:transparent;
+  padding:36px 20px 48px;
+}
+body:has(.auth-page) > section[aria-labelledby="newsletter-title"] > div{
+  max-width:640px;
+  padding:0;
 }
 body:has(.auth-page) > section[aria-labelledby="newsletter-title"] .bg-sand-100{
   background:rgba(255,255,255,.1);
   border:1px solid rgba(255,255,255,.22);
+  border-radius:18px;
   -webkit-backdrop-filter:blur(12px);
   backdrop-filter:blur(12px);
+}
+body:has(.auth-page) > section[aria-labelledby="newsletter-title"] .rounded-3xl > img{
+  display:none;
 }
 body:has(.auth-page) > section[aria-labelledby="newsletter-title"] #newsletter-title{
   color:#fff;
@@ -217,6 +228,7 @@ body:has(.auth-page) > section[aria-labelledby="newsletter-title"] .text-ocean-6
 body:has(.auth-page) > section[aria-labelledby="newsletter-title"] .bg-navy-900{
   background:var(--primary);
   color:#fff;
+  border-radius:8px;
 }
 body:has(.auth-page) > section[aria-labelledby="newsletter-title"] .bg-navy-900:hover{
   background:var(--primary-hover);
@@ -224,6 +236,7 @@ body:has(.auth-page) > section[aria-labelledby="newsletter-title"] .bg-navy-900:
 body:has(.auth-page) > section[aria-labelledby="newsletter-title"] input{
   color:var(--ink);
   border-color:var(--line);
+  border-radius:8px;
 }
 body:has(.auth-page) > section[aria-labelledby="newsletter-title"] input:focus{
   border-color:var(--primary);

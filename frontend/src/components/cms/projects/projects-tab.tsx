@@ -476,28 +476,28 @@ export default function ProjectsTab({ onDirtyChange }: { onDirtyChange: (dirty: 
         <>
           <section className="project-page-heading">
             <div><h2>Projects</h2><p>Manage meetings, incentives, conventions and exhibitions shown on the website’s Projects page.</p></div>
-            <button className="project-primary" onClick={startNew} type="button">＋ Add Project</button>
+            <button suppressHydrationWarning className="project-primary" onClick={startNew} type="button">＋ Add Project</button>
           </section>
           <nav aria-label="Filter by category" className="project-category-tabs">
             {(["all", "meetings", "incentives", "conventions", "exhibitions"] as const).map((item) => (
-              <button aria-pressed={category === item} className={category === item ? "active" : ""} key={item}
+              <button suppressHydrationWarning aria-pressed={category === item} className={category === item ? "active" : ""} key={item}
                 onClick={() => setCategory(item)} type="button">
                 {item === "all" ? "All" : categories[item]} <span>{counts[item]}</span>
               </button>
             ))}
           </nav>
           <section aria-label="Project filters" className="project-toolbar">
-            <label className="project-search"><span aria-hidden="true">⌕</span><input aria-label="Search projects" onChange={(event) => setQuery(event.target.value)} placeholder="Search by project title or summary…" type="search" value={query} /></label>
-            <select aria-label="Publication status" onChange={(event) => setStatus(event.target.value as "" | ProjectStatus)} value={status}>
+            <label className="project-search"><span aria-hidden="true">⌕</span><input suppressHydrationWarning aria-label="Search projects" onChange={(event) => setQuery(event.target.value)} placeholder="Search by project title or summary…" type="search" value={query} /></label>
+            <select suppressHydrationWarning aria-label="Publication status" onChange={(event) => setStatus(event.target.value as "" | ProjectStatus)} value={status}>
               <option value="">All statuses</option><option value="published">Published</option><option value="draft">Draft</option>
             </select>
-            <select aria-label="Sort projects" onChange={(event) => setSort(event.target.value)} value={sort}>
+            <select suppressHydrationWarning aria-label="Sort projects" onChange={(event) => setSort(event.target.value)} value={sort}>
               <option value="newest">Project date: newest first</option><option value="oldest">Project date: oldest first</option>
               <option value="updated">Recently updated</option><option value="name">Name (A–Z)</option>
             </select>
             <div aria-label="Layout" className="project-view-toggle" role="group">
               {(["grid", "list"] as const).map((item) => (
-                <button aria-pressed={view === item} key={item} onClick={() => {
+                <button suppressHydrationWarning aria-pressed={view === item} key={item} onClick={() => {
                   setView(item);
                   try { localStorage.setItem(VIEW_KEY, item); } catch (caught) {
                     console.error("Could not save project layout preference.", caught);
@@ -509,18 +509,18 @@ export default function ProjectsTab({ onDirtyChange }: { onDirtyChange: (dirty: 
           </section>
           <div className="project-result-bar">
             <span>{query || category !== "all" || status ? <>Showing <b>{filtered.length}</b> of {projects.length} projects</> : <><b>{projects.length} {projects.length === 1 ? "project" : "projects"}</b> · {projects.filter((project) => project.status === "published").length} published · {projects.filter((project) => project.status === "draft").length} draft{projects.filter((project) => project.status === "draft").length === 1 ? "" : "s"}</>}</span>
-            {(query || category !== "all" || status) && <button onClick={clearFilters} type="button">× Clear filters</button>}
+            {(query || category !== "all" || status) && <button suppressHydrationWarning onClick={clearFilters} type="button">× Clear filters</button>}
           </div>
           {projects.length === 0 ? (
-            <div className="project-empty"><h3>No projects yet</h3><p>Add your first project to show it on the website’s Projects page.</p><button className="project-primary" onClick={startNew} type="button">＋ Add Project</button></div>
+            <div className="project-empty"><h3>No projects yet</h3><p>Add your first project to show it on the website’s Projects page.</p><button suppressHydrationWarning className="project-primary" onClick={startNew} type="button">＋ Add Project</button></div>
           ) : filtered.length === 0 ? (
-            <div className="project-empty"><h3>No projects match your filters</h3><p>Try another category or search term.</p><button className="project-secondary" onClick={clearFilters} type="button">Clear filters</button></div>
+            <div className="project-empty"><h3>No projects match your filters</h3><p>Try another category or search term.</p><button suppressHydrationWarning className="project-secondary" onClick={clearFilters} type="button">Clear filters</button></div>
           ) : (
             <div className={`project-cards ${view}`}>
-              <button className="project-add-card" onClick={startNew} type="button"><span>＋</span><b>Add new project</b><small>Create a meeting, incentive, convention or exhibition with its description and photo gallery.</small></button>
+              <button suppressHydrationWarning className="project-add-card" onClick={startNew} type="button"><span>＋</span><b>Add new project</b><small>Create a meeting, incentive, convention or exhibition with its description and photo gallery.</small></button>
               {filtered.map((project) => (
                 <article className="project-card" key={project.id}>
-                  <button className="project-card-cover" onClick={() => startEdit(project)} style={backgroundStyle(project.cover.src)} type="button">
+                  <button suppressHydrationWarning className="project-card-cover" onClick={() => startEdit(project)} style={backgroundStyle(project.cover.src)} type="button">
                     <span className={`project-status ${project.status}`}>{project.status === "published" ? "Published" : "Draft"}</span>
                     {imageCount(project) > 1 && <span className="project-photo-count">{imageCount(project)} photos</span>}
                   </button>
@@ -531,22 +531,22 @@ export default function ProjectsTab({ onDirtyChange }: { onDirtyChange: (dirty: 
                     <small>{dateLabel(project.date)} · Updated {timeAgo(project.updatedAt)}</small>
                   </div>
                   <div className="project-card-actions">
-                    <button onClick={() => startEdit(project)} type="button">Edit</button>
-                    <button onClick={() => setPreview(project)} type="button">Preview</button>
-                    <button aria-label={`Duplicate ${project.title}`} onClick={() => void duplicateProject(project)} type="button">Duplicate</button>
-                    <button aria-label={`Delete ${project.title}`} onClick={() => void deleteProject(project)} type="button">Delete</button>
+                    <button suppressHydrationWarning onClick={() => startEdit(project)} type="button">Edit</button>
+                    <button suppressHydrationWarning onClick={() => setPreview(project)} type="button">Preview</button>
+                    <button suppressHydrationWarning aria-label={`Duplicate ${project.title}`} onClick={() => void duplicateProject(project)} type="button">Duplicate</button>
+                    <button suppressHydrationWarning aria-label={`Delete ${project.title}`} onClick={() => void deleteProject(project)} type="button">Delete</button>
                   </div>
                 </article>
               ))}
             </div>
           )}
           <p className="project-demo-note">Prototype: changes are saved in this browser only, not on a server. Published projects appear on the public Projects page, newest first.
-            <button onClick={resetProjects} type="button">Reset sample projects</button>
+            <button suppressHydrationWarning onClick={resetProjects} type="button">Reset sample projects</button>
           </p>
         </>
       ) : draft && (
         <section className="project-editor">
-          <button className="project-back" onClick={closeEditor} type="button">← Back to Projects</button>
+          <button suppressHydrationWarning className="project-back" onClick={closeEditor} type="button">← Back to Projects</button>
           <header className="project-editor-heading">
             <div className="project-editor-thumb" style={backgroundStyle(draft.cover.src)} />
             <div><span className={`project-category ${draft.category || "none"}`}>{categoryLabel(draft.category) || "No category yet"}</span><h2>{draft.title || (activeId === "new" ? "New project" : "Untitled project")}</h2><p>{dateLabel(draft.date)} · {imageCount(draft)} photos</p></div>
@@ -559,26 +559,26 @@ export default function ProjectsTab({ onDirtyChange }: { onDirtyChange: (dirty: 
                 <div className="project-form-grid">
                   <fieldset className="project-field full"><legend>Category *</legend><div className="project-radio-row">
                     {(Object.entries(categories) as [ProjectCategory, string][]).map(([key, label]) => (
-                      <button aria-pressed={draft.category === key} className={`project-radio ${key}`} key={key} onClick={() => updateDraft({ category: key })} type="button">{label}</button>
+                      <button suppressHydrationWarning aria-pressed={draft.category === key} className={`project-radio ${key}`} key={key} onClick={() => updateDraft({ category: key })} type="button">{label}</button>
                     ))}
                   </div><small>Choose whether this project is a meeting, incentive, convention or exhibition.</small></fieldset>
-                  <label className="project-field full">Project title *<input maxLength={100} onChange={(event) => updateDraft({ title: event.target.value })} placeholder="e.g. Beach Clean-up at Mount Lavinia" value={draft.title} /></label>
-                  <label className="project-field full">Page URL (slug) *<span className="project-slug"><span>letsfly.lk/projects/</span><input maxLength={80} onChange={(event) => { setSlugTouched(true); updateDraft({ slug: event.target.value }); }} value={draft.slug} /></span><small>Created automatically from the title. Use lowercase letters, numbers and hyphens.</small></label>
-                  <label className="project-field">Project date *<input onChange={(event) => updateDraft({ date: event.target.value })} type="date" value={draft.date} /><small>Used to sort projects, newest first.</small></label>
-                  <label className="project-field">Publication status<select onChange={(event) => updateDraft({ status: event.target.value as ProjectStatus })} value={draft.status}><option value="draft">Draft</option><option value="published">Published</option></select><small>Choosing Published checks the project and puts it live.</small></label>
-                  <label className="project-field full">Card summary *<textarea maxLength={200} onChange={(event) => updateDraft({ summary: event.target.value })} placeholder="One or two sentences shown on the Projects page card." rows={3} value={draft.summary} /><small>{draft.summary.length} / 200</small></label>
+                  <label className="project-field full">Project title *<input suppressHydrationWarning maxLength={100} onChange={(event) => updateDraft({ title: event.target.value })} placeholder="e.g. Beach Clean-up at Mount Lavinia" value={draft.title} /></label>
+                  <label className="project-field full">Page URL (slug) *<span className="project-slug"><span>letsfly.lk/projects/</span><input suppressHydrationWarning maxLength={80} onChange={(event) => { setSlugTouched(true); updateDraft({ slug: event.target.value }); }} value={draft.slug} /></span><small>Created automatically from the title. Use lowercase letters, numbers and hyphens.</small></label>
+                  <label className="project-field">Project date *<input suppressHydrationWarning onChange={(event) => updateDraft({ date: event.target.value })} type="date" value={draft.date} /><small>Used to sort projects, newest first.</small></label>
+                  <label className="project-field">Publication status<select suppressHydrationWarning onChange={(event) => updateDraft({ status: event.target.value as ProjectStatus })} value={draft.status}><option value="draft">Draft</option><option value="published">Published</option></select><small>Choosing Published checks the project and puts it live.</small></label>
+                  <label className="project-field full">Card summary *<textarea suppressHydrationWarning maxLength={200} onChange={(event) => updateDraft({ summary: event.target.value })} placeholder="One or two sentences shown on the Projects page card." rows={3} value={draft.summary} /><small>{draft.summary.length} / 200</small></label>
                 </div>
               </section>
               <section className="project-panel">
                 <header><h3>Description Overview *</h3><p>The full story of the project, shown in full on the project page. Use the formatting buttons or write paragraphs.</p></header>
                 <div className="project-editor-tools">
-                  <button onMouseDown={(event) => event.preventDefault()} onClick={() => document.execCommand("bold")} type="button"><b>B</b></button>
-                  <button onMouseDown={(event) => event.preventDefault()} onClick={() => document.execCommand("italic")} type="button"><i>I</i></button>
-                  <button onClick={() => {
+                  <button suppressHydrationWarning onMouseDown={(event) => event.preventDefault()} onClick={() => document.execCommand("bold")} type="button"><b>B</b></button>
+                  <button suppressHydrationWarning onMouseDown={(event) => event.preventDefault()} onClick={() => document.execCommand("italic")} type="button"><i>I</i></button>
+                  <button suppressHydrationWarning onClick={() => {
                     const url = window.prompt("Paste the full web address, starting with https://");
                     if (url && /^(https?:\/\/|mailto:|tel:)\S+$/i.test(url)) document.execCommand("createLink", false, url);
                   }} onMouseDown={(event) => event.preventDefault()} type="button">Link</button>
-                  <button onMouseDown={(event) => event.preventDefault()} onClick={() => { document.execCommand("removeFormat"); document.execCommand("unlink"); }} type="button">Clear formatting</button>
+                  <button suppressHydrationWarning onMouseDown={(event) => event.preventDefault()} onClick={() => { document.execCommand("removeFormat"); document.execCommand("unlink"); }} type="button">Clear formatting</button>
                 </div>
                 <div aria-label="Description overview" className="project-richtext" contentEditable onInput={(event) => updateDraft({ description: event.currentTarget.innerHTML })} onPaste={(event) => {
                   event.preventDefault();
@@ -587,23 +587,23 @@ export default function ProjectsTab({ onDirtyChange }: { onDirtyChange: (dirty: 
               </section>
               <section className="project-panel">
                 <header><div><h3>Project gallery</h3><p>Photos shown on the project page after the cover image. Add a short description (alt text) to each one.</p></div>
-                  <label className="project-secondary project-file-button">＋ Upload images<input accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden multiple onChange={(event) => void chooseGallery(event)} type="file" /></label>
+                  <label className="project-secondary project-file-button">＋ Upload images<input suppressHydrationWarning accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden multiple onChange={(event) => void chooseGallery(event)} type="file" /></label>
                 </header>
                 {imageError && <p className="project-error" role="alert">{imageError}</p>}
                 <div className="project-gallery-edit" onDragOver={(event) => event.preventDefault()} onDrop={(event) => onDrop(event, "gallery")}>
                   {draft.gallery.map((image, index) => (
                     <article key={`${image.src.slice(0, 35)}-${index}`}>
                       <div className="project-gallery-image" style={backgroundStyle(image.src)}><span>{index + 1}</span></div>
-                      <input aria-label={`Alt text for image ${index + 1}`} maxLength={140} onChange={(event) => updateDraft({ gallery: draft.gallery.map((item, itemIndex) => itemIndex === index ? { ...item, alt: event.target.value } : item) })} placeholder="Describe this photo (alt text)" value={image.alt} />
+                      <input suppressHydrationWarning aria-label={`Alt text for image ${index + 1}`} maxLength={140} onChange={(event) => updateDraft({ gallery: draft.gallery.map((item, itemIndex) => itemIndex === index ? { ...item, alt: event.target.value } : item) })} placeholder="Describe this photo (alt text)" value={image.alt} />
                       <div className="project-gallery-actions">
-                        <button aria-label={`Move image ${index + 1} earlier`} disabled={index === 0} onClick={() => moveGallery(index, -1)} type="button">←</button>
-                        <button aria-label={`Move image ${index + 1} later`} disabled={index === draft.gallery.length - 1} onClick={() => moveGallery(index, 1)} type="button">→</button>
-                        <button onClick={() => setCoverFromGallery(index)} type="button">Set as cover</button>
-                        <button onClick={() => updateDraft({ gallery: draft.gallery.filter((_, itemIndex) => itemIndex !== index) })} type="button">Remove</button>
+                        <button suppressHydrationWarning aria-label={`Move image ${index + 1} earlier`} disabled={index === 0} onClick={() => moveGallery(index, -1)} type="button">←</button>
+                        <button suppressHydrationWarning aria-label={`Move image ${index + 1} later`} disabled={index === draft.gallery.length - 1} onClick={() => moveGallery(index, 1)} type="button">→</button>
+                        <button suppressHydrationWarning onClick={() => setCoverFromGallery(index)} type="button">Set as cover</button>
+                        <button suppressHydrationWarning onClick={() => updateDraft({ gallery: draft.gallery.filter((_, itemIndex) => itemIndex !== index) })} type="button">Remove</button>
                       </div>
                     </article>
                   ))}
-                  <label className="project-gallery-add">＋ Add project photos<small>Drag & drop or browse · JPG, PNG, WebP · max 5 MB each<input accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden multiple onChange={(event) => void chooseGallery(event)} type="file" /></small></label>
+                  <label className="project-gallery-add">＋ Add project photos<small>Drag & drop or browse · JPG, PNG, WebP · max 5 MB each<input suppressHydrationWarning accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden multiple onChange={(event) => void chooseGallery(event)} type="file" /></small></label>
                 </div>
               </section>
             </div>
@@ -614,29 +614,29 @@ export default function ProjectsTab({ onDirtyChange }: { onDirtyChange: (dirty: 
                 {imageError && <p className="project-error" role="alert">{imageError}</p>}
                 <label className="project-cover-upload" onDragOver={(event) => event.preventDefault()} onDrop={(event) => onDrop(event, "cover")} style={backgroundStyle(draft.cover.src)}>
                   {!draft.cover.src && <>Upload Cover Image<small>Drag & drop here, or browse files</small></>}
-                  <input accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden onChange={(event) => void chooseCover(event)} type="file" />
+                  <input suppressHydrationWarning accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden onChange={(event) => void chooseCover(event)} type="file" />
                 </label>
-                {draft.cover.src && <button className="project-secondary" onClick={() => updateDraft({ cover: { ...draft.cover, src: "", name: undefined } })} type="button">Remove cover</button>}
-                <label className="project-field">Cover alt text *<input maxLength={140} onChange={(event) => updateDraft({ cover: { ...draft.cover, alt: event.target.value } })} placeholder="Describe the cover photo" value={draft.cover.alt} /></label>
+                {draft.cover.src && <button suppressHydrationWarning className="project-secondary" onClick={() => updateDraft({ cover: { ...draft.cover, src: "", name: undefined } })} type="button">Remove cover</button>}
+                <label className="project-field">Cover alt text *<input suppressHydrationWarning maxLength={140} onChange={(event) => updateDraft({ cover: { ...draft.cover, alt: event.target.value } })} placeholder="Describe the cover photo" value={draft.cover.alt} /></label>
               </section>
               <section className="project-panel project-live-preview"><h3>Card preview · Projects page</h3><div className="project-preview-image" style={backgroundStyle(draft.cover.src)} /><span className={`project-category ${draft.category || "none"}`}>{categoryLabel(draft.category) || "Category"}</span><b>{draft.title || "Project title"}</b><p>{draft.summary || "Your card summary will appear here."}</p></section>
             </aside>
           </div>
           <footer className="project-actionbar"><span>{error && <span role="alert">{error}</span>}</span><div>
-            <button className="project-secondary" onClick={closeEditor} type="button">Cancel</button>
-            <button className="project-secondary" onClick={() => setPreview(draft)} type="button">Preview</button>
-            <button className="project-secondary" onClick={() => saveProject("draft")} type="button">Save Draft</button>
-            <button className="project-primary" onClick={() => saveProject("published")} type="button">Publish</button>
+            <button suppressHydrationWarning className="project-secondary" onClick={closeEditor} type="button">Cancel</button>
+            <button suppressHydrationWarning className="project-secondary" onClick={() => setPreview(draft)} type="button">Preview</button>
+            <button suppressHydrationWarning className="project-secondary" onClick={() => saveProject("draft")} type="button">Save Draft</button>
+            <button suppressHydrationWarning className="project-primary" onClick={() => saveProject("published")} type="button">Publish</button>
           </div></footer>
         </section>
       )}
       {preview && <div className="project-modal-backdrop" onClick={() => setPreview(null)}>
         <section aria-label="Project preview" aria-modal="true" className="project-preview-modal" onClick={(event) => event.stopPropagation()} role="dialog">
-          <header><div><span className={`project-category ${preview.category || "none"}`}>{categoryLabel(preview.category) || "Category"}</span><h2>{preview.title || "Untitled project"}</h2><p>{dateLabel(preview.date)} · {preview.status === "published" ? "Published" : "Draft — not visible on the website"}</p></div><button aria-label="Close preview" onClick={() => setPreview(null)} type="button">×</button></header>
+          <header><div><span className={`project-category ${preview.category || "none"}`}>{categoryLabel(preview.category) || "Category"}</span><h2>{preview.title || "Untitled project"}</h2><p>{dateLabel(preview.date)} · {preview.status === "published" ? "Published" : "Draft — not visible on the website"}</p></div><button suppressHydrationWarning aria-label="Close preview" onClick={() => setPreview(null)} type="button">×</button></header>
           {preview.cover.src && <img alt={preview.cover.alt} className="project-preview-hero" src={preview.cover.src} />}
           <div className="project-preview-copy"><p>{preview.summary}</p><div dangerouslySetInnerHTML={{ __html: safeDescription(preview.description) }} /></div>
           {!!preview.gallery.length && <div className="project-preview-gallery">{preview.gallery.map((image, index) => <img alt={image.alt} key={`${image.src.slice(0, 35)}-${index}`} src={image.src} />)}</div>}
-          <footer><button className="project-secondary" onClick={() => setPreview(null)} type="button">Close preview</button></footer>
+          <footer><button suppressHydrationWarning className="project-secondary" onClick={() => setPreview(null)} type="button">Close preview</button></footer>
         </section>
       </div>}
     </div>

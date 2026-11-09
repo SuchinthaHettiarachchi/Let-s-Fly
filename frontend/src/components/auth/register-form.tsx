@@ -111,7 +111,7 @@ export default function RegisterForm() {
                     <circle cx="12" cy="8" r="4" />
                     <path d="M4 21a8 8 0 0 1 16 0" />
                   </svg>
-                  <input
+                  <input suppressHydrationWarning
                     autoComplete="name"
                     id="name"
                     name="name"
@@ -150,7 +150,7 @@ export default function RegisterForm() {
                     <rect x="3" y="5" width="18" height="14" rx="2" />
                     <path d="m3 7 9 6 9-6" />
                   </svg>
-                  <input
+                  <input suppressHydrationWarning
                     autoComplete="email"
                     id="reg-email"
                     name="email"
@@ -188,7 +188,7 @@ export default function RegisterForm() {
                     <rect x="4" y="11" width="16" height="10" rx="2" />
                     <path d="M8 11V7a4 4 0 0 1 8 0v4" />
                   </svg>
-                  <input
+                  <input suppressHydrationWarning
                     autoComplete="new-password"
                     id="reg-pass"
                     name="password"
@@ -203,7 +203,7 @@ export default function RegisterForm() {
                     aria-invalid={Boolean(errors.password)}
                     aria-describedby="reg-pass-err"
                   />
-                  <button
+                  <button suppressHydrationWarning
                     aria-label={passwordVisible ? "Hide password" : "Show password"}
                     aria-pressed={passwordVisible}
                     className="toggle-pw"
@@ -261,7 +261,7 @@ export default function RegisterForm() {
                     <rect x="4" y="11" width="16" height="10" rx="2" />
                     <path d="M8 11V7a4 4 0 0 1 8 0v4" />
                   </svg>
-                  <input
+                  <input suppressHydrationWarning
                     autoComplete="new-password"
                     id="reg-confirm"
                     name="confirm"
@@ -282,7 +282,7 @@ export default function RegisterForm() {
                 </span>
               </div>
 
-              <button
+              <button suppressHydrationWarning
                 className={`btn-signin${busy ? " loading" : ""}`}
                 disabled={busy}
                 type="submit"
