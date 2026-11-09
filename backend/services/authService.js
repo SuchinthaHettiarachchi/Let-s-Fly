@@ -1,0 +1,21 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const config = require('../config/config');
+
+const DUMMY_HASH = bcrypt.hashSync('dummy-password', 10);
+
+exports.createUser = async ({ name, email, password }) => {
+  const user = await User.create({ name, email, password: await User.hashPassword(password) });
+  return { id: user._id, name: user.name, email: user.email, role: user.role };
+};
+
+exports.verifyCredentials = async (email, password) => {
+  const user = await User.findOne({ email }).select('+password');
+  const valid = await bcrypt.compare(password, user ? user.password : DUMMY_HASH);
+  return user && valid ? user : null;
+};
+
+exports.issueToken = (user) => jwt.sign({ id: user._id, role: user.role }, config.jwtSecret, { expiresIn: config.jwtExpiresIn });
+
+exports.findUserByEmail = (email) => User.findOne({ email });

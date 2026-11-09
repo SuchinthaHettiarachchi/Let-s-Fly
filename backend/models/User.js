@@ -8,10 +8,6 @@ const userSchema = new mongoose.Schema({
   role: { type: String, default: 'user' },
 }, { timestamps: true });
 
-userSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
-
 userSchema.statics.hashPassword = async function (password) {
   return await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT || '10'));
 };

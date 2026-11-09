@@ -1,14 +1,6 @@
 const express = require('express');
-const rateLimit = require('express-rate-limit');
+const { limiter } = require('../middleware/rateLimiter');
 const authCtrl = require('../controllers/authController');
-
-const limiter = (limit) => rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { message: 'Too many requests, try again later' },
-});
 
 const router = express.Router();
 
