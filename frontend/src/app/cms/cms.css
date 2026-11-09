@@ -1,3 +1,12 @@
+/* Site chrome restricted on CMS — same treatment as the auth pages
+   (header root, WhatsApp FAB strip, newsletter card and footer are
+   all body-level children). */
+body:has(.cms-app) > div.sticky,
+body:has(.cms-app) > section[aria-labelledby="newsletter-title"],
+body:has(.cms-app) > footer {
+  display: none !important;
+}
+
 .cms-app {
   --cms-navy: #13087a;
   --cms-ink: #120a5c;
