@@ -1,5 +1,0 @@
-# Each app keeps its own ignore rules (see frontend/.gitignore). These apply everywhere.
-.DS_Store
-node_modules/
-.env*
-!.env.example
