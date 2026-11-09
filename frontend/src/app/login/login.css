@@ -183,6 +183,54 @@ body:has(.auth-page) > div.sticky,
 body:has(.auth-page) > footer{display:none!important}
 
 /* =========================================================
+   NEWSLETTER / SUBSCRIPTION ON AUTH PAGES
+   Follows the auth theme (glass card, primary/yellow accents)
+   instead of the site's white/sand footer style. Scoped by
+   :has(.auth-page), so site pages keep their original design.
+   Existing Tailwind breakpoints keep it responsive on every
+   device (avatars >=900px, form stacks below 480px).
+   ========================================================= */
+body:has(.auth-page) > section[aria-labelledby="newsletter-title"]{
+  background:transparent;
+}
+body:has(.auth-page) > section[aria-labelledby="newsletter-title"] .bg-sand-100{
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(12px);
+}
+body:has(.auth-page) > section[aria-labelledby="newsletter-title"] #newsletter-title{
+  color:#fff;
+  font-family:inherit;
+  letter-spacing:-.4px;
+}
+body:has(.auth-page) > section[aria-labelledby="newsletter-title"] .text-navy-900,
+body:has(.auth-page) > section[aria-labelledby="newsletter-title"] .text-ink-900:not(input){
+  color:#fff;
+}
+body:has(.auth-page) > section[aria-labelledby="newsletter-title"] .text-ink-600{
+  color:rgba(255,255,255,.82);
+}
+body:has(.auth-page) > section[aria-labelledby="newsletter-title"] .text-ocean-600{
+  color:var(--yellow);
+}
+body:has(.auth-page) > section[aria-labelledby="newsletter-title"] .bg-navy-900{
+  background:var(--primary);
+  color:#fff;
+}
+body:has(.auth-page) > section[aria-labelledby="newsletter-title"] .bg-navy-900:hover{
+  background:var(--primary-hover);
+}
+body:has(.auth-page) > section[aria-labelledby="newsletter-title"] input{
+  color:var(--ink);
+  border-color:var(--line);
+}
+body:has(.auth-page) > section[aria-labelledby="newsletter-title"] input:focus{
+  border-color:var(--primary);
+  outline-color:var(--primary);
+}
+
+/* =========================================================
    RESPONSIVE
    ========================================================= */
 @media (min-height:900px) and (min-width:900px){
