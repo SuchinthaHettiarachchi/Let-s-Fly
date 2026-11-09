@@ -82,7 +82,6 @@ svg{display:block;flex-shrink:0}
 .cms-head h2{font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.4px;line-height:1.2}
 .cms-head span{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--primary);background:var(--soft);border-radius:999px;padding:2px 9px;margin-left:8px;vertical-align:3px}
 .cms > p{font-size:13.5px;color:var(--muted);margin-top:10px}
-.cms > .demo-label{font-size:11.5px;color:#5b5420;background:#fffbd6;border-left:3px solid var(--yellow);padding:7px 10px;margin-top:9px;border-radius:0 6px 6px 0}
 
 form{margin-top:22px;display:flex;flex-direction:column;gap:16px}
 .field label{display:block;font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:7px}
@@ -176,6 +175,12 @@ form{margin-top:22px;display:flex;flex-direction:column;gap:16px}
 .foot a{color:rgba(255,255,255,.85);display:inline-flex;align-items:center;gap:6px}
 .foot a:hover{color:var(--yellow)}
 .foot .dot{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.4)}
+
+/* =========================================================
+   AUTH PAGES: site header & footer restricted (never shown)
+   ========================================================= */
+body:has(.auth-page) > div.sticky,
+body:has(.auth-page) > footer{display:none!important}
 
 /* =========================================================
    RESPONSIVE

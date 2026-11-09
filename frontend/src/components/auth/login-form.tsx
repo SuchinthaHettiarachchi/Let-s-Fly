@@ -2,29 +2,18 @@
 
 import { useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { authApi } from "@/lib/auth-api";
 
 interface LoginErrors {
-  username?: string;
+  email?: string;
   password?: string;
-}
-
-function getErrorMessage(value: unknown): string | null {
-  if (
-    typeof value === "object" &&
-    value !== null &&
-    "error" in value &&
-    typeof value.error === "string"
-  ) {
-    return value.error;
-  }
-  return null;
 }
 
 export default function LoginForm() {
   const router = useRouter();
-  const usernameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -37,46 +26,31 @@ export default function LoginForm() {
     if (busy) return;
 
     const nextErrors: LoginErrors = {};
+    if (!email.trim()) nextErrors.email = "Please enter your email.";
+    if (!password) nextErrors.password = "Please enter your password.";
     setErrors(nextErrors);
     setNotice("");
-
     if (Object.keys(nextErrors).length > 0) {
-      if (nextErrors.username) usernameRef.current?.focus();
+      if (nextErrors.email) emailRef.current?.focus();
       else passwordRef.current?.focus();
       return;
     }
 
     setBusy(true);
-    try {
-      const response = await fetch("/api/demo-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password, remember }),
-      });
-      const result: unknown = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          getErrorMessage(result) ?? "Demo sign-in could not be completed.",
-        );
-      }
-
-      setNotice("Demo sign-in successful. Opening the CMS…");
+    const result = await authApi.login(email.trim(), password, remember);
+    if (result.ok) {
+      setNotice("Signed in successfully. Opening the CMS…");
       router.replace("/cms");
-    } catch (error) {
-      setNotice(
-        error instanceof Error
-          ? error.message
-          : "Demo sign-in could not be completed. Please try again.",
-      );
-      setBusy(false);
+      return;
     }
+    setNotice(result.message || "Sign-in failed. Please try again.");
+    setBusy(false);
   }
 
   return (
     <>
       <div className="bg" aria-hidden="true" />
-      <main className="page">
+      <main className="page auth-page">
         <header className="brand">
           <div className="logo" aria-label="Let's Fly.lk">
             Let&apos;sFly
@@ -109,13 +83,10 @@ export default function LoginForm() {
               </h2>
             </div>
             <p>Sign in to manage your website content and travel products.</p>
-            <p className="demo-label">
-              Demo mode: any non-empty username and password will sign you in.
-            </p>
 
             <form id="cmsForm" noValidate onSubmit={handleSubmit}>
-              <div className={`field${errors.username ? " invalid" : ""}`}>
-                <label htmlFor="user">Email / Username</label>
+              <div className={`field${errors.email ? " invalid" : ""}`}>
+                <label htmlFor="user">Email</label>
                 <div className="control">
                   <svg
                     width="18"
@@ -136,23 +107,20 @@ export default function LoginForm() {
                     id="user"
                     name="user"
                     onChange={(event) => {
-                      setUsername(event.target.value);
-                      setErrors((current) => ({
-                        ...current,
-                        username: undefined,
-                      }));
+                      setEmail(event.target.value);
+                      setErrors((current) => ({ ...current, email: undefined }));
                     }}
                     placeholder="you@letsfly.lk"
-                    ref={usernameRef}
+                    ref={emailRef}
                     required
-                    type="text"
-                    value={username}
-                    aria-invalid={Boolean(errors.username)}
+                    type="email"
+                    value={email}
+                    aria-invalid={Boolean(errors.email)}
                     aria-describedby="user-err"
                   />
                 </div>
                 <span className="err-msg" id="user-err">
-                  {errors.username ?? "Please enter your email or username."}
+                  {errors.email ?? "Please enter your email."}
                 </span>
               </div>
 
@@ -179,10 +147,7 @@ export default function LoginForm() {
                     name="pass"
                     onChange={(event) => {
                       setPassword(event.target.value);
-                      setErrors((current) => ({
-                        ...current,
-                        password: undefined,
-                      }));
+                      setErrors((current) => ({ ...current, password: undefined }));
                     }}
                     placeholder="Enter your password"
                     ref={passwordRef}
@@ -193,9 +158,7 @@ export default function LoginForm() {
                     aria-describedby="pass-err"
                   />
                   <button
-                    aria-label={
-                      passwordVisible ? "Hide password" : "Show password"
-                    }
+                    aria-label={passwordVisible ? "Hide password" : "Show password"}
                     aria-pressed={passwordVisible}
                     className="toggle-pw"
                     onClick={() => {
@@ -258,7 +221,7 @@ export default function LoginForm() {
                 {busy ? (
                   <>
                     <span className="spinner" />
-                    <span>Checking…</span>
+                    <span>Signing in…</span>
                   </>
                 ) : (
                   <>
@@ -279,17 +242,11 @@ export default function LoginForm() {
                 )}
               </button>
 
-              <a
-                className="forgot"
-                href="#forgot"
-                onClick={(event) => {
-                  event.preventDefault();
-                  setNotice(
-                    "Password reset is not connected in this demo. Please contact your system administrator.",
-                  );
-                }}
-              >
+              <a className="forgot" href="/forgot-password">
                 Forgot Password?
+              </a>
+              <a className="forgot" href="/register">
+                Don&apos;t have an account? Create one
               </a>
             </form>
 

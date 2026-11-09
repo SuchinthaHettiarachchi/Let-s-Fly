@@ -14,7 +14,7 @@ exports.validateRegister = (body) => {
 exports.validateLogin = (body) => {
   const { email, password } = body;
   if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) throw httpError(400, 'Email and password are required');
-  return { email: email.toLowerCase(), password };
+  return { email: email.toLowerCase(), password, remember: body.remember === true };
 };
 
 exports.validateForgotPassword = (body) => {

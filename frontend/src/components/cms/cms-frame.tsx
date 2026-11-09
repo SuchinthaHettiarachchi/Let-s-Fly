@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { useTheme } from "@/app/theme-provider";
+import { authApi } from "@/lib/auth-api";
 import HomeTab from "@/components/cms/home/home-tab";
 import InquiriesTab from "@/components/cms/inquiries/inquiries-tab";
 import ProjectsTab from "@/components/cms/projects/projects-tab";
@@ -55,14 +56,14 @@ export default function CmsFrame() {
     setLogoutError(null);
 
     try {
-      const response = await fetch("/api/demo-session", { method: "DELETE" });
-      if (!response.ok) {
-        throw new Error(`The session endpoint returned ${response.status}.`);
+      const result = await authApi.logout();
+      if (!result.ok) {
+        throw new Error(`The logout endpoint returned ${result.status}.`);
       }
       window.location.replace("/login");
     } catch (error) {
-      console.error("Could not end the demo session.", error);
-      setLogoutError("The demo session could not be ended. Please try again.");
+      console.error("Could not end the session.", error);
+      setLogoutError("The session could not be ended. Please try again.");
       setLoggingOut(false);
     }
   }, []);

@@ -16,6 +16,9 @@ exports.verifyCredentials = async (email, password) => {
   return user && valid ? user : null;
 };
 
-exports.issueToken = (user) => jwt.sign({ id: user._id, role: user.role }, config.jwtSecret, { expiresIn: config.jwtExpiresIn });
+exports.issueToken = (user, remember = false) =>
+  jwt.sign({ id: user.id, role: user.role }, config.jwtSecret, {
+    expiresIn: remember ? '7d' : config.jwtExpiresIn,
+  });
 
 exports.findUserByEmail = (email) => User.findOne({ email });

@@ -1,6 +1,5 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { DEMO_SESSION_COOKIE, isValidDemoSession } from "@/lib/demo-session";
+import { getSession } from "@/lib/session";
 import CmsFrame from "@/components/cms/cms-frame";
 import "./cms.css";
 
@@ -9,10 +8,8 @@ export const metadata = {
 };
 
 export default async function CmsPage() {
-  const token = (await cookies()).get(DEMO_SESSION_COOKIE)?.value;
-  if (!isValidDemoSession(token)) {
-    redirect("/login");
-  }
+  const session = await getSession();
+  if (!session) redirect("/login");
 
   return <CmsFrame />;
 }

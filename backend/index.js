@@ -11,7 +11,7 @@ const { errorHandler } = require('./middleware/error');
 const app = express();
 
 app.use(helmet());
-app.use(cors({ origin: config.frontendUrl }));
+app.use(cors({ origin: config.frontendUrl, credentials: true }));
 app.use(express.json({ limit: '10kb' }));
 
 const clean = (obj) => {
