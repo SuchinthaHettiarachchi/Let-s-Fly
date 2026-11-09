@@ -48,7 +48,7 @@ export default function CmsFrame() {
   const [activeSection, setActiveSection] = useState("home");
   const [activeRoute, setActiveRoute] = useState("home");
   const [projectDirty, setProjectDirty] = useState(false);
-  const { mode, setThemeMode } = useTheme();
+  const { mode, setMode } = useTheme();
 
   const signOut = useCallback(async () => {
     setLoggingOut(true);
@@ -146,7 +146,7 @@ export default function CmsFrame() {
         </button>
         <button
           className="cms-app-nav-item"
-          onClick={() => setThemeMode(mode === "light" ? "dark" : "light")}
+          onClick={() => setMode(mode === "light" ? "dark" : "light")}
           type="button"
           aria-label={mode === "light" ? "Switch to dark mode" : "Switch to light mode"}
         >
