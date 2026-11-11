@@ -392,7 +392,7 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
 
       <section className="home-welcome">
         <div>
-          <h1>{greeting}, Admin !</h1>
+          <h1>Good morning, Admin ! Welcome to your travel management workspace.</h1>
           <p>Welcome to your travel management workspace.</p>
         </div>
         <span className="home-date"><CalendarIcon />{date}</span>
