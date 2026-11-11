@@ -119,7 +119,7 @@ export default function CmsFrame() {
   return (
     <main className="cms-app flex h-dvh w-full overflow-hidden bg-cms-bg text-cms-text font-[family-name:Poppins,system-ui,-apple-system,Segoe_UI,sans-serif] text-[14px] leading-[1.55] max-[760px]:flex-col">
       <div className="cms-home-shell fixed inset-0 z-60 flex h-dvh w-screen pointer-events-none [hidden]:hidden max-[760px]:flex-col">
-        <aside aria-label="CMS navigation" className="relative z-40 flex h-full w-66 shrink-0 grow-0 basis-66 flex-col bg-cms-navy px-3 pb-3.5 text-white pointer-events-auto max-[760px]:h-auto max-[760px]:w-full max-[760px]:basis-auto max-[760px]:flex-wrap max-[760px]:px-2.5 max-[760px]:pb-2">
+        <aside aria-label="CMS navigation" className="relative z-40 flex h-full w-66 shrink-0 grow-0 basis-66 flex-col bg-[#13087a] px-3 pb-3.5 text-white pointer-events-auto max-[760px]:h-auto max-[760px]:w-full max-[760px]:basis-auto max-[760px]:flex-wrap max-[760px]:px-2.5 max-[760px]:pb-2">
         <a className="flex min-h-18 flex-none items-center gap-2.5 border-b border-[rgba(255,255,255,.08)] px-1.5 text-white no-underline max-[760px]:min-h-[46px] max-[760px]:border-0" href="/cms" onClick={(event) => {
           event.preventDefault();
           navigate("home");
