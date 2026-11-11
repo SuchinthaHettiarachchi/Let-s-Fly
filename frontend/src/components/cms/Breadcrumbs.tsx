@@ -57,7 +57,7 @@ export function Breadcrumbs({
 }): ReactNode {
   if (items.length === 0) return null;
   return (
-    <nav aria-label="Breadcrumb" className={`text-[12px] leading-none ${className}`}>
+    <nav aria-label="Breadcrumb" className={`inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-full border border-cms-line bg-white px-3 py-[7px] text-[12px] leading-none text-cms-muted shadow-[0_1px_2px_rgba(16,10,80,0.04)] dark:bg-[#171a42] dark:shadow-none ${className}`}>
       <ol className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
@@ -74,7 +74,7 @@ export function Breadcrumbs({
                       onNavigate(item.id);
                     }
                   }}
-                  className="inline-flex items-center gap-1.5 text-cms-muted transition-colors duration-150 hover:text-cms-primary"
+                  className="inline-flex items-center gap-1.5 text-cms-muted transition-colors duration-150 hover:text-cms-ink"
                 >
                   {index === 0 && <HomeGlyph />}
                   {item.label}

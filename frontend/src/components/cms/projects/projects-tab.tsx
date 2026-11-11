@@ -40,7 +40,7 @@ const btnTiny =
 const panelShell =
   "min-w-0 rounded-[13px] border border-cms-line bg-cms-card p-[18px] shadow-[0_1px_2px_rgba(19,8,122,.04)] dark:shadow-none";
 const inputShell =
-  "min-h-[38px] w-full rounded-lg border border-[#dcdaf0] bg-white px-[10px] py-2 text-[12px] font-semibold text-cms-ink outline-none transition-colors focus:border-cms-primary focus:shadow-[0_0_0_3px_rgba(27,15,216,.1)] focus-visible:outline-none! dark:border-[#2a2e63] dark:bg-[#101435] dark:focus:border-cms-primary dark:focus:shadow-[0_0_0_3px_rgba(106,96,255,.28)]";
+  "min-h-[38px] w-full rounded-lg border border-[#dcdaf0] bg-white px-[10px] py-2 text-[12px] font-semibold text-cms-ink transition-colors focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
 const chipShell = "inline-flex items-center rounded-full px-2 py-[3px] text-[10px] font-semibold";
 
 const categoryChipStyles: Record<string, string> = {
@@ -537,7 +537,7 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
             ))}
           </nav>
           <section aria-label="Project filters" className="flex flex-wrap items-center gap-[9px] rounded-xl border border-cms-line bg-cms-card p-3">
-            <label className="flex h-[38px] w-full min-w-[180px] items-center gap-2 rounded-lg border border-cms-line px-2.5 text-cms-muted min-[761px]:w-auto min-[761px]:flex-1">
+            <label className="flex h-[38px] w-full min-w-[180px] items-center gap-2 rounded-lg border border-cms-line px-2.5 text-cms-muted focus-within:border-cms-primary min-[761px]:w-auto min-[761px]:flex-1">
               <span aria-hidden="true">⌕</span>
               <input suppressHydrationWarning aria-label="Search projects" className="w-full border-0 bg-transparent text-[12px] text-cms-ink outline-none placeholder:text-cms-muted" onChange={(event) => setQuery(event.target.value)} placeholder="Search by project title or summary…" type="search" value={query} />
             </label>
@@ -611,7 +611,7 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
                   <div className={`flex flex-wrap gap-[5px] px-3 py-2.5 ${
                     view === "list"
                       ? "content-center justify-end border-t-0 border-cms-line max-[760px]:col-span-full max-[760px]:justify-start max-[760px]:border-t"
-                      : "border-t border-cms-line"
+                      : "justify-end border-t border-cms-line"
                   }`}>
                     <button suppressHydrationWarning className={btnTiny} onClick={() => startEdit(project)} type="button">Edit</button>
                     <button suppressHydrationWarning className={btnTiny} onClick={() => setPreview(project)} type="button">Preview</button>
@@ -671,7 +671,7 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
                     <input suppressHydrationWarning className={inputShell} maxLength={100} onChange={(event) => updateDraft({ title: event.target.value })} placeholder="e.g. Beach Clean-up at Mount Lavinia" value={draft.title} />
                   </label>
                   <label className="grid min-w-0 gap-1.5 text-[11px] font-semibold text-cms-ink col-span-full">Page URL (slug) *
-                    <span className="flex items-center overflow-hidden rounded-lg border border-[#dcdaf0] bg-white text-[10px] font-normal text-cms-muted dark:border-[#2a2e63] dark:bg-[#101435]">
+                    <span className="flex items-center overflow-hidden rounded-lg border border-[#dcdaf0] bg-white text-[10px] font-normal text-cms-muted focus-within:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]">
                       <span className="pl-[9px] whitespace-nowrap">letsfly.lk/projects/</span>
                       <input suppressHydrationWarning className="min-h-[38px] w-full border-0 bg-transparent px-2.5 text-[12px] text-cms-ink outline-none focus-visible:outline-none!" maxLength={80} onChange={(event) => { setSlugTouched(true); updateDraft({ slug: event.target.value }); }} value={draft.slug} />
                     </span>
@@ -732,7 +732,7 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
                         <span className="absolute left-1.5 top-1.5 grid size-[22px] place-items-center rounded-full bg-[rgba(18,10,92,.8)] text-[10px] text-white dark:bg-[rgba(0,0,0,.65)]">{index + 1}</span>
                       </div>
                       <input suppressHydrationWarning aria-label={`Alt text for image ${index + 1}`} className="mt-1.5 h-[34px] w-full rounded-[7px] border border-cms-line bg-white px-2 text-[10px] text-cms-ink outline-none transition-colors focus:border-cms-primary focus-visible:outline-none! dark:border-[#2a2e63] dark:bg-[#101435]" maxLength={140} onChange={(event) => updateDraft({ gallery: draft.gallery.map((item, itemIndex) => itemIndex === index ? { ...item, alt: event.target.value } : item) })} placeholder="Describe this photo (alt text)" value={image.alt} />
-                      <div className="mt-[5px] flex flex-wrap gap-1">
+                      <div className="mt-[5px] flex flex-wrap justify-end gap-1">
                         <button suppressHydrationWarning aria-label={`Move image ${index + 1} earlier`} className={`${btnTiny} min-h-[27px] px-1.5 text-[9px]`} disabled={index === 0} onClick={() => moveGallery(index, -1)} type="button">←</button>
                         <button suppressHydrationWarning aria-label={`Move image ${index + 1} later`} className={`${btnTiny} min-h-[27px] px-1.5 text-[9px]`} disabled={index === draft.gallery.length - 1} onClick={() => moveGallery(index, 1)} type="button">→</button>
                         <button suppressHydrationWarning className={`${btnTiny} min-h-[27px] px-1.5 text-[9px]`} onClick={() => setCoverFromGallery(index)} type="button">Set as cover</button>

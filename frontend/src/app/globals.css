@@ -466,12 +466,34 @@ body:has(.cms-app) > footer {
 }
 
 .cms-app button:focus-visible,
-.cms-app a:focus-visible,
+.cms-app a:focus-visible {
+  outline: 2px solid var(--color-cms-primary);
+  outline-offset: 2px;
+}
+
+/* CMS inputs: no default/focus outline and no glow ring — focus shows only
+   a 1px primary border (border-0 inputs get it from their wrapper's
+   focus-within). Important beats the site-wide :focus-visible outline. */
+.cms-app input,
+.cms-app select,
+.cms-app textarea,
+.cms-app [contenteditable="true"],
+.cms-app input:focus,
+.cms-app select:focus,
+.cms-app textarea:focus,
+.cms-app [contenteditable="true"]:focus,
 .cms-app input:focus-visible,
 .cms-app select:focus-visible,
 .cms-app textarea:focus-visible,
 .cms-app [contenteditable="true"]:focus-visible {
-  outline: 2px solid var(--color-cms-primary);
-  outline-offset: 2px;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.cms-app input:focus,
+.cms-app select:focus,
+.cms-app textarea:focus,
+.cms-app [contenteditable="true"]:focus {
+  border-color: var(--color-cms-primary) !important;
 }
 

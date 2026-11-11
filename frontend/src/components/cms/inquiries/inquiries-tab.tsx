@@ -359,7 +359,7 @@ export default function InquiriesTab({ onNavigate }: { onNavigate: (section: str
               <label className="block mb-[6px] text-cms-ink text-[12px] font-semibold" htmlFor="inquiry-comment">Comment</label>
               <textarea suppressHydrationWarning
                 autoFocus
-                className="w-full py-[10px] px-3 resize-y border border-cms-line rounded-[9px] bg-cms-card text-cms-text text-[13px] placeholder:text-cms-muted focus:outline-none focus:border-cms-primary focus:shadow-[0_0_0_3px_rgba(27,15,216,.12)] dark:focus:shadow-[0_0_0_3px_rgba(106,96,255,.3)]"
+                className="w-full py-[10px] px-3 resize-y border border-cms-line rounded-[9px] bg-cms-card text-cms-text text-[13px] placeholder:text-cms-muted focus:border-cms-primary"
                 id="inquiry-comment"
                 onChange={(event) => setCommentText(event.target.value)}
                 placeholder="Add an internal note about this inquiry"
