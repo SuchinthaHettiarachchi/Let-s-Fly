@@ -247,79 +247,79 @@ export default function InquiriesTab() {
     : null;
 
   return (
-    <div className="cms-inquiries">
-      <section aria-label="Inquiry totals" className="inquiry-summary">
-        <article className="inquiry-summary-card inquiry-summary-total">
-          <span>Total inquiries</span>
-          <strong>{filteredInquiries.length}</strong>
+    <div className="animate-[cms-home-fade_0.35s_cubic-bezier(.2,.7,.2,1)]">
+      <section aria-label="Inquiry totals" className="grid grid-cols-3 gap-[14px] max-[480px]:gap-[9px]">
+        <article className="flex min-h-24 flex-col justify-between py-4 px-[18px] border border-cms-line border-t-[3px] border-t-cms-primary rounded-[14px] bg-white shadow-[0_1px_2px_rgba(19,8,122,.05)] max-[480px]:min-h-[82px] max-[480px]:p-3">
+          <span className="text-cms-muted text-[12px] font-medium leading-[1.35]">Total inquiries</span>
+          <strong className="text-cms-ink text-[25px] font-bold leading-none max-[480px]:text-[22px]">{filteredInquiries.length}</strong>
         </article>
-        <article className="inquiry-summary-card inquiry-summary-pending">
-          <span>Pending</span>
-          <strong>{pendingCount}</strong>
+        <article className="flex min-h-24 flex-col justify-between py-4 px-[18px] border border-cms-line border-t-[3px] border-t-[#e3a900] rounded-[14px] bg-white shadow-[0_1px_2px_rgba(19,8,122,.05)] max-[480px]:min-h-[82px] max-[480px]:p-3">
+          <span className="text-cms-muted text-[12px] font-medium leading-[1.35]">Pending</span>
+          <strong className="text-cms-ink text-[25px] font-bold leading-none max-[480px]:text-[22px]">{pendingCount}</strong>
         </article>
-        <article className="inquiry-summary-card inquiry-summary-completed">
-          <span>Completed</span>
-          <strong>{completedCount}</strong>
+        <article className="flex min-h-24 flex-col justify-between py-4 px-[18px] border border-cms-line border-t-[3px] border-t-[#12a36a] rounded-[14px] bg-white shadow-[0_1px_2px_rgba(19,8,122,.05)] max-[480px]:min-h-[82px] max-[480px]:p-3">
+          <span className="text-cms-muted text-[12px] font-medium leading-[1.35]">Completed</span>
+          <strong className="text-cms-ink text-[25px] font-bold leading-none max-[480px]:text-[22px]">{completedCount}</strong>
         </article>
       </section>
 
-      {storageError && <p className="inquiry-alert" role="alert">{storageError}</p>}
+      {storageError && <p className="mt-4 py-3 px-[14px] border-l-[3px] border-l-[#d42a45] rounded-[7px] bg-[#fff1f2] text-[#991b1b] text-[13px]" role="alert">{storageError}</p>}
 
-      <section aria-labelledby="inquiry-list-heading" className="inquiry-list">
-        <header className="inquiry-list-heading">
+      <section aria-labelledby="inquiry-list-heading" className="mt-6 overflow-hidden border border-cms-line rounded-[14px] bg-white shadow-[0_1px_2px_rgba(19,8,122,.05)]">
+        <header className="flex min-h-18 items-center justify-between py-[14px] px-5 border-b border-cms-line">
           <div>
-            <h2 id="inquiry-list-heading">All inquiries</h2>
-            <p>{filteredInquiries.length} {filteredInquiries.length === 1 ? "inquiry" : "inquiries"}</p>
+            <h2 id="inquiry-list-heading" className="text-cms-ink text-[16px] font-semibold">All inquiries</h2>
+            <p className="mt-[2px] text-cms-muted text-[12px]">{filteredInquiries.length} {filteredInquiries.length === 1 ? "inquiry" : "inquiries"}</p>
           </div>
         </header>
-        <nav aria-label="Filter inquiries by category" className="inquiry-category-tabs">
+        <nav aria-label="Filter inquiries by category" className="flex gap-[6px] px-4 py-3 overflow-x-auto border-b border-cms-line [scrollbar-width:thin]">
           <button suppressHydrationWarning
             aria-pressed={activeCategory === "All"}
-            className={activeCategory === "All" ? "active" : ""}
+            className={`inline-flex min-h-9 flex-none items-center gap-[7px] px-[11px] rounded-lg border text-[12px]! whitespace-nowrap focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2 ${activeCategory === "All" ? "border-[#dedcf0] bg-[#f1f0fd] text-cms-primary font-semibold!" : "border-transparent bg-transparent text-cms-muted font-medium! hover:bg-cms-bg hover:text-cms-ink"}`}
             onClick={() => setActiveCategory("All")}
             type="button"
           >
-            All <span>{inquiries.length}</span>
+            All <span className="grid min-w-5 h-5 place-items-center px-[5px] rounded-full bg-[rgba(19,8,122,.07)] text-inherit text-[10px]">{inquiries.length}</span>
           </button>
           {categories.map((category) => (
             <button suppressHydrationWarning
               aria-pressed={activeCategory === category}
-              className={activeCategory === category ? "active" : ""}
+              className={`inline-flex min-h-9 flex-none items-center gap-[7px] px-[11px] rounded-lg border text-[12px]! whitespace-nowrap focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2 ${activeCategory === category ? "border-[#dedcf0] bg-[#f1f0fd] text-cms-primary font-semibold!" : "border-transparent bg-transparent text-cms-muted font-medium! hover:bg-cms-bg hover:text-cms-ink"}`}
               key={category}
               onClick={() => setActiveCategory(category)}
               type="button"
             >
-              {category} <span>{counts.categories[category]}</span>
+              {category} <span className="grid min-w-5 h-5 place-items-center px-[5px] rounded-full bg-[rgba(19,8,122,.07)] text-inherit text-[10px]">{counts.categories[category]}</span>
             </button>
           ))}
         </nav>
         {filteredInquiries.length === 0 ? (
-          <div className="inquiry-empty">
-            <span aria-hidden="true" className="inquiry-empty-icon">✉</span>
-            <h3>{inquiries.length === 0 ? "No inquiries yet" : "No inquiries in this category"}</h3>
-            <p>{inquiries.length === 0 ? "Inquiries submitted through the website contact forms will appear here." : "Choose another category to see its inquiries."}</p>
+          <div className="flex min-h-[230px] flex-col items-center justify-center p-[30px] text-center">
+            <span aria-hidden="true" className="grid size-13 place-items-center rounded-2xl bg-[#f1f0fd] text-cms-primary text-[24px]">✉</span>
+            <h3 className="mt-[14px] text-cms-ink text-[15px] font-semibold">{inquiries.length === 0 ? "No inquiries yet" : "No inquiries in this category"}</h3>
+            <p className="max-w-[390px] mt-[5px] text-cms-muted text-[12.5px]">{inquiries.length === 0 ? "Inquiries submitted through the website contact forms will appear here." : "Choose another category to see its inquiries."}</p>
           </div>
         ) : (
-          <div className="inquiry-rows">
+          <div className="flex flex-col">
             {filteredInquiries.map((inquiry) => (
-              <article className="inquiry-row" key={inquiry.id}>
-                <div className="inquiry-details">
-                  <time className="inquiry-date" dateTime={inquiry.createdAt}>
+              <article className="flex items-center justify-between gap-6 py-[18px] px-5 border-b border-cms-line last:border-b-0 max-[760px]:items-stretch max-[760px]:flex-col max-[760px]:gap-[14px]" key={inquiry.id}>
+                <div className="min-w-0 flex-1">
+                  <time className="text-cms-muted text-[11.5px]" dateTime={inquiry.createdAt}>
                     {formatDate(inquiry.createdAt)}
                   </time>
-                  <h3>{inquiry.customerName}</h3>
-                  <div className="inquiry-contact">
-                    {inquiry.email && <a href={`mailto:${inquiry.email}`}>{inquiry.email}</a>}
-                    {inquiry.phone && <a href={`tel:${inquiry.phone}`}>{inquiry.phone}</a>}
+                  <h3 className="mt-[2px] text-cms-ink text-[14px] font-semibold">{inquiry.customerName}</h3>
+                  <div className="flex flex-wrap gap-y-1 gap-x-[14px] mt-[3px] text-[12px]">
+                    {inquiry.email && <a className="text-cms-primary no-underline hover:underline" href={`mailto:${inquiry.email}`}>{inquiry.email}</a>}
+                    {inquiry.phone && <a className="text-cms-primary no-underline hover:underline" href={`tel:${inquiry.phone}`}>{inquiry.phone}</a>}
                   </div>
-                  <span className="inquiry-category">{inquiry.category}</span>
-                  <p className="inquiry-message">{inquiry.message}</p>
+                  <span className="inline-flex mt-2 py-[3px] px-[9px] rounded-full bg-[#f1f0fd] text-cms-ink text-[11px] font-semibold">{inquiry.category}</span>
+                  <p className="mt-2 text-cms-text text-[13px] leading-[1.5] wrap-anywhere">{inquiry.message}</p>
                 </div>
-                <div aria-label={`Status for ${inquiry.customerName}`} className="inquiry-status-actions">
+                <div aria-label={`Status for ${inquiry.customerName}`} className="flex flex-none flex-wrap justify-end max-w-[330px] gap-[6px] max-[760px]:justify-start max-[760px]:max-w-none">
                   {statuses.map((status) => (
                     <button suppressHydrationWarning
                       aria-pressed={inquiry.status === status}
-                      className={`inquiry-status-button${inquiry.status === status ? " selected" : ""}`}
+                      className={`min-h-[34px] px-[10px] border rounded-lg text-[11px]! font-semibold! transition-colors duration-200 ease-[ease] focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2 ${inquiry.status === status ? "border-cms-primary bg-cms-primary text-white" : "border-cms-line bg-white text-cms-muted hover:border-[#cfcce8] hover:text-cms-ink"}`}
                       key={status}
                       onClick={() => changeStatus(inquiry.id, status)}
                       type="button"
@@ -327,11 +327,11 @@ export default function InquiriesTab() {
                       {status}
                     </button>
                   ))}
-                  <button suppressHydrationWarning className="inquiry-row-action" onClick={() => {
+                  <button suppressHydrationWarning className="min-h-[34px] px-[10px] border border-cms-line rounded-lg bg-white text-cms-ink text-[11px]! font-semibold! whitespace-nowrap hover:border-[#cfcce8] hover:bg-cms-bg focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2" onClick={() => {
                     setCommentInquiryId(inquiry.id);
                     setCommentText("");
                   }} type="button">Add comment</button>
-                  <button suppressHydrationWarning className="inquiry-row-action" onClick={() => setSelectedInquiry(inquiry)} type="button">View details</button>
+                  <button suppressHydrationWarning className="min-h-[34px] px-[10px] border border-cms-line rounded-lg bg-white text-cms-ink text-[11px]! font-semibold! whitespace-nowrap hover:border-[#cfcce8] hover:bg-cms-bg focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2" onClick={() => setSelectedInquiry(inquiry)} type="button">View details</button>
                 </div>
               </article>
             ))}
@@ -339,25 +339,26 @@ export default function InquiriesTab() {
         )}
       </section>
       {commentInquiry && (
-        <div className="inquiry-modal-backdrop" onClick={() => setCommentInquiryId(null)}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-5 bg-[rgba(10,4,70,.48)] backdrop-blur-[3px]" onClick={() => setCommentInquiryId(null)}>
           <section
             aria-labelledby="inquiry-comment-title"
             aria-modal="true"
-            className="inquiry-modal"
+            className="w-[min(100%,560px)] max-h-[min(85dvh,760px)] p-[22px] overflow-y-auto rounded-2xl bg-white shadow-[0_24px_60px_rgba(10,4,70,.22)]"
             onClick={(event) => event.stopPropagation()}
             role="dialog"
           >
-            <header>
+            <header className="flex items-start justify-between gap-4 mb-[18px]">
               <div>
-                <h2 id="inquiry-comment-title">Add a comment</h2>
-                <p>For {commentInquiry.customerName}</p>
+                <h2 id="inquiry-comment-title" className="text-cms-ink text-[18px] font-semibold">Add a comment</h2>
+                <p className="mt-[3px] text-cms-muted text-[12px]">For {commentInquiry.customerName}</p>
               </div>
-              <button suppressHydrationWarning aria-label="Close" onClick={() => setCommentInquiryId(null)} type="button">×</button>
+              <button suppressHydrationWarning aria-label="Close" className="grid size-[34px] flex-none place-items-center border border-cms-line rounded-lg bg-white text-cms-muted text-[22px]! focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2" onClick={() => setCommentInquiryId(null)} type="button">×</button>
             </header>
             <form onSubmit={addComment}>
-              <label htmlFor="inquiry-comment">Comment</label>
+              <label className="block mb-[6px] text-cms-ink text-[12px] font-semibold" htmlFor="inquiry-comment">Comment</label>
               <textarea suppressHydrationWarning
                 autoFocus
+                className="w-full py-[10px] px-3 resize-y border border-cms-line rounded-[9px] text-cms-text text-[13px] focus:outline-none focus:border-cms-primary focus:shadow-[0_0_0_3px_rgba(27,15,216,.12)]"
                 id="inquiry-comment"
                 onChange={(event) => setCommentText(event.target.value)}
                 placeholder="Add an internal note about this inquiry"
@@ -365,46 +366,46 @@ export default function InquiriesTab() {
                 rows={4}
                 value={commentText}
               />
-              <footer>
-                <button suppressHydrationWarning className="inquiry-row-action" onClick={() => setCommentInquiryId(null)} type="button">Cancel</button>
-                <button suppressHydrationWarning className="inquiry-modal-primary" type="submit">Save comment</button>
+              <footer className="flex justify-end gap-2 mt-[18px]">
+                <button suppressHydrationWarning className="min-h-[34px] px-[10px] border border-cms-line rounded-lg bg-white text-cms-ink text-[11px]! font-semibold! whitespace-nowrap hover:border-[#cfcce8] hover:bg-cms-bg focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2" onClick={() => setCommentInquiryId(null)} type="button">Cancel</button>
+                <button suppressHydrationWarning className="min-h-9 px-[13px] border-0 rounded-lg bg-cms-primary text-white text-[12px]! font-semibold! hover:bg-[#1408b0] focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2" type="submit">Save comment</button>
               </footer>
             </form>
           </section>
         </div>
       )}
       {detailInquiry && (
-        <div className="inquiry-modal-backdrop" onClick={() => setSelectedInquiry(null)}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-5 bg-[rgba(10,4,70,.48)] backdrop-blur-[3px]" onClick={() => setSelectedInquiry(null)}>
           <section
             aria-labelledby="inquiry-detail-title"
             aria-modal="true"
-            className="inquiry-modal"
+            className="w-[min(100%,560px)] max-h-[min(85dvh,760px)] p-[22px] overflow-y-auto rounded-2xl bg-white shadow-[0_24px_60px_rgba(10,4,70,.22)]"
             onClick={(event) => event.stopPropagation()}
             role="dialog"
           >
-            <header>
+            <header className="flex items-start justify-between gap-4 mb-[18px]">
               <div>
-                <h2 id="inquiry-detail-title">Inquiry details</h2>
-                <p>{detailInquiry.category} · {formatDate(detailInquiry.createdAt)}</p>
+                <h2 id="inquiry-detail-title" className="text-cms-ink text-[18px] font-semibold">Inquiry details</h2>
+                <p className="mt-[3px] text-cms-muted text-[12px]">{detailInquiry.category} · {formatDate(detailInquiry.createdAt)}</p>
               </div>
-              <button suppressHydrationWarning aria-label="Close" onClick={() => setSelectedInquiry(null)} type="button">×</button>
+              <button suppressHydrationWarning aria-label="Close" className="grid size-[34px] flex-none place-items-center border border-cms-line rounded-lg bg-white text-cms-muted text-[22px]! focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2" onClick={() => setSelectedInquiry(null)} type="button">×</button>
             </header>
-            <dl className="inquiry-detail-fields">
-              <div><dt>Customer</dt><dd>{detailInquiry.customerName}</dd></div>
-              <div><dt>Email</dt><dd>{detailInquiry.email || "Not provided"}</dd></div>
-              <div><dt>Phone</dt><dd>{detailInquiry.phone || "Not provided"}</dd></div>
-              <div><dt>Status</dt><dd>{detailInquiry.status}</dd></div>
-              <div className="inquiry-detail-message"><dt>Message</dt><dd>{detailInquiry.message}</dd></div>
+            <dl className="grid grid-cols-2 gap-3 max-[480px]:grid-cols-1">
+              <div className="py-[10px] px-3 rounded-[9px] bg-cms-bg wrap-anywhere"><dt className="text-cms-muted text-[11px]">Customer</dt><dd className="mt-[3px] text-cms-ink text-[13px] font-medium">{detailInquiry.customerName}</dd></div>
+              <div className="py-[10px] px-3 rounded-[9px] bg-cms-bg wrap-anywhere"><dt className="text-cms-muted text-[11px]">Email</dt><dd className="mt-[3px] text-cms-ink text-[13px] font-medium">{detailInquiry.email || "Not provided"}</dd></div>
+              <div className="py-[10px] px-3 rounded-[9px] bg-cms-bg wrap-anywhere"><dt className="text-cms-muted text-[11px]">Phone</dt><dd className="mt-[3px] text-cms-ink text-[13px] font-medium">{detailInquiry.phone || "Not provided"}</dd></div>
+              <div className="py-[10px] px-3 rounded-[9px] bg-cms-bg wrap-anywhere"><dt className="text-cms-muted text-[11px]">Status</dt><dd className="mt-[3px] text-cms-ink text-[13px] font-medium">{detailInquiry.status}</dd></div>
+              <div className="py-[10px] px-3 rounded-[9px] bg-cms-bg wrap-anywhere col-span-full max-[480px]:col-auto"><dt className="text-cms-muted text-[11px]">Message</dt><dd className="mt-[3px] text-cms-ink text-[13px] font-medium">{detailInquiry.message}</dd></div>
             </dl>
-            <div className="inquiry-comments">
-              <h3>Comments ({detailInquiry.comments.length})</h3>
+            <div className="mt-[18px]">
+              <h3 className="text-cms-ink text-[13px] font-semibold">Comments ({detailInquiry.comments.length})</h3>
               {detailInquiry.comments.length > 0 ? (
-                <ul>{detailInquiry.comments.map((comment, index) => <li key={`${detailInquiry.id}-${index}`}>{comment}</li>)}</ul>
-              ) : <p>No comments yet.</p>}
+                <ul className="grid gap-[7px] mt-2 p-0 list-none">{detailInquiry.comments.map((comment, index) => <li className="py-[9px] px-[11px] border-l-[3px] border-l-cms-primary rounded-[5px] bg-cms-bg text-cms-text text-[12px] whitespace-pre-wrap" key={`${detailInquiry.id}-${index}`}>{comment}</li>)}</ul>
+              ) : <p className="mt-[7px] text-cms-muted text-[12px]">No comments yet.</p>}
             </div>
-            <footer>
-              <button suppressHydrationWarning className="inquiry-row-action" onClick={() => setSelectedInquiry(null)} type="button">Close</button>
-              <button suppressHydrationWarning className="inquiry-modal-primary" onClick={() => {
+            <footer className="flex justify-end gap-2 mt-[18px]">
+              <button suppressHydrationWarning className="min-h-[34px] px-[10px] border border-cms-line rounded-lg bg-white text-cms-ink text-[11px]! font-semibold! whitespace-nowrap hover:border-[#cfcce8] hover:bg-cms-bg focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2" onClick={() => setSelectedInquiry(null)} type="button">Close</button>
+              <button suppressHydrationWarning className="min-h-9 px-[13px] border-0 rounded-lg bg-cms-primary text-white text-[12px]! font-semibold! hover:bg-[#1408b0] focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2" onClick={() => {
                 setSelectedInquiry(null);
                 setCommentInquiryId(detailInquiry.id);
                 setCommentText("");
