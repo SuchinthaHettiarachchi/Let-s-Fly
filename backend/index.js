@@ -6,13 +6,18 @@ const cors = require('cors');
 
 const config = require('./config/config');
 const authRouter = require('./routers/authRouter');
+const heroRouter = require('./routers/heroRouter');
 const { errorHandler } = require('./middleware/error');
 
 const app = express();
 
 app.use(helmet());
 app.use(cors({ origin: config.frontendUrl, credentials: true }));
-app.use(express.json({ limit: '10kb' }));
+// /api/hero carries base64 WebP images and parses its own 10mb JSON body in the router.
+app.use((req, res, next) => {
+  if (req.originalUrl.startsWith('/api/hero')) return next();
+  express.json({ limit: '10kb' })(req, res, next);
+});
 
 const clean = (obj) => {
   if (!obj || typeof obj !== 'object') return;
@@ -24,6 +29,7 @@ const clean = (obj) => {
 app.use((req, res, next) => { clean(req.body); next(); });
 
 app.use('/api/auth', authRouter);
+app.use('/api/hero', heroRouter);
 app.use(errorHandler);
 
 mongoose.connect(config.mongoUri)

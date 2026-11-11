@@ -18,11 +18,17 @@ interface HeroError {
   [key: string]: string;
 }
 
-const HERO_KEY = "lf_hero_slides";
+const HERO_URL = `${process.env.NEXT_PUBLIC_API_URL}/hero`;
 const HERO_MAX = 10;
-const HERO_SPECS: Record<HeroKind, { width: number; height: number; label: string }> = {
-  desktop: { width: 1920, height: 800, label: "Desktop" },
-  mobile: { width: 750, height: 1000, label: "Mobile" },
+// Sizes taken from the live website's hero assets (public/images/hero).
+// Uploads are accepted when the aspect ratio is within RATIO_TOLERANCE of the
+// spec and the image is at least 60% of the recommended size (object-cover
+// handles the rest), so admins are not forced to crop to exact pixels.
+const RATIO_TOLERANCE = 0.05;
+const MIN_SIZE = 0.6;
+const HERO_SPECS: Record<HeroKind, { width: number; height: number; label: string; ratio: string }> = {
+  desktop: { width: 1800, height: 1061, label: "Desktop", ratio: "≈1.7:1" },
+  mobile: { width: 1080, height: 1920, label: "Mobile", ratio: "9:16" },
 };
 
 const stats = [
@@ -61,15 +67,6 @@ function makeSlideId() {
   return `hs${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 }
 
-function loadSlides(): HeroSlide[] {
-  try {
-    const saved: unknown = JSON.parse(localStorage.getItem(HERO_KEY) ?? "[]");
-    return Array.isArray(saved) ? (saved as HeroSlide[]) : [];
-  } catch {
-    return [];
-  }
-}
-
 function readHeroFile(file: File, kind: HeroKind): Promise<{ src?: string; error?: string }> {
   const spec = HERO_SPECS[kind];
   if (!/\.webp$/i.test(file.name) || file.type !== "image/webp") {
@@ -87,12 +84,18 @@ function readHeroFile(file: File, kind: HeroKind): Promise<{ src?: string; error
       const image = new Image();
       image.onerror = () => resolve({ error: "This file is not a valid WebP image." });
       image.onload = () => {
-        if (image.naturalWidth === spec.width && image.naturalHeight === spec.height) {
+        const actualRatio = image.naturalWidth / image.naturalHeight;
+        const specRatio = spec.width / spec.height;
+        const ratioOk = Math.abs(actualRatio - specRatio) / specRatio <= RATIO_TOLERANCE;
+        const sizeOk = image.naturalWidth >= spec.width * MIN_SIZE && image.naturalHeight >= spec.height * MIN_SIZE;
+        if (ratioOk && sizeOk) {
           resolve({ src: reader.result as string });
           return;
         }
         resolve({
-          error: `Image is ${image.naturalWidth} × ${image.naturalHeight} px. ${spec.label} banners must be exactly ${spec.width} × ${spec.height} px.`,
+          error: `Image is ${image.naturalWidth} × ${image.naturalHeight} px (ratio ${actualRatio.toFixed(2)}:1). ` +
+            `${spec.label} banners need ratio ${spec.ratio} (±5%) and at least ${Math.round(spec.width * MIN_SIZE)} × ${Math.round(spec.height * MIN_SIZE)} px — ` +
+            `recommended ${spec.width} × ${spec.height} px.`,
         });
       };
       image.src = reader.result;
@@ -106,11 +109,26 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
   const [errors, setErrors] = useState<HeroError>({});
   const [dirty, setDirty] = useState(false);
   const [notice, setNotice] = useState("");
+  const [loaded, setLoaded] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
-    setSlides(loadSlides());
     setNow(new Date());
+    let cancelled = false;
+    fetch(HERO_URL)
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`))))
+      .then((data: { slides?: HeroSlide[] }) => {
+        if (cancelled || !Array.isArray(data.slides)) return;
+        setSlides(data.slides);
+        setLoaded(true);
+      })
+      .catch(() => {
+        if (!cancelled) setNotice("Could not load slides from the server — start the backend and reload.");
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   function updateSlide(id: string, field: keyof HeroSlide, value: string | boolean) {
@@ -179,20 +197,42 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
     updateSlide(id, kind, "");
   }
 
-  function saveSlides() {
+  async function saveSlides() {
     const incomplete = slides.findIndex((slide) => slide.active && (!slide.desktop || !slide.mobile));
     if (incomplete >= 0) {
       setNotice(`Slot ${incomplete + 1} needs both desktop and mobile images (or hide it).`);
       return;
     }
-    try {
-      localStorage.setItem(HERO_KEY, JSON.stringify(slides));
-    } catch {
-      setNotice("Could not save: browser storage is full. Remove some images.");
+    if (!loaded) {
+      setNotice("Slides were not loaded from the server — nothing was saved.");
       return;
     }
-    setDirty(false);
-    setNotice("Hero slider saved");
+    setSaving(true);
+    try {
+      const res = await fetch(HERO_URL, {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slides }),
+      });
+      if (!res.ok) {
+        const body: { message?: string } | null = await res.json().catch(() => null);
+        setNotice(
+          res.status === 401
+            ? "Your session expired — sign in again."
+            : body?.message ?? "Could not save the hero slider.",
+        );
+        return;
+      }
+      const body: { slides?: HeroSlide[] } = await res.json();
+      if (Array.isArray(body.slides)) setSlides(body.slides);
+      setDirty(false);
+      setNotice("Hero slider saved");
+    } catch {
+      setNotice("Could not reach the server — nothing was saved.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   const date = now?.toLocaleDateString("en-GB", {
@@ -214,9 +254,9 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
           </div>
         </div>
         <div className="home-hero-spec">
-          <span>Desktop: <b>1920 × 800 px</b></span>
-          <span>Mobile: <b>750 × 1000 px</b></span>
-          <span>Format: <b>WebP</b></span>
+          <span>Desktop: <b>1800 × 1061 px</b> (≈1.7:1)</span>
+          <span>Mobile: <b>1080 × 1920 px</b> (9:16)</span>
+          <span>Format: <b>WebP</b> · ratio ±5%</span>
         </div>
         {slides.length ? slides.map((slide, index) => (
           <article className="home-hero-slot" key={slide.id}>
@@ -228,8 +268,8 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
               <button suppressHydrationWarning className="home-button home-button-ghost" onClick={() => deleteSlide(slide.id)} type="button">Delete</button>
             </div>
             <div className="home-hero-fields">
-              <label>Banner title (alt text)<input suppressHydrationWarning onChange={(event) => updateSlide(slide.id, "title", event.target.value)} placeholder="e.g. Summer in Maldives" type="text" value={slide.title} /></label>
-              <label>Link URL (optional)<input suppressHydrationWarning onChange={(event) => updateSlide(slide.id, "link", event.target.value)} placeholder="/holidays/maldives" type="text" value={slide.link} /></label>
+              <label>Banner title (alt text)<input suppressHydrationWarning maxLength={120} placeholder="e.g. Summer in Maldives" type="text" value={slide.title} onChange={(event) => updateSlide(slide.id, "title", event.target.value)} /></label>
+              <label>Link URL (optional)<input suppressHydrationWarning maxLength={500} placeholder="/holidays/maldives" type="text" value={slide.link} onChange={(event) => updateSlide(slide.id, "link", event.target.value)} /></label>
             </div>
             <div className="home-hero-images">
               {(["desktop", "mobile"] as const).map((kind) => {
@@ -237,7 +277,7 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
                 return (
                   <div className="home-upload" key={kind}>
                     <b>{spec.label} version</b>
-                    <p>Exactly <strong>{spec.width} × {spec.height} px</strong> · <strong>WebP</strong> (.webp) only</p>
+                    <p>Aspect ratio <strong>{spec.ratio}</strong> (±5%) · Recommended <strong>{spec.width} × {spec.height} px</strong> · <strong>WebP</strong> (.webp) only</p>
                     <div className={`home-image-preview home-image-${kind}`} style={slide[kind] ? { backgroundImage: `url("${slide[kind]}")` } : undefined}>{slide[kind] ? "" : "No image"}</div>
                     <div className="home-upload-actions">
                       <label className="home-button home-button-ghost">
@@ -255,7 +295,7 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
         )) : <div className="home-hero-empty">No hero slots yet. Add your first slot to get started.</div>}
         <div className="home-hero-footer">
           <button suppressHydrationWarning className="home-button home-button-ghost" disabled={slides.length >= HERO_MAX} onClick={addSlide} type="button">+ Add slot</button>
-          <button suppressHydrationWarning className="home-button home-button-primary" onClick={saveSlides} type="button">Save hero slider</button>
+          <button suppressHydrationWarning className="home-button home-button-primary" disabled={!loaded || saving} onClick={() => void saveSlides()} type="button">{saving ? "Saving…" : "Save hero slider"}</button>
           <span className="home-hint" aria-live="polite">{notice || (dirty ? "Unsaved changes" : "")}</span>
         </div>
       </section>
