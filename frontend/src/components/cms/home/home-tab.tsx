@@ -53,6 +53,7 @@ const icons: Record<string, ReactNode> = {
   srilanka: <><path d="M12 3c2.5 0 5 2.6 5 7 0 5-2.7 11-5 11s-5-6-5-11c0-4.4 2.5-7 5-7z" /><circle cx="12" cy="10" r="2" /></>,
   arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
   up: <path d="m7 17 10-10M8 7h9v9" />,
+  upload: <><path d="M12 15V3m0 0L8 7m4-4 4 4" /><path d="M3 15v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4" /></>,
 };
 
 function HomeIcon({ name, size = 20 }: { name: string; size?: number }) {
@@ -67,11 +68,47 @@ function makeSlideId() {
   return `hs${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 }
 
+function blobToDataUrl(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("Could not read converted image."));
+    reader.onload = () => resolve(reader.result as string);
+    reader.readAsDataURL(blob);
+  });
+}
+
+// Real client-side WebP conversion: draw the image onto a canvas (downscaled
+// to the recommended width when oversized) and let the browser encode WebP.
+function encodeWebp(image: HTMLImageElement, targetWidth: number): Promise<Blob | null> {
+  const scale = image.naturalWidth > targetWidth ? targetWidth / image.naturalWidth : 1;
+  const width = Math.max(1, Math.round(image.naturalWidth * scale));
+  const height = Math.max(1, Math.round(image.naturalHeight * scale));
+  try {
+    if (typeof OffscreenCanvas !== "undefined") {
+      const canvas = new OffscreenCanvas(width, height);
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return Promise.resolve(null);
+      ctx.drawImage(image, 0, 0, width, height);
+      return canvas.convertToBlob({ type: "image/webp", quality: 0.85 });
+    }
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return Promise.resolve(null);
+    ctx.drawImage(image, 0, 0, width, height);
+    return new Promise((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
+  } catch {
+    return Promise.resolve(null);
+  }
+}
+
+// Any decodable image (JPG/PNG/WebP/…) is accepted: ratio + size are checked
+// on the original, then the browser re-encodes it as real WebP (downscaling
+// oversized files to the recommended width) before it is stored.
 function readHeroFile(file: File, kind: HeroKind): Promise<{ src?: string; error?: string }> {
   const spec = HERO_SPECS[kind];
-  if (!/\.webp$/i.test(file.name) || file.type !== "image/webp") {
-    return Promise.resolve({ error: "Only WebP (.webp) files are accepted." });
-  }
+  const sourceIsWebp = file.type === "image/webp" || /\.webp$/i.test(file.name);
 
   return new Promise((resolve) => {
     const reader = new FileReader();
@@ -81,24 +118,53 @@ function readHeroFile(file: File, kind: HeroKind): Promise<{ src?: string; error
         resolve({ error: "Could not read the file." });
         return;
       }
+      const original = reader.result;
       const image = new Image();
-      image.onerror = () => resolve({ error: "This file is not a valid WebP image." });
+      image.onerror = () => resolve({ error: "This file is not a valid image." });
       image.onload = () => {
         const actualRatio = image.naturalWidth / image.naturalHeight;
         const specRatio = spec.width / spec.height;
         const ratioOk = Math.abs(actualRatio - specRatio) / specRatio <= RATIO_TOLERANCE;
         const sizeOk = image.naturalWidth >= spec.width * MIN_SIZE && image.naturalHeight >= spec.height * MIN_SIZE;
-        if (ratioOk && sizeOk) {
-          resolve({ src: reader.result as string });
+        if (!ratioOk || !sizeOk) {
+          resolve({
+            error: `Image is ${image.naturalWidth} × ${image.naturalHeight} px (ratio ${actualRatio.toFixed(2)}:1). ` +
+              `${spec.label} banners need ratio ${spec.ratio} (±5%) and at least ${Math.round(spec.width * MIN_SIZE)} × ${Math.round(spec.height * MIN_SIZE)} px — ` +
+              `recommended ${spec.width} × ${spec.height} px.`,
+          });
           return;
         }
-        resolve({
-          error: `Image is ${image.naturalWidth} × ${image.naturalHeight} px (ratio ${actualRatio.toFixed(2)}:1). ` +
-            `${spec.label} banners need ratio ${spec.ratio} (±5%) and at least ${Math.round(spec.width * MIN_SIZE)} × ${Math.round(spec.height * MIN_SIZE)} px — ` +
-            `recommended ${spec.width} × ${spec.height} px.`,
-        });
+        const oversized = image.naturalWidth > spec.width;
+        if (sourceIsWebp && !oversized) {
+          resolve({ src: original });
+          return;
+        }
+        encodeWebp(image, spec.width)
+          .then(async (blob) => {
+            if (blob && blob.type === "image/webp") {
+              resolve({ src: await blobToDataUrl(blob) });
+              return;
+            }
+            // Encoder unavailable (e.g. Safari): an already-WebP file can pass through as-is.
+            if (sourceIsWebp) {
+              resolve({ src: original });
+              return;
+            }
+            resolve({
+              error: "This browser cannot convert images to WebP — upload an already-WebP file, or open the CMS in Chrome, Edge or Firefox.",
+            });
+          })
+          .catch(() => {
+            if (sourceIsWebp) {
+              resolve({ src: original });
+              return;
+            }
+            resolve({
+              error: "This browser cannot convert images to WebP — upload an already-WebP file, or open the CMS in Chrome, Edge or Firefox.",
+            });
+          });
       };
-      image.src = reader.result;
+      image.src = original;
     };
     reader.readAsDataURL(file);
   });
@@ -107,6 +173,7 @@ function readHeroFile(file: File, kind: HeroKind): Promise<{ src?: string; error
 export default function HomeTab({ onNavigate }: { onNavigate: (section: string) => void }) {
   const [slides, setSlides] = useState<HeroSlide[]>([]);
   const [errors, setErrors] = useState<HeroError>({});
+  const [dropping, setDropping] = useState<Record<string, boolean>>({});
   const [dirty, setDirty] = useState(false);
   const [notice, setNotice] = useState("");
   const [loaded, setLoaded] = useState(false);
@@ -256,7 +323,7 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
         <div className="home-hero-spec">
           <span>Desktop: <b>1800 × 1061 px</b> (≈1.7:1)</span>
           <span>Mobile: <b>1080 × 1920 px</b> (9:16)</span>
-          <span>Format: <b>WebP</b> · ratio ±5%</span>
+          <span>Format: <b>WebP</b> (auto-converted) · ratio ±5%</span>
         </div>
         {slides.length ? slides.map((slide, index) => (
           <article className="home-hero-slot" key={slide.id}>
@@ -274,15 +341,38 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
             <div className="home-hero-images">
               {(["desktop", "mobile"] as const).map((kind) => {
                 const spec = HERO_SPECS[kind];
+                const dropKey = `${slide.id}:${kind}`;
                 return (
                   <div className="home-upload" key={kind}>
                     <b>{spec.label} version</b>
-                    <p>Aspect ratio <strong>{spec.ratio}</strong> (±5%) · Recommended <strong>{spec.width} × {spec.height} px</strong> · <strong>WebP</strong> (.webp) only</p>
-                    <div className={`home-image-preview home-image-${kind}`} style={slide[kind] ? { backgroundImage: `url("${slide[kind]}")` } : undefined}>{slide[kind] ? "" : "No image"}</div>
+                    <p>Aspect ratio <strong>{spec.ratio}</strong> (±5%) · Recommended <strong>{spec.width} × {spec.height} px</strong> · Output <strong>WebP</strong> (auto-converted)</p>
+                    <div
+                      className={`home-image-preview home-image-${kind}${dropping[dropKey] ? " is-dragging" : ""}`}
+                      style={slide[kind] ? { backgroundImage: `url("${slide[kind]}")` } : undefined}
+                      onDragOver={(event) => {
+                        event.preventDefault();
+                        event.dataTransfer.dropEffect = "copy";
+                        setDropping((current) => ({ ...current, [dropKey]: true }));
+                      }}
+                      onDragLeave={(event) => {
+                        if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
+                        setDropping((current) => ({ ...current, [dropKey]: false }));
+                      }}
+                      onDrop={(event) => {
+                        event.preventDefault();
+                        setDropping((current) => ({ ...current, [dropKey]: false }));
+                        void uploadImage(slide.id, kind, event.dataTransfer.files?.[0]);
+                      }}
+                      >{slide[kind] ? "" : (
+                        <>
+                          <HomeIcon name="upload" size={26} />
+                          <span>Drop image here</span>
+                        </>
+                      )}</div>
                     <div className="home-upload-actions">
                       <label className="home-button home-button-ghost">
                         {slide[kind] ? "Replace image" : "Upload image"}
-                        <input suppressHydrationWarning accept="image/webp,.webp" hidden onChange={(event) => void uploadImage(slide.id, kind, event.target.files?.[0])} type="file" />
+                        <input suppressHydrationWarning accept="image/*" hidden onChange={(event) => void uploadImage(slide.id, kind, event.target.files?.[0])} type="file" />
                       </label>
                       {slide[kind] && <button suppressHydrationWarning className="home-button home-button-ghost" onClick={() => removeImage(slide.id, kind)} type="button">Remove</button>}
                     </div>
