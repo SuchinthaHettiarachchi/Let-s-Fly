@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import CmsFrame from "@/components/cms/cms-frame";
-import "./cms.css";
 
 export const metadata = {
   title: "CMS | Let's Fly.lk",

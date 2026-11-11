@@ -411,3 +411,67 @@ html[data-loading] main {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ================= CMS ================= */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-cms-navy: #13087a;
+  --color-cms-ink: #120a5c;
+  --color-cms-primary: #1b0fd8;
+  --color-cms-yellow: #ffe600;
+  --color-cms-text: #3a3950;
+  --color-cms-muted: #7b7a93;
+  --color-cms-line: #e9e8f2;
+  --color-cms-bg: #ffffff;
+  --color-cms-card: #ffffff;
+  --color-cms-card2: #f1f0fa;
+}
+
+.dark {
+  --color-cms-navy: #0d0560;
+  --color-cms-ink: #ececff;
+  --color-cms-primary: #6a60ff;
+  --color-cms-yellow: #ffe600;
+  --color-cms-text: #c3c6ea;
+  --color-cms-muted: #9aa0d0;
+  --color-cms-line: #2a2e63;
+  --color-cms-bg: #0b0e28;
+  --color-cms-card: #171a42;
+  --color-cms-card2: #1f2353;
+}
+
+@keyframes cms-home-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* CMS page chrome: hide site header/newsletter/footer on /cms (same as auth pages). */
+body:has(.cms-app) > div.sticky,
+body:has(.cms-app) > section[aria-labelledby="newsletter-title"],
+body:has(.cms-app) > footer {
+  display: none !important;
+}
+
+.cms-app button,
+.cms-app input,
+.cms-app select,
+.cms-app textarea,
+.cms-app [contenteditable="true"] {
+  font: inherit;
+}
+
+.cms-app button {
+  cursor: pointer;
+}
+
+.cms-app button:focus-visible,
+.cms-app a:focus-visible,
+.cms-app input:focus-visible,
+.cms-app select:focus-visible,
+.cms-app textarea:focus-visible,
+.cms-app [contenteditable="true"]:focus-visible {
+  outline: 2px solid var(--color-cms-primary);
+  outline-offset: 2px;
+}
+

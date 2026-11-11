@@ -6,19 +6,22 @@ import { authApi } from "@/lib/auth-api";
 import HomeTab from "@/components/cms/home/home-tab";
 import InquiriesTab from "@/components/cms/inquiries/inquiries-tab";
 import ProjectsTab from "@/components/cms/projects/projects-tab";
+import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 
 const sections = [
-  { id: "home", title: "Home" },
-  { id: "projects", title: "Projects" },
-  { id: "outbound", title: "Outbound Travels" },
-  { id: "srilanka", title: "Travel Sri Lanka" },
-  { id: "hotels", title: "Hotel Bookings" },
-  { id: "trains", title: "Trains" },
-  { id: "cruises", title: "Cruises" },
-  { id: "gallery", title: "Gallery" },
-  { id: "rental", title: "Rental" },
-  { id: "inquiries", title: "Inquiries" },
+  { id: "home", title: "Home", description: "Dashboard and homepage — hero banners, quick links and site activity." },
+  { id: "projects", title: "Projects", description: "Create, edit and manage the MICE travel projects shown on the website." },
+  { id: "outbound", title: "Outbound Travels", description: "Manage outbound packages, destinations and departures." },
+  { id: "srilanka", title: "Travel Sri Lanka", description: "Manage Sri Lanka tour packages, routes and itineraries." },
+  { id: "hotels", title: "Hotel Bookings", description: "Manage hotel partners, room types and booking rates." },
+  { id: "trains", title: "Trains", description: "Manage train routes, schedules and reservations." },
+  { id: "cruises", title: "Cruises", description: "Manage cruise packages and sailing dates." },
+  { id: "gallery", title: "Gallery", description: "Curate photo galleries, albums and site imagery." },
+  { id: "rental", title: "Rental", description: "Manage the vehicle rental fleet, pricing and availability." },
+  { id: "inquiries", title: "Inquiries", description: "Review customer inquiries, comments and responses." },
 ];
+
+const reactSections = new Set(["home", "projects", "inquiries"]);
 
 const navigationIcons: Record<string, ReactNode> = {
   home: <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" />,
@@ -114,17 +117,17 @@ export default function CmsFrame() {
     window.history.pushState(null, "", `${window.location.pathname}${window.location.search}${hash}`);
   }
 
-  const currentTitle = sections.find((section) => section.id === activeSection)?.title ?? "Home";
+  const current = sections.find((section) => section.id === activeSection) ?? sections[0];
+  const isReactPage = reactSections.has(activeSection);
 
   return (
-    <main className="cms-app flex h-dvh w-full overflow-hidden bg-cms-bg text-cms-text font-[family-name:Poppins,system-ui,-apple-system,Segoe_UI,sans-serif] text-[14px] leading-[1.55] max-[760px]:flex-col">
-      <div className="cms-home-shell fixed inset-0 z-60 flex h-dvh w-screen pointer-events-none [hidden]:hidden max-[760px]:flex-col">
-        <aside aria-label="CMS navigation" className="relative z-40 flex h-full w-66 shrink-0 grow-0 basis-66 flex-col bg-[#13087a] px-3 pb-3.5 text-white pointer-events-auto max-[760px]:h-auto max-[760px]:w-full max-[760px]:basis-auto max-[760px]:flex-wrap max-[760px]:px-2.5 max-[760px]:pb-2">
+    <main className="cms-app flex h-dvh w-full overflow-hidden bg-cms-bg font-[family-name:Poppins,system-ui,-apple-system,Segoe_UI,sans-serif] text-[14px] leading-[1.55] text-cms-text max-[760px]:flex-col">
+      <aside aria-label="CMS navigation" className="relative z-40 flex h-full w-66 shrink-0 grow-0 basis-66 flex-col bg-[#13087a] px-3 pb-3.5 text-white max-[760px]:h-auto max-[760px]:w-full max-[760px]:basis-auto max-[760px]:flex-wrap max-[760px]:px-2.5 max-[760px]:pb-2">
         <a className="flex min-h-18 flex-none items-center gap-2.5 border-b border-[rgba(255,255,255,.08)] px-1.5 text-white no-underline max-[760px]:min-h-[46px] max-[760px]:border-0" href="/cms" onClick={(event) => {
           event.preventDefault();
           navigate("home");
         }}>
-          <span aria-hidden="true" className="grid size-10 place-items-center rounded-full bg-cms-yellow text-[13px] font-extrabold text-cms-primary">LF</span>
+          <span aria-hidden="true" className="grid size-10 place-items-center rounded-full bg-cms-yellow text-[13px] font-extrabold text-cms-navy">LF</span>
           <b className="text-[14px] whitespace-nowrap">Let&apos;s Fly <small className="block text-[10px] uppercase tracking-[1px] text-cms-yellow">CMS</small></b>
         </a>
         <div className="px-2.5 pb-2.5 pt-[22px] text-[10px] font-semibold uppercase tracking-[1.4px] text-[rgba(255,255,255,.52)] max-[760px]:hidden">Menu</div>
@@ -170,43 +173,44 @@ export default function CmsFrame() {
           </svg>
           <span>{mode === "light" ? "🌙" : "☀️"}</span>
         </button>
-        </aside>
-        <section className="flex h-full min-w-0 flex-1 flex-col pointer-events-auto [hidden]:hidden max-[760px]:flex-1 max-[760px]:min-h-0" hidden={activeSection !== "home" && activeSection !== "inquiries" && activeSection !== "projects"}>
-          <header className="flex min-h-18 items-center border-b border-cms-line bg-[rgba(246,246,251,.96)] px-8 backdrop-blur-[10px]">
-            <div>
-              <span className="text-[12px] text-cms-muted">CMS / {currentTitle}</span>
-              <h1 className="mt-px text-[20px] font-semibold leading-[1.3] text-cms-ink">{currentTitle}</h1>
-            </div>
+      </aside>
+
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden max-[760px]:flex-1">
+        {!isReactPage && (
+          <header className="shrink-0 border-b border-cms-line bg-white px-5 pt-5 pb-3.5 sm:px-7 xl:px-10 dark:bg-[#101435]">
+            <h1 className="text-[20px] font-semibold leading-[1.3] text-cms-ink xl:text-[22px]">{current.title}</h1>
+            <p className="mt-1 max-w-[70ch] text-[13px] text-cms-muted">{current.description}</p>
+            <Breadcrumbs
+              className="mt-3"
+              items={[{ label: "Home", href: "#home", id: "home" }, { label: current.title }]}
+              onNavigate={navigate}
+            />
           </header>
-          <div className="mx-auto min-h-0 w-[min(100%,1344px)] flex-1 overflow-y-auto px-8 py-7 max-[760px]:w-full max-[760px]:px-4 max-[760px]:pb-8 max-[760px]:pt-5">
-            {activeSection === "home" ? (
-              <HomeTab onNavigate={navigate} />
-            ) : activeSection === "inquiries" ? (
-              <InquiriesTab />
-            ) : (
-              <ProjectsTab onDirtyChange={setProjectDirty} />
-            )}
-          </div>
-        </section>
+        )}
+        <div className="min-h-0 flex-1 overflow-y-auto bg-white dark:bg-[#0b0e28]">
+          {isReactPage ? (
+            <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8">
+              {activeSection === "home" ? (
+                <HomeTab onNavigate={navigate} />
+              ) : activeSection === "inquiries" ? (
+                <InquiriesTab onNavigate={navigate} />
+              ) : (
+                <ProjectsTab onDirtyChange={setProjectDirty} onNavigate={navigate} />
+              )}
+            </div>
+          ) : (
+            <iframe
+              className="h-full w-full border-0 bg-cms-bg"
+              key={activeSection}
+              src={`/api/cms-demo#${activeRoute}`}
+              title={`Let's Fly CMS — ${current.title}`}
+            />
+          )}
+        </div>
       </div>
-      {activeSection !== "home" && activeSection !== "inquiries" && activeSection !== "projects" && (
-        <>
-          <iframe
-            className="fixed inset-0 z-50 block h-dvh w-screen border-0 bg-cms-bg max-[760px]:h-dvh"
-            key={activeSection}
-            src={`/api/cms-demo#${activeRoute}`}
-            title={`Let's Fly CMS — ${currentTitle}`}
-          />
-          <div className="fixed right-4 top-3 z-60 flex gap-2 rounded-[10px] border border-[rgba(19,8,122,.1)] bg-[rgba(255,255,255,.94)] p-1.5 shadow-[0_4px_16px_rgba(10,4,70,.12)] max-[760px]:right-2 max-[760px]:top-2">
-            <button suppressHydrationWarning className="min-h-[34px] rounded-[7px] border border-cms-line bg-white px-[11px] text-[11px]! font-semibold! text-cms-ink hover:not-disabled:bg-cms-bg disabled:cursor-wait! disabled:opacity-60" onClick={() => navigate("home")} type="button">Return to React Home</button>
-            <button suppressHydrationWarning className="min-h-[34px] rounded-[7px] border border-cms-line bg-white px-[11px] text-[11px]! font-semibold! text-cms-ink hover:not-disabled:bg-cms-bg disabled:cursor-wait! disabled:opacity-60" disabled={loggingOut} onClick={() => void signOut()} type="button">
-              {loggingOut ? "Signing out…" : "Sign out"}
-            </button>
-          </div>
-        </>
-      )}
+
       {logoutError && (
-        <div className="fixed right-4 top-21 z-100 flex max-w-[min(460px,calc(100vw_-_32px))] items-center gap-4 rounded-[10px] bg-white px-4 py-3.5 shadow-[0_12px_35px_rgba(10,4,70,.18)] text-[13px] text-[#991b1b]" role="alert">
+        <div className="fixed right-4 top-4 z-100 flex max-w-[min(460px,calc(100vw_-_32px))] items-center gap-4 rounded-[10px] border border-cms-line bg-cms-card px-4 py-3.5 shadow-[0_12px_35px_rgba(10,4,70,.18)] dark:shadow-none text-[13px] text-[#991b1b] dark:text-[#ff9aa8]" role="alert">
           <span>{logoutError}</span>
           <button suppressHydrationWarning className="rounded-md border-0 bg-[#b91c1c] px-3 py-[7px] font-semibold! text-white" disabled={loggingOut} onClick={() => void signOut()} type="button">Retry</button>
         </div>
