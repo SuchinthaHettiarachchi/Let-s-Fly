@@ -13,10 +13,9 @@ import { MessageSection } from "@/components/contact/MessageSection";
 import { RelatedPackages } from "@/components/package/RelatedPackages";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { MobileActionBar } from "@/components/layout/MobileActionBar";
-import { detailPackages, durationLabel, formatLKR, getPackage, relatedPackages } from "@/data/packages";
+import { detailPackages, durationLabel, formatLKR, getPackage, relatedPackages, type Package } from "@/data/packages";
 
-// Only packages with full content get a page; anything else 404s.
-export const dynamicParams = false;
+const PACKAGES_API = `${process.env.NEXT_PUBLIC_API_URL}/packages`;
 
 export function generateStaticParams() {
   return detailPackages().map((p) => ({ slug: p.slug }));
@@ -24,7 +23,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps<"/packages/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const pkg = getPackage(slug);
+  const pkg = getPackage(slug) ?? await getCmsPackage(slug);
   if (!pkg) return {};
   return {
     title: pkg.title,
@@ -34,7 +33,7 @@ export async function generateMetadata({ params }: PageProps<"/packages/[slug]">
 
 export default async function PackagePage({ params }: PageProps<"/packages/[slug]">) {
   const { slug } = await params;
-  const pkg = getPackage(slug);
+  const pkg = getPackage(slug) ?? await getCmsPackage(slug);
   if (!pkg?.overview) notFound();
 
   const tabs: Tab[] = [{ id: "overview", label: "Overview", content: <OverviewPanel overview={pkg.overview} /> }];
@@ -45,6 +44,7 @@ export default async function PackagePage({ params }: PageProps<"/packages/[slug
       content: <ItineraryPanel itinerary={pkg.itinerary} days={pkg.days} nights={pkg.nights} />,
     });
   }
+
   if (pkg.inclusions) {
     tabs.push({ id: "inclusions", label: "Inclusions & Exclusions", content: <InclusionsPanel inclusions={pkg.inclusions} /> });
   }
@@ -83,4 +83,37 @@ export default async function PackagePage({ params }: PageProps<"/packages/[slug
       <RevealOnScroll />
     </>
   );
+}
+
+async function getCmsPackage(slug: string): Promise<Package | undefined> {
+  try {
+    const response = await fetch(`${PACKAGES_API}/${encodeURIComponent(slug)}`, { next: { revalidate: 60 } });
+    if (!response.ok) return undefined;
+    const data: { package?: {
+      slug: string; title: string; region: string; area?: string; category?: Package["category"];
+      days: number; nights: number; price: number; image?: string; badge?: string; flightsIncluded?: boolean;
+    } } = await response.json();
+    const item = data.package;
+    if (!item) return undefined;
+    return {
+      slug: item.slug,
+      title: item.title,
+      region: item.region,
+      location: item.area ? `${item.region} · ${item.area}` : item.region,
+      category: item.category ?? "outbound",
+      area: item.area,
+      badge: item.badge,
+      days: item.days,
+      nights: item.nights,
+      price: item.price,
+      image: item.image,
+      flightsIncluded: item.flightsIncluded,
+      overview: {
+        summary: `Explore our ${item.title} travel package. Contact us for the latest availability and itinerary details.`,
+        highlights: [],
+      },
+    };
+  } catch {
+    return undefined;
+  }
 }

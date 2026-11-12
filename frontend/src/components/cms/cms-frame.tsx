@@ -6,6 +6,7 @@ import { authApi } from "@/lib/auth-api";
 import HomeTab from "@/components/cms/home/home-tab";
 import InquiriesTab from "@/components/cms/inquiries/inquiries-tab";
 import ProjectsTab from "@/components/cms/projects/projects-tab";
+import PackagesTab from "@/components/cms/packages/packages-tab";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 
 const sections = [
@@ -21,7 +22,7 @@ const sections = [
   { id: "inquiries", title: "Inquiries", description: "Review customer inquiries, comments and responses." },
 ];
 
-const reactSections = new Set(["home", "projects", "inquiries"]);
+const reactSections = new Set(["home", "projects", "outbound", "srilanka", "inquiries"]);
 
 const navigationIcons: Record<string, ReactNode> = {
   home: <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" />,
@@ -194,6 +195,8 @@ export default function CmsFrame() {
                 <HomeTab onNavigate={navigate} />
               ) : activeSection === "inquiries" ? (
                 <InquiriesTab onNavigate={navigate} />
+              ) : activeSection === "outbound" || activeSection === "srilanka" ? (
+                <PackagesTab key={activeSection} category={activeSection === "outbound" ? "outbound" : "sri-lanka"} onNavigate={navigate} />
               ) : (
                 <ProjectsTab onDirtyChange={setProjectDirty} onNavigate={navigate} />
               )}
