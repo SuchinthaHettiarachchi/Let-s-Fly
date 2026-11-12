@@ -10,6 +10,7 @@ const primary = `${btn} border-transparent bg-cms-primary text-white hover:bg-[#
 const secondary = `${btn} border-cms-line bg-cms-card text-cms-ink hover:bg-[#f5f5f7] dark:hover:bg-[#101435]`;
 
 type Category = "outbound" | "sri-lanka";
+type Theme = "cultural" | "hill-country" | "beaches" | "wildlife";
 type PackageItem = {
   _id: string;
   slug: string;
@@ -17,6 +18,7 @@ type PackageItem = {
   region: string;
   area: string;
   category: Category;
+  themes?: Theme[];
   badge: string;
   days: number;
   nights: number;
@@ -28,7 +30,7 @@ type PackageItem = {
 type Draft = Omit<PackageItem, "_id" | "createdAt">;
 
 const blankDraft = (category: Category): Draft => ({
-  slug: "", title: "", region: "", area: "", category, badge: "",
+  slug: "", title: "", region: "", area: "", category, themes: [], badge: "",
   days: 1, nights: 0, price: 0, image: "", flightsIncluded: false,
 });
 
@@ -82,10 +84,17 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
     setEditingId(item._id);
     setDraft({
       slug: item.slug, title: item.title, region: item.region, area: item.area,
-      category: item.category, badge: item.badge, days: item.days, nights: item.nights,
+      category: item.category, themes: item.themes ?? [], badge: item.badge, days: item.days, nights: item.nights,
       price: item.price, image: item.image, flightsIncluded: item.flightsIncluded,
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function toggleTheme(theme: Theme) {
+    setDraft((current) => ({
+      ...current,
+      themes: (current.themes ?? []).includes(theme) ? (current.themes ?? []).filter((item) => item !== theme) : [...(current.themes ?? []), theme],
+    }));
   }
 
   function reset() {
@@ -155,6 +164,18 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
           <Field label="Image URL"><input className={inputShell} placeholder="/images/packages/dubai.jpg" value={draft.image} onChange={(event) => update("image", event.target.value)} /></Field>
           <label className="mt-7 inline-flex items-center gap-2 text-[13px] font-semibold text-cms-text"><input checked={draft.flightsIncluded} onChange={(event) => update("flightsIncluded", event.target.checked)} type="checkbox" /> Flights included</label>
         </div>
+        {draft.category === "sri-lanka" && (
+          <fieldset className="mt-4">
+            <legend className="text-[12.5px] font-semibold text-cms-text">Sri Lanka themes</legend>
+            <div className="mt-2 flex flex-wrap gap-3">
+              {([["cultural", "Cultural"], ["hill-country", "Hill country"], ["beaches", "Beaches"], ["wildlife", "Wildlife"]] as const).map(([value, label]) => (
+                <label className="inline-flex items-center gap-1.5 text-[12px] text-cms-text" key={value}>
+                  <input checked={(draft.themes ?? []).includes(value)} onChange={() => toggleTheme(value)} type="checkbox" /> {label}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        )}
         <div className="mt-4 flex items-center gap-2">
           <button className={primary} disabled={saving} onClick={() => void save()} type="button">{saving ? "Saving…" : editingId ? "Update package" : "Create package"}</button>
           <span className="text-[12px] text-cms-muted" aria-live="polite">{notice}</span>

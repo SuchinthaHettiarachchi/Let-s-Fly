@@ -1,6 +1,7 @@
 const { httpError } = require('../middleware/error');
 
 const categories = new Set(['outbound', 'sri-lanka']);
+const themes = new Set(['cultural', 'hill-country', 'beaches', 'wildlife']);
 
 const requiredText = (value, field, max = 200) => {
   if (typeof value !== 'string' || !value.trim() || value.length > max) {
@@ -19,6 +20,7 @@ exports.validatePackage = (body) => {
   if (!body || typeof body !== 'object') throw httpError(400, 'Package data is required');
   const category = requiredText(body.category, 'Category', 20);
   if (!categories.has(category)) throw httpError(400, 'Category must be outbound or sri-lanka');
+  const selectedThemes = Array.isArray(body.themes) ? body.themes.filter((theme) => themes.has(theme)) : [];
   const days = Number(body.days);
   const nights = Number(body.nights);
   const price = Number(body.price);
@@ -31,6 +33,7 @@ exports.validatePackage = (body) => {
     region: requiredText(body.region, 'Region', 100),
     area: optionalText(body.area, 'Area', 160),
     category,
+    themes: category === 'sri-lanka' ? selectedThemes : [],
     badge: optionalText(body.badge, 'Badge', 80),
     days,
     nights,

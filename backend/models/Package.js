@@ -6,6 +6,7 @@ const packageSchema = new mongoose.Schema({
   region: { type: String, required: true, trim: true },
   area: { type: String, trim: true, default: '' },
   category: { type: String, enum: ['outbound', 'sri-lanka'], required: true },
+  themes: { type: [String], default: [] },
   badge: { type: String, trim: true, default: '' },
   days: { type: Number, required: true, min: 1 },
   nights: { type: Number, required: true, min: 0 },

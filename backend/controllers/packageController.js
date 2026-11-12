@@ -3,7 +3,10 @@ const { validatePackage } = require('../validators/packageValidator');
 
 exports.listLatest = async (_req, res, next) => {
   try {
-    res.json({ packages: await packageService.getLatestPackages() });
+    const packages = _req.query.category
+      ? await packageService.listPackages(_req.query.category)
+      : await packageService.getLatestPackages();
+    res.json({ packages });
   } catch (error) {
     next(error);
   }

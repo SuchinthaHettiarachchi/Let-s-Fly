@@ -1,23 +1,24 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { PackageCard } from "@/components/package/PackageCard";
+import { PackageCard, type PackageCardData } from "@/components/package/PackageCard";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { sriLankaThemes, type Package, type SriLankaTheme } from "@/data/packages";
+import { sriLankaThemes, type SriLankaTheme } from "@/data/packages";
 
 const PAGE_SIZE = 6;
 
+type TourPackage = PackageCardData & { themes?: SriLankaTheme[] };
+
 const sorts = {
   popular: { label: "Popular", fn: () => 0 },
-  "price-asc": { label: "Price: low to high", fn: (a: Package, b: Package) => a.price - b.price },
-  "price-desc": { label: "Price: high to low", fn: (a: Package, b: Package) => b.price - a.price },
-  duration: { label: "Shortest first", fn: (a: Package, b: Package) => a.days - b.days },
+  "price-asc": { label: "Price: low to high", fn: (a: TourPackage, b: TourPackage) => a.price - b.price },
+  "price-desc": { label: "Price: high to low", fn: (a: TourPackage, b: TourPackage) => b.price - a.price },
+  duration: { label: "Shortest first", fn: (a: TourPackage, b: TourPackage) => a.days - b.days },
 } as const;
 type SortKey = keyof typeof sorts;
 
-/** Sri Lanka tours with theme chips, sort and "Show more". */
-export function TourGrid({ tours }: { tours: Package[] }) {
+export function TourGrid({ tours }: { tours: TourPackage[] }) {
   const [theme, setTheme] = useState<SriLankaTheme | "all">("all");
   const [sort, setSort] = useState<SortKey>("popular");
   const [limit, setLimit] = useState(PAGE_SIZE);

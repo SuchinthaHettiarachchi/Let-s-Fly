@@ -5,7 +5,10 @@ import { Container } from "@/components/ui/Container";
 import { TourGrid } from "@/components/holidays/TourGrid";
 import { HotelBookings } from "@/components/holidays/HotelBookings";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { packages } from "@/data/packages";
+import { packages, type SriLankaTheme } from "@/data/packages";
+import type { PackageCardData } from "@/components/package/PackageCard";
+
+const PACKAGES_API = `${process.env.NEXT_PUBLIC_API_URL}/packages`;
 
 export const metadata: Metadata = {
   title: { absolute: "Sri Lanka Tour Packages & Hotel Bookings | Let's Fly" },
@@ -13,8 +16,10 @@ export const metadata: Metadata = {
     "Explore Sri Lanka with tailor-made tour packages, round trips and hotel deals. Private drivers, guides and resort specials from an SLTDA-registered agency.",
 };
 
-export default function SriLankaPage() {
-  const tours = packages.filter((p) => p.category === "sri-lanka");
+type CmsTour = PackageCardData & { themes?: SriLankaTheme[] };
+
+export default async function SriLankaPage() {
+  const tours = await getSriLankaTours();
   return (
     <>
       <PageHero
@@ -41,4 +46,15 @@ export default function SriLankaPage() {
       <RevealOnScroll />
     </>
   );
+}
+
+async function getSriLankaTours(): Promise<CmsTour[]> {
+  try {
+    const response = await fetch(`${PACKAGES_API}?category=sri-lanka`, { next: { revalidate: 60 } });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const data: { packages?: CmsTour[] } = await response.json();
+    return Array.isArray(data.packages) ? data.packages : [];
+  } catch {
+    return packages.filter((p) => p.category === "sri-lanka");
+  }
 }
