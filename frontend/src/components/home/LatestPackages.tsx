@@ -8,7 +8,7 @@ import { Icon } from "@/components/ui/Icon";
 import { PackageCard, type PackageCardData } from "@/components/package/PackageCard";
 import { HotelBookingCard } from "@/components/holidays/HotelBookings";
 import { JourneyCard } from "@/components/holidays/JourneyList";
-import { packages, type Package } from "@/data/packages";
+import type { Package } from "@/data/packages";
 import { journeys } from "@/data/journeys";
 
 /** At most 3 rows of 4. Packages are listed newest first in data/packages.ts. */
@@ -28,11 +28,12 @@ const filters: Filter[] = [
 
 export function LatestPackages() {
   const [active, setActive] = useState(0);
-  const [cmsPackages, setCmsPackages] = useState<CmsPackage[] | null>(null);
+  const [cmsPackages, setCmsPackages] = useState<CmsPackage[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const pills = useRef<HTMLDivElement>(null);
   const { show, category, href } = filters[active];
-  const availablePackages = cmsPackages ?? packages;
-  const shown = (category ? availablePackages.filter((p) => p.category === category) : availablePackages).slice(0, MAX_SHOWN);
+  const shown = (category ? cmsPackages.filter((p) => p.category === category) : cmsPackages).slice(0, MAX_SHOWN);
 
   useEffect(() => {
     let cancelled = false;
@@ -40,10 +41,13 @@ export function LatestPackages() {
       .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`))))
       .then((data: { packages?: CmsPackage[] }) => {
         if (cancelled || !Array.isArray(data.packages)) return;
-        if (data.packages.length) setCmsPackages(data.packages);
+        setCmsPackages(data.packages);
       })
       .catch(() => {
-        // Keep the bundled packages visible when the CMS is unavailable.
+        if (!cancelled) setError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
       });
     return () => {
       cancelled = true;
@@ -106,13 +110,10 @@ export function LatestPackages() {
 
         {/* Fills 4 across, then wraps: 12 packages make 3 full rows, 10 make 4 + 4 + 2. */}
         {show === "packages" && (
-          <div className="grid grid-cols-1 gap-5 pt-2 sm:grid-cols-2 lg:grid-cols-4">
-            {shown.map((p, i) => (
-              <div key={p.slug} data-reveal={(i % 4) * 90}>
-                <PackageCard pkg={p} imageSizes="(min-width: 1024px) 300px, (min-width: 640px) 50vw, 100vw" compact className="h-full" />
-              </div>
-            ))}
-          </div>
+          loading ? <div className="rounded-xl border border-dashed border-sand-300 py-12 text-center text-body text-ink-400">Loading packages…</div>
+            : error ? <div className="rounded-xl border border-dashed border-sand-300 py-12 text-center text-body text-ink-600">Packages are temporarily unavailable.</div>
+              : shown.length ? <div className="grid grid-cols-1 gap-5 pt-2 sm:grid-cols-2 lg:grid-cols-4">{shown.map((p, i) => <div key={p.slug} data-reveal={(i % 4) * 90}><PackageCard pkg={p} imageSizes="(min-width: 1024px) 300px, (min-width: 640px) 50vw, 100vw" compact className="h-full" /></div>)}</div>
+                : <div className="rounded-xl border border-dashed border-sand-300 py-12 text-center text-body text-ink-600">No packages are available yet.</div>
         )}
       </Container>
     </section>

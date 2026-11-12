@@ -13,17 +13,12 @@ import { MessageSection } from "@/components/contact/MessageSection";
 import { RelatedPackages } from "@/components/package/RelatedPackages";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { MobileActionBar } from "@/components/layout/MobileActionBar";
-import { detailPackages, durationLabel, formatLKR, getPackage, relatedPackages, type Package } from "@/data/packages";
-
-const PACKAGES_API = `${process.env.NEXT_PUBLIC_API_URL}/packages`;
-
-export function generateStaticParams() {
-  return detailPackages().map((p) => ({ slug: p.slug }));
-}
+import { durationLabel, formatLKR, type Package } from "@/data/packages";
+import { getPackageBySlug } from "@/lib/package-api";
 
 export async function generateMetadata({ params }: PageProps<"/packages/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const pkg = getPackage(slug) ?? await getCmsPackage(slug);
+  const pkg = await getPackageBySlug(slug);
   if (!pkg) return {};
   return {
     title: pkg.title,
@@ -33,7 +28,7 @@ export async function generateMetadata({ params }: PageProps<"/packages/[slug]">
 
 export default async function PackagePage({ params }: PageProps<"/packages/[slug]">) {
   const { slug } = await params;
-  const pkg = getPackage(slug) ?? await getCmsPackage(slug);
+  const pkg = await getPackageBySlug(slug);
   if (!pkg?.overview) notFound();
 
   const tabs: Tab[] = [{ id: "overview", label: "Overview", content: <OverviewPanel overview={pkg.overview} /> }];
@@ -73,7 +68,7 @@ export default async function PackagePage({ params }: PageProps<"/packages/[slug
         text={`Questions about ${pkg.title}, or want to change dates, hotels or the route? Send us a message and we'll tailor it for you.`}
       />
 
-      <RelatedPackages items={relatedPackages(pkg)} />
+      <RelatedPackages items={await getRelatedPackages(pkg)} />
       <CtaBand tone="sand" />
       <MobileActionBar
         label="From, per person"
@@ -85,35 +80,7 @@ export default async function PackagePage({ params }: PageProps<"/packages/[slug
   );
 }
 
-async function getCmsPackage(slug: string): Promise<Package | undefined> {
-  try {
-    const response = await fetch(`${PACKAGES_API}/${encodeURIComponent(slug)}`, { next: { revalidate: 60 } });
-    if (!response.ok) return undefined;
-    const data: { package?: {
-      slug: string; title: string; region: string; area?: string; category?: Package["category"];
-      days: number; nights: number; price: number; image?: string; badge?: string; flightsIncluded?: boolean;
-    } } = await response.json();
-    const item = data.package;
-    if (!item) return undefined;
-    return {
-      slug: item.slug,
-      title: item.title,
-      region: item.region,
-      location: item.area ? `${item.region} · ${item.area}` : item.region,
-      category: item.category ?? "outbound",
-      area: item.area,
-      badge: item.badge,
-      days: item.days,
-      nights: item.nights,
-      price: item.price,
-      image: item.image,
-      flightsIncluded: item.flightsIncluded,
-      overview: {
-        summary: `Explore our ${item.title} travel package. Contact us for the latest availability and itinerary details.`,
-        highlights: [],
-      },
-    };
-  } catch {
-    return undefined;
-  }
+async function getRelatedPackages(pkg: Package): Promise<Package[]> {
+  const related = pkg.related ?? [];
+  return (await Promise.all(related.map((slug) => getPackageBySlug(slug)))).filter((item): item is Package => Boolean(item));
 }

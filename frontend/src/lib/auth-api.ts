@@ -1,4 +1,4 @@
-const API = "/api/auth";
+const API = "/api";
 
 async function post(path: string, body: unknown) {
   const res = await fetch(`${API}${path}`, {

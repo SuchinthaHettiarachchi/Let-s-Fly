@@ -12,7 +12,10 @@ const listPackages = (category) => {
 
 const getPackageBySlug = (slug) => Package.findOne({ slug }).lean();
 const createPackage = (data) => Package.create(data);
-const updatePackage = (id, data) => Package.findByIdAndUpdate(id, data, { new: true, runValidators: true }).lean();
+const updatePackage = (id, data) => {
+  const changes = Object.fromEntries(Object.entries(data).filter(([, value]) => value !== undefined));
+  return Package.findByIdAndUpdate(id, changes, { new: true, runValidators: true }).lean();
+};
 const deletePackage = (id) => Package.findByIdAndDelete(id);
 
 module.exports = { getLatestPackages, listPackages, getPackageBySlug, createPackage, updatePackage, deletePackage };

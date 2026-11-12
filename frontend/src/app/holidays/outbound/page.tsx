@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow, SectionHeading } from "@/components/ui/SectionHeading";
 import { Icon } from "@/components/ui/Icon";
 import { RegionPackages } from "@/components/holidays/RegionPackages";
-import { packages } from "@/data/packages";
+import { getPackagesByCategory } from "@/lib/package-api";
 
 export const metadata: Metadata = {
   title: { absolute: "Holiday Packages from Sri Lanka | Outbound Tours | Let's Fly" },
@@ -21,8 +21,8 @@ const reasons = [
   { icon: "payments", title: "Easy payments", text: "Pay in LKR, with instalment options." },
 ];
 
-export default function OutboundPage() {
-  const tours = packages.filter((p) => p.category === "outbound");
+export default async function OutboundPage() {
+  const tours = await getPackagesByCategory("outbound");
   return (
     <>
       <PageHero
