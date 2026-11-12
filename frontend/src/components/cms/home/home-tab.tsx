@@ -59,10 +59,10 @@ const icons: Record<string, ReactNode> = {
 const cardShell = "border border-cms-line rounded-[14px] bg-cms-card shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none";
 const liftCard = "transition-[box-shadow,transform,border-color] duration-[250ms] hover:-translate-y-0.5 hover:border-[#dedcf0] hover:shadow-[0_8px_24px_rgba(19,8,122,.08)] dark:hover:border-[#4a4f8f] dark:hover:shadow-none";
 const btnBase = "inline-flex min-h-[38px] items-center justify-center gap-2 rounded-[9px] px-[14px] text-[12.5px] font-semibold transition-[background-color,border-color,color] duration-200 disabled:cursor-not-allowed disabled:opacity-50";
-const btnGhost = `${btnBase} border border-cms-line bg-cms-card text-cms-ink hover:not-disabled:border-[#cfcce8] hover:not-disabled:bg-cms-card2 dark:hover:not-disabled:border-[#4a4f8f]`;
+const btnGhost = `${btnBase} border border-cms-line bg-cms-card text-cms-ink hover:not-disabled:border-[#e2e2ea] hover:not-disabled:bg-[#f5f5f7] dark:hover:not-disabled:border-[#4a4f8f] dark:hover:not-disabled:bg-[#101435]`;
 const btnPrimary = `${btnBase} border border-transparent bg-cms-primary text-white hover:bg-[#150cb0] dark:hover:bg-[#7d74ff]`;
 const cardGrid = "grid grid-cols-1 gap-[18px] sm:grid-cols-2 xl:grid-cols-4";
-const emptyShell = "mb-3 rounded-[14px] border border-dashed border-[#cfcce8] px-[10px] py-[26px] text-center text-cms-muted dark:border-[#2a2e63]";
+const emptyShell = "mb-3 rounded-[14px] border border-dashed border-[#e2e2ea] px-[10px] py-[26px] text-center text-cms-muted dark:border-[#2a2e63]";
 const stackedMedia = "grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-3 max-[760px]:grid-cols-1";
 const inputShell =
   "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[14px] text-cms-ink outline-none placeholder:text-cms-muted focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
@@ -340,8 +340,8 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
         {stats.map((stat) => (
           <article className={`p-5 ${cardShell} ${liftCard}`} key={stat.label}>
             <div className="flex items-start justify-between">
-              <span className={`grid size-[42px] place-items-center rounded-[12px] bg-cms-card2 ${stat.style}`}><HomeIcon name={stat.icon} /></span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-cms-card2 px-2 py-[3px] text-[11.5px] font-semibold text-[#12a36a] dark:text-[#6ee7a8]"><HomeIcon name="up" size={12} />{stat.trend}</span>
+              <span className={`grid size-[42px] place-items-center rounded-[12px] bg-[#f5f5f7] dark:bg-[#101435] ${stat.style}`}><HomeIcon name={stat.icon} /></span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f5f7] dark:bg-[#101435] px-2 py-[3px] text-[11.5px] font-semibold text-[#12a36a] dark:text-[#6ee7a8]"><HomeIcon name="up" size={12} />{stat.trend}</span>
             </div>
             <div className="mt-4 text-[13px] font-medium text-cms-muted">{stat.label}</div>
             <div className="mt-[2px] text-[30px] font-bold leading-[1.15] tracking-[-0.8px] text-cms-ink">{stat.value}</div>
@@ -362,7 +362,7 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
               <b className="block text-[14px] font-semibold leading-[1.4] text-cms-ink">{item.title}</b>
               <p className="mt-1 text-[12px] leading-[1.5] text-cms-muted">{item.description}</p>
             </span>
-            <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full border border-cms-line bg-cms-card2 text-cms-muted transition-colors duration-[250ms] group-hover:border-cms-primary group-hover:bg-cms-primary group-hover:text-white dark:border-[#2a2e63] dark:bg-[#1f2353]">
+            <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full border border-cms-line bg-[#f5f5f7] text-cms-muted transition-colors duration-[250ms] group-hover:border-cms-primary group-hover:bg-cms-primary group-hover:text-white dark:border-[#2a2e63] dark:bg-[#101435]">
               <HomeIcon name="up" size={14} />
             </span>
           </button>
@@ -377,9 +377,9 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
           </div>
         </div>
         <div className="mb-4 flex flex-wrap gap-2">
-          <span className="rounded-full border border-cms-line bg-cms-card2 px-3 py-[5px] text-[12.5px] text-cms-muted">Desktop: <b className="text-cms-ink">1800 × 1061 px</b> (≈1.7:1)</span>
-          <span className="rounded-full border border-cms-line bg-cms-card2 px-3 py-[5px] text-[12.5px] text-cms-muted">Mobile: <b className="text-cms-ink">1080 × 1920 px</b> (9:16)</span>
-          <span className="rounded-full border border-cms-line bg-cms-card2 px-3 py-[5px] text-[12.5px] text-cms-muted">Format: <b className="text-cms-ink">WebP</b> (auto-converted) · ratio ±5%</span>
+          <span className="rounded-full border border-cms-line bg-[#f5f5f7] dark:bg-[#101435] px-3 py-[5px] text-[12.5px] text-cms-muted">Desktop: <b className="text-cms-ink">1800 × 1061 px</b> (≈1.7:1)</span>
+          <span className="rounded-full border border-cms-line bg-[#f5f5f7] dark:bg-[#101435] px-3 py-[5px] text-[12.5px] text-cms-muted">Mobile: <b className="text-cms-ink">1080 × 1920 px</b> (9:16)</span>
+          <span className="rounded-full border border-cms-line bg-[#f5f5f7] dark:bg-[#101435] px-3 py-[5px] text-[12.5px] text-cms-muted">Format: <b className="text-cms-ink">WebP</b> (auto-converted) · ratio ±5%</span>
         </div>
         {slides.length ? slides.map((slide, index) => (
           <article className="mb-3 rounded-[14px] border border-cms-line bg-cms-card p-4" key={slide.id}>
@@ -401,11 +401,11 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
                 const spec = HERO_SPECS[kind];
                 const dropKey = `${slide.id}:${kind}`;
                 return (
-                  <div className="rounded-[12px] border border-dashed border-[#cfcce8] bg-cms-card2 p-3 dark:border-[#2a2e63]" key={kind}>
+                  <div className="rounded-[12px] border border-dashed border-cms-line bg-[#f5f5f7] p-3 dark:border-[#2a2e63] dark:bg-[#101435]" key={kind}>
                     <b className="text-[13px]">{spec.label} version</b>
                     <p className="mb-2.5 min-h-9 text-[12px] text-cms-muted">Aspect ratio <strong>{spec.ratio}</strong> (±5%) · Recommended <strong>{spec.width} × {spec.height} px</strong> · Output <strong>WebP</strong> (auto-converted)</p>
                     <div
-                      className={`grid h-[230px] place-items-center gap-1.5 rounded-[10px] border-[1.5px] border-dashed bg-center bg-cover bg-no-repeat text-center text-[12.5px] font-medium transition-[border-color,background-color,box-shadow,color] duration-[180ms] ease-out ${dropping[dropKey] ? "border-cms-primary bg-[#f5f4ff] text-cms-primary shadow-[0_0_0_4px_rgba(27,15,216,.10)] dark:bg-[#232755] dark:shadow-[0_0_0_4px_rgba(106,96,255,.2)]" : "border-[#c4bfee] bg-white text-cms-muted dark:border-[#2a2e63] dark:bg-[#171a42]"}`}
+                      className={`grid h-[230px] place-items-center gap-1.5 rounded-[10px] border-[1.5px] border-dashed bg-center bg-cover bg-no-repeat text-center text-[12.5px] font-medium transition-[border-color,background-color,box-shadow,color] duration-[180ms] ease-out ${dropping[dropKey] ? "border-[#6f6e80] bg-[#f5f5f7] text-cms-ink shadow-[0_0_0_4px_rgba(110,110,130,.16)] dark:border-[#8a8ab0] dark:bg-[#101435] dark:text-[#ececff]" : "border-cms-line bg-white text-cms-muted dark:border-[#2a2e63] dark:bg-[#171a42]"}`}
                       style={slide[kind] ? { backgroundImage: `url("${slide[kind]}")` } : undefined}
                       onDragOver={(event) => {
                         event.preventDefault();
@@ -427,7 +427,7 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
                           <span>Drop image here</span>
                         </>
                       )}</div>
-                    <div className="flex flex-wrap justify-end gap-2">
+                    <div className="mt-3 flex flex-wrap justify-end gap-2.5">
                       <label className={`${btnGhost} cursor-pointer`}>
                         {slide[kind] ? "Replace image" : "Upload image"}
                         <input suppressHydrationWarning accept="image/*" hidden onChange={(event) => void uploadImage(slide.id, kind, event.target.files?.[0])} type="file" />
@@ -445,16 +445,16 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
         ) : (
           <div aria-hidden="true" className="mb-3 animate-pulse rounded-[14px] border border-cms-line bg-cms-card p-4">
             <div className="mb-3 flex items-center gap-2">
-              <div className="h-4 w-24 rounded-md bg-cms-card2" />
-              <div className="ml-auto h-[38px] w-32 rounded-[9px] bg-cms-card2" />
+              <div className="h-4 w-24 rounded-md bg-[#f5f5f7] dark:bg-[#101435]" />
+              <div className="ml-auto h-[38px] w-32 rounded-[9px] bg-[#f5f5f7] dark:bg-[#101435]" />
             </div>
             <div className="mb-3 grid grid-cols-2 gap-3 max-[760px]:grid-cols-1">
-              <div className="h-10 rounded-[9px] bg-cms-card2" />
-              <div className="h-10 rounded-[9px] bg-cms-card2" />
+              <div className="h-10 rounded-[9px] bg-[#f5f5f7] dark:bg-[#101435]" />
+              <div className="h-10 rounded-[9px] bg-[#f5f5f7] dark:bg-[#101435]" />
             </div>
             <div className={stackedMedia}>
-              <div className="h-[230px] rounded-[10px] bg-cms-card2" />
-              <div className="h-[230px] rounded-[10px] bg-cms-card2" />
+              <div className="h-[230px] rounded-[10px] bg-[#f5f5f7] dark:bg-[#101435]" />
+              <div className="h-[230px] rounded-[10px] bg-[#f5f5f7] dark:bg-[#101435]" />
             </div>
           </div>
         )}
