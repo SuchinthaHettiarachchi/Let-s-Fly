@@ -1,6 +1,7 @@
 const { httpError } = require('../middleware/error');
 const { validateRegister, validateLogin, validateForgotPassword } = require('../validators/authValidator');
 const authService = require('../services/authService');
+const config = require('../config/config');
 
 const SESSION_COOKIE = 'letsfly_token';
 
@@ -10,6 +11,7 @@ const startSession = (res, user, remember) => {
     httpOnly: true,
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
+    domain: config.cookieDomain,
     maxAge: remember ? 7 * 24 * 60 * 60 * 1000 : 15 * 60 * 1000,
     path: '/',
   });
@@ -32,7 +34,7 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = async (req, res) => {
-  res.clearCookie(SESSION_COOKIE, { path: '/' });
+  res.clearCookie(SESSION_COOKIE, { domain: config.cookieDomain, path: '/' });
   res.json({ message: 'Logged out' });
 };
 

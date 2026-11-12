@@ -1,4 +1,4 @@
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = "/api/auth";
 
 async function post(path: string, body: unknown) {
   const res = await fetch(`${API}${path}`, {

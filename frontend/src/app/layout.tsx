@@ -39,6 +39,9 @@ export const metadata: Metadata = {
   },
   description:
     "SLTDA-registered travel agency in Colombo, Sri Lanka. Book air tickets, holiday packages, visas, hotels and transfers. Pay later with KOKO.",
+  icons: {
+    icon: "/images/letsflylogo.ico",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

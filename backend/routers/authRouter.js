@@ -4,9 +4,9 @@ const authCtrl = require('../controllers/authController');
 
 const router = express.Router();
 
-router.post('/register', limiter(5), authCtrl.register);
-router.post('/login', limiter(5), authCtrl.login);
+router.post('/register', limiter(15), authCtrl.register);
+router.post('/login', limiter(15), authCtrl.login);
 router.post('/logout', authCtrl.logout);
-router.post('/forgot-password', limiter(3), authCtrl.forgotPassword);
+router.post('/forgot-password', limiter(10), authCtrl.forgotPassword);
 
 module.exports = router;
