@@ -7,7 +7,7 @@ import HomeTab from "@/components/cms/home/home-tab";
 import InquiriesTab from "@/components/cms/inquiries/inquiries-tab";
 import ProjectsTab from "@/components/cms/projects/projects-tab";
 import PackagesTab from "@/components/cms/packages/packages-tab";
-import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
+import CmsSectionTab from "@/components/cms/cms-section-tab";
 
 const sections = [
   { id: "home", title: "Home", description: "Dashboard and homepage — hero banners, quick links and site activity." },
@@ -21,8 +21,6 @@ const sections = [
   { id: "rental", title: "Rental", description: "Manage the vehicle rental fleet, pricing and availability." },
   { id: "inquiries", title: "Inquiries", description: "Review customer inquiries, comments and responses." },
 ];
-
-const reactSections = new Set(["home", "projects", "outbound", "srilanka", "inquiries"]);
 
 const navigationIcons: Record<string, ReactNode> = {
   home: <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" />,
@@ -42,16 +40,10 @@ function getSectionFromHash() {
   return sections.some((item) => item.id === section) ? section : "home";
 }
 
-function getRouteFromHash() {
-  const route = window.location.hash.slice(1);
-  return sections.some((item) => item.id === route.split("/")[0]) ? route : "home";
-}
-
 export default function CmsFrame() {
   const [logoutError, setLogoutError] = useState<string | null>(null);
   const [loggingOut, setLoggingOut] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-  const [activeRoute, setActiveRoute] = useState("home");
   const [projectDirty, setProjectDirty] = useState(false);
   const { mode, setMode } = useTheme();
 
@@ -74,8 +66,6 @@ export default function CmsFrame() {
 
   useEffect(() => {
     const syncRoute = () => {
-      const route = getRouteFromHash();
-      setActiveRoute(route);
       setActiveSection(getSectionFromHash());
     };
     syncRoute();
@@ -106,21 +96,18 @@ export default function CmsFrame() {
 
   function navigate(section: string) {
     if (!sections.some((item) => item.id === section)) return;
-    if (activeSection === section && activeRoute === section) return;
+    if (activeSection === section) return;
     if (activeSection === "projects" && projectDirty && section !== "projects" &&
         !window.confirm("You have unsaved changes to this project. If you leave now, they will be lost.")) {
       return;
     }
     if (activeSection === "projects" && section !== "projects") setProjectDirty(false);
     setActiveSection(section);
-    setActiveRoute(section);
     const hash = section === "home" ? "" : `#${section}`;
     window.history.pushState(null, "", `${window.location.pathname}${window.location.search}${hash}`);
   }
 
   const current = sections.find((section) => section.id === activeSection) ?? sections[0];
-  const isReactPage = reactSections.has(activeSection);
-
   return (
     <main className="cms-app flex h-dvh w-full overflow-hidden bg-cms-bg font-[family-name:Poppins,system-ui,-apple-system,Segoe_UI,sans-serif] text-[14px] leading-[1.55] text-cms-text max-[760px]:flex-col">
       <aside aria-label="CMS navigation" className="relative z-40 flex h-full w-66 shrink-0 grow-0 basis-66 flex-col bg-[#13087a] px-3 pb-3.5 text-white max-[760px]:h-auto max-[760px]:w-full max-[760px]:basis-auto max-[760px]:flex-wrap max-[760px]:px-2.5 max-[760px]:pb-2">
@@ -177,37 +164,17 @@ export default function CmsFrame() {
       </aside>
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden max-[760px]:flex-1">
-        {!isReactPage && (
-          <header className="shrink-0 border-b border-cms-line bg-white px-5 pt-5 pb-3.5 sm:px-7 xl:px-10 dark:bg-[#101435]">
-            <h1 className="text-[20px] font-semibold leading-[1.3] text-cms-ink xl:text-[22px]">{current.title}</h1>
-            <p className="mt-1 max-w-[70ch] text-[13px] text-cms-muted">{current.description}</p>
-            <Breadcrumbs
-              className="mt-3"
-              items={[{ label: "Home", href: "#home", id: "home" }, { label: current.title }]}
-              onNavigate={navigate}
-            />
-          </header>
-        )}
         <div className="min-h-0 flex-1 overflow-y-auto bg-white dark:bg-[#0b0e28]">
-          {isReactPage ? (
-            <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8">
-              {activeSection === "home" ? (
-                <HomeTab onNavigate={navigate} />
-              ) : activeSection === "inquiries" ? (
-                <InquiriesTab onNavigate={navigate} />
-              ) : activeSection === "outbound" || activeSection === "srilanka" ? (
-                <PackagesTab key={activeSection} category={activeSection === "outbound" ? "outbound" : "sri-lanka"} onNavigate={navigate} />
-              ) : (
-                <ProjectsTab onDirtyChange={setProjectDirty} onNavigate={navigate} />
-              )}
-            </div>
+          {activeSection === "home" ? (
+            <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><HomeTab onNavigate={navigate} /></div>
+          ) : activeSection === "inquiries" ? (
+            <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><InquiriesTab onNavigate={navigate} /></div>
+          ) : activeSection === "outbound" || activeSection === "srilanka" ? (
+            <PackagesTab key={activeSection} category={activeSection === "outbound" ? "outbound" : "sri-lanka"} onNavigate={navigate} />
+          ) : activeSection === "projects" ? (
+            <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><ProjectsTab onDirtyChange={setProjectDirty} onNavigate={navigate} /></div>
           ) : (
-            <iframe
-              className="h-full w-full border-0 bg-cms-bg"
-              key={activeSection}
-              src={`/api/cms-demo#${activeRoute}`}
-              title={`Let's Fly CMS — ${current.title}`}
-            />
+            <CmsSectionTab title={current.title} description={current.description} onNavigate={navigate} />
           )}
         </div>
       </div>
