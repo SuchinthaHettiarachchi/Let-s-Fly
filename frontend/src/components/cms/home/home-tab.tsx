@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
+import { aboutLink, contactGroup, footerColumns, navGroups } from "@/data/site";
 
 type HeroKind = "desktop" | "mobile";
 
@@ -30,6 +31,13 @@ const HERO_SPECS: Record<HeroKind, { width: number; height: number; label: strin
   desktop: { width: 1800, height: 1061, label: "Desktop", ratio: "≈1.7:1" },
   mobile: { width: 1080, height: 1920, label: "Mobile", ratio: "9:16" },
 };
+const heroLinkOptions = [
+  { label: "Home", href: "/" },
+  ...navGroups.flatMap((group) => group.links),
+  aboutLink,
+  ...contactGroup.links,
+  ...footerColumns.flatMap((column) => column.links),
+].filter((link, index, links) => links.findIndex((item) => item.href === link.href) === index);
 
 const stats = [
   { label: "Travel Packages", value: 24, icon: "outbound", style: "text-cms-muted", trend: "+3", foot: "Outbound & Sri Lanka" },
@@ -394,7 +402,18 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
             </div>
             <div className="mb-3 grid grid-cols-2 gap-3 max-[760px]:grid-cols-1">
               <label className="block text-[12.5px] font-semibold text-cms-text">Banner title (alt text)<input className={inputShell} suppressHydrationWarning maxLength={120} placeholder="e.g. Summer in Maldives" type="text" value={slide.title} onChange={(event) => updateSlide(slide.id, "title", event.target.value)} /></label>
-              <label className="block text-[12.5px] font-semibold text-cms-text">Link URL (optional)<input className={inputShell} suppressHydrationWarning maxLength={500} placeholder="/holidays/maldives" type="text" value={slide.link} onChange={(event) => updateSlide(slide.id, "link", event.target.value)} /></label>
+              <label className="block text-[12.5px] font-semibold text-cms-text">
+                Link URL (optional)
+                <select className={inputShell} suppressHydrationWarning value={slide.link} onChange={(event) => updateSlide(slide.id, "link", event.target.value)}>
+                  <option value="">No link</option>
+                  {slide.link && !heroLinkOptions.some((link) => link.href === slide.link) && (
+                    <option value={slide.link}>Current URL: {slide.link}</option>
+                  )}
+                  {heroLinkOptions.map((link) => (
+                    <option key={link.href} value={link.href}>{link.label} ({link.href})</option>
+                  ))}
+                </select>
+              </label>
             </div>
             <div className={stackedMedia}>
               {(["desktop", "mobile"] as const).map((kind) => {
