@@ -29,6 +29,11 @@ const clean = (obj) => {
 };
 app.use((req, res, next) => { clean(req.body); next(); });
 
+//Add Health Route
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 app.use('/api/auth', authRouter);
 app.use('/api/hero', heroRouter);
 app.use('/api/packages', packageRouter);
