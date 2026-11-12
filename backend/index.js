@@ -7,6 +7,7 @@ const cors = require('cors');
 const config = require('./config/config');
 const authRouter = require('./routers/authRouter');
 const heroRouter = require('./routers/heroRouter');
+const packageRouter = require('./routers/packageRouter');
 const { errorHandler } = require('./middleware/error');
 
 const app = express();
@@ -30,6 +31,7 @@ app.use((req, res, next) => { clean(req.body); next(); });
 
 app.use('/api/auth', authRouter);
 app.use('/api/hero', heroRouter);
+app.use('/api/packages', packageRouter);
 app.use(errorHandler);
 
 mongoose.connect(config.mongoUri)

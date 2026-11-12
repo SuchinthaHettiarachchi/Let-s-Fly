@@ -4,7 +4,8 @@ import { Icon } from "@/components/ui/Icon";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { durationLabel, durationShort, formatLKR, type Package } from "@/data/packages";
 
-type Props = { pkg: Package; className?: string; imageSizes?: string; compact?: boolean };
+export type PackageCardData = Pick<Package, "slug" | "title" | "region" | "area" | "badge" | "days" | "nights" | "price" | "image" | "flightsIncluded">;
+type Props = { pkg: PackageCardData; className?: string; imageSizes?: string; compact?: boolean };
 
 /** Package card: photo with place tag + badge, title, duration, price and the yellow bottom strip. */
 export function PackageCard({ pkg, className = "", imageSizes = "(min-width: 1024px) 400px, 100vw", compact = false }: Props) {

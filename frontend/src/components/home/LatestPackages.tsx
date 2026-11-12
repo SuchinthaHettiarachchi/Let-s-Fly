@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Icon } from "@/components/ui/Icon";
-import { PackageCard } from "@/components/package/PackageCard";
+import { PackageCard, type PackageCardData } from "@/components/package/PackageCard";
 import { HotelBookingCard } from "@/components/holidays/HotelBookings";
 import { JourneyCard } from "@/components/holidays/JourneyList";
 import { packages, type Package } from "@/data/packages";
@@ -13,7 +13,9 @@ import { journeys } from "@/data/journeys";
 
 /** At most 3 rows of 4. Packages are listed newest first in data/packages.ts. */
 const MAX_SHOWN = 12;
+const PACKAGES_URL = `${process.env.NEXT_PUBLIC_API_URL}/packages`;
 
+type CmsPackage = PackageCardData & { category: Package["category"] };
 type Filter = { label: string; href: string; show: "packages" | "hotels" | "journeys"; category?: Package["category"] };
 
 const filters: Filter[] = [
@@ -26,9 +28,27 @@ const filters: Filter[] = [
 
 export function LatestPackages() {
   const [active, setActive] = useState(0);
+  const [cmsPackages, setCmsPackages] = useState<CmsPackage[] | null>(null);
   const pills = useRef<HTMLDivElement>(null);
   const { show, category, href } = filters[active];
-  const shown = (category ? packages.filter((p) => p.category === category) : packages).slice(0, MAX_SHOWN);
+  const availablePackages = cmsPackages ?? packages;
+  const shown = (category ? availablePackages.filter((p) => p.category === category) : availablePackages).slice(0, MAX_SHOWN);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(PACKAGES_URL)
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`))))
+      .then((data: { packages?: CmsPackage[] }) => {
+        if (cancelled || !Array.isArray(data.packages)) return;
+        if (data.packages.length) setCmsPackages(data.packages);
+      })
+      .catch(() => {
+        // Keep the bundled packages visible when the CMS is unavailable.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const scrollPills = (dir: 1 | -1) => pills.current?.scrollBy({ left: dir * 160, behavior: "smooth" });
 
