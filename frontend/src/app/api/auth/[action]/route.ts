@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
+import { apiUrl } from "@/lib/api-url";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
 const SESSION_COOKIE = "letsfly_token";
 
 export async function POST(request: Request, context: { params: Promise<{ action: string }> }) {
@@ -10,7 +10,7 @@ export async function POST(request: Request, context: { params: Promise<{ action
   }
 
   const body = await request.json().catch(() => ({}));
-  const response = await fetch(`${API}/auth/${action}`, {
+  const response = await fetch(apiUrl(`/auth/${action}`), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),

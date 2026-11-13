@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { aboutLink, contactGroup, footerColumns, navGroups } from "@/data/site";
+import { apiUrl } from "@/lib/api-url";
 
 type HeroKind = "desktop" | "mobile";
 
@@ -19,7 +20,7 @@ interface HeroError {
   [key: string]: string;
 }
 
-const HERO_URL = `${process.env.NEXT_PUBLIC_API_URL}/hero`;
+const HERO_URL = apiUrl("/hero");
 const HERO_MAX = 10;
 // Sizes taken from the live website's hero assets (public/images/hero).
 // Uploads are accepted when the aspect ratio is within RATIO_TOLERANCE of the

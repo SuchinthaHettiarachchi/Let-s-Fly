@@ -1,7 +1,13 @@
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { categoryCrumb, durationLabel, type Package } from "@/data/packages";
+import type { Package } from "@/data/packages";
+import { durationLabel } from "@/lib/package-format";
+
+const categoryCrumb = {
+  outbound: { label: "Outbound Packages", href: "/holidays/outbound" },
+  "sri-lanka": { label: "Sri Lanka Tours", href: "/holidays/sri-lanka" },
+} as const;
 import { ShareButton } from "./ShareButton";
 
 export function PackageHeader({ pkg }: { pkg: Package }) {

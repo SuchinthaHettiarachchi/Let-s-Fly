@@ -6,7 +6,8 @@ import { PackageCard } from "@/components/package/PackageCard";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { useInquiry } from "@/components/inquiry/InquiryProvider";
-import { outboundRegions, type OutboundRegion, type Package } from "@/data/packages";
+import type { OutboundRegion, Package } from "@/data/packages";
+import { outboundRegions } from "@/data/package-config";
 
 /** "Where to next?" region cards that filter the outbound package grid below them. */
 export function RegionPackages({ tours }: { tours: Package[] }) {

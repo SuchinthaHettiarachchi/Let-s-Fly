@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@/components/ui/Icon";
 import { Placeholder } from "@/components/ui/Placeholder";
-import { durationLabel, durationShort, formatLKR, type Package } from "@/data/packages";
+import type { Package } from "@/data/packages";
+import { durationLabel, durationShort, formatLKR } from "@/lib/package-format";
 
 export type PackageCardData = Pick<Package, "slug" | "title" | "region" | "area" | "badge" | "days" | "nights" | "price" | "image" | "flightsIncluded">;
 type Props = { pkg: PackageCardData; className?: string; imageSizes?: string; compact?: boolean };

@@ -27,7 +27,7 @@ exports.validatePackage = (body) => {
   if (!Number.isInteger(days) || days < 1) throw httpError(400, 'Days must be a positive whole number');
   if (!Number.isInteger(nights) || nights < 0) throw httpError(400, 'Nights must be a non-negative whole number');
   if (!Number.isFinite(price) || price < 0) throw httpError(400, 'Price must be a non-negative number');
-  return {
+  const result = {
     slug: requiredText(body.slug, 'Slug', 120).toLowerCase(),
     title: requiredText(body.title, 'Title', 160),
     region: requiredText(body.region, 'Region', 100),
@@ -44,12 +44,13 @@ exports.validatePackage = (body) => {
     image: optionalText(body.image, 'Image URL', 1000),
     priceNote: optionalText(body.priceNote, 'Price note', 240),
     flightsIncluded: body.flightsIncluded === true,
-    rating: body.rating && typeof body.rating === 'object' ? body.rating : undefined,
-    gallery: Array.isArray(body.gallery) ? body.gallery.filter((item) => typeof item === 'string').slice(0, 20) : [],
-    brochureUrl: optionalText(body.brochureUrl, 'Brochure URL', 1000),
-    overview: body.overview && typeof body.overview === 'object' ? body.overview : undefined,
-    itinerary: body.itinerary && typeof body.itinerary === 'object' ? body.itinerary : undefined,
-    inclusions: body.inclusions && typeof body.inclusions === 'object' ? body.inclusions : undefined,
-    related: Array.isArray(body.related) ? body.related.filter((item) => typeof item === 'string').slice(0, 20) : [],
   };
+  if (Object.prototype.hasOwnProperty.call(body, 'rating')) result.rating = body.rating && typeof body.rating === 'object' ? body.rating : undefined;
+  if (Object.prototype.hasOwnProperty.call(body, 'gallery')) result.gallery = Array.isArray(body.gallery) ? body.gallery.filter((item) => typeof item === 'string').slice(0, 20) : [];
+  if (Object.prototype.hasOwnProperty.call(body, 'brochureUrl')) result.brochureUrl = optionalText(body.brochureUrl, 'Brochure URL', 1000);
+  if (Object.prototype.hasOwnProperty.call(body, 'overview')) result.overview = body.overview && typeof body.overview === 'object' ? body.overview : undefined;
+  if (Object.prototype.hasOwnProperty.call(body, 'itinerary')) result.itinerary = body.itinerary && typeof body.itinerary === 'object' ? body.itinerary : undefined;
+  if (Object.prototype.hasOwnProperty.call(body, 'inclusions')) result.inclusions = body.inclusions && typeof body.inclusions === 'object' ? body.inclusions : undefined;
+  if (Object.prototype.hasOwnProperty.call(body, 'related')) result.related = Array.isArray(body.related) ? body.related.filter((item) => typeof item === 'string').slice(0, 20) : [];
+  return result;
 };

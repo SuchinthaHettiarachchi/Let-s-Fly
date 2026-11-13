@@ -10,10 +10,11 @@ import { HotelBookingCard } from "@/components/holidays/HotelBookings";
 import { JourneyCard } from "@/components/holidays/JourneyList";
 import type { Package } from "@/data/packages";
 import { journeys } from "@/data/journeys";
+import { apiUrl } from "@/lib/api-url";
 
 /** At most 3 rows of 4. Packages are listed newest first in data/packages.ts. */
 const MAX_SHOWN = 12;
-const PACKAGES_URL = `${process.env.NEXT_PUBLIC_API_URL}/packages`;
+const PACKAGES_URL = apiUrl("/packages");
 
 type CmsPackage = PackageCardData & { category: Package["category"] };
 type Filter = { label: string; href: string; show: "packages" | "hotels" | "journeys"; category?: Package["category"] };

@@ -9,6 +9,7 @@ import { Icon } from "@/components/ui/Icon";
 import { useInquiry } from "@/components/inquiry/InquiryProvider";
 import { contact } from "@/data/site";
 import { heroSlides } from "@/data/home";
+import { apiUrl } from "@/lib/api-url";
 
 const AUTOPLAY_MS = 2000;
 
@@ -43,7 +44,7 @@ export function HeroSlider() {
   // unreachable or has nothing usable, visitors keep the static slides.
   useEffect(() => {
     let cancelled = false;
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/hero`)
+    fetch(apiUrl("/hero"))
       .then((res) => (res.ok ? res.json() : null))
       .then((data: unknown) => {
         if (cancelled || !data || typeof data !== "object") return;

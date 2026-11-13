@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Placeholder } from "@/components/ui/Placeholder";
-import { durationShort, formatLKR, type Package } from "@/data/packages";
+import type { Package } from "@/data/packages";
+import { durationShort, formatLKR } from "@/lib/package-format";
 
 export function RelatedPackages({ items }: { items: Package[] }) {
   if (!items.length) return null;

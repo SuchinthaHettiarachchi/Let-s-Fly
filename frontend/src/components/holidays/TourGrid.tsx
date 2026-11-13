@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import { PackageCard, type PackageCardData } from "@/components/package/PackageCard";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { sriLankaThemes, type SriLankaTheme } from "@/data/packages";
+import type { SriLankaTheme } from "@/data/packages";
+import { sriLankaThemes } from "@/data/package-config";
 
 const PAGE_SIZE = 6;
 

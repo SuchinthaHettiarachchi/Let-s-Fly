@@ -6,7 +6,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { contact } from "@/data/site";
-import { formatLKR } from "@/data/packages";
+import { formatLKR } from "@/lib/package-format";
 import type { Journey } from "@/data/journeys";
 
 const kinds = [

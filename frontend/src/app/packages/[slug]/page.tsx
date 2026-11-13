@@ -13,7 +13,8 @@ import { MessageSection } from "@/components/contact/MessageSection";
 import { RelatedPackages } from "@/components/package/RelatedPackages";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { MobileActionBar } from "@/components/layout/MobileActionBar";
-import { durationLabel, formatLKR, type Package } from "@/data/packages";
+import type { Package } from "@/data/packages";
+import { durationLabel, formatLKR } from "@/lib/package-format";
 import { getPackageBySlug } from "@/lib/package-api";
 
 export async function generateMetadata({ params }: PageProps<"/packages/[slug]">): Promise<Metadata> {
@@ -29,9 +30,13 @@ export async function generateMetadata({ params }: PageProps<"/packages/[slug]">
 export default async function PackagePage({ params }: PageProps<"/packages/[slug]">) {
   const { slug } = await params;
   const pkg = await getPackageBySlug(slug);
-  if (!pkg?.overview) notFound();
+  if (!pkg) notFound();
 
-  const tabs: Tab[] = [{ id: "overview", label: "Overview", content: <OverviewPanel overview={pkg.overview} /> }];
+  const overview = pkg.overview ?? {
+    summary: `Explore our ${pkg.title} package. Contact us for the latest availability and itinerary details.`,
+    highlights: [],
+  };
+  const tabs: Tab[] = [{ id: "overview", label: "Overview", content: <OverviewPanel overview={overview} /> }];
   if (pkg.itinerary) {
     tabs.push({
       id: "itinerary",

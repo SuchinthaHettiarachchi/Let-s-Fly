@@ -6,7 +6,7 @@ import { Placeholder } from "@/components/ui/Placeholder";
 import { buttonClasses } from "@/components/ui/Button";
 import { useInquiry } from "@/components/inquiry/InquiryProvider";
 import { bookingPortals } from "@/data/site";
-import { formatLKR } from "@/data/packages";
+import { formatLKR } from "@/lib/package-format";
 import type { Fare } from "@/data/flights";
 
 /** "Top fares from Colombo": photo cards; actions appear on hover (always visible on touch screens). */
