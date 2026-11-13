@@ -19,4 +19,20 @@ router.post('/', requireAuth, limiter(30), async (req, res, next) => {
   }
 });
 
+// Video: raw binary body (fetch sends the File as-is), MP4/WebM up to 100MB.
+router.post(
+  '/video',
+  requireAuth,
+  limiter(15),
+  express.raw({ type: 'video/*', limit: '100mb' }),
+  async (req, res, next) => {
+    try {
+      const url = await r2Service.uploadRaw(req.body, req.headers['content-type'], 'videos');
+      res.status(201).json({ url });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
 module.exports = router;

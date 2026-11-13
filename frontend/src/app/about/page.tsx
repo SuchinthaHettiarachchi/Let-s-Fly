@@ -12,12 +12,11 @@ import { CountUp } from "@/components/home/CountUp";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { PlanTripButton } from "@/components/layout/PlanTripButton";
 import { contact } from "@/data/site";
+import { getWhoWeAre } from "@/lib/who-we-are-api";
 import {
-  aboutParagraphs,
   aboutStats,
   approach,
   commitments,
-  founderQuote,
   journeysThisYear,
   team,
   underOneRoof,
@@ -33,7 +32,8 @@ export const metadata: Metadata = {
 const gradient =
   "bg-[linear-gradient(180deg,rgba(11,37,69,.55)_0%,rgba(11,37,69,.9)_100%)] sm:bg-[linear-gradient(90deg,rgba(11,37,69,.94)_0%,rgba(11,37,69,.78)_35%,rgba(19,87,155,.35)_70%,rgba(19,87,155,.1)_100%)]";
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const who = await getWhoWeAre();
   return (
     <>
       {/* 1. Hero */}
@@ -89,45 +89,70 @@ export default function AboutPage() {
       <section className="py-16 lg:py-24">
         <Container className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.1fr_1fr]">
           <div data-reveal className="flex flex-col gap-5">
-            <Eyebrow>Who we are</Eyebrow>
+            <Eyebrow>{who.eyebrow}</Eyebrow>
             <h2>
-              More Than <span className="text-ocean-600">Just Travel</span>
+              {who.headingLead}
+              {who.headingHighlight && <span className="text-ocean-600">{who.headingHighlight}</span>}
             </h2>
-            {aboutParagraphs.map((p) => (
+            {who.paragraphs.map((p) => (
               <p key={p.slice(0, 20)} className="text-body text-ink-600">
                 {p}
               </p>
             ))}
-            <figure className="mt-2 flex gap-4 border-t border-sand-300 pt-6">
-              <span className="flex size-12 flex-none items-center justify-center rounded-full bg-ocean-600 text-small font-bold text-white">
-                {founderQuote.initials}
-              </span>
-              <div className="flex flex-col gap-2">
-                <blockquote className="text-lead font-medium text-ink-900">
-                  “{founderQuote.quote}”
-                </blockquote>
-                <figcaption className="text-small">
-                  <span className="font-semibold">{founderQuote.name}</span>
-                  <span className="block text-caption font-normal text-ink-400">{founderQuote.role}</span>
-                </figcaption>
-              </div>
-            </figure>
+            {who.quote.quote && (
+              <figure className="mt-2 flex gap-4 border-t border-sand-300 pt-6">
+                <span className="flex size-12 flex-none items-center justify-center rounded-full bg-ocean-600 text-small font-bold text-white">
+                  {who.quote.initials}
+                </span>
+                <div className="flex flex-col gap-2">
+                  <blockquote className="text-lead font-medium text-ink-900">
+                    “{who.quote.quote}”
+                  </blockquote>
+                  <figcaption className="text-small">
+                    <span className="font-semibold">{who.quote.name}</span>
+                    <span className="block text-caption font-normal text-ink-400">{who.quote.role}</span>
+                  </figcaption>
+                </div>
+              </figure>
+            )}
           </div>
           <div data-reveal="150" className="relative mx-auto w-full max-w-[500px] pb-16 sm:pb-20">
-            <Placeholder label="TEAM PHOTO" icon="groups" className="aspect-[4/5] w-[92%] rounded-2xl" />
-            <div className="absolute bottom-0 left-0 size-[46%] overflow-hidden rounded-2xl border-[6px] border-white shadow-lf-md">
-              <Image src="/images/packages/kandy-ella-rail.jpg" alt="" fill sizes="230px" className="object-cover" />
-            </div>
-            <div className="absolute top-8 right-0 flex animate-float flex-col rounded-xl bg-white px-5 py-4 shadow-lf-md">
-              <CountUp value="14+" className="num text-stat text-ocean-600" />
-              <span className="text-caption font-normal text-ink-600">
-                years helping
-                <br />
-                Sri Lankans travel
-              </span>
-            </div>
+            {who.mainImage ? (
+              <div className="aspect-[4/5] w-[92%] overflow-hidden rounded-2xl">
+                <Image src={who.mainImage} alt="" fill sizes="(min-width: 1024px) 460px, 92vw" className="object-cover" />
+              </div>
+            ) : (
+              <Placeholder label="TEAM PHOTO" icon="groups" className="aspect-[4/5] w-[92%] rounded-2xl" />
+            )}
+            {who.insetImage && (
+              <div className="absolute bottom-0 left-0 size-[46%] overflow-hidden rounded-2xl border-[6px] border-white shadow-lf-md">
+                <Image src={who.insetImage} alt="" fill sizes="230px" className="object-cover" />
+              </div>
+            )}
+            {who.statValue && (
+              <div className="absolute top-8 right-0 flex animate-float flex-col rounded-xl bg-white px-5 py-4 shadow-lf-md">
+                <CountUp value={who.statValue} className="num text-stat text-ocean-600" />
+                <span className="whitespace-pre-line text-caption font-normal text-ink-600">
+                  {who.statLabel}
+                </span>
+              </div>
+            )}
           </div>
         </Container>
+        {who.video && (
+          <Container className="mt-14">
+            <div data-reveal className="relative mx-auto aspect-video w-full max-w-[960px] overflow-hidden rounded-2xl bg-navy-900 shadow-lf-md">
+              {/* Unmuted by design: the CMS video keeps its own audio. */}
+              <video
+                className="h-full w-full"
+                controls
+                playsInline
+                preload="metadata"
+                src={who.video}
+              />
+            </div>
+          </Container>
+        )}
       </section>
 
       {/* 4. Our approach */}

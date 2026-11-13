@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
+import WhoWeAreSection from "@/components/cms/home/who-we-are-section";
 import { aboutLink, contactGroup, footerColumns, navGroups } from "@/data/site";
 import { apiUrl } from "@/lib/api-url";
 
@@ -484,6 +485,8 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
           <button suppressHydrationWarning className={btnPrimary} disabled={!loaded || saving} onClick={() => void saveSlides()} type="button">{saving ? "Saving…" : "Save hero slider"}</button>
         </div>
       </section>
+
+      <WhoWeAreSection />
     </div>
   );
 }
