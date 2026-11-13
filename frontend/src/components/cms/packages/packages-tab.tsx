@@ -5,10 +5,51 @@ import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { apiUrl } from "@/lib/api-url";
 
 const API = apiUrl("/packages");
+const UPLOAD = apiUrl("/upload");
 const inputShell = "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[13px] text-cms-ink outline-none focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
 const btn = "inline-flex min-h-[38px] items-center justify-center rounded-[9px] border px-[14px] text-[12px] font-semibold disabled:cursor-not-allowed disabled:opacity-50";
 const primary = `${btn} border-transparent bg-cms-primary text-white hover:bg-[#150cb0]`;
 const secondary = `${btn} border-cms-line bg-cms-card text-cms-ink hover:bg-[#f5f5f7] dark:hover:bg-[#101435]`;
+
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+
+function readAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("Could not read the file."));
+    reader.onload = () => resolve(reader.result as string);
+    reader.readAsDataURL(file);
+  });
+}
+
+// Downscale oversized uploads and re-encode as WebP (same approach as the hero
+// media slots) so R2 storage and page weight stay small; falls back to the
+// original file when the browser cannot encode WebP.
+async function prepareImage(file: File): Promise<string> {
+  const original = await readAsDataUrl(file);
+  if (file.type === "image/gif") return original;
+  const image = await new Promise<HTMLImageElement | null>((resolve) => {
+    const img = new Image();
+    img.onerror = () => resolve(null);
+    img.onload = () => resolve(img);
+    img.src = original;
+  });
+  if (!image || image.naturalWidth <= 1600) return original;
+  try {
+    const scale = 1600 / image.naturalWidth;
+    const canvas = document.createElement("canvas");
+    canvas.width = 1600;
+    canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return original;
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
+    if (!blob) return original;
+    return await readAsDataUrl(new File([blob], file.name.replace(/\.\w+$/, ".webp"), { type: "image/webp" }));
+  } catch {
+    return original;
+  }
+}
 
 type Category = "outbound" | "sri-lanka";
 type Theme = "cultural" | "hill-country" | "beaches" | "wildlife";
@@ -49,6 +90,39 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   const [loaded, setLoaded] = useState(false);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const [dropping, setDropping] = useState(false);
+
+  async function uploadImage(file?: File | null) {
+    if (!file) return;
+    setUploadError("");
+    if (!file.type.startsWith("image/")) {
+      setUploadError("Choose an image file (JPEG, PNG, WebP, AVIF or GIF).");
+      return;
+    }
+    if (file.size > MAX_IMAGE_BYTES) {
+      setUploadError("Image must be 5MB or smaller.");
+      return;
+    }
+    setUploading(true);
+    try {
+      const prepared = await prepareImage(file);
+      const response = await fetch(UPLOAD, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: prepared, folder: "packages" }),
+      });
+      const data: { url?: string; message?: string } = await response.json().catch(() => ({}));
+      if (!response.ok || !data.url) throw new Error(data.message ?? "Upload failed.");
+      update("image", data.url);
+    } catch (error) {
+      setUploadError(error instanceof Error ? error.message : "Upload failed.");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   const load = useCallback(async () => {
     try {
@@ -162,7 +236,45 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
           <Field label="Days"><input className={inputShell} min="1" type="number" value={draft.days} onChange={(event) => update("days", Number(event.target.value))} /></Field>
           <Field label="Nights"><input className={inputShell} min="0" type="number" value={draft.nights} onChange={(event) => update("nights", Number(event.target.value))} /></Field>
           <Field label="Price (LKR)"><input className={inputShell} min="0" type="number" value={draft.price} onChange={(event) => update("price", Number(event.target.value))} /></Field>
-          <Field label="Image URL"><input className={inputShell} placeholder="/images/packages/dubai.jpg" value={draft.image} onChange={(event) => update("image", event.target.value)} /></Field>
+          <div className="sm:col-span-2">
+            <span className="block text-[12.5px] font-semibold text-cms-text">Cover image</span>
+            <div
+              className={`mt-1.5 grid h-[150px] place-items-center gap-1.5 rounded-[10px] border-[1.5px] border-dashed bg-center bg-cover bg-no-repeat text-center text-[12.5px] font-medium transition-[border-color,box-shadow] duration-[180ms] ease-out ${dropping ? "border-[#6f6e80] shadow-[0_0_0_4px_rgba(110,110,130,.16)] dark:border-[#8a8ab0]" : "border-cms-line dark:border-[#2a2e63]"}`}
+              style={draft.image ? { backgroundImage: `url("${draft.image}")` } : undefined}
+              onDragOver={(event) => {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = "copy";
+                setDropping(true);
+              }}
+              onDragLeave={(event) => {
+                if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
+                setDropping(false);
+              }}
+              onDrop={(event) => {
+                event.preventDefault();
+                setDropping(false);
+                void uploadImage(event.dataTransfer.files?.[0]);
+              }}
+            >{draft.image || uploading ? "" : (
+              <>
+                <svg aria-hidden="true" fill="none" height="26" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="26">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" x2="12" y1="3" y2="15" />
+                </svg>
+                <span>Drop image here</span>
+              </>
+            )}</div>
+            <div className="mt-2 flex flex-wrap items-center justify-end gap-2.5">
+              <label className={`${secondary} ${uploading ? "pointer-events-none opacity-50" : "cursor-pointer"}`}>
+                {uploading ? "Uploading…" : draft.image ? "Replace image" : "Choose image"}
+                <input accept="image/*" hidden disabled={uploading} onChange={(event) => void uploadImage(event.target.files?.[0])} type="file" />
+              </label>
+              {draft.image && !uploading && <button className={secondary} onClick={() => update("image", "")} type="button">Remove</button>}
+            </div>
+            <span className="mt-1.5 block truncate text-[11.5px] text-cms-muted" title={draft.image}>{draft.image || "JPEG, PNG, WebP or GIF · up to 5MB"}</span>
+            <span className="mt-1 block text-[12px] text-[#d42a45] empty:hidden dark:text-[#ff9aa8]" role="alert">{uploadError}</span>
+          </div>
           <label className="mt-7 inline-flex items-center gap-2 text-[13px] font-semibold text-cms-text"><input checked={draft.flightsIncluded} onChange={(event) => update("flightsIncluded", event.target.checked)} type="checkbox" /> Flights included</label>
         </div>
         {draft.category === "sri-lanka" && (

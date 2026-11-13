@@ -8,15 +8,16 @@ const config = require('./config/config');
 const authRouter = require('./routers/authRouter');
 const heroRouter = require('./routers/heroRouter');
 const packageRouter = require('./routers/packageRouter');
+const uploadRouter = require('./routers/uploadRouter');
 const { errorHandler } = require('./middleware/error');
 
 const app = express();
 
 app.use(helmet());
 app.use(cors({ origin: config.frontendUrl, credentials: true }));
-// /api/hero carries base64 WebP images and parses its own 10mb JSON body in the router.
+// /api/hero and /api/upload carry base64 images and parse their own larger JSON bodies in the router.
 app.use((req, res, next) => {
-  if (req.originalUrl.startsWith('/api/hero')) return next();
+  if (req.originalUrl.startsWith('/api/hero') || req.originalUrl.startsWith('/api/upload')) return next();
   express.json({ limit: '10kb' })(req, res, next);
 });
 
@@ -37,6 +38,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRouter);
 app.use('/api/hero', heroRouter);
 app.use('/api/packages', packageRouter);
+app.use('/api/upload', uploadRouter);
 app.use(errorHandler);
 
 mongoose.connect(config.mongoUri)
