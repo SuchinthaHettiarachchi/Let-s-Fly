@@ -6,20 +6,41 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { rentalPerks, rentalTypes } from "@/data/home";
+import { rentalPerks } from "@/data/home";
+import {
+  defaultRentalTeaser,
+  getRentalTeaser,
+  rentalSlotMeta,
+  type RentalTeaserContent,
+} from "@/lib/rental-teaser-api";
 
 export function RentalsTeaser() {
   const [selected, setSelected] = useState(0);
   const [paused, setPaused] = useState(false);
-  const current = rentalTypes[selected];
+  const [content, setContent] = useState<RentalTeaserContent>(defaultRentalTeaser);
+
+  useEffect(() => {
+    let cancelled = false;
+    void getRentalTeaser().then((next) => {
+      if (!cancelled) setContent(next);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const slots = content.slots;
+  const current = slots[selected] ?? slots[0];
+  const currentMeta = current ? rentalSlotMeta[current.id] : null;
 
   // Image carousel: the vehicle photo changes on its own every few seconds. Picking a type
   // restarts the timer, hovering the photo pauses it, and reduced motion turns it off.
   useEffect(() => {
-    if (paused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = window.setTimeout(() => setSelected((i) => (i + 1) % rentalTypes.length), 4000);
+    if (paused || slots.length === 0) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setTimeout(() => setSelected((i) => (i + 1) % slots.length), 4000);
     return () => window.clearTimeout(id);
-  }, [selected, paused]);
+  }, [selected, paused, slots.length]);
 
   return (
     <section id="rentals" className="scroll-mt-[110px] lg:scroll-mt-[156px] py-20 lg:py-[110px]">
@@ -41,15 +62,16 @@ export function RentalsTeaser() {
             ))}
           </ul>
           <div role="group" aria-label="Vehicle type" className="my-1 flex flex-wrap gap-2.5">
-            {rentalTypes.map((t, i) => {
+            {slots.map((t, i) => {
               const on = i === selected;
+              const meta = rentalSlotMeta[t.id];
               return (
                 <button
-                  key={t.label}
+                  key={t.id}
                   type="button"
                   aria-pressed={on}
-                  aria-label={t.label}
-                  title={t.label}
+                  aria-label={meta.label}
+                  title={meta.label}
                   onClick={() => setSelected(i)}
                   className={`flex h-[52px] w-16 cursor-pointer items-center justify-center rounded-full border-[1.5px] transition-[color,background-color,border-color,scale] duration-200 press ${
                     on
@@ -57,7 +79,7 @@ export function RentalsTeaser() {
                       : "border-sand-300 bg-white text-ink-900 hover:border-ocean-600"
                   }`}
                 >
-                  <Icon name={t.icon} size={28} />
+                  <Icon name={meta.icon} size={28} />
                 </button>
               );
             })}
@@ -74,21 +96,23 @@ export function RentalsTeaser() {
           onMouseLeave={() => setPaused(false)}
         >
           <div className="relative h-[320px] overflow-hidden rounded-2xl bg-sand-200 sm:h-[480px]">
-            {rentalTypes.map((t, i) => (
+            {slots.map((t, i) => (
               <Image
-                key={t.image}
+                key={`${t.id}-${t.image}`}
                 src={t.image}
-                alt={i === selected ? `${t.label} for rent` : ""}
+                alt={i === selected && currentMeta ? `${currentMeta.label} for rent` : ""}
                 fill
                 sizes="(min-width: 1024px) 600px, 100vw"
                 className={`object-cover transition-opacity duration-700 ${i === selected ? "opacity-100" : "opacity-0"}`}
               />
             ))}
           </div>
-          <div className="absolute bottom-6 left-4 flex flex-col rounded-xl bg-sun-400 px-5 py-4 text-navy-900 shadow-[0_18px_40px_rgba(11,37,69,.18)] sm:bottom-9 lg:-left-7">
-            <span className="text-caption font-medium">{current.label} from</span>
-            <span className="num text-h3">{current.price}</span>
-          </div>
+          {current && (
+            <div className="absolute bottom-6 left-4 flex flex-col rounded-xl bg-sun-400 px-5 py-4 text-navy-900 shadow-[0_18px_40px_rgba(11,37,69,.18)] sm:bottom-9 lg:-left-7">
+              <span className="text-caption font-medium">{current.line1}</span>
+              <span className="num text-h3">{current.line2}</span>
+            </div>
+          )}
         </div>
       </Container>
     </section>

@@ -49,12 +49,7 @@ export const rentalPerks = [
   "Daily, weekly & monthly rates",
 ];
 
-export const rentalTypes = [
-  { label: "Cars", icon: "directions_car", image: "/images/rentals/car.jpg", price: "LKR 8,500 / day" },
-  { label: "Vans", icon: "airport_shuttle", image: "/images/rentals/van.jpg", price: "LKR 14,000 / day" },
-  { label: "Bikes", icon: "two_wheeler", image: "/images/rentals/bike.jpg", price: "LKR 4,500 / day" },
-  { label: "Scooters", icon: "moped", image: "/images/rentals/scooter.jpg", price: "LKR 3,000 / day" },
-];
+/** Rental teaser slots live in Mongo (CMS → Car & bike rental); see src/lib/rental-teaser-api.ts. */
 
 /**
  * Real Google reviews of Let's Fly.lk (5.0 from 25 reviews). Long reviews are trimmed to word-for-word
