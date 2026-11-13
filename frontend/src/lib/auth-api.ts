@@ -14,8 +14,5 @@ async function post(path: string, body: unknown) {
 export const authApi = {
   login: (email: string, password: string, remember: boolean) =>
     post("/auth/login", { email, password, remember }),
-  register: (name: string, email: string, password: string) =>
-    post("/auth/register", { name, email, password }),
-  forgotPassword: (email: string) => post("/auth/forgot-password", { email }),
   logout: () => post("/auth/logout", {}),
 };

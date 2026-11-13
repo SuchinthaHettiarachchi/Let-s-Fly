@@ -5,11 +5,6 @@ const config = require('../config/config');
 
 const DUMMY_HASH = bcrypt.hashSync('dummy-password', 10);
 
-exports.createUser = async ({ name, email, password }) => {
-  const user = await User.create({ name, email, password: await User.hashPassword(password) });
-  return { id: user._id, name: user.name, email: user.email, role: user.role };
-};
-
 exports.verifyCredentials = async (email, password) => {
   const user = await User.findOne({ email }).select('+password');
   const valid = await bcrypt.compare(password, user ? user.password : DUMMY_HASH);
@@ -20,5 +15,3 @@ exports.issueToken = (user, remember = false) =>
   jwt.sign({ id: user.id, role: user.role }, config.jwtSecret, {
     expiresIn: remember ? '7d' : config.jwtExpiresIn,
   });
-
-exports.findUserByEmail = (email) => User.findOne({ email });

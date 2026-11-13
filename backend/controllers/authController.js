@@ -1,5 +1,5 @@
 const { httpError } = require('../middleware/error');
-const { validateRegister, validateLogin, validateForgotPassword } = require('../validators/authValidator');
+const { validateLogin } = require('../validators/authValidator');
 const authService = require('../services/authService');
 const config = require('../config/config');
 
@@ -18,12 +18,6 @@ const startSession = (res, user, remember) => {
   return token;
 };
 
-exports.register = async (req, res) => {
-  const user = await authService.createUser(validateRegister(req.body));
-  const token = startSession(res, user, false);
-  res.status(201).json({ ...user, token });
-};
-
 exports.login = async (req, res) => {
   const { email, password, remember } = validateLogin(req.body);
   const user = await authService.verifyCredentials(email, password);
@@ -36,13 +30,4 @@ exports.login = async (req, res) => {
 exports.logout = async (req, res) => {
   res.clearCookie(SESSION_COOKIE, { domain: config.cookieDomain, path: '/' });
   res.json({ message: 'Logged out' });
-};
-
-exports.forgotPassword = async (req, res) => {
-  const { email } = validateForgotPassword(req.body);
-  const user = await authService.findUserByEmail(email);
-  if (user) {
-    // TODO: generate short-lived reset token and email it
-  }
-  res.json({ message: 'If an account exists for that email, a reset link has been sent' });
 };

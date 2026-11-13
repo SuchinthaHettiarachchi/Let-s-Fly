@@ -5,7 +5,7 @@ const SESSION_COOKIE = "letsfly_token";
 
 export async function POST(request: Request, context: { params: Promise<{ action: string }> }) {
   const { action } = await context.params;
-  if (!["login", "register", "logout", "forgot-password"].includes(action)) {
+  if (!["login", "logout"].includes(action)) {
     return NextResponse.json({ message: "Unknown authentication action" }, { status: 404 });
   }
 
@@ -19,7 +19,7 @@ export async function POST(request: Request, context: { params: Promise<{ action
   const data = await response.json().catch(() => ({}));
   const result = NextResponse.json(data, { status: response.status });
 
-  if (response.ok && typeof data.token === "string" && (action === "login" || action === "register")) {
+  if (response.ok && typeof data.token === "string" && action === "login") {
     result.cookies.set({
       name: SESSION_COOKIE,
       value: data.token,

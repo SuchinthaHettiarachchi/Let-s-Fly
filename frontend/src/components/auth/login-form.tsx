@@ -242,12 +242,6 @@ export default function LoginForm() {
                 )}
               </button>
 
-              <a className="forgot" href="/forgot-password">
-                Forgot Password?
-              </a>
-              <a className="forgot" href="/register">
-                Don&apos;t have an account? Create one
-              </a>
             </form>
 
             <div
