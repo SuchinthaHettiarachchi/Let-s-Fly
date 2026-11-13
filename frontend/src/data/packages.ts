@@ -16,6 +16,14 @@ export type ItineraryDay = {
 
 export type InclusionItem = { title: string; note?: string };
 
+export type PaymentMethod = { icon: string; title: string; text: string };
+export type PaymentStep = { title: string; text: string };
+export type PackagePayment = {
+  methods: PaymentMethod[];
+  steps: PaymentStep[];
+  note: string;
+};
+
 export type SriLankaTheme = "cultural" | "hill-country" | "beaches" | "wildlife";
 export type OutboundRegion = "middle-east" | "asia" | "europe" | "maldives";
 
@@ -29,8 +37,8 @@ export type Package = {
   category: "outbound" | "sri-lanka";
   /** Outbound only: which "Where to next?" region it belongs to. */
   outboundRegion?: OutboundRegion;
-  /** Sri Lanka only: themes used by the filter chips. */
-  themes?: SriLankaTheme[];
+  /** Sri Lanka only: dynamic category keys used by the filter chips. */
+  themes?: string[];
   /** Places shown on the card tag, e.g. "Sigiriya · Dambulla". Falls back to region. */
   area?: string;
   badge?: string;
@@ -57,6 +65,7 @@ export type Package = {
     days: ItineraryDay[];
   };
   inclusions?: { intro: string; included: InclusionItem[]; excluded: InclusionItem[] };
+  payment?: PackagePayment;
   related?: string[];
 };
 

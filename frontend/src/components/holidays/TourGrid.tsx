@@ -1,15 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PackageCard, type PackageCardData } from "@/components/package/PackageCard";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import type { SriLankaTheme } from "@/data/packages";
 import { sriLankaThemes } from "@/data/package-config";
+import { getTourCategories, type TourCategory } from "@/lib/package-cms";
 
 const PAGE_SIZE = 6;
 
-type TourPackage = PackageCardData & { themes?: SriLankaTheme[] };
+type TourPackage = PackageCardData & { themes?: string[] };
 
 const sorts = {
   popular: { label: "Popular", fn: () => 0 },
@@ -19,10 +19,30 @@ const sorts = {
 } as const;
 type SortKey = keyof typeof sorts;
 
-export function TourGrid({ tours }: { tours: TourPackage[] }) {
-  const [theme, setTheme] = useState<SriLankaTheme | "all">("all");
+export function TourGrid({ tours, categories }: { tours: TourPackage[]; categories?: TourCategory[] }) {
+  const [theme, setTheme] = useState<string>("all");
   const [sort, setSort] = useState<SortKey>("popular");
   const [limit, setLimit] = useState(PAGE_SIZE);
+  const [fetchedCats, setFetchedCats] = useState<TourCategory[]>([]);
+
+  useEffect(() => {
+    if (categories?.length) return;
+    let cancelled = false;
+    getTourCategories().then((next) => {
+      if (!cancelled && next.length) setFetchedCats(next);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [categories]);
+
+  const chips = useMemo(() => {
+    const source = categories?.length ? categories : fetchedCats;
+    const dynamic = source.length
+      ? [...source].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0)).map((c) => ({ id: c.key, label: c.label }))
+      : sriLankaThemes;
+    return [{ id: "all", label: "All" }, ...dynamic];
+  }, [categories, fetchedCats]);
 
   const visible = useMemo(() => {
     const filtered = theme === "all" ? tours : tours.filter((t) => t.themes?.includes(theme));
@@ -30,12 +50,10 @@ export function TourGrid({ tours }: { tours: TourPackage[] }) {
     return [...filtered].sort(sorts[sort].fn);
   }, [tours, theme, sort]);
 
-  const chips: { id: SriLankaTheme | "all"; label: string }[] = [{ id: "all", label: "All" }, ...sriLankaThemes];
-
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-4 rounded-xl bg-sand-50 p-3 lg:flex-row lg:items-center lg:justify-between">
-        <div role="group" aria-label="Filter by theme" className="no-scrollbar -mx-3 flex gap-2 overflow-x-auto px-3 lg:mx-0 lg:px-0">
+        <div role="group" aria-label="Filter by category" className="no-scrollbar -mx-3 flex gap-2 overflow-x-auto px-3 lg:mx-0 lg:px-0">
           {chips.map((c) => {
             const on = c.id === theme;
             return (

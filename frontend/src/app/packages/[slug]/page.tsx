@@ -48,7 +48,7 @@ export default async function PackagePage({ params }: PageProps<"/packages/[slug
   if (pkg.inclusions) {
     tabs.push({ id: "inclusions", label: "Inclusions & Exclusions", content: <InclusionsPanel inclusions={pkg.inclusions} /> });
   }
-  tabs.push({ id: "payment", label: "Payment Methods", content: <PaymentPanel /> });
+  tabs.push({ id: "payment", label: "Payment Methods", content: <PaymentPanel payment={pkg.payment} /> });
 
   return (
     <>

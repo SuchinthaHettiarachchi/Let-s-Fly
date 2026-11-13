@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import WhoWeAreSection from "@/components/cms/home/who-we-are-section";
+import HomeAboutSection from "@/components/cms/home/home-about-section";
 import RentalTeaserSection from "@/components/cms/home/rental-teaser-section";
 import { aboutLink, contactGroup, footerColumns, navGroups } from "@/data/site";
 import { apiUrl } from "@/lib/api-url";
@@ -513,6 +514,7 @@ async function uploadImage(id: string, kind: HeroKind, file?: File) {
       </section>
 
       <WhoWeAreSection />
+      <HomeAboutSection />
       <RentalTeaserSection />
     </div>
   );

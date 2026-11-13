@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
-import { googleRating, stats } from "@/data/home";
+import { getHomeAbout } from "@/lib/home-about-api";
 import { CountUp } from "./CountUp";
 
 const reviewerAvatars = [
@@ -11,15 +11,16 @@ const reviewerAvatars = [
   "/images/people/reviewer-3.jpg",
 ];
 
-export function AboutIntro() {
+export async function AboutIntro() {
+  const content = await getHomeAbout();
   return (
     <section className="py-16 lg:py-20">
       <Container className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2 lg:gap-[72px]">
         <div data-reveal className="relative">
           {/* Brand film: plays silently on a loop, with no play button or controls. */}
           <video
-            src="/videos/letsfly-home.mp4"
-            poster="/videos/letsfly-home-poster.jpg"
+            src={content.video}
+            poster={content.videoPoster || undefined}
             autoPlay
             muted
             loop
@@ -42,23 +43,18 @@ export function AboutIntro() {
               ))}
             </div>
             <div className="flex flex-col">
-              <span className="text-small font-semibold">{googleRating.score} on Google</span>
-              <span className="text-caption font-normal text-ink-400">from {googleRating.count} reviews</span>
+              <span className="text-small font-semibold">{content.ratingScore} on Google</span>
+              <span className="text-caption font-normal text-ink-400">from {content.ratingCount} reviews</span>
             </div>
           </div>
         </div>
 
         <div data-reveal="150" className="flex flex-col gap-5">
-          <Eyebrow>Who we are</Eyebrow>
-          <h2>
-            Your journey, our expertise. Smart travel starts here.
-          </h2>
-          <p className="text-lead text-ink-600">
-            At Let&apos;s Fly, we bring every travel need under one roof. Our team handles your corporate trip, family
-            holiday or luxury escape from start to finish for air tickets, visas, hotels, tour packages and transfers.
-          </p>
+          <Eyebrow>{content.eyebrow}</Eyebrow>
+          <h2>{content.heading}</h2>
+          <p className="text-lead text-ink-600">{content.paragraph}</p>
           <div className="mt-2.5 mb-2 grid grid-cols-3 gap-3 sm:gap-4">
-            {stats.map((s) => (
+            {content.stats.map((s) => (
               <div
                 key={s.label}
                 className="group relative flex flex-col gap-0.5 overflow-hidden rounded-xl bg-sand-50 p-3 transition-[translate,background-color,box-shadow] duration-300 ease-lf hover:-translate-y-1 hover:bg-white hover:shadow-lf-card-hover sm:p-5"

@@ -13,7 +13,7 @@ const sections = [
   { id: "home", title: "Home", description: "Dashboard and homepage — hero banners, quick links and site activity." },
   { id: "projects", title: "Projects", description: "Create, edit and manage the MICE travel projects shown on the website." },
   { id: "outbound", title: "Outbound Travels", description: "Manage outbound packages, destinations and departures." },
-  { id: "srilanka", title: "Travel Sri Lanka", description: "Manage Sri Lanka tour packages, routes and itineraries." },
+  { id: "srilanka", title: "Travel Sri Lanka", description: "Manage categories, tour packages, gallery, overview, itinerary and payment methods." },
   { id: "hotels", title: "Hotel Bookings", description: "Manage hotel partners, room types and booking rates." },
   { id: "trains", title: "Trains", description: "Manage train routes, schedules and reservations." },
   { id: "cruises", title: "Cruises", description: "Manage cruise packages and sailing dates." },

@@ -10,16 +10,26 @@ const heroRouter = require('./routers/heroRouter');
 const packageRouter = require('./routers/packageRouter');
 const uploadRouter = require('./routers/uploadRouter');
 const whoWeAreRouter = require('./routers/whoWeAreRouter');
+const homeAboutRouter = require('./routers/homeAboutRouter');
 const rentalTeaserRouter = require('./routers/rentalTeaserRouter');
+const categoryRouter = require('./routers/categoryRouter');
 const { errorHandler } = require('./middleware/error');
 
 const app = express();
 
 app.use(helmet());
 app.use(cors({ origin: config.frontendUrl, credentials: true }));
-// /api/hero, /api/upload and /api/who-we-are parse their own larger JSON bodies in the router.
+// These routers parse their own larger JSON bodies in the router.
 app.use((req, res, next) => {
-  if (req.originalUrl.startsWith('/api/hero') || req.originalUrl.startsWith('/api/upload') || req.originalUrl.startsWith('/api/who-we-are') || req.originalUrl.startsWith('/api/rental-teaser')) return next();
+  if (
+    req.originalUrl.startsWith('/api/hero')
+    || req.originalUrl.startsWith('/api/upload')
+    || req.originalUrl.startsWith('/api/who-we-are')
+    || req.originalUrl.startsWith('/api/home-about')
+    || req.originalUrl.startsWith('/api/rental-teaser')
+    || req.originalUrl.startsWith('/api/packages')
+    || req.originalUrl.startsWith('/api/categories')
+  ) return next();
   express.json({ limit: '10kb' })(req, res, next);
 });
 
@@ -42,7 +52,9 @@ app.use('/api/hero', heroRouter);
 app.use('/api/packages', packageRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/who-we-are', whoWeAreRouter);
+app.use('/api/home-about', homeAboutRouter);
 app.use('/api/rental-teaser', rentalTeaserRouter);
+app.use('/api/categories', categoryRouter);
 app.use(errorHandler);
 
 mongoose.connect(config.mongoUri)

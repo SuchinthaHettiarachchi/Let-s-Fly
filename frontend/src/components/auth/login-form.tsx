@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
 import { authApi } from "@/lib/auth-api";
 
 interface LoginErrors {
@@ -10,7 +9,6 @@ interface LoginErrors {
 }
 
 export default function LoginForm() {
-  const router = useRouter();
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState("");
@@ -39,8 +37,10 @@ export default function LoginForm() {
     setBusy(true);
     const result = await authApi.login(email.trim(), password, remember);
     if (result.ok) {
-      setNotice("Signed in successfully. Opening the CMS…");
-      router.replace("/cms");
+      // Full page load so the login stylesheet is never carried into the CMS —
+      // a client-side router.replace left login.css applied and the portal looked
+      // unstyled until the visitor pressed refresh.
+      window.location.replace("/cms");
       return;
     }
     setNotice(result.message || "Sign-in failed. Please try again.");

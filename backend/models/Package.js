@@ -23,6 +23,7 @@ const packageSchema = new mongoose.Schema({
   overview: { type: mongoose.Schema.Types.Mixed, default: undefined },
   itinerary: { type: mongoose.Schema.Types.Mixed, default: undefined },
   inclusions: { type: mongoose.Schema.Types.Mixed, default: undefined },
+  payment: { type: mongoose.Schema.Types.Mixed, default: undefined },
   related: { type: [String], default: [] },
 }, { timestamps: true });
 

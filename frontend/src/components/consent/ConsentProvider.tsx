@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useMemo, useState, useSyncExternalStore } from "react";
+import { usePathname } from "next/navigation";
 import {
   allAllowed,
   getConsent,
@@ -43,6 +44,9 @@ export function useConsent() {
 export function ConsentProvider({ children }: { children: React.ReactNode }) {
   const consent = useSyncExternalStore(subscribeConsent, getConsent, getServerConsent);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  // The CMS portal (and its login screen) never shows the consent UI — it is staff-only.
+  const pathname = usePathname() ?? "";
+  const onPortal = pathname === "/cms" || pathname.startsWith("/cms/") || pathname === "/login" || pathname.startsWith("/login/");
 
   const save = useCallback((choices: Choices) => {
     saveConsent(choices);
@@ -68,8 +72,8 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
   return (
     <ConsentContext.Provider value={value}>
       {children}
-      {consent === null && !settingsOpen && <CookieBanner />}
-      {settingsOpen && <CookiePreferences />}
+      {consent === null && !settingsOpen && !onPortal && <CookieBanner />}
+      {settingsOpen && !onPortal && <CookiePreferences />}
       <ConsentScripts />
     </ConsentContext.Provider>
   );

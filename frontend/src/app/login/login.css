@@ -23,7 +23,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{min-height:100%}
-body{
+body:has(.auth-page){
   font-family:var(--font-body),system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   color:var(--text);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;
   background:#0e0660;
@@ -81,7 +81,7 @@ svg{display:block;flex-shrink:0}
 .cms-head span{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--primary);background:var(--soft);border-radius:999px;padding:2px 9px;margin-left:8px;vertical-align:3px}
 .cms > p{font-size:13.5px;color:var(--muted);margin-top:10px}
 
-form{margin-top:22px;display:flex;flex-direction:column;gap:16px}
+.auth-page form{margin-top:22px;display:flex;flex-direction:column;gap:16px}
 .field label{display:block;font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:7px}
 .control{position:relative}
 .control > svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#9a98b5;pointer-events:none;transition:color .2s}
@@ -202,7 +202,7 @@ body:has(.auth-page) > section[aria-labelledby="newsletter-title"]{display:none!
   .systems{grid-template-columns:1fr;gap:14px}
 }
 @media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation:none!important;transition:none!important}
+  body:has(.auth-page) *,body:has(.auth-page) *::before,body:has(.auth-page) *::after{animation:none!important;transition:none!important}
   .bg{transform:none}
 }
 

@@ -7,6 +7,7 @@ import { HotelBookings } from "@/components/holidays/HotelBookings";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import type { Package } from "@/data/packages";
 import { getPackagesByCategory } from "@/lib/package-api";
+import { getTourCategories } from "@/lib/package-cms";
 
 export const metadata: Metadata = {
   title: { absolute: "Sri Lanka Tour Packages & Hotel Bookings | Let's Fly" },
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default async function SriLankaPage() {
-  const tours = await getSriLankaTours();
+  const [tours, categories] = await Promise.all([getSriLankaTours(), getTourCategories()]);
   return (
     <>
       <PageHero
@@ -32,7 +33,7 @@ export default async function SriLankaPage() {
         <div className="bg-ocean-600/50">
           <section className="py-14 lg:py-20">
             <Container>
-              <TourGrid tours={tours} />
+              <TourGrid tours={tours} categories={categories} />
             </Container>
           </section>
           <HotelBookings />
