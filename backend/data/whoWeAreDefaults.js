@@ -19,6 +19,6 @@ module.exports = {
   statValue: '14+',
   statLabel: 'years helping\nSri Lankans travel',
   mainImage: '',
-  insetImage: '/images/packages/kandy-ella-rail.jpg',
+  insetImage: 'https://pub-964aaf148d3f409d99da8fedff2d543c.r2.dev/packages/kandy-ella-rail.jpg',
   video: '',
 };

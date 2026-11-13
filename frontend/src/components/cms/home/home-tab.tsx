@@ -22,6 +22,7 @@ interface HeroError {
 }
 
 const HERO_URL = apiUrl("/hero");
+const UPLOAD_URL = apiUrl("/upload");
 const HERO_MAX = 10;
 // Sizes taken from the live website's hero assets (public/images/hero).
 // Uploads are accepted when the aspect ratio is within RATIO_TOLERANCE of the
@@ -195,6 +196,7 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
   const [slides, setSlides] = useState<HeroSlide[]>([]);
   const [errors, setErrors] = useState<HeroError>({});
   const [dropping, setDropping] = useState<Record<string, boolean>>({});
+  const [uploading, setUploading] = useState<string | null>(null);
   const [dirty, setDirty] = useState(false);
   const [notice, setNotice] = useState("");
   const [loaded, setLoaded] = useState(false);
@@ -260,21 +262,44 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
     setDirty(true);
   }
 
-  async function uploadImage(id: string, kind: HeroKind, file?: File) {
-    if (!file) return;
-    const key = `${id}:${kind}`;
-    const result = await readHeroFile(file, kind);
-    if (result.error) {
-      setErrors((current) => ({ ...current, [key]: result.error ?? "" }));
-      return;
-    }
-    setErrors((current) => {
-      const next = { ...current };
-      delete next[key];
-      return next;
-    });
-    updateSlide(id, kind, result.src ?? "");
+async function uploadToR2(dataUrl: string): Promise<string> {
+  const response = await fetch(UPLOAD_URL, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ image: dataUrl, folder: "hero" }),
+  });
+  const body: { url?: string; message?: string } = await response.json().catch(() => ({}));
+  if (!response.ok || !body.url) throw new Error(body.message ?? "Upload failed.");
+  return body.url;
+}
+
+async function uploadImage(id: string, kind: HeroKind, file?: File) {
+  if (!file) return;
+  const key = `${id}:${kind}`;
+  const result = await readHeroFile(file, kind);
+  if (result.error) {
+    setErrors((current) => ({ ...current, [key]: result.error ?? "" }));
+    return;
   }
+  setErrors((current) => {
+    const next = { ...current };
+    delete next[key];
+    return next;
+  });
+  setUploading(key);
+  try {
+    const url = await uploadToR2(result.src ?? "");
+    updateSlide(id, kind, url);
+  } catch (error) {
+    setErrors((current) => ({
+      ...current,
+      [key]: error instanceof Error ? error.message : "Upload failed.",
+    }));
+  } finally {
+    setUploading(null);
+  }
+}
 
   function removeImage(id: string, kind: HeroKind) {
     setErrors((current) => {
@@ -449,11 +474,11 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
                         </>
                       )}</div>
                     <div className="mt-3 flex flex-wrap justify-end gap-2.5">
-                      <label className={`${btnGhost} cursor-pointer`}>
-                        {slide[kind] ? "Replace image" : "Upload image"}
-                        <input suppressHydrationWarning accept="image/*" hidden onChange={(event) => void uploadImage(slide.id, kind, event.target.files?.[0])} type="file" />
+                      <label className={`${btnGhost} ${uploading === dropKey ? "pointer-events-none opacity-50" : "cursor-pointer"}`}>
+                        {uploading === dropKey ? "Uploading…" : slide[kind] ? "Replace image" : "Upload image"}
+                        <input suppressHydrationWarning accept="image/*" disabled={uploading === dropKey} hidden onChange={(event) => void uploadImage(slide.id, kind, event.target.files?.[0])} type="file" />
                       </label>
-                      {slide[kind] && <button suppressHydrationWarning className={btnGhost} onClick={() => removeImage(slide.id, kind)} type="button">Remove</button>}
+                      {slide[kind] && uploading !== dropKey && <button suppressHydrationWarning className={btnGhost} onClick={() => removeImage(slide.id, kind)} type="button">Remove</button>}
                     </div>
                     <span className="mt-1.5 block text-[12px] text-[#d42a45] empty:hidden dark:text-[#ff9aa8]" role="alert">{errors[`${slide.id}:${kind}`] ?? ""}</span>
                   </div>

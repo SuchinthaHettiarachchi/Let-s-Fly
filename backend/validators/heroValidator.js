@@ -4,13 +4,19 @@ const MAX_SLIDES = 10;
 const MAX_IMAGE_CHARS = 4000000;
 const WEBP_RE = /^data:image\/webp;base64,[A-Za-z0-9+/]+={0,2}$/;
 const LINK_RE = /^(\/(?!\/)|https?:\/\/)/i;
+const URL_MAX = 1000;
 
+// Hero media is stored as an R2 https URL. Legacy slides still carry base64
+// WebP — accepted here, then uploaded to R2 by the controller before save.
 const image = (value, field) => {
   if (value === '' || value === undefined || value === null) return '';
-  if (typeof value !== 'string' || value.length > MAX_IMAGE_CHARS || !WEBP_RE.test(value)) {
-    throw httpError(400, `${field} must be a WebP image`);
+  if (typeof value !== 'string') throw httpError(400, `${field} must be an image URL`);
+  if (WEBP_RE.test(value)) {
+    if (value.length > MAX_IMAGE_CHARS) throw httpError(400, `${field} must be a WebP image`);
+    return value;
   }
-  return value;
+  if (value.length <= URL_MAX && /^(https?:\/\/)/i.test(value)) return value;
+  throw httpError(400, `${field} must be an https image URL`);
 };
 
 exports.validateSlides = (body) => {

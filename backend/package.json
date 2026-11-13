@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "migrate:packages": "node scripts/migratePackages.js"
+    "migrate:packages": "node scripts/migratePackages.js",
+    "migrate:images-r2": "node scripts/migrateImagesToR2.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1168.0",

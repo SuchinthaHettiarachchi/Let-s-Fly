@@ -57,7 +57,8 @@ export function HeroSlider() {
           mobile: s.mobile,
           title: s.title,
           link: s.link,
-          optimized: false,
+          // Local static paths go through next/image; R2/remote and data URLs use plain <img>.
+          optimized: s.desktop.startsWith("/") && s.mobile.startsWith("/"),
         })));
         setIndex(0);
       })
@@ -106,8 +107,9 @@ export function HeroSlider() {
             );
           })()
         ) : (
-          // Admin uploads are base64 WebP (not optimizer paths), so both files are
+          // Admin uploads are R2 HTTPS URLs (or legacy base64 WebP), so both files are
           // stacked and swapped in CSS at the same 40rem breakpoint as <picture>.
+          // next/image optimizes static local paths only (see optimized flag above).
           <>
             <img alt={s.title} className={`hidden min-[40rem]:block absolute inset-0 h-full w-full ${layer}`} loading={first ? "eager" : "lazy"} src={s.desktop} />
             <img alt={s.title} className={`block min-[40rem]:hidden absolute inset-0 h-full w-full ${layer}`} loading={first ? "eager" : "lazy"} src={s.mobile} />
