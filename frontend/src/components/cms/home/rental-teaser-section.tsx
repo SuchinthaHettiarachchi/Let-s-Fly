@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
+import { ImageUpload } from "@/components/cms/ImageUpload";
 import { apiUrl } from "@/lib/api-url";
 import {
   defaultRentalTeaser,
@@ -14,9 +15,9 @@ import {
 
 const URL_API = apiUrl("/rental-teaser");
 const UPLOAD_API = apiUrl("/upload");
-
 const inputShell =
   "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[14px] text-cms-ink outline-none placeholder:text-cms-muted focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
+
 const btnGhost = cmsButtonClasses("secondary");
 const btnPrimary = cmsButtonClasses("primary");
 
@@ -64,7 +65,6 @@ export default function RentalTeaserSection() {
   const [notice, setNotice] = useState("");
   const [uploading, setUploading] = useState<RentalSlotId | null>(null);
   const [uploadError, setUploadError] = useState("");
-  const [dropping, setDropping] = useState<RentalSlotId | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -193,36 +193,15 @@ export default function RentalTeaserSection() {
                 </span>
               </div>
 
-              <div
-                className={`mt-2 grid h-[130px] place-items-center gap-1.5 rounded-[10px] border-[1.5px] border-dashed bg-center bg-cover bg-no-repeat text-center text-[12.5px] font-medium transition-[border-color,box-shadow] duration-[180ms] ease-out ${dropping === id ? "border-[#6f6e80] shadow-[0_0_0_4px_rgba(110,110,130,.16)] dark:border-[#8a8ab0]" : "border-cms-line bg-white text-cms-muted dark:border-[#2a2e63] dark:bg-[#171a42]"}`}
-                style={slot.image ? { backgroundImage: `url("${slot.image}")` } : undefined}
-                onDragOver={(event) => {
-                  event.preventDefault();
-                  event.dataTransfer.dropEffect = "copy";
-                  setDropping(id);
-                }}
-                onDragLeave={(event) => {
-                  if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
-                  setDropping(null);
-                }}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  setDropping(null);
-                  void uploadImage(id, event.dataTransfer.files?.[0]);
-                }}
-              >
-                {slot.image || uploading === id ? "" : <span>Drop image here</span>}
-              </div>
-
-              <div className="mt-2 flex flex-wrap items-center justify-end gap-2">
-                <label className={`${btnGhost} ${uploading === id ? "pointer-events-none opacity-50" : "cursor-pointer"}`}>
-                  {uploading === id ? "Uploading…" : slot.image ? "Replace" : "Choose image"}
-                  <input accept="image/*" disabled={uploading === id} hidden onChange={(event) => void uploadImage(id, event.target.files?.[0])} type="file" />
-                </label>
-                {slot.image && uploading !== id && (
-                  <button className={btnGhost} onClick={() => updateSlot(id, { image: "" })} type="button">Remove</button>
-                )}
-              </div>
+              <ImageUpload
+                accept="image/*"
+                className="mt-2"
+                height="h-[130px]"
+                onFile={(file) => void uploadImage(id, file)}
+                onRemove={() => updateSlot(id, { image: "" })}
+                uploading={uploading === id}
+                value={slot.image}
+              />
 
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 <label className="block text-[12.5px] font-semibold text-cms-text">

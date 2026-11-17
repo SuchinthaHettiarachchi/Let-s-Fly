@@ -1,0 +1,32 @@
+
+C:\Users\ASUS\Desktop\Entrepreneur Ideas\KaraliyaddaOne\Projects\Let's Fly\Let-s-Fly\frontend\src\components\cms\cms-frame.tsx
+  13:8  warning  'TrainsTab' is defined but never used   @typescript-eslint/no-unused-vars
+  14:8  warning  'CruisesTab' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\ASUS\Desktop\Entrepreneur Ideas\KaraliyaddaOne\Projects\Let's Fly\Let-s-Fly\frontend\src\components\cms\cruises\cruises-tab.tsx
+    6:10  warning  'CmsSelect' is defined but never used                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+    8:10  warning  'Icon' is defined but never used                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+  105:21  warning  'setUploading' is assigned a value but never used                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  161:6   warning  React Hook useCallback has a missing dependency: 'nextStopId'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setStops' needs the current value of 'nextStopId'  react-hooks/exhaustive-deps
+  167:9   warning  'reorderStop' is assigned a value but never used                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+  432:35  warning  'i' is defined but never used                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+
+C:\Users\ASUS\Desktop\Entrepreneur Ideas\KaraliyaddaOne\Projects\Let's Fly\Let-s-Fly\frontend\src\components\cms\projects\projects-tab.tsx
+  805:33   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  807:163  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\ASUS\Desktop\Entrepreneur Ideas\KaraliyaddaOne\Projects\Let's Fly\Let-s-Fly\frontend\src\components\cms\trains\trains-tab.tsx
+    8:10  warning  'Icon' is defined but never used                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+  107:21  warning  'setUploading' is assigned a value but never used                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  158:9   warning  'setCountry' is assigned a value but never used                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  172:6   warning  React Hook useCallback has a missing dependency: 'nextStopId'. Either include it or remove the dependency array. You can also replace multiple useState variables with useReducer if 'setStops' needs the current value of 'nextStopId'  react-hooks/exhaustive-deps
+  178:9   warning  'reorderStop' is assigned a value but never used                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+  381:75  error    Unexpected any. Specify a different type                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  460:35  warning  'i' is defined but never used                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+
+C:\Users\ASUS\Desktop\Entrepreneur Ideas\KaraliyaddaOne\Projects\Let's Fly\Let-s-Fly\frontend\src\components\home\HeroSlider.tsx
+  114:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  115:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+Γ£û 19 problems (1 error, 18 warnings)
+

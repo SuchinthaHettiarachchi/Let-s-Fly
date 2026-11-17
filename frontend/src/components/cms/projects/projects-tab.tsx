@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type DragEvent } from "react";
 import seeds from "./projects.json";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
+import { ImageUpload } from "@/components/cms/ImageUpload";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
 
 const STORAGE_KEY = "letsfly-cms-projects-v1";
@@ -39,6 +40,9 @@ const panelShell =
   "min-w-0 rounded-[13px] border border-cms-line bg-cms-card p-[18px] shadow-[0_1px_2px_rgba(19,8,122,.04)] dark:shadow-none";
 const inputShell =
   "min-h-[38px] w-full rounded-lg border border-[#dcdaf0] bg-white px-[10px] py-2 text-[12px] font-semibold text-cms-ink transition-colors focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
+
+const [uploading, setUploading] = useState(false);
+
 const chipShell = "inline-flex items-center rounded-full px-2 py-[3px] text-[10px] font-semibold";
 
 const categoryChipStyles: Record<string, string> = {
@@ -754,14 +758,18 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
                     <p className="mt-1 text-[10.5px] leading-[1.5] text-cms-muted">The main image on the project card and at the top of the project page.</p>
                   </div>
                 </header>
-                <p className="mb-[9px] text-[10px] text-cms-muted">1600 × 900 px · 16:9 · JPG / PNG / WebP · Max 5 MB</p>
-                {imageError && <p className="mb-3 rounded-[7px] border-l-[3px] border-[#d42a45] bg-[#fff1f2] px-3 py-2.5 text-[12px] text-[#991b1b] dark:border-[#5c2233] dark:bg-[#3a1420] dark:text-[#ff9aa8]" role="alert">{imageError}</p>}
-                <label onDragOver={(event) => event.preventDefault()} onDrop={(event) => onDrop(event, "cover")} style={backgroundStyle(draft.cover.src)}
-                  className="flex min-h-[150px] cursor-pointer flex-col items-center justify-center gap-[5px] rounded-[9px] border border-dashed border-[#cfcce8] bg-cms-card2 bg-cover bg-center text-center text-[12px] font-semibold text-cms-ink [text-shadow:0_1px_4px_white] transition-colors hover:border-cms-primary dark:border-[#41478c] dark:[text-shadow:0_1px_4px_rgba(0,0,0,.7)]">
-                  {!draft.cover.src && <>Upload Cover Image<small className="text-[10px] font-normal">Drag &amp; drop here, or browse files</small></>}
-                  <input suppressHydrationWarning accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden onChange={(event) => void chooseCover(event)} type="file" />
-                </label>
-                {draft.cover.src && <button suppressHydrationWarning className={`${btnSecondary} mt-2`} onClick={() => updateDraft({ cover: { ...draft.cover, src: "", name: undefined } })} type="button">Remove cover</button>}
+<div className="mt-4 rounded-[12px] border border-dashed border-cms-line bg-[#f5f5f7] p-3 dark:border-[#2a2e63] dark:bg-[#101435]">
+                  <ImageUpload
+                    accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                    error={imageError ?? ""}
+                    height="h-[150px]"
+                    label="Cover image *"
+                    onFile={(file) => void chooseCover({ target: { files: [file] } } as ChangeEvent<HTMLInputElement>)}
+                    onRemove={() => updateDraft({ cover: { ...draft.cover, src: "", name: undefined } })}
+                    uploading={uploading}
+                    value={draft.cover.src}
+                  />
+                </div>
                 <label className="mt-3.5 grid min-w-0 gap-1.5 text-[11px] font-semibold text-cms-ink">Cover alt text *
                   <input suppressHydrationWarning className={inputShell} maxLength={140} onChange={(event) => updateDraft({ cover: { ...draft.cover, alt: event.target.value } })} placeholder="Describe the cover photo" value={draft.cover.alt} />
                 </label>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
+import { ImageUpload } from "@/components/cms/ImageUpload";
 import { apiUrl } from "@/lib/api-url";
 import type { WhoWeAreContent } from "@/lib/who-we-are-api";
 
@@ -63,7 +64,7 @@ export default function WhoWeAreSection() {
   const [notice, setNotice] = useState("");
   const [uploading, setUploading] = useState<ImageKey | "video" | null>(null);
   const [uploadError, setUploadError] = useState("");
-  const [dropping, setDropping] = useState<ImageKey | "video" | null>(null);
+  const [dropping, setDropping] = useState<"video" | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -313,34 +314,15 @@ export default function WhoWeAreSection() {
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         {([["mainImage", "Main photo (portrait 4:5)"], ["insetImage", "Inset photo (bottom-left overlay)"]] as const).map(([field, label]) => (
           <div className="rounded-[12px] border border-dashed border-cms-line bg-[#f5f5f7] p-3 dark:border-[#2a2e63] dark:bg-[#101435]" key={field}>
-            <b className="text-[13px] text-cms-text">{label}</b>
-            <div
-              className={`mt-2 grid h-[130px] place-items-center gap-1.5 rounded-[10px] border-[1.5px] border-dashed bg-center bg-cover bg-no-repeat text-center text-[12.5px] font-medium transition-[border-color,box-shadow] duration-[180ms] ease-out ${dropping === field ? "border-[#6f6e80] shadow-[0_0_0_4px_rgba(110,110,130,.16)] dark:border-[#8a8ab0]" : "border-cms-line bg-white text-cms-muted dark:border-[#2a2e63] dark:bg-[#171a42]"}`}
-              style={content[field] ? { backgroundImage: `url("${content[field]}")` } : undefined}
-              onDragOver={(event) => {
-                event.preventDefault();
-                event.dataTransfer.dropEffect = "copy";
-                setDropping(field);
-              }}
-              onDragLeave={(event) => {
-                if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
-                setDropping(null);
-              }}
-              onDrop={(event) => {
-                event.preventDefault();
-                setDropping(null);
-                void uploadImage(field, event.dataTransfer.files?.[0]);
-              }}
-            >{content[field] || uploading === field ? "" : <span>Drop image here</span>}</div>
-            <div className="mt-2 flex flex-wrap items-center justify-end gap-2">
-              <label className={`${btnGhost} ${uploading === field ? "pointer-events-none opacity-50" : "cursor-pointer"}`}>
-                {uploading === field ? "Uploading…" : content[field] ? "Replace" : "Choose image"}
-                <input accept="image/*" disabled={uploading === field} hidden onChange={(event) => void uploadImage(field, event.target.files?.[0])} type="file" />
-              </label>
-              {content[field] && uploading !== field && (
-                <button className={btnGhost} onClick={() => update(field, "")} type="button">Remove</button>
-              )}
-            </div>
+            <ImageUpload
+              accept="image/*"
+              height="h-[130px]"
+              label={label}
+              onFile={(file) => void uploadImage(field, file)}
+              onRemove={() => update(field, "")}
+              uploading={uploading === field}
+              value={content[field]}
+            />
           </div>
         ))}
       </div>

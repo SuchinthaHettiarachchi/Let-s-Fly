@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
+import { ImageUpload } from "@/components/cms/ImageUpload";
 import { apiUrl } from "@/lib/api-url";
 import {
   defaultInclusions,
@@ -134,7 +135,6 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   const [uploading, setUploading] = useState(false);
   const [galleryUploading, setGalleryUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
-  const [dropping, setDropping] = useState(false);
   const [catNotice, setCatNotice] = useState("");
   const [catDraft, setCatDraft] = useState({ key: "", label: "", sortOrder: 0 });
   const [catEditingId, setCatEditingId] = useState<string | null>(null);
@@ -483,43 +483,17 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
             <Field label="Nights"><input className={inputShell} min="0" type="number" value={draft.nights} onChange={(event) => update("nights", Number(event.target.value))} /></Field>
             <Field label="Price (LKR)"><input className={inputShell} min="0" type="number" value={draft.price} onChange={(event) => update("price", Number(event.target.value))} /></Field>
             <div className="sm:col-span-2">
-              <span className="block text-[12.5px] font-semibold text-cms-text">Cover image</span>
-              <div
-                className={`mt-1.5 grid h-[150px] place-items-center gap-1.5 rounded-[10px] border-[1.5px] border-dashed bg-center bg-cover bg-no-repeat text-center text-[12.5px] font-medium transition-[border-color,box-shadow] duration-[180ms] ease-out ${dropping ? "border-[#6f6e80] shadow-[0_0_0_4px_rgba(110,110,130,.16)] dark:border-[#8a8ab0]" : "border-cms-line dark:border-[#2a2e63]"}`}
-                style={draft.image ? { backgroundImage: `url("${draft.image}")` } : undefined}
-                onDragOver={(event) => {
-                  event.preventDefault();
-                  event.dataTransfer.dropEffect = "copy";
-                  setDropping(true);
-                }}
-                onDragLeave={(event) => {
-                  if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
-                  setDropping(false);
-                }}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  setDropping(false);
-                  void uploadImage(event.dataTransfer.files?.[0]);
-                }}
-              >{draft.image || uploading ? "" : (
-                <>
-                  <svg aria-hidden="true" fill="none" height="26" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="26">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="17 8 12 3 7 8" />
-                    <line x1="12" x2="12" y1="3" y2="15" />
-                  </svg>
-                  <span>Drop image here</span>
-                </>
-              )}</div>
-              <div className="mt-2 flex flex-wrap items-center justify-end gap-2.5">
-                <label className={`${secondary} ${uploading ? "pointer-events-none opacity-50" : "cursor-pointer"}`}>
-                  {uploading ? "Uploading…" : draft.image ? "Replace image" : "Choose image"}
-                  <input accept="image/*" hidden disabled={uploading} onChange={(event) => void uploadImage(event.target.files?.[0])} type="file" />
-                </label>
-                {draft.image && !uploading && <button className={secondary} onClick={() => update("image", "")} type="button">Remove</button>}
-              </div>
-              <span className="mt-1.5 block truncate text-[11.5px] text-cms-muted" title={draft.image}>{draft.image || "JPEG, PNG, WebP or GIF · up to 5MB"}</span>
-              <span className="mt-1 block text-[12px] text-[#d42a45] empty:hidden dark:text-[#ff9aa8]" role="alert">{uploadError}</span>
+              <ImageUpload
+                accept="image/*"
+                error={uploadError}
+                height="h-[150px]"
+                hint="JPEG, PNG, WebP or GIF · up to 5MB"
+                label="Cover image"
+                onFile={(file) => void uploadImage(file)}
+                onRemove={() => update("image", "")}
+                uploading={uploading}
+                value={draft.image}
+              />
             </div>
             <label className="mt-7 inline-flex items-center gap-2 text-[13px] font-semibold text-cms-text"><input checked={draft.flightsIncluded} onChange={(event) => update("flightsIncluded", event.target.checked)} type="checkbox" /> Flights included</label>
             {draft.category === "sri-lanka" && (

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
+import { ImageUpload } from "@/components/cms/ImageUpload";
 import { apiUrl } from "@/lib/api-url";
 import type { HomeAboutContent } from "@/lib/home-about-api";
 
@@ -61,7 +62,7 @@ export default function HomeAboutSection() {
   const [notice, setNotice] = useState("");
   const [uploading, setUploading] = useState<"video" | "videoPoster" | null>(null);
   const [uploadError, setUploadError] = useState("");
-  const [dropping, setDropping] = useState<"video" | "videoPoster" | null>(null);
+  const [dropping, setDropping] = useState<"video" | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -302,35 +303,16 @@ export default function HomeAboutSection() {
 
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <div className="rounded-[12px] border border-dashed border-cms-line bg-[#f5f5f7] p-3 dark:border-[#2a2e63] dark:bg-[#101435]">
-          <b className="text-[13px] text-cms-text">Video poster (16:9)</b>
-          <p className="mt-0.5 text-[12px] text-cms-muted">Shown before the film plays. Optional.</p>
-          <div
-            className={`mt-2 grid h-[130px] place-items-center gap-1.5 rounded-[10px] border-[1.5px] border-dashed bg-center bg-cover bg-no-repeat text-center text-[12.5px] font-medium transition-[border-color,box-shadow] duration-[180ms] ease-out ${dropping === "videoPoster" ? "border-[#6f6e80] shadow-[0_0_0_4px_rgba(110,110,130,.16)] dark:border-[#8a8ab0]" : "border-cms-line bg-white text-cms-muted dark:border-[#2a2e63] dark:bg-[#171a42]"}`}
-            style={content.videoPoster ? { backgroundImage: `url("${content.videoPoster}")` } : undefined}
-            onDragOver={(event) => {
-              event.preventDefault();
-              event.dataTransfer.dropEffect = "copy";
-              setDropping("videoPoster");
-            }}
-            onDragLeave={(event) => {
-              if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
-              setDropping(null);
-            }}
-            onDrop={(event) => {
-              event.preventDefault();
-              setDropping(null);
-              void uploadPoster(event.dataTransfer.files?.[0]);
-            }}
-          >{content.videoPoster || uploading === "videoPoster" ? "" : <span>Drop image here</span>}</div>
-          <div className="mt-2 flex flex-wrap items-center justify-end gap-2">
-            <label className={`${btnGhost} ${uploading === "videoPoster" ? "pointer-events-none opacity-50" : "cursor-pointer"}`}>
-              {uploading === "videoPoster" ? "Uploading…" : content.videoPoster ? "Replace" : "Choose image"}
-              <input accept="image/*" disabled={uploading === "videoPoster"} hidden onChange={(event) => void uploadPoster(event.target.files?.[0])} type="file" />
-            </label>
-            {content.videoPoster && uploading !== "videoPoster" && (
-              <button className={btnGhost} onClick={() => update("videoPoster", "")} type="button">Remove</button>
-            )}
-          </div>
+          <ImageUpload
+            accept="image/*"
+            height="h-[130px]"
+            hint="Shown before the film plays. Optional."
+            label="Video poster (16:9)"
+            onFile={(file) => void uploadPoster(file)}
+            onRemove={() => update("videoPoster", "")}
+            uploading={uploading === "videoPoster"}
+            value={content.videoPoster}
+          />
         </div>
 
         <div className="rounded-[12px] border border-dashed border-cms-line bg-[#f5f5f7] p-3 dark:border-[#2a2e63] dark:bg-[#101435]">

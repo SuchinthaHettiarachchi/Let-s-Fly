@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
-import { CmsButton, cmsButtonClasses } from "@/components/cms/CmsButton";
+import { CmsButton } from "@/components/cms/CmsButton";
 import { CmsSelect } from "@/components/cms/CmsSelect";
+import { ImageUpload } from "@/components/cms/ImageUpload";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
 import { Icon } from "@/components/ui/Icon";
 import { apiUrl } from "@/lib/api-url";
@@ -461,46 +462,19 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
           </Field>
 
           <div className="sm:col-span-2 lg:col-span-3">
-            <span className="block text-[12.5px] font-semibold text-cms-text">Photo or video</span>
-            {itemDraft.media && itemDraft.mediaType === "video" ? (
-              <video
-                className="mt-1.5 h-[180px] w-full rounded-[10px] border border-cms-line bg-black object-contain"
-                controls
-                preload="metadata"
-                src={itemDraft.media}
-              />
-            ) : (
-              <div
-                className={`mt-1.5 grid h-[150px] place-items-center gap-1.5 rounded-[10px] border-[1.5px] border-dashed bg-center bg-cover bg-no-repeat text-center text-[12.5px] font-medium ${itemDraft.media ? "border-cms-line" : "border-cms-line dark:border-[#2a2e63]"}`}
-                style={itemDraft.media ? { backgroundImage: `url("${itemDraft.media}")` } : undefined}
-              >
-                {!itemDraft.media && !uploading && <span>Choose a photo or video</span>}
-              </div>
-            )}
-            <div className="mt-2 flex flex-wrap items-center justify-end gap-2.5">
-              <label className={cmsButtonClasses("secondary", "md", uploading ? "pointer-events-none opacity-50" : "cursor-pointer")}>
-                {uploading ? "Uploading…" : itemDraft.media ? "Replace media" : "Choose media"}
-                <input
-                  accept="image/*,video/*"
-                  hidden
-                  disabled={uploading}
-                  onChange={(event) => {
-                    void uploadMedia(event.target.files?.[0]);
-                    event.target.value = "";
-                  }}
-                  type="file"
-                />
-              </label>
-              {itemDraft.media && !uploading && (
-                <CmsButton variant="muted" onClick={() => setItemDraft((d) => ({ ...d, media: "", mediaType: "" }))}>Remove</CmsButton>
-              )}
-            </div>
-            <span className="mt-1.5 block truncate text-[11.5px] text-cms-muted" title={itemDraft.media}>
-              {itemDraft.media
-                ? `${itemDraft.mediaType === "video" ? "Video" : "Image"} · ${itemDraft.media}`
-                : "JPEG, PNG, WebP or GIF up to 5MB · MP4 or WebM up to 100MB"}
-            </span>
-            <span className="mt-1 block text-[12px] text-[#d42a45] empty:hidden dark:text-[#ff9aa8]" role="alert">{uploadError}</span>
+            <ImageUpload
+              accept="image/*,video/*"
+              chooseText="Choose media"
+              emptyText="Choose a photo or video"
+              error={uploadError}
+              height="h-[180px]"
+              hint="JPEG, PNG, WebP or GIF up to 5MB · MP4 or WebM up to 100MB"
+              label="Photo or video"
+              onFile={(file) => void uploadMedia(file)}
+              onRemove={() => setItemDraft((d) => ({ ...d, media: "", mediaType: "" }))}
+              uploading={uploading}
+              value={itemDraft.media}
+            />
           </div>
         </div>
 

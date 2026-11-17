@@ -1,0 +1,62 @@
+Γû▓ Next.js 16.3.4 (Turbopack)
+- Environments: .env
+Γ£ô Running next.config.ts took 135ms
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 2 errors:
+./src/components/cms/cruises/cruises-tab.tsx:158:42
+Error: cannot reassign to a variable declared with `const`
+  156 |       const exists = prev.some((s) => s.name.toLowerCase() === stopName.toLowerCase());
+  157 |       if (exists) return prev;
+> 158 |       const newStop: Stop = { id: String(nextStopId++), name: stopName };
+      |                                          ^^^^^^^^^^
+  159 |       return [...prev, newStop];
+  160 |     });
+  161 |   }, []);
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./src/components/cms/cruises/cruises-tab.tsx [Client Component Browser]
+    ./src/components/cms/cms-frame.tsx [Client Component Browser]
+    ./src/components/cms/cms-frame.tsx [Server Component]
+    ./src/app/cms/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/cms/cruises/cruises-tab.tsx [Client Component SSR]
+    ./src/components/cms/cms-frame.tsx [Client Component SSR]
+    ./src/components/cms/cms-frame.tsx [Server Component]
+    ./src/app/cms/page.tsx [Server Component]
+
+
+./src/components/cms/trains/trains-tab.tsx:169:42
+Error: cannot reassign to a variable declared with `const`
+  167 |       const exists = prev.some((s) => s.name.toLowerCase() === stopName.toLowerCase());
+  168 |       if (exists) return prev;
+> 169 |       const newStop: Stop = { id: String(nextStopId++), name: stopName };
+      |                                          ^^^^^^^^^^
+  170 |       return [...prev, newStop];
+  171 |     });
+  172 |   }, []);
+
+Ecmascript file had an error
+
+Import traces:
+  Client Component Browser:
+    ./src/components/cms/trains/trains-tab.tsx [Client Component Browser]
+    ./src/components/cms/cms-frame.tsx [Client Component Browser]
+    ./src/components/cms/cms-frame.tsx [Server Component]
+    ./src/app/cms/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/cms/trains/trains-tab.tsx [Client Component SSR]
+    ./src/components/cms/cms-frame.tsx [Client Component SSR]
+    ./src/components/cms/cms-frame.tsx [Server Component]
+    ./src/app/cms/page.tsx [Server Component]
+
+
+    at <unknown> (./src/components/cms/cruises/cruises-tab.tsx:158:42)
+    at <unknown> (./src/components/cms/trains/trains-tab.tsx:169:42)

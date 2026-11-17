@@ -10,6 +10,8 @@ import ProjectsTab from "@/components/cms/projects/projects-tab";
 import PackagesTab from "@/components/cms/packages/packages-tab";
 import RentalsTab from "@/components/cms/rentals/rentals-tab";
 import GalleryTab from "@/components/cms/gallery/gallery-tab";
+import TrainsTab from "@/components/cms/trains/trains-tab";
+import CruisesTab from "@/components/cms/cruises/cruises-tab";
 import CmsSectionTab from "@/components/cms/cms-section-tab";
 
 const sections = [
@@ -178,6 +180,10 @@ export default function CmsFrame() {
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><ProjectsTab onDirtyChange={setProjectDirty} onNavigate={navigate} /></div>
           ) : activeSection === "rental" ? (
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><RentalsTab onNavigate={navigate} /></div>
+          ) : activeSection === "trains" ? (
+            <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><TrainsTab onNavigate={navigate} /></div>
+          ) : activeSection === "cruises" ? (
+            <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><CruisesTab onNavigate={navigate} /></div>
           ) : activeSection === "gallery" ? (
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><GalleryTab onNavigate={navigate} /></div>
           ) : (

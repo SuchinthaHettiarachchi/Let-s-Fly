@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
+import { ImageUpload } from "@/components/cms/ImageUpload";
 import WhoWeAreSection from "@/components/cms/home/who-we-are-section";
 import HomeAboutSection from "@/components/cms/home/home-about-section";
 import RentalTeaserSection from "@/components/cms/home/rental-teaser-section";
@@ -197,7 +198,6 @@ function readHeroFile(file: File, kind: HeroKind): Promise<{ src?: string; error
 export default function HomeTab({ onNavigate }: { onNavigate: (section: string) => void }) {
   const [slides, setSlides] = useState<HeroSlide[]>([]);
   const [errors, setErrors] = useState<HeroError>({});
-  const [dropping, setDropping] = useState<Record<string, boolean>>({});
   const [uploading, setUploading] = useState<string | null>(null);
   const [dirty, setDirty] = useState(false);
   const [notice, setNotice] = useState("");
@@ -452,37 +452,15 @@ async function uploadImage(id: string, kind: HeroKind, file?: File) {
                   <div className="rounded-[12px] border border-dashed border-cms-line bg-[#f5f5f7] p-3 dark:border-[#2a2e63] dark:bg-[#101435]" key={kind}>
                     <b className="text-[13px]">{spec.label} version</b>
                     <p className="mb-2.5 min-h-9 text-[12px] text-cms-muted">Aspect ratio <strong>{spec.ratio}</strong> (±5%) · Recommended <strong>{spec.width} × {spec.height} px</strong> · Output <strong>WebP</strong> (auto-converted)</p>
-                    <div
-                      className={`grid h-[230px] place-items-center gap-1.5 rounded-[10px] border-[1.5px] border-dashed bg-center bg-cover bg-no-repeat text-center text-[12.5px] font-medium transition-[border-color,background-color,box-shadow,color] duration-[180ms] ease-out ${dropping[dropKey] ? "border-[#6f6e80] bg-[#f5f5f7] text-cms-ink shadow-[0_0_0_4px_rgba(110,110,130,.16)] dark:border-[#8a8ab0] dark:bg-[#101435] dark:text-[#ececff]" : "border-cms-line bg-white text-cms-muted dark:border-[#2a2e63] dark:bg-[#171a42]"}`}
-                      style={slide[kind] ? { backgroundImage: `url("${slide[kind]}")` } : undefined}
-                      onDragOver={(event) => {
-                        event.preventDefault();
-                        event.dataTransfer.dropEffect = "copy";
-                        setDropping((current) => ({ ...current, [dropKey]: true }));
-                      }}
-                      onDragLeave={(event) => {
-                        if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
-                        setDropping((current) => ({ ...current, [dropKey]: false }));
-                      }}
-                      onDrop={(event) => {
-                        event.preventDefault();
-                        setDropping((current) => ({ ...current, [dropKey]: false }));
-                        void uploadImage(slide.id, kind, event.dataTransfer.files?.[0]);
-                      }}
-                      >{slide[kind] ? "" : (
-                        <>
-                          <HomeIcon name="upload" size={26} />
-                          <span>Drop image here</span>
-                        </>
-                      )}</div>
-                    <div className="mt-3 flex flex-wrap justify-end gap-2.5">
-                      <label className={`${btnGhost} ${uploading === dropKey ? "pointer-events-none opacity-50" : "cursor-pointer"}`}>
-                        {uploading === dropKey ? "Uploading…" : slide[kind] ? "Replace image" : "Upload image"}
-                        <input suppressHydrationWarning accept="image/*" disabled={uploading === dropKey} hidden onChange={(event) => void uploadImage(slide.id, kind, event.target.files?.[0])} type="file" />
-                      </label>
-                      {slide[kind] && uploading !== dropKey && <button suppressHydrationWarning className={btnGhost} onClick={() => removeImage(slide.id, kind)} type="button">Remove</button>}
-                    </div>
-                    <span className="mt-1.5 block text-[12px] text-[#d42a45] empty:hidden dark:text-[#ff9aa8]" role="alert">{errors[`${slide.id}:${kind}`] ?? ""}</span>
+                    <ImageUpload
+                      accept="image/*"
+                      error={errors[dropKey] ?? ""}
+                      height="h-[230px]"
+                      onFile={(file) => void uploadImage(slide.id, kind, file)}
+                      onRemove={() => removeImage(slide.id, kind)}
+                      uploading={uploading === dropKey}
+                      value={slide[kind]}
+                    />
                   </div>
                 );
               })}

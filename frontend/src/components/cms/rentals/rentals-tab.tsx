@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
-import { CmsButton, cmsButtonClasses } from "@/components/cms/CmsButton";
+import { CmsButton } from "@/components/cms/CmsButton";
 import { CmsSelect } from "@/components/cms/CmsSelect";
+import { ImageUpload } from "@/components/cms/ImageUpload";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
 import { VehicleIconSelect } from "@/components/rentals/VehicleIconSelect";
 import { Icon } from "@/components/ui/Icon";
@@ -420,128 +421,119 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
           {vehicleEditingId && <CmsButton variant="secondary" onClick={resetVehicle}>Cancel edit</CmsButton>}
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <Field label="Vehicle title">
-            <input
-              className={inputShell}
-              placeholder="Honda Vezel"
-              value={vehicleDraft.name}
-              onChange={(event) => setVehicleDraft((d) => ({ ...d, name: event.target.value }))}
-            />
-          </Field>
-          <Field label="Category">
-            <CmsSelect
-              aria-label="Category"
-              className="mt-1.5"
-              onChange={(category) => setVehicleDraft((d) => ({ ...d, category }))}
-              options={categories.map((cat) => ({ value: cat._id, label: cat.name, icon: cat.icon }))}
-              placeholder="Select a category…"
-              value={vehicleDraft.category}
-            />
-          </Field>
-          <Field label="Seats">
-            <input
-              className={inputShell}
-              type="number"
-              min={1}
-              step={1}
-              inputMode="numeric"
-              placeholder="5"
-              value={vehicleDraft.seats}
-              onChange={(event) => {
-                const raw = event.target.value;
-                // "" clears the field completely; otherwise keep the typed number (may be invalid until corrected).
-                if (raw === "") setVehicleDraft((d) => ({ ...d, seats: "" }));
-                else {
-                  const n = Number(raw);
-                  setVehicleDraft((d) => ({ ...d, seats: Number.isNaN(n) ? "" : n }));
-                }
-              }}
-            />
-            {!seatsValid && (
-              <span className="mt-1 block text-[11.5px] text-[#d42a45] dark:text-[#ff9aa8]">
-                {vehicleDraft.seats === "" ? "Seats are required." : "Seats must be a positive whole number."}
-              </span>
-            )}
-          </Field>
-          <Field label="Transmission">
-            <CmsSelect
-              aria-label="Transmission"
-              className="mt-1.5"
-              onChange={(transmission) => setVehicleDraft((d) => ({ ...d, transmission: transmission as Transmission | "" }))}
-              options={TRANSMISSIONS.map((t) => ({ value: t, label: t }))}
-              value={vehicleDraft.transmission}
-            />
-          </Field>
-          <Field label="Fuel type">
-            <CmsSelect
-              aria-label="Fuel type"
-              className="mt-1.5"
-              onChange={(fuel) => setVehicleDraft((d) => ({ ...d, fuel: fuel as FuelType | "" }))}
-              options={FUELS.map((f) => ({ value: f, label: f }))}
-              value={vehicleDraft.fuel}
-            />
-          </Field>
-          <fieldset className="sm:col-span-2 lg:col-span-3">
-            <legend className="text-[12.5px] font-semibold text-cms-text">Drive modes</legend>
-            <div className="mt-2 flex flex-wrap gap-4">
-              {DRIVE_MODES.map((mode) => (
-                <label key={mode.id} className="inline-flex items-center gap-1.5 text-[12px] text-cms-text">
-                  <input
-                    type="checkbox"
-                    checked={vehicleDraft.modes.includes(mode.id)}
-                    onChange={() =>
-                      setVehicleDraft((d) => ({
-                        ...d,
-                        modes: d.modes.includes(mode.id) ? d.modes.filter((m) => m !== mode.id) : [...d.modes, mode.id],
-                      }))
-                    }
-                  />
-                  {mode.label}
-                </label>
-              ))}
-            </div>
-            {!vehicleDraft.modes.length && <span className="mt-1 block text-[11.5px] text-[#d42a45] dark:text-[#ff9aa8]">Select at least one drive mode.</span>}
-          </fieldset>
-
-          <div className="sm:col-span-2">
-            <span className="block text-[12.5px] font-semibold text-cms-text">Vehicle image</span>
-            <div
-              className={`mt-1.5 grid h-[150px] place-items-center gap-1.5 rounded-[10px] border-[1.5px] border-dashed bg-center bg-cover bg-no-repeat text-center text-[12.5px] font-medium ${vehicleDraft.image ? "border-cms-line" : "border-cms-line dark:border-[#2a2e63]"}`}
-              style={vehicleDraft.image ? { backgroundImage: `url("${vehicleDraft.image}")` } : undefined}
-            >
-              {!vehicleDraft.image && !uploading && <span>Drop or choose an image</span>}
-            </div>
-            <div className="mt-2 flex flex-wrap items-center justify-end gap-2.5">
-              <label className={cmsButtonClasses("secondary", "md", uploading ? "pointer-events-none opacity-50" : "cursor-pointer")}>
-                {uploading ? "Uploading…" : vehicleDraft.image ? "Replace image" : "Choose image"}
-                <input
-                  accept="image/*"
-                  hidden
-                  disabled={uploading}
-                  onChange={(event) => {
-                    void uploadImage(event.target.files?.[0]);
-                    event.target.value = "";
-                  }}
-                  type="file"
-                />
-              </label>
-              {vehicleDraft.image && !uploading && (
-                <CmsButton variant="muted" onClick={() => setVehicleDraft((d) => ({ ...d, image: "" }))}>Remove</CmsButton>
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(280px,340px)]">
+          {/* Left: vehicle input fields */}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <Field label="Vehicle title">
+              <input
+                className={inputShell}
+                placeholder="Honda Vezel"
+                value={vehicleDraft.name}
+                onChange={(event) => setVehicleDraft((d) => ({ ...d, name: event.target.value }))}
+              />
+            </Field>
+            <Field label="Category">
+              <CmsSelect
+                aria-label="Category"
+                className="mt-1.5"
+                onChange={(category) => setVehicleDraft((d) => ({ ...d, category }))}
+                options={categories.map((cat) => ({ value: cat._id, label: cat.name, icon: cat.icon }))}
+                placeholder="Select a category…"
+                value={vehicleDraft.category}
+              />
+            </Field>
+            <Field label="Seats">
+              <input
+                className={inputShell}
+                type="number"
+                min={1}
+                step={1}
+                inputMode="numeric"
+                placeholder="5"
+                value={vehicleDraft.seats}
+                onChange={(event) => {
+                  const raw = event.target.value;
+                  // "" clears the field completely; otherwise keep the typed number (may be invalid until corrected).
+                  if (raw === "") setVehicleDraft((d) => ({ ...d, seats: "" }));
+                  else {
+                    const n = Number(raw);
+                    setVehicleDraft((d) => ({ ...d, seats: Number.isNaN(n) ? "" : n }));
+                  }
+                }}
+              />
+              {!seatsValid && (
+                <span className="mt-1 block text-[11.5px] text-[#d42a45] dark:text-[#ff9aa8]">
+                  {vehicleDraft.seats === "" ? "Seats are required." : "Seats must be a positive whole number."}
+                </span>
               )}
-            </div>
-            <span className="mt-1.5 block truncate text-[11.5px] text-cms-muted" title={vehicleDraft.image}>
-              {vehicleDraft.image || "JPEG, PNG, WebP or GIF · up to 5MB"}
-            </span>
-            <span className="mt-1 block text-[12px] text-[#d42a45] empty:hidden dark:text-[#ff9aa8]" role="alert">{uploadError}</span>
+            </Field>
+            <Field label="Transmission">
+              <CmsSelect
+                aria-label="Transmission"
+                className="mt-1.5"
+                onChange={(transmission) => setVehicleDraft((d) => ({ ...d, transmission: transmission as Transmission | "" }))}
+                options={TRANSMISSIONS.map((t) => ({ value: t, label: t }))}
+                value={vehicleDraft.transmission}
+              />
+            </Field>
+            <Field label="Fuel type">
+              <CmsSelect
+                aria-label="Fuel type"
+                className="mt-1.5"
+                onChange={(fuel) => setVehicleDraft((d) => ({ ...d, fuel: fuel as FuelType | "" }))}
+                options={FUELS.map((f) => ({ value: f, label: f }))}
+                value={vehicleDraft.fuel}
+              />
+            </Field>
+            <fieldset className="sm:col-span-2">
+              <legend className="text-[12.5px] font-semibold text-cms-text">Drive modes</legend>
+              <div className="mt-2 flex flex-wrap gap-4">
+                {DRIVE_MODES.map((mode) => (
+                  <label key={mode.id} className="inline-flex items-center gap-1.5 text-[12px] text-cms-text">
+                    <input
+                      type="checkbox"
+                      checked={vehicleDraft.modes.includes(mode.id)}
+                      onChange={() =>
+                        setVehicleDraft((d) => ({
+                          ...d,
+                          modes: d.modes.includes(mode.id) ? d.modes.filter((m) => m !== mode.id) : [...d.modes, mode.id],
+                        }))
+                      }
+                    />
+                    {mode.label}
+                  </label>
+                ))}
+              </div>
+              {!vehicleDraft.modes.length && <span className="mt-1 block text-[11.5px] text-[#d42a45] dark:text-[#ff9aa8]">Select at least one drive mode.</span>}
+            </fieldset>
+          </div>
+
+          {/* Right: shared vehicle image upload */}
+          <div className="rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#101435] lg:self-start">
+            <h3 className="text-[13px] font-semibold text-cms-ink">Vehicle image</h3>
+            <p className="mt-1 text-[12px] text-cms-muted">Shown on the vehicle card on the Rentals page.</p>
+            <ImageUpload
+              accept="image/*"
+              className="mt-3"
+              error={uploadError}
+              height="h-[170px]"
+              hint="JPEG, PNG, WebP or GIF · up to 5MB"
+              onFile={(file) => void uploadImage(file)}
+              onRemove={() => {
+                setVehicleDraft((d) => ({ ...d, image: "" }));
+                setUploadError("");
+              }}
+              uploading={uploading}
+              value={vehicleDraft.image}
+            />
           </div>
         </div>
 
-        <div className="mt-4 flex items-center gap-2">
+        <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
+          {!vehicleValid && <span className="mr-auto text-[12px] text-cms-muted">Fill in all required fields to save.</span>}
           <CmsButton variant="primary" disabled={!vehicleValid || savingVehicle || uploading} onClick={() => void saveVehicle()}>
             {savingVehicle ? "Saving…" : vehicleEditingId ? "Update vehicle" : "Add vehicle"}
           </CmsButton>
-          {!vehicleValid && <span className="text-[12px] text-cms-muted">Fill in all required fields to save.</span>}
         </div>
       </section>
 
@@ -558,15 +550,15 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
         ) : (
           <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
             {vehicles.map((vehicle) => (
-              <article className="flex gap-4 rounded-[11px] border border-cms-line p-4" key={vehicle._id}>
+              <article className="flex overflow-hidden rounded-[11px] border border-cms-line" key={vehicle._id}>
                 <div
-                  className="h-20 w-24 flex-none rounded-[9px] border border-cms-line bg-center bg-cover bg-no-repeat"
+                  className="min-h-[96px] w-24 flex-none border-r border-cms-line bg-cms-bg bg-cover bg-center bg-no-repeat sm:w-28"
                   style={vehicle.image ? { backgroundImage: `url("${vehicle.image}")` } : undefined}
                   aria-hidden="true"
                 />
-                <div className="min-w-0 flex-1">
+                <div className="min-w-0 flex-1 p-4">
                   <div className="flex items-start justify-between gap-3">
-                    <div>
+                    <div className="min-w-0">
                       <h3 className="truncate font-semibold text-cms-ink">{vehicle.name}</h3>
                       <p className="mt-1 text-[12px] text-cms-muted">
                         {categoryName(vehicle.category)} · {vehicle.seats} seats · {vehicle.transmission} · {vehicle.fuel}
