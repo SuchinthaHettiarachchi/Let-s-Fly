@@ -1,0 +1,95 @@
+
+name: CI/CD - Test, Merge & Deploy
+
+on:
+  push:
+    branches:
+      - development
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    name: Run Frontend & Backend Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Development
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Run Frontend Tests
+        working-directory: frontend
+        run: npm test --if-present
+
+      - name: Install Backend Dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Run Backend Tests
+        working-directory: backend
+        run: npm test --if-present
+
+  merge:
+    name: Merge Development into Main
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge Development into Main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin
+
+          git checkout -B main origin/main
+          git merge --no-ff origin/development \
+            -m "Auto merge development into main"
+
+          git push origin main
+
+  deploy:
+    name: Deploy to VPS
+    needs: merge
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy Latest Main to VPS
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /YOUR/VPS/PROJECT/PATH
+
+            git fetch origin
+            git checkout main
+            git pull --ff-only origin main
+
+            cd frontend
+            npm ci
+            npm run build
+
+            cd ../backend
+            npm ci
+            npm run build --if-present
+
+            pm2 restart YOUR_PM2_APP_NAME --update-env
+
+            echo "Deployment completed successfully"
