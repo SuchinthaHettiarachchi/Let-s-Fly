@@ -7,7 +7,7 @@ import { Icon } from "@/components/ui/Icon";
 import { PhotoWall } from "@/components/gallery/PhotoWall";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { contact, socials } from "@/data/site";
-import { galleryPhotos } from "@/data/gallery";
+import { getGalleryCategories, getGalleryItems } from "@/lib/gallery-api";
 
 export const metadata: Metadata = {
   title: { absolute: "Tour Photos & Videos | Travel Gallery | Let's Fly" },
@@ -15,7 +15,8 @@ export const metadata: Metadata = {
     "Browse photos and videos from Let's Fly tours, including Sri Lanka round trips, overseas holidays and group journeys. See where our travellers have been.",
 };
 
-export default function GalleryPage() {
+export default async function GalleryPage() {
+  const [categories, items] = await Promise.all([getGalleryCategories(), getGalleryItems()]);
   const instagram = socials.find((s) => s.name === "Instagram")?.href ?? "#";
   return (
     <>
@@ -29,7 +30,7 @@ export default function GalleryPage() {
 
       <section className="py-14 lg:py-20">
         <Container>
-          <PhotoWall photos={galleryPhotos} />
+          <PhotoWall items={items} categories={categories} />
         </Container>
       </section>
 

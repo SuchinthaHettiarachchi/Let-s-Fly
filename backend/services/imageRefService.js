@@ -7,9 +7,10 @@ const HeroSlider = require('../models/HeroSlider');
 const WhoWeAre = require('../models/WhoWeAre');
 const HomeAbout = require('../models/HomeAbout');
 const RentalVehicle = require('../models/RentalVehicle');
+const GalleryItem = require('../models/GalleryItem');
 
 /**
- * @param {string} url - image URL to check
+ * @param {string} url - image/video URL to check
  * @param {string|null} excludeVehicleId - vehicle id to ignore (the record being updated)
  * @returns {Promise<boolean>} true when at least one other record still uses the URL
  */
@@ -25,6 +26,7 @@ exports.isImageInUse = async (url, excludeVehicleId = null) => {
     WhoWeAre.exists({ $or: [{ mainImage: url }, { insetImage: url }] }),
     HomeAbout.exists({ videoPoster: url }),
     RentalVehicle.exists(vehicleQuery),
+    GalleryItem.exists({ media: url }),
   ];
   const results = await Promise.all(checks);
   return results.some(Boolean);

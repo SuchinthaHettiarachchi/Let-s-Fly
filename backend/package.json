@@ -9,7 +9,8 @@
     "migrate:images-r2": "node scripts/migrateImagesToR2.js",
     "seed:rental-teaser": "node scripts/seedRentalTeaser.js",
     "seed:categories": "node scripts/seedCategories.js",
-    "seed:rentals": "node scripts/seedRentals.js"
+    "seed:rentals": "node scripts/seedRentals.js",
+    "seed:gallery": "node scripts/seedGallery.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1168.0",

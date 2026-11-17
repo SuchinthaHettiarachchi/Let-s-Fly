@@ -9,6 +9,7 @@ import InquiriesTab from "@/components/cms/inquiries/inquiries-tab";
 import ProjectsTab from "@/components/cms/projects/projects-tab";
 import PackagesTab from "@/components/cms/packages/packages-tab";
 import RentalsTab from "@/components/cms/rentals/rentals-tab";
+import GalleryTab from "@/components/cms/gallery/gallery-tab";
 import CmsSectionTab from "@/components/cms/cms-section-tab";
 
 const sections = [
@@ -19,7 +20,7 @@ const sections = [
   { id: "hotels", title: "Hotel Bookings", description: "Manage hotel partners, room types and booking rates." },
   { id: "trains", title: "Trains", description: "Manage train routes, schedules and reservations." },
   { id: "cruises", title: "Cruises", description: "Manage cruise packages and sailing dates." },
-  { id: "gallery", title: "Gallery", description: "Curate photo galleries, albums and site imagery." },
+  { id: "gallery", title: "Gallery", description: "Manage gallery categories and the photos and videos shown on the Travellers Gallery page." },
   { id: "rental", title: "Rental", description: "Manage rental categories and vehicle cards shown on the Rentals page." },
   { id: "inquiries", title: "Inquiries", description: "Review customer inquiries, comments and responses." },
 ];
@@ -177,6 +178,8 @@ export default function CmsFrame() {
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><ProjectsTab onDirtyChange={setProjectDirty} onNavigate={navigate} /></div>
           ) : activeSection === "rental" ? (
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><RentalsTab onNavigate={navigate} /></div>
+          ) : activeSection === "gallery" ? (
+            <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><GalleryTab onNavigate={navigate} /></div>
           ) : (
             <CmsSectionTab title={current.title} description={current.description} onNavigate={navigate} />
           )}

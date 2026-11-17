@@ -4,25 +4,24 @@ import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { Placeholder } from "@/components/ui/Placeholder";
 import { Lightbox } from "@/components/ui/Lightbox";
-import { galleryCategories, type GalleryCategory, type GalleryPhoto } from "@/data/gallery";
+import type { GalleryCategory, GalleryItem } from "@/lib/gallery-api";
 
 const PAGE_SIZE = 12;
 // Alternating tile heights give the masonry rhythm.
 const heights = ["h-[180px] sm:h-[260px]", "h-[140px] sm:h-[200px]", "h-[220px] sm:h-[320px]", "h-[160px] sm:h-[220px]"];
 
-export function PhotoWall({ photos }: { photos: GalleryPhoto[] }) {
-  const [category, setCategory] = useState<GalleryCategory | "all">("all");
+export function PhotoWall({ items, categories }: { items: GalleryItem[]; categories: GalleryCategory[] }) {
+  const [category, setCategory] = useState<string>("all");
   const [limit, setLimit] = useState(PAGE_SIZE);
   const [viewing, setViewing] = useState<number | null>(null);
 
-  const filtered = category === "all" ? photos : photos.filter((p) => p.category === category);
+  const filtered = category === "all" ? items : items.filter((p) => p.category === category);
   const shown = filtered.slice(0, limit);
-  // The lightbox only steps through real photos.
-  const withImages = filtered.filter((p): p is GalleryPhoto & { image: string } => Boolean(p.image));
+  // The lightbox only steps through photos; videos play in place.
+  const withImages = filtered.filter((p) => p.mediaType === "image" && Boolean(p.media));
 
-  const chips = [{ id: "all" as const, label: "All" }, ...galleryCategories];
+  const chips = [{ id: "all", label: "All" }, ...categories.map((c) => ({ id: c._id, label: c.name }))];
 
   return (
     <div className="flex flex-col gap-8">
@@ -49,7 +48,7 @@ export function PhotoWall({ photos }: { photos: GalleryPhoto[] }) {
           })}
         </div>
         <span aria-live="polite" className="text-small text-ink-400">
-          {filtered.length} photos
+          {filtered.length} photos &amp; videos
         </span>
       </div>
 
@@ -57,34 +56,39 @@ export function PhotoWall({ photos }: { photos: GalleryPhoto[] }) {
         {shown.map((p, i) => {
           const tile = `relative mb-3 block w-full sm:mb-4 break-inside-avoid overflow-hidden rounded-xl bg-sand-200 ${heights[i % heights.length]}`;
           const caption = (
-            <span className="absolute bottom-2 left-2 flex max-w-[calc(100%-1rem)] items-center gap-1 truncate sm:bottom-3 sm:left-3 rounded-full bg-white/95 px-2.5 py-1 text-caption text-ink-900">
+            <span className="absolute bottom-2 left-2 z-10 flex max-w-[calc(100%-1rem)] items-center gap-1 truncate sm:bottom-3 sm:left-3 rounded-full bg-white/95 px-2.5 py-1 text-caption text-ink-900">
               <Icon name="location_on" size={14} className="text-ocean-600" />
-              {p.place}
+              {p.caption}
             </span>
           );
           return (
-            <li key={p.place} data-reveal={(i % 4) * 80} className="break-inside-avoid">
-              {p.image ? (
+            <li key={p._id} data-reveal={(i % 4) * 80} className="break-inside-avoid">
+              {p.mediaType === "video" ? (
+                <div className={`${tile} bg-black`}>
+                  <video
+                    className="absolute inset-0 h-full w-full object-contain"
+                    controls
+                    preload="metadata"
+                    src={p.media}
+                  />
+                  {caption}
+                </div>
+              ) : (
                 <button
                   type="button"
-                  onClick={() => setViewing(withImages.findIndex((w) => w.place === p.place))}
-                  aria-label={`View photo: ${p.place}`}
+                  onClick={() => setViewing(withImages.findIndex((w) => w._id === p._id))}
+                  aria-label={`View photo: ${p.caption}`}
                   className={`${tile} group cursor-zoom-in`}
                 >
                   <Image
-                    src={p.image}
-                    alt={p.place}
+                    src={p.media}
+                    alt={p.caption}
                     fill
                     sizes="(min-width: 1024px) 300px, (min-width: 640px) 50vw, 100vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   {caption}
                 </button>
-              ) : (
-                <div className={tile}>
-                  <Placeholder label="PHOTO" className="absolute inset-0 rounded-none border-0" />
-                  {caption}
-                </div>
               )}
             </li>
           );
@@ -101,8 +105,8 @@ export function PhotoWall({ photos }: { photos: GalleryPhoto[] }) {
 
       {viewing !== null && viewing >= 0 && (
         <Lightbox
-          images={withImages.map((w) => w.image)}
-          captions={withImages.map((w) => w.place)}
+          images={withImages.map((w) => w.media)}
+          captions={withImages.map((w) => w.caption)}
           start={viewing}
           title="Travellers Gallery"
           onClose={() => setViewing(null)}

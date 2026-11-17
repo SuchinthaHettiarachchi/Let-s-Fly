@@ -15,6 +15,8 @@ const rentalTeaserRouter = require('./routers/rentalTeaserRouter');
 const categoryRouter = require('./routers/categoryRouter');
 const rentalCategoryRouter = require('./routers/rentalCategoryRouter');
 const rentalVehicleRouter = require('./routers/rentalVehicleRouter');
+const galleryCategoryRouter = require('./routers/galleryCategoryRouter');
+const galleryItemRouter = require('./routers/galleryItemRouter');
 const { errorHandler } = require('./middleware/error');
 
 const app = express();
@@ -33,6 +35,8 @@ app.use((req, res, next) => {
     || req.originalUrl.startsWith('/api/categories')
     || req.originalUrl.startsWith('/api/rental-categories')
     || req.originalUrl.startsWith('/api/rental-vehicles')
+    || req.originalUrl.startsWith('/api/gallery-categories')
+    || req.originalUrl.startsWith('/api/gallery-items')
   ) return next();
   express.json({ limit: '10kb' })(req, res, next);
 });
@@ -61,6 +65,8 @@ app.use('/api/rental-teaser', rentalTeaserRouter);
 app.use('/api/categories', categoryRouter);
 app.use('/api/rental-categories', rentalCategoryRouter);
 app.use('/api/rental-vehicles', rentalVehicleRouter);
+app.use('/api/gallery-categories', galleryCategoryRouter);
+app.use('/api/gallery-items', galleryItemRouter);
 app.use(errorHandler);
 
 mongoose.connect(config.mongoUri)
