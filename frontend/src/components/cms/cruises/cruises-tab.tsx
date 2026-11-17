@@ -2,10 +2,9 @@
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
-import { CmsButton, cmsButtonClasses } from "@/components/cms/CmsButton";
-import { CmsSelect } from "@/components/cms/CmsSelect";
+import { CmsButton } from "@/components/cms/CmsButton";
+import { ImageUpload } from "@/components/cms/ImageUpload";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
-import { Icon } from "@/components/ui/Icon";
 import { apiUrl } from "@/lib/api-url";
 import type { Journey } from "@/lib/journey-api";
 
@@ -101,6 +100,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
   const [savingDraft, setSavingDraft] = useState(false);
 
   const [stops, setStops] = useState<string[]>([]);
+  const [stopInput, setStopInput] = useState("");
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
 
@@ -200,6 +200,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
       setDraft(blankJourney());
       setDraftEditingId(null);
       setStops([]);
+      setStopInput("");
       setUploadError("");
       await load();
     } catch (error) {
@@ -231,6 +232,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
     setDraft(blankJourney());
     setDraftEditingId(null);
     setStops([]);
+    setStopInput("");
     setUploadError("");
   }
 
@@ -279,112 +281,125 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
           <p className="mt-1 text-[12px] text-cms-muted">Fill in all fields.</p>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Field label="Name (e.g. Singapore → Penang → Phuket)">
-            <input className={inputShell} placeholder="Singapore → Penang → Phuket" value={draft.name} onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))} />
-          </Field>
-          <Field label="Label (e.g. Southeast Asia)">
-            <input className={inputShell} placeholder="Southeast Asia" value={draft.label} onChange={(e) => setDraft((d) => ({ ...d, label: e.target.value }))} />
-          </Field>
-          <Field label="Description">
-            <textarea className={inputShell} rows={3} placeholder="Five nights on a modern cruise ship..." value={draft.text} onChange={(e) => setDraft((d) => ({ ...d, text: e.target.value }))}></textarea>
-          </Field>
-          <Field label="Price (LKR)">
-            <input
-              className={inputShell}
-              type="number"
-              min={0}
-              step="100"
-              placeholder="240000"
-              value={draft.price}
-              onChange={(e) => setDraft((d) => ({ ...d, price: Number(e.target.value) || 0 }))}
-            />
-          </Field>
-          <Field label="Price Note">
-            <input className={inputShell} placeholder="per person, twin cabin" value={draft.priceNote} onChange={(e) => setDraft((d) => ({ ...d, priceNote: e.target.value }))} />
-          </Field>
-          <Field label="Image">
-            <div
-              className={`mt-1.5 grid h-[150px] place-items-center gap-1.5 rounded-[10px] border-[1.5px] border-dashed bg-center bg-cover bg-no-repeat text-center text-[12.5px] font-medium ${draft.image ? "border-cms-line" : "border-cms-line dark:border-[#2a2e63]"}`}
-              style={draft.image ? { backgroundImage: `url("${draft.image}")` } : undefined}
-            >
-              {!draft.image && !uploading && <span>Drop or choose an image</span>}
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field label="Name (e.g. Singapore → Penang → Phuket)">
+              <input className={inputShell} placeholder="Singapore → Penang → Phuket" value={draft.name} onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))} />
+            </Field>
+            <Field label="Label (e.g. Southeast Asia)">
+              <input className={inputShell} placeholder="Southeast Asia" value={draft.label} onChange={(e) => setDraft((d) => ({ ...d, label: e.target.value }))} />
+            </Field>
+            <div className="sm:col-span-2">
+              <Field label="Description">
+                <textarea className={`${inputShell} h-auto min-h-[96px] py-2.5`} placeholder="Five nights on a modern cruise ship..." value={draft.text} onChange={(e) => setDraft((d) => ({ ...d, text: e.target.value }))}></textarea>
+              </Field>
             </div>
-            <div className="mt-2 flex flex-wrap items-center justify-end gap-2.5">
-              <label className={cmsButtonClasses("secondary", "md", uploading ? "pointer-events-none opacity-50" : "cursor-pointer")}>
-                {uploading ? "Uploading…" : "Choose image"}
-                <input
-                  accept="image/*"
-                  hidden
-                  disabled={uploading}
-                  onChange={(event) => {
-                    const file = event.target.files?.[0];
-                    if (!file) return;
-                    void uploadImageToR2(file);
-                    event.target.value = "";
-                  }}
-                  type="file"
-                />
-              </label>
-              {draft.image && !uploading && (
-                <CmsButton variant="muted" onClick={() => setDraft((d) => ({ ...d, image: "" }))}>Remove</CmsButton>
-              )}
-            </div>
-            <span className="mt-1.5 block truncate text-[11.5px] text-cms-muted" title={draft.image}>
-              {draft.image || "JPEG, PNG, WebP or GIF · up to 5MB"}
-            </span>
-            <span className="mt-1 block text-[12px] text-[#d42a45] empty:hidden dark:text-[#ff9aa8]" role="alert">{uploadError}</span>
-          </Field>
-          <Field label="Chips (features, separated by comma)">
-            <input
-              className={inputShell}
-              placeholder="5 nights, Balcony cabins, Monthly sailings"
-              value={draft.chips.join(", ")}
-              onChange={(e) => setDraft((d) => ({ ...d, chips: e.target.value.split(",").map((c) => c.trim()).filter(Boolean) }))}
-            />
-          </Field>
-
-          <Field label="Starting Point">
-            <input
-              className={inputShell}
-              placeholder="Singapore"
-              value={draft.startingPoint}
-              onChange={(e) => setDraft((d) => ({ ...d, startingPoint: e.target.value }))}
-            />
-          </Field>
-
-          <Field label="Stops">
-            <div className="mt-2 space-y-2">
-              {/* Existing stops */}
-              {stops.map((stop) => (
-                <div key={stop} className="flex items-center gap-2 rounded border border-cms-line px-2 py-1 text-[12px] text-cms-ink dark:border-[#2a2e63] dark:bg-[#101435]">
-                  <span className="flex-1 truncate">{stop}</span>
-                  <CmsButton
-                    size="icon"
-                    variant="muted"
-                    aria-label="Remove stop"
-                    onClick={() => removeStop(stop)}
-                  >
-                    ×
-                  </CmsButton>
+            <Field label="Price (LKR)">
+              <input
+                className={inputShell}
+                type="number"
+                min={0}
+                step="100"
+                placeholder="240000"
+                value={draft.price}
+                onChange={(e) => setDraft((d) => ({ ...d, price: Number(e.target.value) || 0 }))}
+              />
+            </Field>
+            <Field label="Price Note">
+              <input className={inputShell} placeholder="per person, twin cabin" value={draft.priceNote} onChange={(e) => setDraft((d) => ({ ...d, priceNote: e.target.value }))} />
+            </Field>
+            <Field label="Chips (features, separated by comma)">
+              <input
+                className={inputShell}
+                placeholder="5 nights, Balcony cabins, Monthly sailings"
+                value={draft.chips.join(", ")}
+                onChange={(e) => setDraft((d) => ({ ...d, chips: e.target.value.split(",").map((c) => c.trim()).filter(Boolean) }))}
+              />
+            </Field>
+            <Field label="Starting Point">
+              <input
+                className={inputShell}
+                placeholder="Singapore"
+                value={draft.startingPoint}
+                onChange={(e) => setDraft((d) => ({ ...d, startingPoint: e.target.value }))}
+              />
+            </Field>
+            <div className="sm:col-span-2">
+              <Field label="Stops">
+                <div className="mt-2 space-y-2">
+                  {stops.map((stop) => (
+                    <div key={stop} className="flex items-center gap-2 rounded border border-cms-line px-2 py-1 text-[12px] text-cms-ink dark:border-[#2a2e63] dark:bg-[#101435]">
+                      <span className="flex-1 truncate">{stop}</span>
+                      <CmsButton
+                        size="icon"
+                        variant="muted"
+                        aria-label="Remove stop"
+                        onClick={() => removeStop(stop)}
+                      >
+                        ×
+                      </CmsButton>
+                    </div>
+                  ))}
+                  <div className="flex items-center gap-2 rounded border border-cms-line px-2 py-1 text-[12px] text-cms-ink dark:border-[#2a2e63] dark:bg-[#101435]">
+                    <input
+                      type="text"
+                      className="flex-1 bg-transparent outline-none"
+                      placeholder="Add a stop..."
+                      value={stopInput}
+                      onChange={(e) => setStopInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          addStop(stopInput);
+                          setStopInput("");
+                        }
+                      }}
+                    />
+                    <CmsButton
+                      size="icon"
+                      variant="primary"
+                      type="button"
+                      onClick={() => {
+                        addStop(stopInput);
+                        setStopInput("");
+                      }}
+                    >
+                      +
+                    </CmsButton>
+                  </div>
                 </div>
-              ))}
-              {/* Add new stop */}
-              <div className="flex items-center gap-2 rounded border border-cms-line px-2 py-1 text-[12px] text-cms-ink dark:border-[#2a2e63] dark:bg-[#101435]">
-                <input
-                  type="text"
-                  className="flex-1 outline-none"
-                  placeholder="Add a stop..."
-                  onChange={(e) => addStop(e.target.value)}
-                />
-                <CmsButton size="icon" variant="primary">+</CmsButton>
-              </div>
+                <span className="mt-1.5 block text-[11px] text-cms-muted">Maximum 10 stops</span>
+              </Field>
             </div>
-            <span className="mt-1.5 block text-[11px] text-cms-muted">Maximum 10 stops</span>
-          </Field>
+          </div>
+
+          <div className="lg:sticky lg:top-4">
+            <ImageUpload
+              label="Image"
+              hint="JPEG, PNG, WebP or GIF · up to 5MB"
+              value={draft.image}
+              uploading={uploading}
+              error={uploadError}
+              onFile={(file) => {
+                void (async () => {
+                  setUploading(true);
+                  setUploadError("");
+                  try {
+                    const url = await uploadImageToR2(file);
+                    setDraft((d) => ({ ...d, image: url }));
+                  } catch (error) {
+                    setUploadError(error instanceof Error ? error.message : "Upload failed.");
+                  } finally {
+                    setUploading(false);
+                  }
+                })();
+              }}
+              onRemove={() => setDraft((d) => ({ ...d, image: "" }))}
+            />
+          </div>
         </div>
 
-        <div className="mt-4 flex items-center gap-2">
+        <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-cms-line pt-4">
           <CmsButton variant="primary" disabled={!draftValid || savingDraft} onClick={() => void saveJourney()}>
             {savingDraft ? "Saving…" : draftEditingId ? "Update journey" : "Add journey"}
           </CmsButton>
