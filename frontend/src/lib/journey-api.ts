@@ -16,10 +16,28 @@ export type Journey = {
 };
 
 export async function getJourneys(): Promise<Journey[]> {
-  const response = await fetch(apiUrl("/journey-categories"), { next: { revalidate: 60 } });
-  if (!response.ok) return [];
-  const data: { journeys?: Journey[] } = await response.json();
-  return Array.isArray(data.journeys) ? data.journeys : [];
+  const controller = new AbortController();
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const timeout = new Promise<never>((_, reject) => {
+      timeoutId = setTimeout(() => {
+        controller.abort();
+        reject(new Error("Journey API request timed out."));
+      }, 3000);
+    });
+    const response = await Promise.race([
+      fetch(apiUrl("/journey-categories"), { cache: "no-store", signal: controller.signal }),
+      timeout,
+    ]);
+    if (!response.ok) return [];
+    const data: { journeys?: Journey[] } = await response.json();
+    return Array.isArray(data.journeys) ? data.journeys : [];
+  } catch (error) {
+    console.error("Failed to load journeys:", error);
+    return [];
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
 }
 
 export async function createJourney(data: Omit<Journey, "id">): Promise<Journey> {

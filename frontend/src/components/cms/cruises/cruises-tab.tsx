@@ -240,7 +240,8 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
     setDeleting(true);
     setNotice("");
     try {
-      const response = await fetch(`${JOURNEYS_API}/${deleteTarget.id}`, {
+      const id = deleteTarget.id;
+      const response = await fetch(`${JOURNEYS_API}/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -443,7 +444,11 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
       <DeleteConfirmModal
         open={deleteTarget !== null}
         title="Delete journey?"
-        message={`“${deleteTarget.label}” will be permanently removed. This cannot be undone.`}
+        message={
+          deleteTarget
+            ? `“${deleteTarget.label}” will be permanently removed. This cannot be undone.`
+            : ""
+        }
         confirmLabel="Delete"
         busy={deleting}
         onConfirm={() => void confirmDelete()}

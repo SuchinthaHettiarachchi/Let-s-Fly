@@ -256,7 +256,8 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
     setDeleting(true);
     setNotice("");
     try {
-      const response = await fetch(`${JOURNEYS_API}/${deleteTarget.id}`, {
+      const id = deleteTarget.id;
+      const response = await fetch(`${JOURNEYS_API}/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -364,7 +365,7 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
             <CmsSelect
               aria-label="Country"
               className="mt-1.5"
-              onChange={(val) => setCountryInDraft(val as any)}
+              onChange={(val) => setCountryInDraft(val as string)}
               options={countryOptions}
               placeholder="Select a country…"
               value={draft.country}
@@ -473,7 +474,11 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
       <DeleteConfirmModal
         open={deleteTarget !== null}
         title="Delete journey?"
-        message={`“${deleteTarget.label}” will be permanently removed. This cannot be undone.`}
+        message={
+          deleteTarget
+            ? `“${deleteTarget.label}” will be permanently removed. This cannot be undone.`
+            : ""
+        }
         confirmLabel="Delete"
         busy={deleting}
         onConfirm={() => void confirmDelete()}

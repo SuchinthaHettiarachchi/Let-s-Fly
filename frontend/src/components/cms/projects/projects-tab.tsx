@@ -41,8 +41,6 @@ const panelShell =
 const inputShell =
   "min-h-[38px] w-full rounded-lg border border-[#dcdaf0] bg-white px-[10px] py-2 text-[12px] font-semibold text-cms-ink transition-colors focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
 
-const [uploading, setUploading] = useState(false);
-
 const chipShell = "inline-flex items-center rounded-full px-2 py-[3px] text-[10px] font-semibold";
 
 const categoryChipStyles: Record<string, string> = {
@@ -384,10 +382,8 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
     }
   }
 
-  async function chooseCover(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    event.target.value = "";
-    if (!file || !draft) return;
+  async function chooseCover(file: File) {
+    if (!draft) return;
     try {
       const image = await readImage(file, 1600);
       updateDraft({ cover: { ...image, alt: draft.cover.alt || image.alt } });
@@ -764,9 +760,8 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
                     error={imageError ?? ""}
                     height="h-[150px]"
                     label="Cover image *"
-                    onFile={(file) => void chooseCover({ target: { files: [file] } } as ChangeEvent<HTMLInputElement>)}
+                    onFile={(file) => void chooseCover(file)}
                     onRemove={() => updateDraft({ cover: { ...draft.cover, src: "", name: undefined } })}
-                    uploading={uploading}
                     value={draft.cover.src}
                   />
                 </div>

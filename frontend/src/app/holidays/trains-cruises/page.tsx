@@ -5,7 +5,8 @@ import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { JourneyList } from "@/components/holidays/JourneyList";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { journeyPerks, journeys } from "@/data/journeys";
+import { journeyPerks } from "@/data/journeys";
+import { getJourneys } from "@/lib/journey-api";
 
 export const metadata: Metadata = {
   title: { absolute: "Train Tickets & Cruise Packages Sri Lanka | Let's Fly" },
@@ -13,7 +14,21 @@ export const metadata: Metadata = {
     "Book scenic train journeys like Kandy to Ella, plus international cruise holidays. Reserved seats and cruise packages arranged by Let's Fly, Colombo.",
 };
 
-export default function TrainsCruisesPage() {
+export const dynamic = "force-dynamic";
+
+export default async function TrainsCruisesPage() {
+  const journeys = (await getJourneys()).map((journey) => ({
+    id: journey.id,
+    kind: journey.kind,
+    label: journey.label,
+    title: journey.name,
+    text: journey.text,
+    chips: journey.chips,
+    price: journey.price,
+    priceNote: journey.priceNote,
+    image: journey.image,
+  }));
+
   return (
     <>
       <PageHero
