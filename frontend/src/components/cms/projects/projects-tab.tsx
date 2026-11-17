@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type DragEvent } from "react";
 import seeds from "./projects.json";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
+import { cmsButtonClasses } from "@/components/cms/CmsButton";
 
 const STORAGE_KEY = "letsfly-cms-projects-v1";
 const VIEW_KEY = "cms-proj-view";
@@ -31,12 +32,9 @@ interface Project {
 }
 type SeedProject = (typeof seeds)[number];
 
-const btnPrimary =
-  "inline-flex min-h-[38px] items-center justify-center gap-[7px] whitespace-nowrap rounded-[9px] border border-cms-primary bg-cms-primary px-[13px] text-[12px] font-semibold text-white transition-colors hover:bg-[#1408b0] dark:hover:bg-[#7d74ff]";
-const btnSecondary =
-  "inline-flex min-h-[38px] items-center justify-center gap-[7px] whitespace-nowrap rounded-[9px] border border-cms-line bg-cms-card px-[13px] text-[12px] font-semibold text-cms-ink transition-colors hover:border-[#cfcce8] hover:bg-[#f6f6fb] dark:hover:border-[#41478c] dark:hover:bg-[#1f2353]";
-const btnTiny =
-  "min-h-[30px] whitespace-nowrap rounded-[7px] border border-cms-line bg-cms-card px-2 text-[10px] font-semibold text-cms-ink transition-colors hover:border-[#cfcce8] hover:bg-[#f6f6fb] dark:hover:border-[#41478c] dark:hover:bg-[#1f2353]";
+const btnPrimary = cmsButtonClasses("primary");
+const btnSecondary = cmsButtonClasses("secondary");
+const btnTiny = cmsButtonClasses("secondary", "sm");
 const panelShell =
   "min-w-0 rounded-[13px] border border-cms-line bg-cms-card p-[18px] shadow-[0_1px_2px_rgba(19,8,122,.04)] dark:shadow-none";
 const inputShell =

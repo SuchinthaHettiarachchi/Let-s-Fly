@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
+import { CmsButton } from "@/components/cms/CmsButton";
 
 const INQUIRIES_STORAGE_KEY = "lf_inquiries";
 
@@ -318,21 +319,21 @@ export default function InquiriesTab({ onNavigate }: { onNavigate: (section: str
                 </div>
                 <div aria-label={`Status for ${inquiry.customerName}`} className="flex flex-wrap justify-end gap-[6px] max-[760px]:justify-start">
                   {statuses.map((status) => (
-                    <button suppressHydrationWarning
+                    <CmsButton
                       aria-pressed={inquiry.status === status}
-                      className={`min-h-[34px] px-[10px] border rounded-lg text-[11px]! font-semibold! transition-colors duration-200 ease-[ease] focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2 ${inquiry.status === status ? "border-cms-primary bg-cms-primary text-white" : "border-cms-line bg-cms-card text-cms-muted hover:border-[#cfcce8] hover:text-cms-ink dark:hover:border-[#41478c]"}`}
                       key={status}
                       onClick={() => changeStatus(inquiry.id, status)}
-                      type="button"
+                      size="sm"
+                      variant={inquiry.status === status ? "primary" : "secondary"}
                     >
                       {status}
-                    </button>
+                    </CmsButton>
                   ))}
-                  <button suppressHydrationWarning className="min-h-[34px] px-[10px] border border-cms-line rounded-lg bg-cms-card text-cms-ink text-[11px]! font-semibold! whitespace-nowrap hover:border-[#cfcce8] hover:bg-cms-card2 dark:hover:border-[#41478c] focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2" onClick={() => {
+                  <CmsButton size="sm" variant="secondary" onClick={() => {
                     setCommentInquiryId(inquiry.id);
                     setCommentText("");
-                  }} type="button">Add comment</button>
-                  <button suppressHydrationWarning className="min-h-[34px] px-[10px] border border-cms-line rounded-lg bg-cms-card text-cms-ink text-[11px]! font-semibold! whitespace-nowrap hover:border-[#cfcce8] hover:bg-cms-card2 dark:hover:border-[#41478c] focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2" onClick={() => setSelectedInquiry(inquiry)} type="button">View details</button>
+                  }}>Add comment</CmsButton>
+                  <CmsButton size="sm" variant="secondary" onClick={() => setSelectedInquiry(inquiry)}>View details</CmsButton>
                 </div>
               </article>
             ))}
@@ -353,7 +354,7 @@ export default function InquiriesTab({ onNavigate }: { onNavigate: (section: str
                 <h2 id="inquiry-comment-title" className="text-cms-ink text-[18px] font-semibold">Add a comment</h2>
                 <p className="mt-[3px] text-cms-muted text-[12px] wrap-anywhere">For {commentInquiry.customerName}</p>
               </div>
-              <button suppressHydrationWarning aria-label="Close" className="grid size-[34px] flex-none place-items-center border border-cms-line rounded-lg bg-cms-card text-cms-muted text-[22px]! focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2" onClick={() => setCommentInquiryId(null)} type="button">×</button>
+              <CmsButton aria-label="Close" size="icon" variant="secondary" onClick={() => setCommentInquiryId(null)}>×</CmsButton>
             </header>
             <form onSubmit={addComment}>
               <label className="block mb-[6px] text-cms-ink text-[12px] font-semibold" htmlFor="inquiry-comment">Comment</label>
@@ -368,8 +369,8 @@ export default function InquiriesTab({ onNavigate }: { onNavigate: (section: str
                 value={commentText}
               />
               <footer className="flex justify-end gap-2 mt-[18px]">
-                <button suppressHydrationWarning className="min-h-[34px] px-[10px] border border-cms-line rounded-lg bg-cms-card text-cms-ink text-[11px]! font-semibold! whitespace-nowrap hover:border-[#cfcce8] hover:bg-cms-card2 dark:hover:border-[#41478c] focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2" onClick={() => setCommentInquiryId(null)} type="button">Cancel</button>
-                <button suppressHydrationWarning className="min-h-9 px-[13px] border-0 rounded-lg bg-cms-primary text-white text-[12px]! font-semibold! hover:bg-[#1408b0] dark:hover:bg-[#7d74ff] focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2" type="submit">Save comment</button>
+                <CmsButton variant="secondary" onClick={() => setCommentInquiryId(null)}>Cancel</CmsButton>
+                <CmsButton variant="primary" type="submit">Save comment</CmsButton>
               </footer>
             </form>
           </section>
@@ -389,7 +390,7 @@ export default function InquiriesTab({ onNavigate }: { onNavigate: (section: str
                 <h2 id="inquiry-detail-title" className="text-cms-ink text-[18px] font-semibold">Inquiry details</h2>
                 <p className="mt-[3px] text-cms-muted text-[12px] wrap-anywhere">{detailInquiry.category} · {formatDate(detailInquiry.createdAt)}</p>
               </div>
-              <button suppressHydrationWarning aria-label="Close" className="grid size-[34px] flex-none place-items-center border border-cms-line rounded-lg bg-cms-card text-cms-muted text-[22px]! focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2" onClick={() => setSelectedInquiry(null)} type="button">×</button>
+              <CmsButton aria-label="Close" size="icon" variant="secondary" onClick={() => setSelectedInquiry(null)}>×</CmsButton>
             </header>
             <dl className="grid grid-cols-2 gap-3 max-[480px]:grid-cols-1">
               <div className="py-[10px] px-3 rounded-[9px] bg-cms-card2 wrap-anywhere"><dt className="text-cms-muted text-[11px]">Customer</dt><dd className="mt-[3px] text-cms-ink text-[13px] font-medium">{detailInquiry.customerName}</dd></div>
@@ -405,12 +406,12 @@ export default function InquiriesTab({ onNavigate }: { onNavigate: (section: str
               ) : <p className="mt-[7px] text-cms-muted text-[12px]">No comments yet.</p>}
             </div>
             <footer className="flex justify-end gap-2 mt-[18px]">
-              <button suppressHydrationWarning className="min-h-[34px] px-[10px] border border-cms-line rounded-lg bg-cms-card text-cms-ink text-[11px]! font-semibold! whitespace-nowrap hover:border-[#cfcce8] hover:bg-cms-card2 dark:hover:border-[#41478c] focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2" onClick={() => setSelectedInquiry(null)} type="button">Close</button>
-              <button suppressHydrationWarning className="min-h-9 px-[13px] border-0 rounded-lg bg-cms-primary text-white text-[12px]! font-semibold! hover:bg-[#1408b0] dark:hover:bg-[#7d74ff] focus-visible:outline-2 focus-visible:outline-cms-primary focus-visible:outline-offset-2" onClick={() => {
+              <CmsButton variant="secondary" onClick={() => setSelectedInquiry(null)}>Close</CmsButton>
+              <CmsButton variant="primary" onClick={() => {
                 setSelectedInquiry(null);
                 setCommentInquiryId(detailInquiry.id);
                 setCommentText("");
-              }} type="button">Add comment</button>
+              }}>Add comment</CmsButton>
             </footer>
           </section>
         </div>

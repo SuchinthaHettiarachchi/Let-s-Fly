@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
+import { cmsButtonClasses } from "@/components/cms/CmsButton";
 import { apiUrl } from "@/lib/api-url";
 import {
   defaultInclusions,
@@ -25,9 +26,8 @@ const CATEGORIES_API = apiUrl("/categories");
 const UPLOAD = apiUrl("/upload");
 const inputShell = "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[13px] text-cms-ink outline-none focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
 const areaShell = `${inputShell} min-h-[72px] py-2 leading-[1.5] resize-y`;
-const btn = "inline-flex min-h-[38px] items-center justify-center rounded-[9px] border px-[14px] text-[12px] font-semibold disabled:cursor-not-allowed disabled:opacity-50";
-const primary = `${btn} border-transparent bg-cms-primary text-white hover:bg-[#150cb0]`;
-const secondary = `${btn} border-cms-line bg-cms-card text-cms-ink hover:bg-[#f5f5f7] dark:hover:bg-[#101435]`;
+const primary = cmsButtonClasses("primary");
+const secondary = cmsButtonClasses("secondary");
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const TABS = ["Details", "Gallery", "Overview", "Itinerary", "Inclusions", "Payment"] as const;

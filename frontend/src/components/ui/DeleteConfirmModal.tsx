@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { CmsButton } from "@/components/cms/CmsButton";
 import { Icon } from "@/components/ui/Icon";
 
 type Props = {
@@ -74,23 +75,21 @@ export function DeleteConfirmModal({
           {message}
         </p>
         <div className="mt-6 flex justify-end gap-2.5">
-          <button
-            type="button"
+          <CmsButton
             disabled={busy}
             onClick={onCancel}
-            className="h-10 cursor-pointer rounded-lg border-[1.5px] border-sand-300 bg-white px-4 text-small font-semibold text-ink-900 transition-[border-color,scale] duration-200 hover:border-ink-400 press disabled:cursor-not-allowed disabled:opacity-50"
+            variant="secondary"
           >
             {cancelLabel}
-          </button>
-          <button
+          </CmsButton>
+          <CmsButton
             ref={confirmRef}
-            type="button"
             disabled={busy}
             onClick={onConfirm}
-            className="h-10 cursor-pointer rounded-lg bg-[#d42a45] px-4 text-small font-semibold text-white transition-[background-color,scale] duration-200 hover:bg-[#b71f37] press disabled:cursor-not-allowed disabled:opacity-50"
+            variant="danger"
           >
             {busy ? "Deleting…" : confirmLabel}
-          </button>
+          </CmsButton>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@/components/ui/Icon";
+import { CmsSelect, type CmsSelectOption } from "@/components/cms/CmsSelect";
 
 /** Vehicle-related Material Symbols used by rental category cards. */
 export const VEHICLE_ICONS: { value: string; label: string }[] = [
@@ -20,36 +20,30 @@ type Props = {
   value: string;
   onChange: (value: string) => void;
   id?: string;
-  /** Class(es) applied to the <select> itself (CMS input shell, etc.). */
+  /** Class(es) merged onto the dropdown trigger (CMS input shell, etc.). */
   className?: string;
   /** Show the "Select an icon…" empty option. */
   placeholder?: boolean;
   disabled?: boolean;
 };
 
-/** Dropdown of vehicle icons with a live glyph preview. Reusable across admin forms. */
+/** Vehicle-icon dropdown: each option shows its glyph + label. Reusable across admin forms. */
 export function VehicleIconSelect({ value, onChange, id, className = "", placeholder = true, disabled = false }: Props) {
-  const selected = VEHICLE_ICONS.some((icon) => icon.value === value);
+  const options: CmsSelectOption[] = VEHICLE_ICONS.map((icon) => ({
+    value: icon.value,
+    label: icon.label,
+    icon: icon.value,
+  }));
   return (
-    <span className="relative flex w-full items-center">
-      <span aria-hidden="true" className="pointer-events-none absolute left-3 flex items-center">
-        <Icon name={selected ? value : "directions_car"} size={18} className={selected ? "text-ocean-600" : "text-ink-400"} />
-      </span>
-      <select
-        id={id}
-        value={value}
-        disabled={disabled}
-        onChange={(event) => onChange(event.target.value)}
-        className={`${className} pl-9`}
-      >
-        {placeholder && <option value="">Select an icon…</option>}
-        {VEHICLE_ICONS.map((icon) => (
-          <option key={icon.value} value={icon.value}>
-            {icon.label}
-          </option>
-        ))}
-        {value && !selected && <option value={value}>{value}</option>}
-      </select>
-    </span>
+    <CmsSelect
+      aria-label="Vehicle icon"
+      className={className}
+      disabled={disabled}
+      id={id}
+      onChange={onChange}
+      options={options}
+      placeholder={placeholder ? "Select an icon…" : "Select…"}
+      value={value}
+    />
   );
 }

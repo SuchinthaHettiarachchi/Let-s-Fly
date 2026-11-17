@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { cmsButtonClasses } from "@/components/cms/CmsButton";
 import { apiUrl } from "@/lib/api-url";
 import type { HomeAboutContent } from "@/lib/home-about-api";
 
@@ -11,9 +12,8 @@ const VIDEO_API = apiUrl("/upload/video");
 const inputShell =
   "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[14px] text-cms-ink outline-none placeholder:text-cms-muted focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
 const areaShell = `${inputShell} min-h-[92px] py-2.5 leading-[1.55] resize-y`;
-const btnBase = "inline-flex min-h-[38px] items-center justify-center gap-2 rounded-[9px] px-[14px] text-[12.5px] font-semibold transition-[background-color,border-color,color] duration-200 disabled:cursor-not-allowed disabled:opacity-50";
-const btnGhost = `${btnBase} border border-cms-line bg-cms-card text-cms-ink hover:not-disabled:border-[#e2e2ea] hover:not-disabled:bg-[#f5f5f7] dark:hover:not-disabled:border-[#4a4f8f] dark:hover:not-disabled:bg-[#101435]`;
-const btnPrimary = `${btnBase} border border-transparent bg-cms-primary text-white hover:bg-[#150cb0] dark:hover:bg-[#7d74ff]`;
+const btnGhost = cmsButtonClasses("secondary");
+const btnPrimary = cmsButtonClasses("primary");
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const MAX_VIDEO_BYTES = 100 * 1024 * 1024;

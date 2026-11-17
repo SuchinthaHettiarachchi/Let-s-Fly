@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { useTheme } from "@/app/theme-provider";
 import { authApi } from "@/lib/auth-api";
+import { CmsButton } from "@/components/cms/CmsButton";
 import HomeTab from "@/components/cms/home/home-tab";
 import InquiriesTab from "@/components/cms/inquiries/inquiries-tab";
 import ProjectsTab from "@/components/cms/projects/projects-tab";
@@ -185,7 +186,7 @@ export default function CmsFrame() {
       {logoutError && (
         <div className="fixed right-4 top-4 z-100 flex max-w-[min(460px,calc(100vw_-_32px))] items-center gap-4 rounded-[10px] border border-cms-line bg-cms-card px-4 py-3.5 shadow-[0_12px_35px_rgba(10,4,70,.18)] dark:shadow-none text-[13px] text-[#991b1b] dark:text-[#ff9aa8]" role="alert">
           <span>{logoutError}</span>
-          <button suppressHydrationWarning className="rounded-md border-0 bg-[#b91c1c] px-3 py-[7px] font-semibold! text-white" disabled={loggingOut} onClick={() => void signOut()} type="button">Retry</button>
+          <CmsButton variant="danger" size="sm" disabled={loggingOut} onClick={() => void signOut()}>Retry</CmsButton>
         </div>
       )}
     </main>

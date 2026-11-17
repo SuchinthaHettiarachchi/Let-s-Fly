@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
+import { CmsButton, cmsButtonClasses } from "@/components/cms/CmsButton";
+import { CmsSelect } from "@/components/cms/CmsSelect";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
 import { VehicleIconSelect } from "@/components/rentals/VehicleIconSelect";
 import { Icon } from "@/components/ui/Icon";
@@ -13,9 +15,6 @@ const VEHICLES_API = apiUrl("/rental-vehicles");
 const UPLOAD = apiUrl("/upload");
 
 const inputShell = "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[13px] text-cms-ink outline-none focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
-const btn = "inline-flex min-h-[38px] items-center justify-center rounded-[9px] border px-[14px] text-[12px] font-semibold disabled:cursor-not-allowed disabled:opacity-50";
-const primary = `${btn} border-transparent bg-cms-primary text-white hover:bg-[#150cb0]`;
-const secondary = `${btn} border-cms-line bg-cms-card text-cms-ink hover:bg-[#f5f5f7] dark:hover:bg-[#101435]`;
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const TRANSMISSIONS: Transmission[] = ["Automatic", "Manual"];
@@ -324,57 +323,90 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
         <span className="text-[12px] text-cms-muted" aria-live="polite">{notice}</span>
       </div>
 
-      {/* —— Categories —— */}
+      {/* —— Categories: form | list —— */}
       <section className="mb-5 rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <div>
-            <h2 className="text-[16px] font-semibold text-cms-ink">Categories</h2>
-            <p className="mt-1 text-[12px] text-cms-muted">Filter chips on the Rentals page. Each category has a name and a vehicle icon.</p>
+        <div className="mb-4">
+          <h2 className="text-[16px] font-semibold text-cms-ink">Categories</h2>
+          <p className="mt-1 text-[12px] text-cms-muted">Filter chips on the Rentals page. Each category has a name and a vehicle icon.</p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+          {/* Left: add / edit form */}
+          <div className="rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#101435]">
+            <h3 className="text-[13px] font-semibold text-cms-ink">{categoryEditingId ? "Edit category" : "Add category"}</h3>
+            <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <Field label="Category name">
+                <input
+                  className={inputShell}
+                  placeholder="Cars"
+                  value={categoryDraft.name}
+                  onChange={(event) => setCategoryDraft((d) => ({ ...d, name: event.target.value }))}
+                />
+              </Field>
+              <Field label="Vehicle icon">
+                <VehicleIconSelect
+                  value={categoryDraft.icon}
+                  onChange={(icon) => setCategoryDraft((d) => ({ ...d, icon }))}
+                  className="mt-1.5"
+                />
+              </Field>
+            </div>
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <CmsButton variant="primary" disabled={!categoryValid || savingCategory} onClick={() => void saveCategory()}>
+                {savingCategory ? "Saving…" : categoryEditingId ? "Update category" : "Add category"}
+              </CmsButton>
+              {categoryEditingId && (
+                <CmsButton variant="secondary" onClick={resetCategory}>Cancel edit</CmsButton>
+              )}
+              {!categoryValid && <span className="text-[12px] text-cms-muted">Name and icon are required.</span>}
+            </div>
           </div>
-          {categoryEditingId && <button className={secondary} onClick={resetCategory} type="button">Cancel edit</button>}
-        </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <Field label="Category name">
-            <input
-              className={inputShell}
-              placeholder="Cars"
-              value={categoryDraft.name}
-              onChange={(event) => setCategoryDraft((d) => ({ ...d, name: event.target.value }))}
-            />
-          </Field>
-          <Field label="Vehicle icon">
-            <VehicleIconSelect
-              value={categoryDraft.icon}
-              onChange={(icon) => setCategoryDraft((d) => ({ ...d, icon }))}
-              className={inputShell}
-            />
-          </Field>
-        </div>
-
-        <div className="mt-4 flex items-center gap-2">
-          <button className={primary} disabled={!categoryValid || savingCategory} onClick={() => void saveCategory()} type="button">
-            {savingCategory ? "Saving…" : categoryEditingId ? "Update category" : "Add category"}
-          </button>
-          {!categoryValid && <span className="text-[12px] text-cms-muted">Name and icon are required.</span>}
-        </div>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {categories.map((cat) => (
-            <span key={cat._id} className="inline-flex items-center gap-2 rounded-full border border-cms-line bg-cms-bg px-3 py-1.5 text-[12px] text-cms-ink dark:bg-[#101435]">
-              <Icon name={cat.icon} size={16} className="text-cms-primary" />
-              <strong className="font-semibold">{cat.name}</strong>
-              <button className="text-cms-primary hover:underline" onClick={() => editCategory(cat)} type="button">Edit</button>
-              <button
-                className="text-[#d42a45] hover:underline"
-                onClick={() => setDeleteTarget({ kind: "category", id: cat._id, label: cat.name })}
-                type="button"
-              >
-                Delete
-              </button>
-            </span>
-          ))}
-          {loaded && !categories.length && <span className="text-[12px] text-cms-muted">No categories yet — add one above.</span>}
+          {/* Right: existing categories table */}
+          <div className="rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#101435]">
+            <h3 className="text-[13px] font-semibold text-cms-ink">Existing categories</h3>
+            {!loaded ? (
+              <p className="mt-3 text-[12.5px] text-cms-muted">Loading…</p>
+            ) : !categories.length ? (
+              <p className="mt-3 text-[12.5px] text-cms-muted">No categories yet — add one on the left.</p>
+            ) : (
+              <div className="mt-3 overflow-x-auto">
+                <table className="w-full border-collapse text-left">
+                  <thead>
+                    <tr className="border-b border-cms-line text-[11px] font-semibold uppercase tracking-wide text-cms-muted">
+                      <th className="pb-2 pr-3">Icon</th>
+                      <th className="pb-2 pr-3">Name</th>
+                      <th className="pb-2 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {categories.map((cat) => (
+                      <tr className="border-b border-cms-line last:border-0" key={cat._id}>
+                        <td className="py-2.5 pr-3">
+                          <span className="flex items-center gap-2 text-[13px] text-cms-ink">
+                            <Icon name={cat.icon} size={18} className="text-cms-primary" />
+                          </span>
+                        </td>
+                        <td className="py-2.5 pr-3 text-[13px] font-medium text-cms-ink">{cat.name}</td>
+                        <td className="py-2.5 text-right">
+                          <span className="inline-flex gap-1.5">
+                            <CmsButton size="sm" variant="secondary" onClick={() => editCategory(cat)}>Edit</CmsButton>
+                            <CmsButton
+                              size="sm"
+                              variant="danger"
+                              onClick={() => setDeleteTarget({ kind: "category", id: cat._id, label: cat.name })}
+                            >
+                              Delete
+                            </CmsButton>
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
@@ -385,7 +417,7 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
             <h2 className="text-[16px] font-semibold text-cms-ink">{vehicleEditingId ? "Edit vehicle" : "Add vehicle"}</h2>
             <p className="mt-1 text-[12px] text-cms-muted">Vehicle cards show the photo, seats, transmission and fuel on the Rentals page.</p>
           </div>
-          {vehicleEditingId && <button className={secondary} onClick={resetVehicle} type="button">Cancel edit</button>}
+          {vehicleEditingId && <CmsButton variant="secondary" onClick={resetVehicle}>Cancel edit</CmsButton>}
         </div>
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -398,16 +430,14 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
             />
           </Field>
           <Field label="Category">
-            <select
-              className={inputShell}
+            <CmsSelect
+              aria-label="Category"
+              className="mt-1.5"
+              onChange={(category) => setVehicleDraft((d) => ({ ...d, category }))}
+              options={categories.map((cat) => ({ value: cat._id, label: cat.name, icon: cat.icon }))}
+              placeholder="Select a category…"
               value={vehicleDraft.category}
-              onChange={(event) => setVehicleDraft((d) => ({ ...d, category: event.target.value }))}
-            >
-              <option value="">Select a category…</option>
-              {categories.map((cat) => (
-                <option key={cat._id} value={cat._id}>{cat.name}</option>
-              ))}
-            </select>
+            />
           </Field>
           <Field label="Seats">
             <input
@@ -435,24 +465,22 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
             )}
           </Field>
           <Field label="Transmission">
-            <select
-              className={inputShell}
+            <CmsSelect
+              aria-label="Transmission"
+              className="mt-1.5"
+              onChange={(transmission) => setVehicleDraft((d) => ({ ...d, transmission: transmission as Transmission | "" }))}
+              options={TRANSMISSIONS.map((t) => ({ value: t, label: t }))}
               value={vehicleDraft.transmission}
-              onChange={(event) => setVehicleDraft((d) => ({ ...d, transmission: event.target.value as Transmission | "" }))}
-            >
-              <option value="">Select…</option>
-              {TRANSMISSIONS.map((t) => <option key={t} value={t}>{t}</option>)}
-            </select>
+            />
           </Field>
           <Field label="Fuel type">
-            <select
-              className={inputShell}
+            <CmsSelect
+              aria-label="Fuel type"
+              className="mt-1.5"
+              onChange={(fuel) => setVehicleDraft((d) => ({ ...d, fuel: fuel as FuelType | "" }))}
+              options={FUELS.map((f) => ({ value: f, label: f }))}
               value={vehicleDraft.fuel}
-              onChange={(event) => setVehicleDraft((d) => ({ ...d, fuel: event.target.value as FuelType | "" }))}
-            >
-              <option value="">Select…</option>
-              {FUELS.map((f) => <option key={f} value={f}>{f}</option>)}
-            </select>
+            />
           </Field>
           <fieldset className="sm:col-span-2 lg:col-span-3">
             <legend className="text-[12.5px] font-semibold text-cms-text">Drive modes</legend>
@@ -485,7 +513,7 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
               {!vehicleDraft.image && !uploading && <span>Drop or choose an image</span>}
             </div>
             <div className="mt-2 flex flex-wrap items-center justify-end gap-2.5">
-              <label className={`${secondary} ${uploading ? "pointer-events-none opacity-50" : "cursor-pointer"}`}>
+              <label className={cmsButtonClasses("secondary", "md", uploading ? "pointer-events-none opacity-50" : "cursor-pointer")}>
                 {uploading ? "Uploading…" : vehicleDraft.image ? "Replace image" : "Choose image"}
                 <input
                   accept="image/*"
@@ -499,7 +527,7 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
                 />
               </label>
               {vehicleDraft.image && !uploading && (
-                <button className={secondary} onClick={() => setVehicleDraft((d) => ({ ...d, image: "" }))} type="button">Remove</button>
+                <CmsButton variant="muted" onClick={() => setVehicleDraft((d) => ({ ...d, image: "" }))}>Remove</CmsButton>
               )}
             </div>
             <span className="mt-1.5 block truncate text-[11.5px] text-cms-muted" title={vehicleDraft.image}>
@@ -510,9 +538,9 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
         </div>
 
         <div className="mt-4 flex items-center gap-2">
-          <button className={primary} disabled={!vehicleValid || savingVehicle || uploading} onClick={() => void saveVehicle()} type="button">
+          <CmsButton variant="primary" disabled={!vehicleValid || savingVehicle || uploading} onClick={() => void saveVehicle()}>
             {savingVehicle ? "Saving…" : vehicleEditingId ? "Update vehicle" : "Add vehicle"}
-          </button>
+          </CmsButton>
           {!vehicleValid && <span className="text-[12px] text-cms-muted">Fill in all required fields to save.</span>}
         </div>
       </section>
@@ -521,7 +549,7 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
       <section className="rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-[16px] font-semibold text-cms-ink">Vehicles ({vehicles.length})</h2>
-          <button className={secondary} onClick={() => void load()} type="button">Refresh</button>
+          <CmsButton variant="secondary" onClick={() => void load()}>Refresh</CmsButton>
         </div>
         {!loaded ? (
           <p className="text-[13px] text-cms-muted">Loading vehicles…</p>
@@ -549,14 +577,14 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
                     </div>
                   </div>
                   <div className="mt-3 flex gap-2">
-                    <button className={secondary} onClick={() => editVehicle(vehicle)} type="button">Edit</button>
-                    <button
-                      className={secondary}
+                    <CmsButton size="sm" variant="secondary" onClick={() => editVehicle(vehicle)}>Edit</CmsButton>
+                    <CmsButton
+                      size="sm"
+                      variant="danger"
                       onClick={() => setDeleteTarget({ kind: "vehicle", id: vehicle._id, label: vehicle.name })}
-                      type="button"
                     >
                       Delete
-                    </button>
+                    </CmsButton>
                   </div>
                 </div>
               </article>

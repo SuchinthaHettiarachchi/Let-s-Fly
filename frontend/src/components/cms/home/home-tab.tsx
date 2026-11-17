@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
+import { cmsButtonClasses } from "@/components/cms/CmsButton";
 import WhoWeAreSection from "@/components/cms/home/who-we-are-section";
 import HomeAboutSection from "@/components/cms/home/home-about-section";
 import RentalTeaserSection from "@/components/cms/home/rental-teaser-section";
@@ -71,9 +72,8 @@ const icons: Record<string, ReactNode> = {
 
 const cardShell = "border border-cms-line rounded-[14px] bg-cms-card shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none";
 const liftCard = "transition-[box-shadow,transform,border-color] duration-[250ms] hover:-translate-y-0.5 hover:border-[#dedcf0] hover:shadow-[0_8px_24px_rgba(19,8,122,.08)] dark:hover:border-[#4a4f8f] dark:hover:shadow-none";
-const btnBase = "inline-flex min-h-[38px] items-center justify-center gap-2 rounded-[9px] px-[14px] text-[12.5px] font-semibold transition-[background-color,border-color,color] duration-200 disabled:cursor-not-allowed disabled:opacity-50";
-const btnGhost = `${btnBase} border border-cms-line bg-cms-card text-cms-ink hover:not-disabled:border-[#e2e2ea] hover:not-disabled:bg-[#f5f5f7] dark:hover:not-disabled:border-[#4a4f8f] dark:hover:not-disabled:bg-[#101435]`;
-const btnPrimary = `${btnBase} border border-transparent bg-cms-primary text-white hover:bg-[#150cb0] dark:hover:bg-[#7d74ff]`;
+const btnGhost = cmsButtonClasses("secondary");
+const btnPrimary = cmsButtonClasses("primary");
 const cardGrid = "grid grid-cols-1 gap-[18px] sm:grid-cols-2 xl:grid-cols-4";
 const emptyShell = "mb-3 rounded-[14px] border border-dashed border-[#e2e2ea] px-[10px] py-[26px] text-center text-cms-muted dark:border-[#2a2e63]";
 const stackedMedia = "grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-3 max-[760px]:grid-cols-1";
