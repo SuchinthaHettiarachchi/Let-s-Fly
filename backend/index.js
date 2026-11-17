@@ -13,6 +13,8 @@ const whoWeAreRouter = require('./routers/whoWeAreRouter');
 const homeAboutRouter = require('./routers/homeAboutRouter');
 const rentalTeaserRouter = require('./routers/rentalTeaserRouter');
 const categoryRouter = require('./routers/categoryRouter');
+const rentalCategoryRouter = require('./routers/rentalCategoryRouter');
+const rentalVehicleRouter = require('./routers/rentalVehicleRouter');
 const { errorHandler } = require('./middleware/error');
 
 const app = express();
@@ -29,6 +31,8 @@ app.use((req, res, next) => {
     || req.originalUrl.startsWith('/api/rental-teaser')
     || req.originalUrl.startsWith('/api/packages')
     || req.originalUrl.startsWith('/api/categories')
+    || req.originalUrl.startsWith('/api/rental-categories')
+    || req.originalUrl.startsWith('/api/rental-vehicles')
   ) return next();
   express.json({ limit: '10kb' })(req, res, next);
 });
@@ -55,6 +59,8 @@ app.use('/api/who-we-are', whoWeAreRouter);
 app.use('/api/home-about', homeAboutRouter);
 app.use('/api/rental-teaser', rentalTeaserRouter);
 app.use('/api/categories', categoryRouter);
+app.use('/api/rental-categories', rentalCategoryRouter);
+app.use('/api/rental-vehicles', rentalVehicleRouter);
 app.use(errorHandler);
 
 mongoose.connect(config.mongoUri)

@@ -5,7 +5,8 @@ import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { Fleet } from "@/components/rentals/Fleet";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { rentalEssentials, vehicles } from "@/data/rentals";
+import { rentalEssentials } from "@/data/rentals";
+import { getRentalCategories, getRentalVehicles } from "@/lib/rental-api";
 
 export const metadata: Metadata = {
   title: { absolute: "Car & Bike Rental Sri Lanka | Airport Transfers | Let's Fly" },
@@ -13,7 +14,8 @@ export const metadata: Metadata = {
     "Rent cars, vans and motorbikes across Sri Lanka, self-drive or with a driver. Airport pickups, day trips and island tours at fair daily rates.",
 };
 
-export default function RentalsPage() {
+export default async function RentalsPage() {
+  const [vehicles, categories] = await Promise.all([getRentalVehicles(), getRentalCategories()]);
   return (
     <>
       <PageHero
@@ -26,7 +28,7 @@ export default function RentalsPage() {
 
       <section className="py-14 lg:py-20">
         <Container>
-          <Fleet vehicles={vehicles} />
+          <Fleet vehicles={vehicles} categories={categories} />
         </Container>
       </section>
 

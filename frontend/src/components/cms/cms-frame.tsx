@@ -7,6 +7,7 @@ import HomeTab from "@/components/cms/home/home-tab";
 import InquiriesTab from "@/components/cms/inquiries/inquiries-tab";
 import ProjectsTab from "@/components/cms/projects/projects-tab";
 import PackagesTab from "@/components/cms/packages/packages-tab";
+import RentalsTab from "@/components/cms/rentals/rentals-tab";
 import CmsSectionTab from "@/components/cms/cms-section-tab";
 
 const sections = [
@@ -18,7 +19,7 @@ const sections = [
   { id: "trains", title: "Trains", description: "Manage train routes, schedules and reservations." },
   { id: "cruises", title: "Cruises", description: "Manage cruise packages and sailing dates." },
   { id: "gallery", title: "Gallery", description: "Curate photo galleries, albums and site imagery." },
-  { id: "rental", title: "Rental", description: "Manage the vehicle rental fleet, pricing and availability." },
+  { id: "rental", title: "Rental", description: "Manage rental categories and vehicle cards shown on the Rentals page." },
   { id: "inquiries", title: "Inquiries", description: "Review customer inquiries, comments and responses." },
 ];
 
@@ -173,6 +174,8 @@ export default function CmsFrame() {
             <PackagesTab key={activeSection} category={activeSection === "outbound" ? "outbound" : "sri-lanka"} onNavigate={navigate} />
           ) : activeSection === "projects" ? (
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><ProjectsTab onDirtyChange={setProjectDirty} onNavigate={navigate} /></div>
+          ) : activeSection === "rental" ? (
+            <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><RentalsTab onNavigate={navigate} /></div>
           ) : (
             <CmsSectionTab title={current.title} description={current.description} onNavigate={navigate} />
           )}

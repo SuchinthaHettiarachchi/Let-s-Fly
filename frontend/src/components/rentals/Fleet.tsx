@@ -6,33 +6,34 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { contact } from "@/data/site";
-import { vehicleTypes, type DriveMode, type Vehicle, type VehicleType } from "@/data/rentals";
+import type { DriveMode, RentalCategory, RentalVehicle } from "@/lib/rental-api";
 
 const modes: { id: DriveMode; label: string }[] = [
   { id: "self-drive", label: "Self-drive" },
   { id: "with-driver", label: "With driver" },
 ];
 
-export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
-  const [type, setType] = useState<VehicleType | "all">("all");
+export function Fleet({ vehicles, categories }: { vehicles: RentalVehicle[]; categories: RentalCategory[] }) {
+  const [categoryId, setCategoryId] = useState<string>("all");
   const [mode, setMode] = useState<DriveMode>("self-drive");
 
-  const visible = vehicles.filter((v) => (type === "all" || v.type === type) && v.modes.includes(mode));
-  const chips = [{ id: "all" as const, label: "All", icon: "apps" }, ...vehicleTypes];
+  const visible = vehicles.filter((v) => (categoryId === "all" || v.category === categoryId) && v.modes.includes(mode));
+  const chips = [{ id: "all" as const, label: "All", icon: "apps" }, ...categories.map((c) => ({ id: c._id, label: c.name, icon: c.icon }))];
   const modeLabel = modes.find((m) => m.id === mode)!.label;
+  const activeCategory = categories.find((c) => c._id === categoryId);
 
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div role="group" aria-label="Vehicle type" className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:px-0">
           {chips.map((c) => {
-            const on = c.id === type;
+            const on = c.id === categoryId;
             return (
               <button
                 key={c.id}
                 type="button"
                 aria-pressed={on}
-                onClick={() => setType(c.id)}
+                onClick={() => setCategoryId(c.id)}
                 className={`flex h-11 flex-none sm:h-10 cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] px-[18px] text-small font-medium transition-[color,background-color,border-color,scale] duration-200 press ${
                   on ? "border-ocean-600 bg-ocean-600 text-white" : "border-sand-300 bg-white text-ink-900 hover:border-ocean-600"
                 }`}
@@ -68,7 +69,7 @@ export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
         <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((v, i) => (
             <li
-              key={v.id}
+              key={v._id}
               data-reveal={(i % 3) * 90}
               className="group flex flex-col overflow-hidden rounded-xl border border-sand-300 bg-white transition-[translate,border-color,box-shadow] duration-300 ease-lf hover:-translate-y-1 hover:border-ocean-600 hover:shadow-lf-card-hover"
             >
@@ -79,7 +80,7 @@ export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
                   <Placeholder label="PHOTO" className="absolute inset-0 rounded-none border-0" />
                 )}
                 <span className="absolute top-3.5 left-3.5 rounded-full bg-white px-3 py-1.5 text-caption text-ocean-600">
-                  {vehicleTypes.find((t) => t.id === v.type)?.label}
+                  {categories.find((c) => c._id === v.category)?.name}
                 </span>
               </div>
               <div className="flex flex-1 flex-col gap-3 p-5">
@@ -116,7 +117,7 @@ export function Fleet({ vehicles }: { vehicles: Vehicle[] }) {
         </ul>
       ) : (
         <p className="py-10 text-center text-ink-600">
-          No {type === "all" ? "" : `${vehicleTypes.find((t) => t.id === type)?.label.toLowerCase()} `}available{" "}
+          No {categoryId === "all" ? "" : `${activeCategory?.name.toLowerCase() ?? ""} `}available{" "}
           {mode === "with-driver" ? "with a driver" : "for self-drive"}. Try the other option or ask us.
         </p>
       )}

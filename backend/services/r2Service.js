@@ -1,4 +1,4 @@
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const crypto = require('crypto');
 const config = require('../config/config');
 const { httpError } = require('../middleware/error');
@@ -64,4 +64,16 @@ exports.uploadRaw = async (buffer, contentType, folder = 'uploads') => {
   if (!Buffer.isBuffer(buffer) || !buffer.length) throw httpError(400, 'The file is empty.');
   if (buffer.length > MAX_VIDEO_BYTES) throw httpError(413, 'Video must be 100MB or smaller.');
   return putObject(buffer, type, ext, folder);
+};
+
+// Deletes an object on our R2 bucket from its public URL. Returns false (no-op)
+// for anything that is not an R2-hosted URL (e.g. local /images/... paths).
+exports.deleteByUrl = async (url) => {
+  if (typeof url !== 'string' || !url) return false;
+  const publicUrl = config.r2.publicUrl;
+  if (!publicUrl || !url.startsWith(`${publicUrl}/`)) return false;
+  const key = url.slice(publicUrl.length + 1);
+  if (!key || key.startsWith('/') || key.includes('..')) return false;
+  await getClient().send(new DeleteObjectCommand({ Bucket: config.r2.bucket, Key: key }));
+  return true;
 };
