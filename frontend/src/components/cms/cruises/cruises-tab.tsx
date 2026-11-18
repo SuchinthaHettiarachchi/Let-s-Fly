@@ -96,6 +96,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
   const [notice, setNotice] = useState("");
 
   const [draft, setDraft] = useState<JourneyDraft>(blankJourney());
+  const [chipsInput, setChipsInput] = useState("");
   const [draftEditingId, setDraftEditingId] = useState<string | null>(null);
   const [savingDraft, setSavingDraft] = useState(false);
 
@@ -174,6 +175,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
     setSavingDraft(true);
     setNotice("");
     try {
+      const chips = chipsInput.split(",").map((c) => c.trim()).filter(Boolean);
       const body = {
         name: draft.name.trim(),
         label: draft.label.trim(),
@@ -181,7 +183,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
         price: draft.price,
         priceNote: draft.priceNote.trim(),
         image: draft.image,
-        chips: draft.chips,
+        chips,
         startingPoint: draft.startingPoint.trim(),
         stops: draft.stops,
       };
@@ -198,6 +200,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
       if (!response.ok) throw new Error(data.message ?? "Could not save journey.");
       setNotice(draftEditingId ? "Journey updated." : "Journey added.");
       setDraft(blankJourney());
+      setChipsInput("");
       setDraftEditingId(null);
       setStops([]);
       setStopInput("");
@@ -223,6 +226,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
       startingPoint: j.startingPoint,
       stops: j.stops,
     });
+    setChipsInput(j.chips.join(", "));
     setNotice("");
     setStops(j.stops);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -230,6 +234,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
 
   function resetDraft() {
     setDraft(blankJourney());
+    setChipsInput("");
     setDraftEditingId(null);
     setStops([]);
     setStopInput("");
@@ -312,8 +317,8 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
               <input
                 className={inputShell}
                 placeholder="5 nights, Balcony cabins, Monthly sailings"
-                value={draft.chips.join(", ")}
-                onChange={(e) => setDraft((d) => ({ ...d, chips: e.target.value.split(",").map((c) => c.trim()).filter(Boolean) }))}
+                value={chipsInput}
+                onChange={(e) => setChipsInput(e.target.value)}
               />
             </Field>
             <Field label="Starting Point">

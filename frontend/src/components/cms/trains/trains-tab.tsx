@@ -100,6 +100,7 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
   const [notice, setNotice] = useState("");
 
   const [draft, setDraft] = useState<JourneyDraft>(blankJourney());
+  const [chipsInput, setChipsInput] = useState("");
   const [draftEditingId, setDraftEditingId] = useState<string | null>(null);
   const [savingDraft, setSavingDraft] = useState(false);
 
@@ -189,6 +190,7 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
     setSavingDraft(true);
     setNotice("");
     try {
+      const chips = chipsInput.split(",").map((c) => c.trim()).filter(Boolean);
       const body = {
         name: draft.name.trim(),
         label: draft.label.trim(),
@@ -196,7 +198,7 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
         price: draft.price,
         priceNote: draft.priceNote.trim(),
         image: draft.image,
-        chips: draft.chips,
+        chips,
         country: draft.country || undefined,
         startingPoint: draft.startingPoint.trim(),
         stops: draft.stops,
@@ -214,6 +216,7 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
       if (!response.ok) throw new Error(data.message ?? "Could not save journey.");
       setNotice(draftEditingId ? "Journey updated." : "Journey added.");
       setDraft(blankJourney());
+      setChipsInput("");
       setDraftEditingId(null);
       setStops([]);
       setStopInput("");
@@ -240,6 +243,7 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
       startingPoint: j.startingPoint,
       stops: j.stops,
     });
+    setChipsInput(j.chips.join(", "));
     setNotice("");
     setStops(j.stops);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -247,6 +251,7 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
 
   function resetDraft() {
     setDraft(blankJourney());
+    setChipsInput("");
     setDraftEditingId(null);
     setStops([]);
     setStopInput("");
@@ -329,8 +334,8 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
               <input
                 className={inputShell}
                 placeholder="6h 50m, Observation car, Daily"
-                value={draft.chips.join(", ")}
-                onChange={(e) => setDraft((d) => ({ ...d, chips: e.target.value.split(",").map((c) => c.trim()).filter(Boolean) }))}
+                value={chipsInput}
+                onChange={(e) => setChipsInput(e.target.value)}
               />
             </Field>
             <Field label="Country (Trains only)">

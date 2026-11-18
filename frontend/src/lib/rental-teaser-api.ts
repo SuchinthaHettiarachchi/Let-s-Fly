@@ -20,7 +20,7 @@ export const rentalSlotMeta: Record<RentalSlotId, { label: string; icon: string;
   cars: { label: "Cars", icon: "directions_car", aspect: "3:2", format: "JPEG/PNG/WebP" },
   vans: { label: "Vans", icon: "airport_shuttle", aspect: "≈1.4:1", format: "JPEG/PNG/WebP" },
   bikes: { label: "Bikes", icon: "two_wheeler", aspect: "3:2", format: "JPEG/PNG/WebP" },
-  scooters: { label: "Scooters", icon: "moped", aspect: "2:3", format: "JPEG/PNG/WebP" },
+  scooters: { label: "Scooters", icon: "moped", aspect: "3", format: "JPEG/PNG/WebP" },
 };
 
 /** Mirrors backend/data/rentalTeaserDefaults.js — shown when the API is unreachable. */
