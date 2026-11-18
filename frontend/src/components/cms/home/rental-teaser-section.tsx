@@ -195,7 +195,7 @@ export default function RentalTeaserSection() {
               <ImageUpload
                 accept="image/*"
                 className="mt-2"
-                height="h-[130px]"
+                height="h-[300px]"
                 onFile={(file) => void uploadImage(id, file)}
                 onRemove={() => updateSlot(id, { image: "" })}
                 uploading={uploading === id}
@@ -215,7 +215,7 @@ export default function RentalTeaserSection() {
             </div>
           );
           if (index === 0) {
-            return [card, <div key="rental-sep" aria-hidden className="hidden self-stretch bg-gradient-to-b from-transparent via-gray-300/80 to-transparent dark:via-[#2a2e63] lg:block" />];
+            return [card, <div key="rental-sep" aria-hidden className="hidden self-stretch bg-gradient-to-b from-transparent via-gray-300/80 to-transparent dark:via-[#2a2e63] lg:block lg:row-span-2" />];
           }
           return card;
         })}
