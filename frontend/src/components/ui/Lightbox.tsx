@@ -29,9 +29,11 @@ export function Lightbox({ images, start, title, captions, onClose }: LightboxPr
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    document.body.dataset.lightboxOpen = "true";
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
+      delete document.body.dataset.lightboxOpen;
     };
   }, [go, onClose]);
 
@@ -43,7 +45,7 @@ export function Lightbox({ images, start, title, captions, onClose }: LightboxPr
       role="dialog"
       aria-modal="true"
       aria-label={`${title} photos`}
-      className="fixed inset-0 z-100 flex flex-col bg-navy-900/95"
+      className="fixed inset-0 z-[100] flex flex-col bg-navy-900/95"
       onClick={onClose}
     >
       <div className="flex items-center justify-between p-4 pt-[max(1rem,env(safe-area-inset-top))] text-small text-white/80">

@@ -38,7 +38,7 @@ export function Header() {
   const setMobileOpen = (open: boolean) => setMenuPath(open ? pathname : null);
 
   return (
-    <div className="sticky top-0 z-50 md:-top-[42px]">
+    <div data-site-header className="sticky top-0 z-50 md:-top-[42px]">
       <TopBar />
       <header className="border-b border-sand-300 bg-white shadow-lf-header">
         <Container className="flex h-16 items-center justify-between md:h-[88px] lg:h-[136px]">

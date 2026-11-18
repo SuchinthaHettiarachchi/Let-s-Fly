@@ -505,3 +505,8 @@ body:has(.cms-app) > footer {
   border-color: var(--color-cms-primary) !important;
 }
 
+
+/* Hide the site header while the gallery/package lightbox is open so the image is unobstructed. */
+body[data-lightbox-open] [data-site-header] {
+  display: none;
+}
