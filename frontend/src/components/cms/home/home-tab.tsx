@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
+import { CmsSelect } from "@/components/cms/CmsSelect";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import WhoWeAreSection from "@/components/cms/home/who-we-are-section";
 import HomeAboutSection from "@/components/cms/home/home-about-section";
@@ -79,7 +80,7 @@ const cardGrid = "grid grid-cols-1 gap-[18px] sm:grid-cols-2 xl:grid-cols-4";
 const emptyShell = "mb-3 rounded-[14px] border border-dashed border-[#e2e2ea] px-[10px] py-[26px] text-center text-cms-muted dark:border-[#2a2e63]";
 const stackedMedia = "grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-3 max-[760px]:grid-cols-1";
 const inputShell =
-  "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[14px] text-cms-ink outline-none placeholder:text-cms-muted focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
+  "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[14px] font-normal text-cms-ink outline-none placeholder:text-cms-muted focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
 
 function HomeIcon({ name, size = 20 }: { name: string; size?: number }) {
   return (
@@ -407,17 +408,17 @@ async function uploadImage(id: string, kind: HeroKind, file?: File) {
       </section>
 
       <section aria-label="Hero slider" className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4">
-        <div className="mb-4 flex justify-between gap-3">
-          <div>
+        <div className="mb-5 flex justify-between items-center gap-3">
+          <div className="flex flex-col gap-1">
             <h2 className="text-[16px] font-semibold text-cms-ink">Hero Slider</h2>
-            <p className="mt-[2px] max-w-[760px] text-[12.5px] leading-[1.5] text-cms-muted">Banners shown at the top of the website home page. Add as many slots as you need (up to {HERO_MAX}); each slot needs a desktop and a mobile image.</p>
+            <p className="mt-[2px] max-w-[760px] text-[12.5px] leading-[1.5] text-cms-muted">Add as many slots as you need (up to {HERO_MAX}); each slot needs a desktop and a mobile image.</p>
           </div>
-        </div>
-        <div className="mb-4 flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2">
           <span className="rounded-full border border-cms-line bg-[#f5f5f7] dark:bg-[#101435] px-3 py-[5px] text-[12.5px] text-cms-muted">Desktop: <b className="text-cms-ink">1800 × 1061 px</b> (≈1.7:1)</span>
           <span className="rounded-full border border-cms-line bg-[#f5f5f7] dark:bg-[#101435] px-3 py-[5px] text-[12.5px] text-cms-muted">Mobile: <b className="text-cms-ink">1080 × 1920 px</b> (9:16)</span>
-          <span className="rounded-full border border-cms-line bg-[#f5f5f7] dark:bg-[#101435] px-3 py-[5px] text-[12.5px] text-cms-muted">Format: <b className="text-cms-ink">WebP</b> (auto-converted) · ratio ±5%</span>
         </div>
+        </div>
+
         {slides.length ? slides.map((slide, index) => (
           <article className="mb-3 rounded-[14px] border border-cms-line bg-cms-card p-4" key={slide.id}>
             <div className="mb-3 flex flex-wrap items-center justify-end gap-2">
@@ -433,15 +434,21 @@ async function uploadImage(id: string, kind: HeroKind, file?: File) {
               <label className="block text-[12.5px] font-semibold text-cms-text">Banner title (alt text)<input className={inputShell} suppressHydrationWarning maxLength={120} placeholder="e.g. Summer in Maldives" type="text" value={slide.title} onChange={(event) => updateSlide(slide.id, "title", event.target.value)} /></label>
               <label className="block text-[12.5px] font-semibold text-cms-text">
                 Link URL (optional)
-                <select className={inputShell} suppressHydrationWarning value={slide.link} onChange={(event) => updateSlide(slide.id, "link", event.target.value)}>
-                  <option value="">No link</option>
-                  {slide.link && !heroLinkOptions.some((link) => link.href === slide.link) && (
-                    <option value={slide.link}>Current URL: {slide.link}</option>
-                  )}
-                  {heroLinkOptions.map((link) => (
-                    <option key={link.href} value={link.href}>{link.label} ({link.href})</option>
-                  ))}
-                </select>
+                <div className="mt-1.5">
+                  <CmsSelect
+                    aria-label="Link URL (optional)"
+                    value={slide.link}
+                    onChange={(value) => updateSlide(slide.id, "link", value)}
+                    placeholder="No link"
+                    options={[
+                      { value: "", label: "No link" },
+                      ...(slide.link && !heroLinkOptions.some((link) => link.href === slide.link)
+                        ? [{ value: slide.link, label: `Current URL: ${slide.link}` }]
+                        : []),
+                      ...heroLinkOptions.map((link) => ({ value: link.href, label: `${link.label} (${link.href})` })),
+                    ]}
+                  />
+                </div>
               </label>
             </div>
             <div className={stackedMedia}>
@@ -491,7 +498,10 @@ async function uploadImage(id: string, kind: HeroKind, file?: File) {
         </div>
       </section>
 
-      <WhoWeAreSection />
+      <div className="mt-9">
+        <h2 className="mb-4 text-[16px] font-semibold text-cms-ink">Home — Who We Are</h2>
+        <WhoWeAreSection />
+      </div>
       <HomeAboutSection />
       <RentalTeaserSection />
     </div>

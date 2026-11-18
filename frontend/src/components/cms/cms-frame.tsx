@@ -12,10 +12,12 @@ import RentalsTab from "@/components/cms/rentals/rentals-tab";
 import GalleryTab from "@/components/cms/gallery/gallery-tab";
 import TrainsTab from "@/components/cms/trains/trains-tab";
 import CruisesTab from "@/components/cms/cruises/cruises-tab";
+import AboutTab from "@/components/cms/about/about-tab";
 import CmsSectionTab from "@/components/cms/cms-section-tab";
 
 const sections = [
   { id: "home", title: "Home", description: "Dashboard and homepage — hero banners, quick links and site activity." },
+  { id: "about", title: "About Us", description: "Manage the About Us page content and sections." },
   { id: "projects", title: "Projects", description: "Create, edit and manage the MICE travel projects shown on the website." },
   { id: "outbound", title: "Outbound Travels", description: "Manage outbound packages, destinations and departures." },
   { id: "srilanka", title: "Travel Sri Lanka", description: "Manage categories, tour packages, gallery, overview, itinerary and payment methods." },
@@ -29,6 +31,7 @@ const sections = [
 
 const navigationIcons: Record<string, ReactNode> = {
   home: <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" />,
+  about: <><circle cx="12" cy="7" r="4" /><path d="M5.5 21a6.5 6.5 0 0 1 13 0" /></>,
   projects: <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />,
   outbound: <><path d="M2 22h20" /><path d="M6.4 17.4 3 13l2-1 3 2 4-2.5L6 6l2.5-1 8 4 3.6-2a2 2 0 0 1 2 3.4L9 17.4z" /></>,
   srilanka: <><path d="M12 3c2.5 0 5 2.6 5 7 0 5-2.7 11-5 11s-5-6-5-11c0-4.4 2.5-7 5-7z" /><circle cx="12" cy="10" r="2" /></>,
@@ -172,6 +175,8 @@ export default function CmsFrame() {
         <div className="min-h-0 flex-1 overflow-y-auto bg-white dark:bg-[#0b0e28]">
           {activeSection === "home" ? (
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><HomeTab onNavigate={navigate} /></div>
+          ) : activeSection === "about" ? (
+            <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><AboutTab onNavigate={navigate} /></div>
           ) : activeSection === "inquiries" ? (
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><InquiriesTab onNavigate={navigate} /></div>
           ) : activeSection === "outbound" || activeSection === "srilanka" ? (

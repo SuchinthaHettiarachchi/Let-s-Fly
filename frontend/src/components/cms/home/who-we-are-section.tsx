@@ -213,7 +213,7 @@ export default function WhoWeAreSection() {
 
   if (!content) {
     return (
-      <section aria-label="Who we are" className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4">
+      <section aria-label="Who we are" className="rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4">
         <h2 className="text-[16px] font-semibold text-cms-ink">Who We Are</h2>
         <p className="mt-1 text-[12.5px] text-cms-muted" aria-live="polite">{notice || "Loading section content…"}</p>
         <div aria-hidden="true" className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -226,7 +226,7 @@ export default function WhoWeAreSection() {
   }
 
   return (
-    <section aria-label="Who we are" className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4">
+    <section aria-label="Who we are" className="rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4">
       <div className="mb-4 flex justify-between gap-3">
         <div>
           <h2 className="text-[16px] font-semibold text-cms-ink">Who We Are</h2>
