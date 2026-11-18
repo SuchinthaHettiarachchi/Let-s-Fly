@@ -11,6 +11,8 @@ export type Journey = {
   price: number;
   priceNote: string;
   image?: string;
+  /** For trains: "Sri Lankan" or "Overseas". */
+  country?: "Sri Lankan" | "Overseas";
 };
 
 export const journeys: Journey[] = [

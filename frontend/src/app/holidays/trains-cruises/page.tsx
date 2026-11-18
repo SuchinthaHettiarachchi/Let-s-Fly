@@ -26,6 +26,11 @@ export default async function TrainsCruisesPage() {
     price: journey.price,
     priceNote: journey.priceNote,
     image: journey.image,
+    country: (journey.country === "Overseas"
+      ? "Overseas"
+      : journey.country === "Sri Lankan"
+        ? "Sri Lankan"
+        : undefined) as "Sri Lankan" | "Overseas" | undefined,
   }));
 
   return (
