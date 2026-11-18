@@ -31,6 +31,8 @@ export default async function TrainsCruisesPage() {
       : journey.country === "Sri Lankan"
         ? "Sri Lankan"
         : undefined) as "Sri Lankan" | "Overseas" | undefined,
+    startingPoint: journey.startingPoint,
+    stops: journey.stops,
   }));
 
   return (

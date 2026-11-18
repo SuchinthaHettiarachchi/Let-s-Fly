@@ -13,6 +13,10 @@ export type Journey = {
   image?: string;
   /** For trains: "Sri Lankan" or "Overseas". */
   country?: "Sri Lankan" | "Overseas";
+  /** Starting station/port. */
+  startingPoint?: string;
+  /** Ordered stops/ports after the starting point. */
+  stops?: string[];
 };
 
 export const journeys: Journey[] = [
