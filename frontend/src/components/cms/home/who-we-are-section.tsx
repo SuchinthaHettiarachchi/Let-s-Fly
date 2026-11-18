@@ -215,7 +215,7 @@ export default function WhoWeAreSection() {
     return (
       <section aria-label="Who we are" className="rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4">
         <h2 className="text-[16px] font-semibold text-cms-ink">Who We Are</h2>
-        <p className="mt-1 text-[12.5px] text-cms-muted" aria-live="polite">{notice || "Loading section content…"}</p>
+        <p className="mt-1.5 text-[12.5px] text-cms-muted" aria-live="polite">{notice || "Loading section content."}</p>
         <div aria-hidden="true" className="mt-4 grid gap-3 sm:grid-cols-2">
           <div className="h-10 rounded-[9px] bg-[#f5f5f7] dark:bg-[#101435]" />
           <div className="h-10 rounded-[9px] bg-[#f5f5f7] dark:bg-[#101435]" />
@@ -230,8 +230,8 @@ export default function WhoWeAreSection() {
       <div className="mb-4 flex justify-between gap-3">
         <div>
           <h2 className="text-[16px] font-semibold text-cms-ink">Who We Are</h2>
-          <p className="mt-[2px] max-w-[760px] text-[12.5px] leading-[1.5] text-cms-muted">
-            The “Who we are” section on the About page
+          <p className="mt-1.5 max-w-[760px] text-[12.5px] leading-[1.5] text-cms-muted">
+            The &quot;Who we are&quot; section on the About page
           </p>
         </div>
       </div>
@@ -269,7 +269,7 @@ export default function WhoWeAreSection() {
               />
               <button
                 aria-label={`Remove paragraph ${index + 1}`}
-                className={`${btnGhost} mt-1.5 shrink-0`}
+                className={cmsButtonClasses("danger", "md", "mt-1.5 shrink-0")}
                 disabled={content.paragraphs.length <= 1}
                 onClick={() => removeParagraph(index)}
                 type="button"
@@ -361,7 +361,7 @@ export default function WhoWeAreSection() {
             <input accept="video/mp4,video/webm" disabled={uploading === "video"} hidden onChange={(event) => void uploadVideo(event.target.files?.[0])} type="file" />
           </label>
           {content.video && uploading !== "video" && (
-            <button className={btnGhost} onClick={() => update("video", "")} type="button">Remove</button>
+            <button className={cmsButtonClasses("danger")} onClick={() => update("video", "")} type="button">Remove</button>
           )}
         </div>
         <span className="mt-1.5 block truncate text-[11.5px] text-cms-muted" title={content.video}>{content.video || "No video yet — optional"}</span>

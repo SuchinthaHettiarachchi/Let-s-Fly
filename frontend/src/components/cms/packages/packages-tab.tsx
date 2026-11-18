@@ -439,7 +439,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                 <strong className="font-semibold">{cat.label}</strong>
                 <span className="text-cms-muted">{cat.key}</span>
                 <button className="text-cms-primary hover:underline" onClick={() => editCategory(cat)} type="button">Edit</button>
-                <button className="text-[#d42a45] hover:underline" onClick={() => void removeCategory(cat)} type="button">Delete</button>
+                <button className={cmsButtonClasses("danger", "sm")} onClick={() => void removeCategory(cat)} type="button">Delete</button>
               </span>
             ))}
             {!categories.length && <span className="text-[12px] text-cms-muted">No categories yet — defaults seed on first load.</span>}
@@ -557,7 +557,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                       ←
                     </button>
                     <button
-                      className={secondary}
+                      className={cmsButtonClasses("danger", "sm")}
                       onClick={() => setDraft((current) => ({ ...current, gallery: current.gallery.filter((_, i) => i !== index) }))}
                       type="button"
                     >
@@ -680,7 +680,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                   <div className="mb-2 flex items-center justify-between">
                     <strong className="text-[13px] text-cms-ink">Day {index + 1}</strong>
                     <button
-                      className={secondary}
+                      className={cmsButtonClasses("danger", "sm")}
                       type="button"
                       onClick={() => updateItinerary("days", draft.itinerary.days.filter((_, i) => i !== index))}
                     >
@@ -774,7 +774,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                       onChange={(e) => updatePayment("methods", draft.payment.methods.map((item, i) => (i === index ? { ...item, text: e.target.value } : item)))}
                     />
                     <button
-                      className={secondary}
+                      className={cmsButtonClasses("danger", "sm")}
                       type="button"
                       onClick={() => updatePayment("methods", draft.payment.methods.filter((_, i) => i !== index))}
                     >
@@ -811,7 +811,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                       onChange={(e) => updatePayment("steps", draft.payment.steps.map((item, i) => (i === index ? { ...item, text: e.target.value } : item)))}
                     />
                     <button
-                      className={secondary}
+                      className={cmsButtonClasses("danger", "sm")}
                       type="button"
                       onClick={() => updatePayment("steps", draft.payment.steps.filter((_, i) => i !== index))}
                     >
@@ -862,7 +862,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
               {item.themes?.length ? (
                 <p className="mt-1 text-[11.5px] text-cms-muted">{item.themes.map(themeLabel).join(" · ")}</p>
               ) : null}
-              <div className="mt-3 flex gap-2"><button className={secondary} onClick={() => edit(item)} type="button">Edit</button><button className={secondary} onClick={() => void remove(item)} type="button">Delete</button></div>
+              <div className="mt-3 flex gap-2"><button className={secondary} onClick={() => edit(item)} type="button">Edit</button><button className={cmsButtonClasses("danger")} onClick={() => void remove(item)} type="button">Delete</button></div>
             </article>)}
           </div>
         )}
@@ -909,7 +909,7 @@ function InclusionEditor({
               value={item.note ?? ""}
               onChange={(e) => onUpdate(index, { note: e.target.value })}
             />
-            <button className={secondary} type="button" onClick={() => onRemove(index)}>Remove</button>
+            <button className={cmsButtonClasses("danger", "sm")} type="button" onClick={() => onRemove(index)}>Remove</button>
           </div>
         ))}
         {!items.length && <p className="text-[12px] text-cms-muted">Empty list.</p>}

@@ -18,7 +18,6 @@ const UPLOAD_API = apiUrl("/upload");
 const inputShell =
   "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[14px] font-normal text-cms-ink outline-none placeholder:text-cms-muted focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
 
-const btnGhost = cmsButtonClasses("secondary");
 const btnPrimary = cmsButtonClasses("primary");
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
@@ -165,7 +164,7 @@ export default function RentalTeaserSection() {
     return (
       <section aria-label="Car and bike rental" className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4">
         <h2 className="text-[16px] font-semibold text-cms-ink">Car &amp; bike rental</h2>
-        <p className="mt-1 text-[12.5px] text-cms-muted" aria-live="polite">{notice || "Loading section content…"}</p>
+        <p className="mt-1.5 text-[12.5px] text-cms-muted" aria-live="polite">{notice || "Loading section content."}</p>
       </section>
     );
   }
@@ -174,8 +173,8 @@ export default function RentalTeaserSection() {
     <section aria-label="Car and bike rental" className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4">
       <div className="mb-4">
         <h2 className="text-[16px] font-semibold text-cms-ink">Car &amp; bike rental</h2>
-        <p className="mt-[2px] max-w-[760px] text-[12.5px] leading-[1.5] text-cms-muted">
-          Homepage teaser — four category slots. Each slot: one image plus the two text lines that overlap the photo.
+        <p className="mt-1.5 max-w-[760px] text-[12.5px] leading-[1.5] text-cms-muted">
+          Homepage teaser - four category slots. Each slot: one image plus the two text lines that overlap the photo.
         </p>
       </div>
 

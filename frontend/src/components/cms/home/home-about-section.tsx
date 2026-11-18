@@ -237,9 +237,9 @@ export default function HomeAboutSection() {
     <section aria-label="Home who we are" className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4">
       <div className="mb-4 flex justify-between gap-3">
         <div>
-          <h2 className="text-[16px] font-semibold text-cms-ink">Home — Who We Are</h2>
-          <p className="mt-[2px] max-w-[760px] text-[12.5px] leading-[1.5] text-cms-muted">
-            The “Who we are” section on the website home page
+          <h2 className="text-[16px] font-semibold text-cms-ink">Home - Who We Are</h2>
+          <p className="mt-1.5 max-w-[760px] text-[12.5px] leading-[1.5] text-cms-muted">
+            The &quot;Who we are&quot; section on the website home page
           </p>
         </div>
       </div>
@@ -278,7 +278,7 @@ export default function HomeAboutSection() {
               </label>
               <button
                 aria-label={`Remove stat ${index + 1}`}
-                className={`${btnGhost} mt-1.5 shrink-0`}
+                className={cmsButtonClasses("danger", "md", "mt-1.5 shrink-0")}
                 disabled={content.stats.length <= 1}
                 onClick={() => removeStat(index)}
                 type="button"
@@ -349,7 +349,7 @@ export default function HomeAboutSection() {
               <input accept="video/mp4,video/webm" disabled={uploading === "video"} hidden onChange={(event) => void uploadVideo(event.target.files?.[0])} type="file" />
             </label>
             {content.video && uploading !== "video" && (
-              <button className={btnGhost} onClick={() => update("video", "")} type="button">Remove</button>
+              <button className={cmsButtonClasses("danger")} onClick={() => update("video", "")} type="button">Remove</button>
             )}
           </div>
           <span className="mt-1.5 block truncate text-[11.5px] text-cms-muted" title={content.video}>{content.video || "No video yet"}</span>

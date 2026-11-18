@@ -285,7 +285,7 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
       <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-[24px] font-semibold text-cms-ink">Trains</h1>
-          <p className="mt-1 text-[13px] text-cms-muted">Manage scenic train journeys, routes and country classification.</p>
+          <p className="mt-1.5 text-[13px] text-cms-muted">Manage scenic train journeys, routes and country classification.</p>
           <Breadcrumbs items={[{ label: "Home", href: "#home", id: "home" }, { label: "Trains" }]} onNavigate={onNavigate} className="mt-3" />
         </div>
         <span className="text-[12px] text-cms-muted" aria-live="polite">{notice}</span>
@@ -295,7 +295,7 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
       <section className="mb-5 rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
         <div className="mb-4">
           <h2 className="text-[16px] font-semibold text-cms-ink">Add New Train Journey</h2>
-          <p className="mt-1 text-[12px] text-cms-muted">Fill in all fields. Country classification applies only to Sri Lankan routes.</p>
+          <p className="mt-1.5 text-[12px] text-cms-muted">Fill in all fields. Country classification applies only to Sri Lankan routes.</p>
         </div>
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_1px_360px] lg:items-start">
@@ -359,7 +359,7 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
                       <span className="flex-1 truncate">{stop}</span>
                       <CmsButton
                         size="icon"
-                        variant="muted"
+                        variant="danger"
                         aria-label="Remove stop"
                         onClick={() => removeStop(stop)}
                       >

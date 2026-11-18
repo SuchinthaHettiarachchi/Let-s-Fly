@@ -319,7 +319,7 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
       <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-[24px] font-semibold text-cms-ink">Rental</h1>
-          <p className="mt-1 text-[13px] text-cms-muted">Manage rental categories and the vehicle cards shown on the Rentals page.</p>
+          <p className="mt-1.5 text-[13px] text-cms-muted">Manage rental categories and the vehicle cards shown on the Rentals page.</p>
           <Breadcrumbs items={[{ label: "Home", href: "#home", id: "home" }, { label: "Rental" }]} onNavigate={onNavigate} className="mt-3" />
         </div>
         <span className="text-[12px] text-cms-muted" aria-live="polite">{notice}</span>
@@ -329,7 +329,7 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
       <section className="mb-5 rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
         <div className="mb-4">
           <h2 className="text-[16px] font-semibold text-cms-ink">Categories</h2>
-          <p className="mt-1 text-[12px] text-cms-muted">Filter chips on the Rentals page. Each category has a name and a vehicle icon.</p>
+          <p className="mt-1.5 text-[12px] text-cms-muted">Filter chips on the Rentals page. Each category has a name and a vehicle icon.</p>
         </div>
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
@@ -417,7 +417,7 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
         <div className="mb-4 flex items-center justify-between gap-3">
           <div>
             <h2 className="text-[16px] font-semibold text-cms-ink">{vehicleEditingId ? "Edit vehicle" : "Add vehicle"}</h2>
-            <p className="mt-1 text-[12px] text-cms-muted">Vehicle cards show the photo, seats, transmission and fuel on the Rentals page.</p>
+            <p className="mt-1.5 text-[12px] text-cms-muted">Vehicle cards show the photo, seats, transmission and fuel on the Rentals page.</p>
           </div>
           {vehicleEditingId && <CmsButton variant="secondary" onClick={resetVehicle}>Cancel edit</CmsButton>}
         </div>
@@ -516,7 +516,7 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
           {/* Right: shared vehicle image upload */}
           <div className="rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#101435] lg:self-start">
             <h3 className="text-[13px] font-semibold text-cms-ink">Vehicle image</h3>
-            <p className="mt-1 text-[12px] text-cms-muted">Shown on the vehicle card on the Rentals page.</p>
+              <p className="mt-1.5 text-[12px] text-cms-muted">Shown on the vehicle card on the Rentals page.</p>
             <ImageUpload
               accept="image/*"
               className="mt-3"

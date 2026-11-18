@@ -614,7 +614,7 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
                     <button suppressHydrationWarning className={btnTiny} onClick={() => startEdit(project)} type="button">Edit</button>
                     <button suppressHydrationWarning className={btnTiny} onClick={() => setPreview(project)} type="button">Preview</button>
                     <button suppressHydrationWarning aria-label={`Duplicate ${project.title}`} className={`${btnTiny} text-[#d42a6a] dark:text-[#ff9aa8]`} onClick={() => void duplicateProject(project)} type="button">Duplicate</button>
-                    <button suppressHydrationWarning aria-label={`Delete ${project.title}`} className={`${btnTiny} text-[#b42336] dark:text-[#ff9aa8]`} onClick={() => void deleteProject(project)} type="button">Delete</button>
+                    <button suppressHydrationWarning aria-label={`Delete ${project.title}`} className={cmsButtonClasses("danger", "sm")} onClick={() => void deleteProject(project)} type="button">Delete</button>
                   </div>
                 </article>
               ))}
@@ -683,7 +683,7 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
                     <select suppressHydrationWarning className={inputShell} onChange={(event) => updateDraft({ status: event.target.value as ProjectStatus })} value={draft.status}>
                       <option value="draft">Draft</option><option value="published">Published</option>
                     </select>
-                    <small className="text-[10.5px] font-normal leading-[1.5] text-cms-muted">Choosing Published checks the project and puts it live.</small>
+                    <small className="mt-0.5 block text-[10.5px] font-normal leading-[1.5] text-cms-muted">Choosing Published checks the project and puts it live.</small>
                   </label>
                   <label className="grid min-w-0 gap-1.5 text-[11px] font-semibold text-cms-ink col-span-full">Card summary *
                     <textarea suppressHydrationWarning className={`${inputShell} resize-y`} maxLength={200} onChange={(event) => updateDraft({ summary: event.target.value })} placeholder="One or two sentences shown on the Projects page card." rows={3} value={draft.summary} />
@@ -734,7 +734,7 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
                         <button suppressHydrationWarning aria-label={`Move image ${index + 1} earlier`} className={`${btnTiny} min-h-[27px] px-1.5 text-[9px]`} disabled={index === 0} onClick={() => moveGallery(index, -1)} type="button">←</button>
                         <button suppressHydrationWarning aria-label={`Move image ${index + 1} later`} className={`${btnTiny} min-h-[27px] px-1.5 text-[9px]`} disabled={index === draft.gallery.length - 1} onClick={() => moveGallery(index, 1)} type="button">→</button>
                         <button suppressHydrationWarning className={`${btnTiny} min-h-[27px] px-1.5 text-[9px]`} onClick={() => setCoverFromGallery(index)} type="button">Set as cover</button>
-                        <button suppressHydrationWarning className={`${btnTiny} min-h-[27px] px-1.5 text-[9px]`} onClick={() => updateDraft({ gallery: draft.gallery.filter((_, itemIndex) => itemIndex !== index) })} type="button">Remove</button>
+                        <button suppressHydrationWarning className={cmsButtonClasses("danger", "sm")} onClick={() => updateDraft({ gallery: draft.gallery.filter((_, itemIndex) => itemIndex !== index) })} type="button">Remove</button>
                       </div>
                     </article>
                   ))}

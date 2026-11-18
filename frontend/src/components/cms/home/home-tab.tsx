@@ -408,11 +408,11 @@ async function uploadImage(id: string, kind: HeroKind, file?: File) {
       </section>
 
       <section aria-label="Hero slider" className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4">
-        <div className="mb-5 flex justify-between items-center gap-3">
-          <div className="flex flex-col gap-1">
-            <h2 className="text-[16px] font-semibold text-cms-ink">Hero Slider</h2>
-            <p className="mt-[2px] max-w-[760px] text-[12.5px] leading-[1.5] text-cms-muted">Add as many slots as you need (up to {HERO_MAX}); each slot needs a desktop and a mobile image.</p>
-          </div>
+          <div className="mb-5 flex justify-between items-center gap-3">
+            <div className="flex flex-col">
+              <h2 className="text-[16px] font-semibold text-cms-ink">Hero Slider</h2>
+              <p className="mt-1.5 max-w-[760px] text-[12.5px] leading-[1.5] text-cms-muted">Add as many slots as you need (up to 10); each slot needs a desktop and a mobile image.</p>
+            </div>
         <div className="flex flex-wrap gap-2">
           <span className="rounded-full border border-cms-line bg-[#f5f5f7] dark:bg-[#101435] px-3 py-[5px] text-[12.5px] text-cms-muted">Desktop: <b className="text-cms-ink">1800 × 1061 px</b> (≈1.7:1)</span>
           <span className="rounded-full border border-cms-line bg-[#f5f5f7] dark:bg-[#101435] px-3 py-[5px] text-[12.5px] text-cms-muted">Mobile: <b className="text-cms-ink">1080 × 1920 px</b> (9:16)</span>
@@ -432,7 +432,7 @@ async function uploadImage(id: string, kind: HeroKind, file?: File) {
               />
               <button suppressHydrationWarning className={btnGhost} disabled={index === 0} onClick={() => moveSlide(index, -1)} type="button" aria-label="Move slot up">↑</button>
               <button suppressHydrationWarning className={btnGhost} disabled={index === slides.length - 1} onClick={() => moveSlide(index, 1)} type="button" aria-label="Move slot down">↓</button>
-              <button suppressHydrationWarning className={btnGhost} onClick={() => deleteSlide(slide.id)} type="button">Delete</button>
+              <button suppressHydrationWarning className={cmsButtonClasses("danger")} onClick={() => deleteSlide(slide.id)} type="button">Delete</button>
             </div>
             <div className="mb-3 grid grid-cols-2 gap-3 max-[760px]:grid-cols-1">
               <label className="block text-[12.5px] font-normal text-cms-text">Banner title (alt text)<input className={inputShell} suppressHydrationWarning maxLength={120} placeholder="e.g. Summer in Maldives" type="text" value={slide.title} onChange={(event) => updateSlide(slide.id, "title", event.target.value)} /></label>

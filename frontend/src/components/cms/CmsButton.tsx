@@ -19,12 +19,12 @@ const variants: Record<CmsButtonVariant, string> = {
     "border-cms-line bg-cms-card text-cms-ink hover:border-[#cfcce8] hover:bg-[#f6f6fb] dark:hover:border-[#41478c] dark:hover:bg-[#1f2353]",
   muted:
     "border-transparent bg-transparent text-cms-muted hover:bg-cms-card2 hover:text-cms-ink",
-  danger: "border-transparent bg-[#d42a45] text-white hover:bg-[#b71f37]",
+  danger: "border-transparent bg-[#dc2626] text-white hover:bg-[#b91c1c]",
 };
 
 const sizes: Record<CmsButtonSize, string> = {
-  sm: "h-7 px-2.5 text-[11px] py-2 pt-3",
-  md: "h-8 px-3 text-[12px] py-2 pt-3",
+  sm: "h-7 px-2.5 text-[11px] py-2 pt-2",
+  md: "h-8 px-3 text-[12px] py-2 pt-2.5",
   lg: "h-9 px-4 text-[12.5px] py-2 pt-3",
   icon: "size-8 p-0 text-[18px] leading-none py-3 pt-3",
 };

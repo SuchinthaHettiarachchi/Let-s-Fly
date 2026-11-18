@@ -268,7 +268,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
       <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-[24px] font-semibold text-cms-ink">Cruises</h1>
-          <p className="mt-1 text-[13px] text-cms-muted">Manage cruise holiday packages.</p>
+          <p className="mt-1.5 text-[13px] text-cms-muted">Manage cruise holiday packages.</p>
           <Breadcrumbs items={[{ label: "Home", href: "#home", id: "home" }, { label: "Cruises" }]} onNavigate={onNavigate} className="mt-3" />
         </div>
         <span className="text-[12px] text-cms-muted" aria-live="polite">{notice}</span>
@@ -278,7 +278,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
       <section className="mb-5 rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
         <div className="mb-4">
           <h2 className="text-[16px] font-semibold text-cms-ink">Add New Cruise Journey</h2>
-          <p className="mt-1 text-[12px] text-cms-muted">Fill in all fields.</p>
+          <p className="mt-1.5 text-[12px] text-cms-muted">Fill in all fields.</p>
         </div>
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_1px_360px] lg:items-start">
@@ -332,7 +332,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
                       <span className="flex-1 truncate">{stop}</span>
                       <CmsButton
                         size="icon"
-                        variant="muted"
+                        variant="danger"
                         aria-label="Remove stop"
                         onClick={() => removeStop(stop)}
                       >

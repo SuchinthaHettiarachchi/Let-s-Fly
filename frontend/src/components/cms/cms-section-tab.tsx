@@ -13,7 +13,7 @@ export default function CmsSectionTab({ title, description, onNavigate }: Props)
     <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8">
       <div className="mb-7">
         <h1 className="text-[24px] font-semibold text-cms-ink">{title}</h1>
-        <p className="mt-1 text-[13px] text-cms-muted">{description}</p>
+        <p className="mt-1.5 text-[13px] text-cms-muted">{description}</p>
         <Breadcrumbs items={[{ label: "Home", href: "#home", id: "home" }, { label: title }]} onNavigate={onNavigate} className="mt-3" />
       </div>
       <section className="rounded-[14px] border border-cms-line bg-cms-card p-6 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">

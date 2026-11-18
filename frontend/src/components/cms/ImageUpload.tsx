@@ -188,7 +188,7 @@ export function ImageUpload({
               </button>
             )}
             {value && !uploading && onRemove && (
-              <button className={cmsButtonClasses("muted", "sm")} onClick={onRemove} type="button">
+              <button className={cmsButtonClasses("danger", "sm")} onClick={onRemove} type="button">
                 Remove
               </button>
             )}

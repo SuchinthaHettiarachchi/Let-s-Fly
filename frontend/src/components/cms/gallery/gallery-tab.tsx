@@ -340,7 +340,7 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
       <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-[24px] font-semibold text-cms-ink">Gallery</h1>
-          <p className="mt-1 text-[13px] text-cms-muted">Manage gallery categories and the photos and videos shown on the Travellers Gallery page.</p>
+          <p className="mt-1.5 text-[13px] text-cms-muted">Manage gallery categories and the photos and videos shown on the Travellers Gallery page.</p>
           <Breadcrumbs items={[{ label: "Home", href: "#home", id: "home" }, { label: "Gallery" }]} onNavigate={onNavigate} className="mt-3" />
         </div>
         <span className="text-[12px] text-cms-muted" aria-live="polite">{notice}</span>
@@ -350,7 +350,7 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
       <section className="mb-5 rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
         <div className="mb-4">
           <h2 className="text-[16px] font-semibold text-cms-ink">Categories</h2>
-          <p className="mt-1 text-[12px] text-cms-muted">Filter chips on the Travellers Gallery page. Each category groups the photos and videos of one theme.</p>
+          <p className="mt-1.5 text-[12px] text-cms-muted">Filter chips on the Travellers Gallery page. Each category groups the photos and videos of one theme.</p>
         </div>
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
@@ -429,7 +429,7 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
         <div className="mb-4 flex items-center justify-between gap-3">
           <div>
             <h2 className="text-[16px] font-semibold text-cms-ink">{itemEditingId ? "Edit gallery item" : "Add gallery item"}</h2>
-            <p className="mt-1 text-[12px] text-cms-muted">Each item is one photo or video with a caption, shown in the Travellers Gallery wall.</p>
+            <p className="mt-1.5 text-[12px] text-cms-muted">Each item is one photo or video with a caption, shown in the Travellers Gallery wall.</p>
           </div>
           {itemEditingId && <CmsButton variant="secondary" onClick={resetItem}>Cancel edit</CmsButton>}
         </div>
