@@ -6,7 +6,7 @@ import { useConsent } from "./ConsentProvider";
 export function CookieSettingsButton({ className = "", children = "Cookie settings" }: { className?: string; children?: React.ReactNode }) {
   const { openSettings } = useConsent();
   return (
-    <button type="button" onClick={openSettings} className={`cursor-pointer ${className}`}>
+    <button type="button" onClick={openSettings} suppressHydrationWarning className={`cursor-pointer ${className}`}>
       {children}
     </button>
   );

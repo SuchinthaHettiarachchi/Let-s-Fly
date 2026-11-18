@@ -6,6 +6,7 @@ import { TourGrid } from "@/components/holidays/TourGrid";
 import { HotelBookings } from "@/components/holidays/HotelBookings";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import type { Package } from "@/data/packages";
+import { getHotelBooking } from "@/lib/hotel-booking-api";
 import { getPackagesByCategory } from "@/lib/package-api";
 import { getTourCategories } from "@/lib/package-cms";
 
@@ -16,7 +17,11 @@ export const metadata: Metadata = {
 };
 
 export default async function SriLankaPage() {
-  const [tours, categories] = await Promise.all([getSriLankaTours(), getTourCategories()]);
+  const [tours, categories, hotelBooking] = await Promise.all([
+    getSriLankaTours(),
+    getTourCategories(),
+    getHotelBooking(),
+  ]);
   return (
     <>
       <PageHero
@@ -28,15 +33,14 @@ export default async function SriLankaPage() {
         title="Sri Lanka tour packages and hotel bookings"
         sub="Trending and seasonal island packages designed for everyone, from Sigiriya to the south coast, with drivers and stays."
       />
-      {/* The masks photo starts right under the hero and covers the rest of the page, under a 50% ocean-blue wash */}
       <div className="bg-[url(/images/hero/sri-lanka-masks.jpg)] bg-cover bg-top bg-no-repeat">
         <div className="bg-ocean-600/50">
-          <section className="py-14 lg:py-20">
+          <section className="py-16 lg:py-20">
             <Container>
               <TourGrid tours={tours} categories={categories} />
             </Container>
           </section>
-          <HotelBookings />
+          <HotelBookings content={hotelBooking} />
           <CtaBand tone="clear" />
         </div>
       </div>

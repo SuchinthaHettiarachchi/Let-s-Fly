@@ -77,7 +77,7 @@ export function Button({
   ...props
 }: Common & ComponentProps<"button">) {
   return (
-    <button type={type} className={buttonClasses(variant, size, className)} {...props}>
+    <button type={type} className={buttonClasses(variant, size, className)} suppressHydrationWarning {...props}>
       {leadingIcon && <Icon name={leadingIcon} />}
       {children}
       {icon && <Icon name={icon} className="transition-transform duration-200 ease-lf group-hover/btn:translate-x-0.5" />}
@@ -105,6 +105,7 @@ export function ArrowButton({
       type="button"
       aria-label={isNext ? "Next" : "Previous"}
       className={`flex items-center justify-center rounded-full cursor-pointer transition-[background-color,border-color,color,scale,opacity] duration-200 ease-lf press disabled:pointer-events-none disabled:opacity-40 ${look}`}
+      suppressHydrationWarning
       {...props}
     >
       <Icon name={isNext ? "chevron_right" : "chevron_left"} size={24} />

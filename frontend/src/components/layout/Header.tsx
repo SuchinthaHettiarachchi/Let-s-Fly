@@ -93,6 +93,7 @@ export function Header() {
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
               onClick={() => setMobileOpen(!mobileOpen)}
+              suppressHydrationWarning
               className="flex size-11 cursor-pointer items-center justify-center rounded-lg text-navy-900 hover:bg-sand-50 lg:hidden"
             >
               <Icon name={mobileOpen ? "close" : "menu"} size={28} />
@@ -190,6 +191,7 @@ function Dropdown({
         aria-expanded={open}
         aria-haspopup="true"
         onClick={() => setOpen(true)}
+        suppressHydrationWarning
         className={`${navItem} ${navState(on)} cursor-pointer gap-0.5 font-medium`}
       >
         {label}

@@ -118,7 +118,7 @@ export default async function AboutPage() {
           </div>
           <div data-reveal="150" className="relative mx-auto w-full max-w-[500px] pb-16 sm:pb-20">
             {who.mainImage ? (
-              <div className="aspect-[4/5] w-[92%] overflow-hidden rounded-2xl">
+              <div className="relative aspect-[4/5] w-[92%] overflow-hidden rounded-2xl">
                 <Image src={who.mainImage} alt="" fill sizes="(min-width: 1024px) 460px, 92vw" className="object-cover" />
               </div>
             ) : (
@@ -168,16 +168,15 @@ export default async function AboutPage() {
             <div data-reveal className="order-2 lg:order-1">
               <ApproachList items={approach} />
             </div>
-            <div
-              data-reveal="150"
-              className="relative order-1 aspect-[16/10] overflow-hidden rounded-2xl lg:sticky lg:top-[170px] lg:order-2 lg:aspect-[3/4]"
-            >
-              <Image src="/images/about/approach.jpg" alt="A traveller hiking through a green mountain valley" fill sizes="(min-width: 1280px) 420px, (min-width: 1024px) 340px, 100vw" className="object-cover" />
-              <div className="absolute inset-x-4 bottom-4 flex items-center gap-3 rounded-xl bg-white/95 px-4 py-3.5 text-small text-ink-900 backdrop-blur-sm">
-                <span className="flex size-9 flex-none items-center justify-center rounded-full bg-sun-400 text-navy-900">
-                  <Icon name="check" size={18} />
-                </span>
-                Every itinerary is reviewed by a second consultant before it reaches you.
+            <div data-reveal="150" className="order-1 lg:sticky lg:top-[170px] lg:order-2">
+              <div className="relative aspect-[16/10] overflow-hidden rounded-2xl lg:aspect-[3/4]">
+                <Image src="/images/about/approach.jpg" alt="A traveller hiking through a green mountain valley" fill sizes="(min-width: 1280px) 420px, (min-width: 1024px) 340px, 100vw" className="object-cover" />
+                <div className="absolute inset-x-4 bottom-4 flex items-center gap-3 rounded-xl bg-white/95 px-4 py-3.5 text-small text-ink-900 backdrop-blur-sm">
+                  <span className="flex size-9 flex-none items-center justify-center rounded-full bg-sun-400 text-navy-900">
+                    <Icon name="check" size={18} />
+                  </span>
+                  Every itinerary is reviewed by a second consultant before it reaches you.
+                </div>
               </div>
             </div>
           </div>

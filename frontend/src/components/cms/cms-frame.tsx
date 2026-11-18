@@ -13,6 +13,7 @@ import GalleryTab from "@/components/cms/gallery/gallery-tab";
 import TrainsTab from "@/components/cms/trains/trains-tab";
 import CruisesTab from "@/components/cms/cruises/cruises-tab";
 import AboutTab from "@/components/cms/about/about-tab";
+import HotelBookingTab from "@/components/cms/hotels/hotel-booking-tab";
 import CmsSectionTab from "@/components/cms/cms-section-tab";
 
 const sections = [
@@ -193,6 +194,8 @@ export default function CmsFrame() {
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><CruisesTab onNavigate={navigate} /></div>
           ) : activeSection === "gallery" ? (
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><GalleryTab onNavigate={navigate} /></div>
+          ) : activeSection === "hotels" ? (
+            <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><HotelBookingTab onNavigate={navigate} /></div>
           ) : (
             <CmsSectionTab title={current.title} description={current.description} onNavigate={navigate} />
           )}

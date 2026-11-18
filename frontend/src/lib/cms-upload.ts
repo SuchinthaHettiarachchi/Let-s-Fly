@@ -70,7 +70,7 @@ export async function prepareImageBlob(
   if (typeof createImageBitmap !== "undefined") {
     try {
       const probe = await createImageBitmap(file);
-      const { width: w, height: h } = probe;
+      const { width: w } = probe;
       probe.close();
       const needsResize = w > maxWidth;
       const needsWebp = forceWebp && file.type !== "image/webp";
@@ -132,9 +132,9 @@ function xhrRequest(
   });
 }
 
-function parseJson(text: string): any {
+function parseJson(text: string): Record<string, unknown> {
   try {
-    return text ? JSON.parse(text) : {};
+    return text ? (JSON.parse(text) as Record<string, unknown>) : {};
   } catch {
     return {};
   }
@@ -179,11 +179,13 @@ async function binaryProxyUploadBlob(
     onProgress,
   });
   const data = parseJson(res.responseText);
-  if (res.status < 200 || res.status >= 300 || !data.url) {
-    throw new Error(data.message || "Upload failed.");
+  const url = typeof data.url === "string" ? data.url : "";
+  if (res.status < 200 || res.status >= 300 || !url) {
+    const message = typeof data.message === "string" ? data.message : "Upload failed.";
+    throw new Error(message);
   }
   onProgress?.(100);
-  return data.url as string;
+  return url;
 }
 
 export async function uploadBlobWithProgress(

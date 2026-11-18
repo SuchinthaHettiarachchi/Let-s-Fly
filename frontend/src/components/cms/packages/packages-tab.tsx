@@ -451,15 +451,34 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
               <Field label="Slug"><input className={inputShell} placeholder="sigiriya-culture-escape" value={draft.slug} onChange={(event) => update("slug", event.target.value)} /></Field>
               <Field label="Region"><input className={inputShell} placeholder="Sri Lanka" value={draft.region} onChange={(event) => update("region", event.target.value)} /></Field>
               <Field label="Area label"><input className={inputShell} placeholder="Sigiriya" value={draft.area} onChange={(event) => update("area", event.target.value)} /></Field>
+              <Field label="Location (card/detail)"><input className={inputShell} placeholder="Sigiriya, Central Province" value={draft.location} onChange={(event) => update("location", event.target.value)} /></Field>
               <Field label="Top category"><select className={inputShell} value={draft.category} onChange={(event) => update("category", event.target.value as Category)}><option value="outbound">Outbound</option><option value="sri-lanka">Sri Lanka</option></select></Field>
+              {draft.category === "outbound" && (
+                <Field label="Outbound region">
+                  <select className={inputShell} value={draft.outboundRegion} onChange={(event) => update("outboundRegion", event.target.value)}>
+                    <option value="">Select region</option>
+                    {outboundRegions.map((r) => (
+                      <option key={r.id} value={r.id}>{r.label}</option>
+                    ))}
+                  </select>
+                </Field>
+              )}
               <Field label="Badge (optional)"><input className={inputShell} placeholder="Best seller" value={draft.badge} onChange={(event) => update("badge", event.target.value)} /></Field>
               <Field label="Days"><input className={inputShell} min="1" type="number" value={draft.days} onChange={(event) => update("days", Number(event.target.value))} /></Field>
               <Field label="Nights"><input className={inputShell} min="0" type="number" value={draft.nights} onChange={(event) => update("nights", Number(event.target.value))} /></Field>
               <Field label="Price (LKR)"><input className={inputShell} min="0" type="number" value={draft.price} onChange={(event) => update("price", Number(event.target.value))} /></Field>
+              <Field label="Price note (optional)"><input className={inputShell} placeholder="per person, twin share" value={draft.priceNote} onChange={(event) => update("priceNote", event.target.value)} /></Field>
               <CmsCheckbox
                 checked={draft.flightsIncluded}
                 onChange={(checked) => update("flightsIncluded", checked)}
                 label="Flights included"
+                containerClassName="mt-7"
+                labelClassName="text-[13px] font-normal text-cms-text"
+              />
+              <CmsCheckbox
+                checked={draft.featured}
+                onChange={(checked) => update("featured", checked)}
+                label="Featured package"
                 containerClassName="mt-7"
                 labelClassName="text-[13px] font-normal text-cms-text"
               />
