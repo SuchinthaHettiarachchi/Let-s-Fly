@@ -10,93 +10,13 @@ import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
 import { VehicleIconSelect } from "@/components/rentals/VehicleIconSelect";
 import { Icon } from "@/components/ui/Icon";
 import { apiUrl } from "@/lib/api-url";
+import { uploadMediaFile } from "@/lib/cms-upload";
 import type { DriveMode, FuelType, RentalCategory, RentalVehicle, Transmission } from "@/lib/rental-api";
 
 const CATEGORIES_API = apiUrl("/rental-categories");
 const VEHICLES_API = apiUrl("/rental-vehicles");
-const UPLOAD = apiUrl("/upload");
 
 const inputShell = "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[13px] text-cms-ink outline-none focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
-
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
-const TRANSMISSIONS: Transmission[] = ["Automatic", "Manual"];
-const FUELS: FuelType[] = ["Hybrid", "Diesel", "Petrol"];
-const DRIVE_MODES: { id: DriveMode; label: string }[] = [
-  { id: "self-drive", label: "Self-drive" },
-  { id: "with-driver", label: "With driver" },
-];
-
-type CategoryDraft = { name: string; icon: string };
-type VehicleDraft = {
-  name: string;
-  category: string;
-  /** number | "" — the input can be completely cleared while typing. */
-  seats: number | "";
-  transmission: Transmission | "";
-  fuel: FuelType | "";
-  modes: DriveMode[];
-  image: string;
-};
-
-const blankCategory = (): CategoryDraft => ({ name: "", icon: "" });
-const blankVehicle = (): VehicleDraft => ({
-  name: "",
-  category: "",
-  seats: "",
-  transmission: "",
-  fuel: "",
-  modes: ["self-drive", "with-driver"],
-  image: "",
-});
-
-function readAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error("Could not read the file."));
-    reader.onload = () => resolve(reader.result as string);
-    reader.readAsDataURL(file);
-  });
-}
-
-async function prepareImage(file: File): Promise<string> {
-  const original = await readAsDataUrl(file);
-  if (file.type === "image/gif") return original;
-  const image = await new Promise<HTMLImageElement | null>((resolve) => {
-    const img = new Image();
-    img.onerror = () => resolve(null);
-    img.onload = () => resolve(img);
-    img.src = original;
-  });
-  if (!image || image.naturalWidth <= 1600) return original;
-  try {
-    const canvas = document.createElement("canvas");
-    canvas.width = 1600;
-    canvas.height = Math.max(1, Math.round(image.naturalHeight * (1600 / image.naturalWidth)));
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return original;
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
-    if (!blob) return original;
-    return await readAsDataUrl(new File([blob], file.name.replace(/\.\w+$/, ".webp"), { type: "image/webp" }));
-  } catch {
-    return original;
-  }
-}
-
-async function uploadToR2(file: File): Promise<string> {
-  if (!file.type.startsWith("image/")) throw new Error("Choose an image file.");
-  if (file.size > MAX_IMAGE_BYTES) throw new Error("Image must be 5MB or smaller.");
-  const prepared = await prepareImage(file);
-  const response = await fetch(UPLOAD, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ image: prepared, folder: "rentals" }),
-  });
-  const data: { url?: string; message?: string } = await response.json().catch(() => ({}));
-  if (!response.ok || !data.url) throw new Error(data.message ?? "Upload failed.");
-  return data.url;
-}
 
 type DeleteTarget = { kind: "category" | "vehicle"; id: string; label: string };
 
@@ -114,6 +34,7 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
   const [vehicleEditingId, setVehicleEditingId] = useState<string | null>(null);
   const [savingVehicle, setSavingVehicle] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState("");
 
   const [deleteTarget, setDeleteTarget] = useState<DeleteTarget | null>(null);
@@ -222,8 +143,9 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
     if (!file) return;
     setUploadError("");
     setUploading(true);
+    setUploadProgress(0);
     try {
-      const url = await uploadToR2(file);
+      const url = await uploadMediaFile(file, { folder: "rentals", kind: "image", onProgress: setUploadProgress });
       setVehicleDraft((current) => ({ ...current, image: url }));
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : "Upload failed.");
@@ -529,6 +451,7 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
                 setUploadError("");
               }}
               uploading={uploading}
+              progress={uploadProgress}
               value={vehicleDraft.image}
             />
           </div>

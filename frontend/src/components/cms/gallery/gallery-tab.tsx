@@ -8,86 +8,19 @@ import { ImageUpload } from "@/components/cms/ImageUpload";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
 import { Icon } from "@/components/ui/Icon";
 import { apiUrl } from "@/lib/api-url";
+import { uploadMediaFile } from "@/lib/cms-upload";
 import type { GalleryCategory, GalleryItem, GalleryMediaType } from "@/lib/gallery-api";
 
 const CATEGORIES_API = apiUrl("/gallery-categories");
 const ITEMS_API = apiUrl("/gallery-items");
-const UPLOAD = apiUrl("/upload");
-const UPLOAD_VIDEO = apiUrl("/upload/video");
 
 const inputShell = "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[13px] text-cms-ink outline-none focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
-
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
-const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
 
 type CategoryDraft = { name: string };
 type ItemDraft = { caption: string; category: string; media: string; mediaType: GalleryMediaType | "" };
 
 const blankCategory = (): CategoryDraft => ({ name: "" });
 const blankItem = (): ItemDraft => ({ caption: "", category: "", media: "", mediaType: "" });
-
-function readAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error("Could not read the file."));
-    reader.onload = () => resolve(reader.result as string);
-    reader.readAsDataURL(file);
-  });
-}
-
-async function prepareImage(file: File): Promise<string> {
-  const original = await readAsDataUrl(file);
-  if (file.type === "image/gif") return original;
-  const image = await new Promise<HTMLImageElement | null>((resolve) => {
-    const img = new Image();
-    img.onerror = () => resolve(null);
-    img.onload = () => resolve(img);
-    img.src = original;
-  });
-  if (!image || image.naturalWidth <= 1600) return original;
-  try {
-    const canvas = document.createElement("canvas");
-    canvas.width = 1600;
-    canvas.height = Math.max(1, Math.round(image.naturalHeight * (1600 / image.naturalWidth)));
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return original;
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
-    if (!blob) return original;
-    return await readAsDataUrl(new File([blob], file.name.replace(/\.\w+$/, ".webp"), { type: "image/webp" }));
-  } catch {
-    return original;
-  }
-}
-
-async function uploadImageToR2(file: File): Promise<string> {
-  if (!file.type.startsWith("image/")) throw new Error("Choose an image file.");
-  if (file.size > MAX_IMAGE_BYTES) throw new Error("Image must be 5MB or smaller.");
-  const prepared = await prepareImage(file);
-  const response = await fetch(UPLOAD, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ image: prepared, folder: "gallery" }),
-  });
-  const data: { url?: string; message?: string } = await response.json().catch(() => ({}));
-  if (!response.ok || !data.url) throw new Error(data.message ?? "Upload failed.");
-  return data.url;
-}
-
-async function uploadVideoToR2(file: File): Promise<string> {
-  if (!file.type.startsWith("video/")) throw new Error("Choose a video file.");
-  if (file.size > MAX_VIDEO_BYTES) throw new Error("Video must be 100MB or smaller.");
-  const response = await fetch(UPLOAD_VIDEO, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": file.type || "video/mp4" },
-    body: file,
-  });
-  const data: { url?: string; message?: string } = await response.json().catch(() => ({}));
-  if (!response.ok || !data.url) throw new Error(data.message ?? "Upload failed.");
-  return data.url;
-}
 
 type DeleteTarget = { kind: "category" | "item"; id: string; label: string };
 
@@ -105,6 +38,7 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
   const [itemEditingId, setItemEditingId] = useState<string | null>(null);
   const [savingItem, setSavingItem] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState("");
 
   const [deleteTarget, setDeleteTarget] = useState<DeleteTarget | null>(null);
@@ -210,16 +144,12 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
     if (!file) return;
     setUploadError("");
     setUploading(true);
+    setUploadProgress(0);
     try {
-      if (file.type.startsWith("image/")) {
-        const url = await uploadImageToR2(file);
-        setItemDraft((current) => ({ ...current, media: url, mediaType: "image" }));
-      } else if (file.type.startsWith("video/")) {
-        const url = await uploadVideoToR2(file);
-        setItemDraft((current) => ({ ...current, media: url, mediaType: "video" }));
-      } else {
-        throw new Error("Choose an image or video file.");
-      }
+      const isVideo = file.type.startsWith("video/");
+      if (!isVideo && !file.type.startsWith("image/")) throw new Error("Choose an image or video file.");
+      const url = await uploadMediaFile(file, { folder: "gallery", kind: isVideo ? "video" : "image", onProgress: setUploadProgress });
+      setItemDraft((current) => ({ ...current, media: url, mediaType: isVideo ? "video" : "image" }));
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : "Upload failed.");
     } finally {
@@ -479,6 +409,7 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
               onFile={(file) => void uploadMedia(file)}
               onRemove={() => setItemDraft((d) => ({ ...d, media: "", mediaType: "" }))}
               uploading={uploading}
+              progress={uploadProgress}
               value={itemDraft.media}
             />
           </div>

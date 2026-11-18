@@ -10,6 +10,7 @@ import HomeAboutSection from "@/components/cms/home/home-about-section";
 import RentalTeaserSection from "@/components/cms/home/rental-teaser-section";
 import { aboutLink, contactGroup, footerColumns, navGroups } from "@/data/site";
 import { apiUrl } from "@/lib/api-url";
+import { uploadBlobWithProgress } from "@/lib/cms-upload";
 
 type HeroKind = "desktop" | "mobile";
 
@@ -27,7 +28,6 @@ interface HeroError {
 }
 
 const HERO_URL = apiUrl("/hero");
-const UPLOAD_URL = apiUrl("/upload");
 const HERO_MAX = 10;
 // Sizes taken from the live website's hero assets (public/images/hero).
 // Uploads are accepted when the aspect ratio is within RATIO_TOLERANCE of the
@@ -94,112 +94,101 @@ function makeSlideId() {
   return `hs${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 }
 
-function blobToDataUrl(blob: Blob): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error("Could not read converted image."));
-    reader.onload = () => resolve(reader.result as string);
-    reader.readAsDataURL(blob);
+
+async function loadImageSize(file: File): Promise<{ width: number; height: number; source: ImageBitmap | HTMLImageElement }> {
+  if (typeof createImageBitmap !== "undefined") {
+    try {
+      const bmp = await createImageBitmap(file);
+      return { width: bmp.width, height: bmp.height, source: bmp };
+    } catch {
+      // fall through
+    }
+  }
+  const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const image = new Image();
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Could not read the file."));
+    };
+    image.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(image);
+    };
+    image.src = url;
   });
+  return { width: img.naturalWidth, height: img.naturalHeight, source: img };
 }
 
-// Real client-side WebP conversion: draw the image onto a canvas (downscaled
-// to the recommended width when oversized) and let the browser encode WebP.
-function encodeWebp(image: HTMLImageElement, targetWidth: number): Promise<Blob | null> {
-  const scale = image.naturalWidth > targetWidth ? targetWidth / image.naturalWidth : 1;
-  const width = Math.max(1, Math.round(image.naturalWidth * scale));
-  const height = Math.max(1, Math.round(image.naturalHeight * scale));
+async function toWebpBlob(source: ImageBitmap | HTMLImageElement, targetWidth: number): Promise<Blob | null> {
+  const srcW = source instanceof HTMLImageElement ? source.naturalWidth : source.width;
+  const srcH = source instanceof HTMLImageElement ? source.naturalHeight : source.height;
+  const scale = srcW > targetWidth ? targetWidth / srcW : 1;
+  const width = Math.max(1, Math.round(srcW * scale));
+  const height = Math.max(1, Math.round(srcH * scale));
   try {
     if (typeof OffscreenCanvas !== "undefined") {
       const canvas = new OffscreenCanvas(width, height);
       const ctx = canvas.getContext("2d");
-      if (!ctx) return Promise.resolve(null);
-      ctx.drawImage(image, 0, 0, width, height);
-      return canvas.convertToBlob({ type: "image/webp", quality: 0.85 });
+      if (!ctx) return null;
+      ctx.drawImage(source as CanvasImageSource, 0, 0, width, height);
+      return await canvas.convertToBlob({ type: "image/webp", quality: 0.85 });
     }
+  } catch {
+    // fall through
+  }
+  try {
     const canvas = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
     const ctx = canvas.getContext("2d");
-    if (!ctx) return Promise.resolve(null);
-    ctx.drawImage(image, 0, 0, width, height);
-    return new Promise((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
+    if (!ctx) return null;
+    ctx.drawImage(source as CanvasImageSource, 0, 0, width, height);
+    return await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
   } catch {
-    return Promise.resolve(null);
+    return null;
   }
 }
 
-// Any decodable image (JPG/PNG/WebP/…) is accepted: ratio + size are checked
-// on the original, then the browser re-encodes it as real WebP (downscaling
-// oversized files to the recommended width) before it is stored.
-function readHeroFile(file: File, kind: HeroKind): Promise<{ src?: string; error?: string }> {
+async function prepareHeroBlob(file: File, kind: HeroKind): Promise<{ blob?: Blob; error?: string }> {
   const spec = HERO_SPECS[kind];
-  const sourceIsWebp = file.type === "image/webp" || /\.webp$/i.test(file.name);
-
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onerror = () => resolve({ error: "Could not read the file." });
-    reader.onload = () => {
-      if (typeof reader.result !== "string") {
-        resolve({ error: "Could not read the file." });
-        return;
-      }
-      const original = reader.result;
-      const image = new Image();
-      image.onerror = () => resolve({ error: "This file is not a valid image." });
-      image.onload = () => {
-        const actualRatio = image.naturalWidth / image.naturalHeight;
-        const specRatio = spec.width / spec.height;
-        const ratioOk = Math.abs(actualRatio - specRatio) / specRatio <= RATIO_TOLERANCE;
-        const sizeOk = image.naturalWidth >= spec.width * MIN_SIZE && image.naturalHeight >= spec.height * MIN_SIZE;
-        if (!ratioOk || !sizeOk) {
-          resolve({
-            error: `Image is ${image.naturalWidth} × ${image.naturalHeight} px (ratio ${actualRatio.toFixed(2)}:1). ` +
-              `${spec.label} banners need ratio ${spec.ratio} (±5%) and at least ${Math.round(spec.width * MIN_SIZE)} × ${Math.round(spec.height * MIN_SIZE)} px — ` +
-              `recommended ${spec.width} × ${spec.height} px.`,
-          });
-          return;
-        }
-        const oversized = image.naturalWidth > spec.width;
-        if (sourceIsWebp && !oversized) {
-          resolve({ src: original });
-          return;
-        }
-        encodeWebp(image, spec.width)
-          .then(async (blob) => {
-            if (blob && blob.type === "image/webp") {
-              resolve({ src: await blobToDataUrl(blob) });
-              return;
-            }
-            // Encoder unavailable (e.g. Safari): an already-WebP file can pass through as-is.
-            if (sourceIsWebp) {
-              resolve({ src: original });
-              return;
-            }
-            resolve({
-              error: "This browser cannot convert images to WebP — upload an already-WebP file, or open the CMS in Chrome, Edge or Firefox.",
-            });
-          })
-          .catch(() => {
-            if (sourceIsWebp) {
-              resolve({ src: original });
-              return;
-            }
-            resolve({
-              error: "This browser cannot convert images to WebP — upload an already-WebP file, or open the CMS in Chrome, Edge or Firefox.",
-            });
-          });
+  try {
+    const { width, height, source } = await loadImageSize(file);
+    const actualRatio = width / height;
+    const specRatio = spec.width / spec.height;
+    const ratioOk = Math.abs(actualRatio - specRatio) / specRatio <= RATIO_TOLERANCE;
+    const sizeOk = width >= spec.width * MIN_SIZE && height >= spec.height * MIN_SIZE;
+    if (!ratioOk || !sizeOk) {
+      if ("close" in source && typeof (source as ImageBitmap).close === "function") (source as ImageBitmap).close();
+      return {
+        error: `Image is ${width} x ${height} px (ratio ${actualRatio.toFixed(2)}:1). ` +
+          `${spec.label} banners need ratio ${spec.ratio} (\u00b15%) and at least ${Math.round(spec.width * MIN_SIZE)} x ${Math.round(spec.height * MIN_SIZE)} px - ` +
+          `recommended ${spec.width} x ${spec.height} px.`,
       };
-      image.src = original;
+    }
+    const oversized = width > spec.width;
+    const sourceIsWebp = file.type === "image/webp" || /\.webp$/i.test(file.name);
+    if (sourceIsWebp && !oversized) {
+      if ("close" in source && typeof (source as ImageBitmap).close === "function") (source as ImageBitmap).close();
+      return { blob: file };
+    }
+    const blob = await toWebpBlob(source, spec.width);
+    if ("close" in source && typeof (source as ImageBitmap).close === "function") (source as ImageBitmap).close();
+    if (blob && blob.type === "image/webp") return { blob };
+    if (sourceIsWebp) return { blob: file };
+    return {
+      error: "This browser cannot convert images to WebP - upload an already-WebP file, or open the CMS in Chrome, Edge or Firefox.",
     };
-    reader.readAsDataURL(file);
-  });
+  } catch {
+    return { error: "Could not read the file." };
+  }
 }
 
 export default function HomeTab({ onNavigate }: { onNavigate: (section: string) => void }) {
   const [slides, setSlides] = useState<HeroSlide[]>([]);
   const [errors, setErrors] = useState<HeroError>({});
   const [uploading, setUploading] = useState<string | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [dirty, setDirty] = useState(false);
   const [notice, setNotice] = useState("");
   const [loaded, setLoaded] = useState(false);
@@ -265,44 +254,37 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
     setDirty(true);
   }
 
-async function uploadToR2(dataUrl: string): Promise<string> {
-  const response = await fetch(UPLOAD_URL, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ image: dataUrl, folder: "hero" }),
-  });
-  const body: { url?: string; message?: string } = await response.json().catch(() => ({}));
-  if (!response.ok || !body.url) throw new Error(body.message ?? "Upload failed.");
-  return body.url;
-}
-
-async function uploadImage(id: string, kind: HeroKind, file?: File) {
-  if (!file) return;
-  const key = `${id}:${kind}`;
-  const result = await readHeroFile(file, kind);
-  if (result.error) {
-    setErrors((current) => ({ ...current, [key]: result.error ?? "" }));
-    return;
+  async function uploadImage(id: string, kind: HeroKind, file?: File) {
+    if (!file) return;
+    const key = `${id}:${kind}`;
+    setErrors((current) => {
+      const next = { ...current };
+      delete next[key];
+      return next;
+    });
+    setUploading(key);
+    setUploadProgress(0);
+    try {
+      const result = await prepareHeroBlob(file, kind);
+      if (result.error || !result.blob) {
+        setErrors((current) => ({ ...current, [key]: result.error ?? "Upload failed." }));
+        return;
+      }
+      const url = await uploadBlobWithProgress(result.blob, {
+        folder: "hero",
+        contentType: result.blob.type || "image/webp",
+        onProgress: setUploadProgress,
+      });
+      updateSlide(id, kind, url);
+    } catch (error) {
+      setErrors((current) => ({
+        ...current,
+        [key]: error instanceof Error ? error.message : "Upload failed.",
+      }));
+    } finally {
+      setUploading(null);
+    }
   }
-  setErrors((current) => {
-    const next = { ...current };
-    delete next[key];
-    return next;
-  });
-  setUploading(key);
-  try {
-    const url = await uploadToR2(result.src ?? "");
-    updateSlide(id, kind, url);
-  } catch (error) {
-    setErrors((current) => ({
-      ...current,
-      [key]: error instanceof Error ? error.message : "Upload failed.",
-    }));
-  } finally {
-    setUploading(null);
-  }
-}
 
   function removeImage(id: string, kind: HeroKind) {
     setErrors((current) => {
@@ -470,6 +452,7 @@ async function uploadImage(id: string, kind: HeroKind, file?: File) {
                       onFile={(file) => void uploadImage(slide.id, kind, file)}
                       onRemove={() => removeImage(slide.id, kind)}
                       uploading={uploading === dropKey}
+                      progress={uploading === dropKey ? uploadProgress : undefined}
                       value={slide[kind]}
                     />
                   </div>

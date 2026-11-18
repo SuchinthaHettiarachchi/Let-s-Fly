@@ -2,22 +2,24 @@
 
 import { useRef, useState, type DragEvent, type KeyboardEvent } from "react";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
+import { UploadProgressCircle } from "@/components/cms/UploadProgress";
 
 /*
- * Shared CMS image upload — one drag-and-drop field used by every CMS section.
- * The parent keeps ownership of validation, Cloudflare upload and state; this
- * component only renders the picker UI (icon, "Choose an Image" copy,
- * "Choose Files" button), the preview and the remove/error rows.
+ * Shared CMS image upload - one drag-and-drop field used by every CMS section.
+ * The parent keeps ownership of validation, processing/upload and state; this
+ * component renders the picker UI, preview, remove/error rows and upload progress.
  */
 export type ImageUploadProps = {
-  /** Current media URL — empty string when nothing is selected yet. */
+  /** Current media URL - empty string when nothing is selected yet. */
   value?: string;
   /** Receives the picked or dropped file; the parent validates and uploads it. */
   onFile: (file: File) => void;
-  /** Clears the current selection — renders the "Remove" action. */
+  /** Clears the current selection - renders the "Remove" action. */
   onRemove?: () => void;
-  /** True while the parent uploads — blocks picking and shows progress. */
+  /** True while the parent uploads/processes - blocks picking and shows progress. */
   uploading?: boolean;
+  /** 0-100 upload percentage, or -1 for indeterminate while uploading. */
+  progress?: number;
   /** Validation or upload error shown under the field. */
   error?: string;
   /** Field label rendered above the drop zone. */
@@ -59,29 +61,12 @@ function UploadIcon() {
   );
 }
 
-function Spinner() {
-  return (
-    <svg
-      aria-hidden="true"
-      className="size-4 animate-spin text-cms-primary"
-      fill="none"
-      height="16"
-      viewBox="0 0 24 24"
-      width="16"
-      stroke="currentColor"
-      strokeWidth="2.5"
-    >
-      <circle cx="12" cy="12" r="9" strokeOpacity="0.25" />
-      <path d="M21 12a9 9 0 0 0-9-9" />
-    </svg>
-  );
-}
-
 export function ImageUpload({
   value = "",
   onFile,
   onRemove,
   uploading = false,
+  progress,
   error = "",
   label,
   hint,
@@ -130,8 +115,10 @@ export function ImageUpload({
           ? "border-cms-line bg-white bg-cover bg-center bg-no-repeat dark:border-[#2a2e63] dark:bg-[#171a42]"
           : "border-cms-line bg-white text-cms-muted hover:border-cms-primary hover:text-cms-ink dark:border-[#2a2e63] dark:bg-[#171a42] dark:hover:border-[#41478c]",
     interactive ? "cursor-pointer" : "",
-    uploading ? "pointer-events-none opacity-60" : "",
+    uploading ? "pointer-events-none opacity-80" : "",
   ].join(" ");
+
+  const showProgress = uploading;
 
   return (
     <div className={`flex flex-col ${className}`.trim()}>
@@ -156,10 +143,14 @@ export function ImageUpload({
         style={hasValue && !isVideo ? { backgroundImage: `url("${value}")` } : undefined}
         tabIndex={interactive ? 0 : undefined}
       >
-        {uploading ? (
+        {showProgress ? (
           <span className="flex flex-col items-center gap-2 text-[12.5px] font-semibold text-cms-ink">
-            <Spinner />
-            Uploading…
+            {typeof progress === "number" && progress >= 0 ? (
+              <UploadProgressCircle progress={progress} />
+            ) : (
+              <UploadProgressCircle progress={100} />
+            )}
+            <span>{typeof progress === "number" && progress >= 0 ? `Uploading ${progress}%` : "Uploading..."}</span>
           </span>
         ) : isVideo ? (
           <video className="h-full w-full bg-black object-contain" controls preload="metadata" src={value} />

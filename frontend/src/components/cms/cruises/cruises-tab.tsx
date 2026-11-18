@@ -6,14 +6,12 @@ import { CmsButton } from "@/components/cms/CmsButton";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
 import { apiUrl } from "@/lib/api-url";
+import { uploadMediaFile } from "@/lib/cms-upload";
 import type { Journey } from "@/lib/journey-api";
 
 const JOURNEYS_API = apiUrl("/journey-categories");
-const UPLOAD = apiUrl("/upload");
 
 const inputShell = "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[13px] text-cms-ink outline-none focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
-
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
 type JourneyDraft = {
   name: string;
@@ -39,55 +37,6 @@ const blankJourney = (): JourneyDraft => ({
   stops: [],
 });
 
-function readAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error("Could not read the file."));
-    reader.onload = () => resolve(reader.result as string);
-    reader.readAsDataURL(file);
-  });
-}
-
-async function prepareImage(file: File): Promise<string> {
-  const original = await readAsDataUrl(file);
-  if (file.type === "image/gif") return original;
-  const image = await new Promise<HTMLImageElement | null>((resolve) => {
-    const img = new Image();
-    img.onerror = () => resolve(null);
-    img.onload = () => resolve(img);
-    img.src = original;
-  });
-  if (!image || image.naturalWidth <= 1600) return original;
-  try {
-    const canvas = document.createElement("canvas");
-    canvas.width = 1600;
-    canvas.height = Math.max(1, Math.round(image.naturalHeight * (1600 / image.naturalWidth)));
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return original;
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
-    if (!blob) return original;
-    return await readAsDataUrl(new File([blob], file.name.replace(/\.\w+$/, ".webp"), { type: "image/webp" }));
-  } catch {
-    return original;
-  }
-}
-
-async function uploadImageToR2(file: File): Promise<string> {
-  if (!file.type.startsWith("image/")) throw new Error("Choose an image file.");
-  if (file.size > MAX_IMAGE_BYTES) throw new Error("Image must be 5MB or smaller.");
-  const prepared = await prepareImage(file);
-  const response = await fetch(UPLOAD, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ image: prepared, folder: "cruises" }),
-  });
-  const data: { url?: string; message?: string } = await response.json().catch(() => ({}));
-  if (!response.ok || !data.url) throw new Error(data.message ?? "Upload failed.");
-  return data.url;
-}
-
 type DeleteTarget = { kind: "journey"; id: string; label: string };
 
 export default function CruisesTab({ onNavigate }: { onNavigate: (section: string) => void }) {
@@ -103,16 +52,18 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
   const [stops, setStops] = useState<string[]>([]);
   const [stopInput, setStopInput] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState("");
 
   const [deleteTarget, setDeleteTarget] = useState<DeleteTarget | null>(null);
   const [deleting, setDeleting] = useState(false);
 
   const fetchAll = useCallback(async (): Promise<Journey[]> => {
-    const res = await fetch(JOURNEYS_API, { credentials: "include" });
+    const res = await fetch(`${JOURNEYS_API}?kind=cruise`, { credentials: "include" });
     if (!res.ok) throw new Error("load failed");
     const data: { journeys?: Journey[] } = await res.json();
-    return Array.isArray(data.journeys) ? data.journeys : [];
+    const list = Array.isArray(data.journeys) ? data.journeys : [];
+    return list.filter((j) => j.kind === "cruise");
   }, []);
 
   const load = useCallback(async () => {
@@ -397,13 +348,15 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
               hint="JPEG, PNG, WebP or GIF · up to 5MB"
               value={draft.image}
               uploading={uploading}
+              progress={uploadProgress}
               error={uploadError}
               onFile={(file) => {
                 void (async () => {
                   setUploading(true);
+                  setUploadProgress(0);
                   setUploadError("");
                   try {
-                    const url = await uploadImageToR2(file);
+                    const url = await uploadMediaFile(file, { folder: "cruises", kind: "image", onProgress: setUploadProgress });
                     setDraft((d) => ({ ...d, image: url }));
                   } catch (error) {
                     setUploadError(error instanceof Error ? error.message : "Upload failed.");

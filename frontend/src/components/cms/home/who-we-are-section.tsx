@@ -3,56 +3,18 @@
 import { useEffect, useState } from "react";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
 import { ImageUpload } from "@/components/cms/ImageUpload";
+import { UploadProgressCircle } from "@/components/cms/UploadProgress";
 import { apiUrl } from "@/lib/api-url";
+import { uploadMediaFile } from "@/lib/cms-upload";
 import type { WhoWeAreContent } from "@/lib/who-we-are-api";
 
 const URL_API = apiUrl("/who-we-are");
-const UPLOAD_API = apiUrl("/upload");
-const VIDEO_API = apiUrl("/upload/video");
 
 const inputShell =
   "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[14px] font-normal text-cms-ink outline-none placeholder:text-cms-muted focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
 const areaShell = `${inputShell} min-h-[92px] py-2.5 leading-[1.55] resize-y`;
 const btnGhost = cmsButtonClasses("secondary");
 const btnPrimary = cmsButtonClasses("primary");
-
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
-const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
-const VIDEO_TYPES = ["video/mp4", "video/webm"];
-
-function readAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error("Could not read the file."));
-    reader.onload = () => resolve(reader.result as string);
-    reader.readAsDataURL(file);
-  });
-}
-
-async function prepareImage(file: File): Promise<string> {
-  const original = await readAsDataUrl(file);
-  if (file.type === "image/gif") return original;
-  const image = await new Promise<HTMLImageElement | null>((resolve) => {
-    const img = new Image();
-    img.onerror = () => resolve(null);
-    img.onload = () => resolve(img);
-    img.src = original;
-  });
-  if (!image || image.naturalWidth <= 1600) return original;
-  try {
-    const canvas = document.createElement("canvas");
-    canvas.width = 1600;
-    canvas.height = Math.max(1, Math.round(image.naturalHeight * (1600 / image.naturalWidth)));
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return original;
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
-    if (!blob) return original;
-    return await readAsDataUrl(new File([blob], file.name.replace(/\.\w+$/, ".webp"), { type: "image/webp" }));
-  } catch {
-    return original;
-  }
-}
 
 type ImageKey = "mainImage" | "insetImage";
 
@@ -63,6 +25,7 @@ export default function WhoWeAreSection() {
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("");
   const [uploading, setUploading] = useState<ImageKey | "video" | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState("");
   const [dropping, setDropping] = useState<"video" | null>(null);
 
@@ -77,7 +40,7 @@ export default function WhoWeAreSection() {
         }
       })
       .catch(() => {
-        if (!cancelled) setNotice("Could not load content — start the backend and reload.");
+        if (!cancelled) setNotice("Could not load content - start the backend and reload.");
       });
     return () => {
       cancelled = true;
@@ -117,26 +80,11 @@ export default function WhoWeAreSection() {
   async function uploadImage(field: ImageKey, file?: File | null) {
     if (!file) return;
     setUploadError("");
-    if (!file.type.startsWith("image/")) {
-      setUploadError("Choose an image file (JPEG, PNG, WebP or GIF).");
-      return;
-    }
-    if (file.size > MAX_IMAGE_BYTES) {
-      setUploadError("Image must be 5MB or smaller.");
-      return;
-    }
     setUploading(field);
+    setUploadProgress(0);
     try {
-      const prepared = await prepareImage(file);
-      const res = await fetch(UPLOAD_API, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: prepared, folder: "who-we-are" }),
-      });
-      const data: { url?: string; message?: string } = await res.json().catch(() => ({}));
-      if (!res.ok || !data.url) throw new Error(data.message ?? "Upload failed.");
-      update(field, data.url);
+      const url = await uploadMediaFile(file, { folder: "who-we-are", kind: "image", onProgress: setUploadProgress });
+      update(field, url);
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : "Upload failed.");
     } finally {
@@ -147,25 +95,11 @@ export default function WhoWeAreSection() {
   async function uploadVideo(file?: File | null) {
     if (!file) return;
     setUploadError("");
-    if (!VIDEO_TYPES.includes(file.type)) {
-      setUploadError("Choose an MP4 or WebM video file.");
-      return;
-    }
-    if (file.size > MAX_VIDEO_BYTES) {
-      setUploadError("Video must be 100MB or smaller.");
-      return;
-    }
     setUploading("video");
+    setUploadProgress(0);
     try {
-      const res = await fetch(VIDEO_API, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": file.type },
-        body: file,
-      });
-      const data: { url?: string; message?: string } = await res.json().catch(() => ({}));
-      if (!res.ok || !data.url) throw new Error(data.message ?? "Upload failed.");
-      update("video", data.url);
+      const url = await uploadMediaFile(file, { folder: "who-we-are", kind: "video", onProgress: setUploadProgress });
+      update("video", url);
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : "Upload failed.");
     } finally {
@@ -175,7 +109,7 @@ export default function WhoWeAreSection() {
 
   async function save() {
     if (!content || !loaded) {
-      setNotice("Content was not loaded from the server — nothing was saved.");
+      setNotice("Content was not loaded from the server - nothing was saved.");
       return;
     }
     const paragraphs = content.paragraphs.map((p) => p.trim()).filter(Boolean);
@@ -196,7 +130,7 @@ export default function WhoWeAreSection() {
       if (!res.ok) {
         setNotice(
           res.status === 401
-            ? "Your session expired — sign in again."
+            ? "Your session expired - sign in again."
             : data?.message ?? "Could not save the Who we are section.",
         );
         return;
@@ -205,7 +139,7 @@ export default function WhoWeAreSection() {
       setDirty(false);
       setNotice("Who we are section saved");
     } catch {
-      setNotice("Could not reach the server — nothing was saved.");
+      setNotice("Could not reach the server - nothing was saved.");
     } finally {
       setSaving(false);
     }
@@ -262,7 +196,7 @@ export default function WhoWeAreSection() {
               <textarea
                 className={areaShell}
                 maxLength={2000}
-                placeholder="Paragraph text…"
+                placeholder="Paragraph text."
                 rows={3}
                 value={paragraph}
                 onChange={(event) => setParagraph(index, event.target.value)}
@@ -307,7 +241,7 @@ export default function WhoWeAreSection() {
         </label>
         <label className="block text-[12.5px] font-semibold text-cms-text">
           Stat label (line break = new line)
-          <input className={inputShell} maxLength={80} placeholder="years helping&#10;Sri Lankans travel" value={content.statLabel} onChange={(event) => update("statLabel", event.target.value)} />
+          <input className={inputShell} maxLength={80} placeholder="years helping Sri Lankans travel" value={content.statLabel} onChange={(event) => update("statLabel", event.target.value)} />
         </label>
       </div>
 
@@ -321,6 +255,7 @@ export default function WhoWeAreSection() {
               onFile={(file) => void uploadImage(field, file)}
               onRemove={() => update(field, "")}
               uploading={uploading === field}
+              progress={uploading === field ? uploadProgress : undefined}
               value={content[field]}
             />
           </div>
@@ -328,7 +263,7 @@ export default function WhoWeAreSection() {
       </div>
 
       <div className="mt-4 rounded-[12px] border border-dashed border-cms-line bg-[#f5f5f7] p-3 dark:border-[#2a2e63] dark:bg-[#101435]">
-        <b className="text-[13px] text-cms-text">Video — 16:9 (1920 × 1080) · MP4 or WebM · up to 100MB</b>
+        <b className="text-[13px] text-cms-text">Video - 16:9 (1920 x 1080) - MP4 or WebM - up to 100MB</b>
         <p className="mt-0.5 text-[12px] text-cms-muted">Shown below the section on the About page and plays unmuted with controls.</p>
         <div
           className={`mt-2 grid h-[140px] place-items-center gap-1.5 overflow-hidden rounded-[10px] border-[1.5px] border-dashed text-center text-[12.5px] font-medium transition-[border-color,box-shadow] duration-[180ms] ease-out ${dropping === "video" ? "border-[#6f6e80] shadow-[0_0_0_4px_rgba(110,110,130,.16)] dark:border-[#8a8ab0]" : "border-cms-line bg-white text-cms-muted dark:border-[#2a2e63] dark:bg-[#171a42]"}`}
@@ -350,21 +285,24 @@ export default function WhoWeAreSection() {
           {content.video && uploading !== "video" ? (
             <video className="h-full w-full bg-navy-900" controls preload="metadata" src={content.video} />
           ) : uploading === "video" ? (
-            <span>Uploading video…</span>
+            <span className="flex flex-col items-center gap-2">
+              <UploadProgressCircle progress={uploadProgress} />
+              <span className="text-[12px]">Uploading video {uploadProgress >= 0 ? `${uploadProgress}%` : "..."}</span>
+            </span>
           ) : (
             <span>Drop an MP4 or WebM video here</span>
           )}
         </div>
         <div className="mt-2 flex flex-wrap items-center justify-end gap-2">
           <label className={`${btnGhost} ${uploading === "video" ? "pointer-events-none opacity-50" : "cursor-pointer"}`}>
-            {uploading === "video" ? "Uploading…" : content.video ? "Replace video" : "Choose video"}
+            {uploading === "video" ? `Uploading ${uploadProgress >= 0 ? uploadProgress + "%" : "..."}` : content.video ? "Replace video" : "Choose video"}
             <input accept="video/mp4,video/webm" disabled={uploading === "video"} hidden onChange={(event) => void uploadVideo(event.target.files?.[0])} type="file" />
           </label>
           {content.video && uploading !== "video" && (
             <button className={cmsButtonClasses("danger")} onClick={() => update("video", "")} type="button">Remove</button>
           )}
         </div>
-        <span className="mt-1.5 block truncate text-[11.5px] text-cms-muted" title={content.video}>{content.video || "No video yet — optional"}</span>
+        <span className="mt-1.5 block truncate text-[11.5px] text-cms-muted" title={content.video}>{content.video || "No video yet - optional"}</span>
       </div>
 
       <span className="mt-1.5 block text-[12px] text-[#d42a45] empty:hidden dark:text-[#ff9aa8]" role="alert">{uploadError}</span>
@@ -372,7 +310,7 @@ export default function WhoWeAreSection() {
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <span className="mr-auto text-[12.5px] text-cms-muted" aria-live="polite">{notice || (dirty ? "Unsaved changes" : "")}</span>
         <button className={btnPrimary} disabled={!loaded || saving || uploading !== null} onClick={() => void save()} type="button">
-          {saving ? "Saving…" : "Save section"}
+          {saving ? "Saving." : "Save section"}
         </button>
       </div>
     </section>

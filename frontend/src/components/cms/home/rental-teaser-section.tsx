@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { apiUrl } from "@/lib/api-url";
+import { uploadMediaFile } from "@/lib/cms-upload";
 import {
   defaultRentalTeaser,
   rentalSlotIds,
@@ -14,47 +15,10 @@ import {
 } from "@/lib/rental-teaser-api";
 
 const URL_API = apiUrl("/rental-teaser");
-const UPLOAD_API = apiUrl("/upload");
 const inputShell =
   "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[14px] font-normal text-cms-ink outline-none placeholder:text-cms-muted focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
 
 const btnPrimary = cmsButtonClasses("primary");
-
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
-
-function readAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error("Could not read the file."));
-    reader.onload = () => resolve(reader.result as string);
-    reader.readAsDataURL(file);
-  });
-}
-
-async function prepareImage(file: File): Promise<string> {
-  const original = await readAsDataUrl(file);
-  if (file.type === "image/gif") return original;
-  const image = await new Promise<HTMLImageElement | null>((resolve) => {
-    const img = new Image();
-    img.onerror = () => resolve(null);
-    img.onload = () => resolve(img);
-    img.src = original;
-  });
-  if (!image || image.naturalWidth <= 1600) return original;
-  try {
-    const canvas = document.createElement("canvas");
-    canvas.width = 1600;
-    canvas.height = Math.max(1, Math.round(image.naturalHeight * (1600 / image.naturalWidth)));
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return original;
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
-    if (!blob) return original;
-    return await readAsDataUrl(new File([blob], file.name.replace(/\.\w+$/, ".webp"), { type: "image/webp" }));
-  } catch {
-    return original;
-  }
-}
 
 export default function RentalTeaserSection() {
   const [content, setContent] = useState<RentalTeaserContent | null>(null);
@@ -63,6 +27,7 @@ export default function RentalTeaserSection() {
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("");
   const [uploading, setUploading] = useState<RentalSlotId | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState("");
 
   useEffect(() => {
@@ -100,26 +65,11 @@ export default function RentalTeaserSection() {
   async function uploadImage(id: RentalSlotId, file?: File | null) {
     if (!file) return;
     setUploadError("");
-    if (!file.type.startsWith("image/")) {
-      setUploadError("Choose an image file (JPEG, PNG, WebP or GIF).");
-      return;
-    }
-    if (file.size > MAX_IMAGE_BYTES) {
-      setUploadError("Image must be 5MB or smaller.");
-      return;
-    }
     setUploading(id);
+    setUploadProgress(0);
     try {
-      const prepared = await prepareImage(file);
-      const res = await fetch(UPLOAD_API, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: prepared, folder: "rentals" }),
-      });
-      const data: { url?: string; message?: string } = await res.json().catch(() => ({}));
-      if (!res.ok || !data.url) throw new Error(data.message ?? "Upload failed.");
-      updateSlot(id, { image: data.url });
+      const url = await uploadMediaFile(file, { folder: "rentals", kind: "image", onProgress: setUploadProgress });
+      updateSlot(id, { image: url });
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : "Upload failed.");
     } finally {
@@ -199,6 +149,7 @@ export default function RentalTeaserSection() {
                 onFile={(file) => void uploadImage(id, file)}
                 onRemove={() => updateSlot(id, { image: "" })}
                 uploading={uploading === id}
+                progress={uploading === id ? uploadProgress : undefined}
                 value={slot.image}
               />
 

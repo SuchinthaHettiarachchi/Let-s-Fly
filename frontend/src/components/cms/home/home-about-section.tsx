@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
 import { apiUrl } from "@/lib/api-url";
+import { uploadMediaFile } from "@/lib/cms-upload";
+import { UploadProgressCircle } from "@/components/cms/UploadProgress";
 import type { HomeAboutContent } from "@/lib/home-about-api";
 
 const URL_API = apiUrl("/home-about");
-const VIDEO_API = apiUrl("/upload/video");
 
 const inputShell =
   "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[14px] font-normal text-cms-ink outline-none placeholder:text-cms-muted focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
@@ -24,6 +25,7 @@ export default function HomeAboutSection() {
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("");
   const [uploading, setUploading] = useState<"video" | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState("");
   const [dropping, setDropping] = useState<"video" | null>(null);
 
@@ -72,25 +74,11 @@ export default function HomeAboutSection() {
   async function uploadVideo(file?: File | null) {
     if (!file) return;
     setUploadError("");
-    if (!VIDEO_TYPES.includes(file.type)) {
-      setUploadError("Choose an MP4 or WebM video file.");
-      return;
-    }
-    if (file.size > MAX_VIDEO_BYTES) {
-      setUploadError("Video must be 100MB or smaller.");
-      return;
-    }
     setUploading("video");
+    setUploadProgress(0);
     try {
-      const res = await fetch(VIDEO_API, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": file.type },
-        body: file,
-      });
-      const data: { url?: string; message?: string } = await res.json().catch(() => ({}));
-      if (!res.ok || !data.url) throw new Error(data.message ?? "Upload failed.");
-      update("video", data.url);
+      const url = await uploadMediaFile(file, { folder: "home-about", kind: "video", onProgress: setUploadProgress });
+      update("video", url);
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : "Upload failed.");
     } finally {
@@ -258,14 +246,14 @@ export default function HomeAboutSection() {
             {content.video && uploading !== "video" ? (
               <video className="h-full w-full bg-navy-900 object-contain" controls preload="metadata" src={content.video} />
             ) : uploading === "video" ? (
-              <span>Uploading video.</span>
+              <span className="flex flex-col items-center gap-2"><UploadProgressCircle progress={uploadProgress} /><span className="text-[12px]">Uploading video {uploadProgress >= 0 ? `${uploadProgress}%` : ""}</span></span>
             ) : (
               <span>Drop an MP4 or WebM video here</span>
             )}
           </div>
           <div className="mt-3 flex flex-wrap items-center justify-end gap-2">
             <label className={`${btnGhost} ${uploading === "video" ? "pointer-events-none opacity-50" : "cursor-pointer"}`}>
-              {uploading === "video" ? "Uploading." : content.video ? "Replace video" : "Choose video"}
+              {uploading === "video" ? `Uploading ${uploadProgress >= 0 ? uploadProgress + "%" : "..."}` : content.video ? "Replace video" : "Choose video"}
               <input accept="video/mp4,video/webm" disabled={uploading === "video"} hidden onChange={(event) => void uploadVideo(event.target.files?.[0])} type="file" />
             </label>
             {content.video && uploading !== "video" && (

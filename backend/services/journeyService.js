@@ -1,18 +1,30 @@
 const Journey = require('../models/Journey');
-const { validateJourneyCreate, validateJourneyUpdate } = require('../validators/journeyValidator');
 
 const sortJourn = (list) => [...list].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0) || a.name.localeCompare(b.name));
 
-exports.list = async () => sortJourn(await Journey.find({}).lean());
-
-exports.create = async (data) => {
-  const doc = new Journey(data);
-  return doc.save();
+const toJourney = (doc) => {
+  if (!doc) return null;
+  const { _id, __v, createdAt, updatedAt, ...rest } = doc;
+  return { id: String(_id), ...rest };
 };
 
-exports.update = (id, data) =>
-  Journey.findByIdAndUpdate(id, data, { new: true, runValidators: true }).lean();
+exports.list = async (filter = {}) => {
+  const q = {};
+  if (filter.kind === 'train' || filter.kind === 'cruise') q.kind = filter.kind;
+  const docs = await Journey.find(q).lean();
+  return sortJourn(docs).map(toJourney);
+};
+
+exports.create = async (data) => {
+  const doc = await new Journey(data).save();
+  return toJourney(doc.toObject());
+};
+
+exports.update = async (id, data) => {
+  const doc = await Journey.findByIdAndUpdate(id, data, { new: true, runValidators: true }).lean();
+  return toJourney(doc);
+};
 
 exports.remove = (id) => Journey.findByIdAndDelete(id);
 
-exports.findById = (id) => Journey.findById(id).lean();
+exports.findById = async (id) => toJourney(await Journey.findById(id).lean());

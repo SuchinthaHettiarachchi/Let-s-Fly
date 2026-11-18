@@ -5,7 +5,9 @@ import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsCheckbox } from "@/components/cms/CmsCheckbox";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
 import { ImageUpload } from "@/components/cms/ImageUpload";
+import { UploadProgressCircle } from "@/components/cms/UploadProgress";
 import { apiUrl } from "@/lib/api-url";
+import { uploadMediaFile } from "@/lib/cms-upload";
 import {
   defaultInclusions,
   defaultItinerary,
@@ -25,50 +27,10 @@ import type { Package } from "@/data/packages";
 
 const API = apiUrl("/packages");
 const CATEGORIES_API = apiUrl("/categories");
-const UPLOAD = apiUrl("/upload");
 const inputShell = "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[13px] text-cms-ink outline-none focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
 const areaShell = `${inputShell} min-h-[72px] py-2 leading-[1.5] resize-y`;
 const primary = cmsButtonClasses("primary");
 const secondary = cmsButtonClasses("secondary");
-
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
-const TABS = ["Details", "Gallery", "Overview", "Itinerary", "Inclusions", "Payment"] as const;
-type FormTab = (typeof TABS)[number];
-
-function readAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error("Could not read the file."));
-    reader.onload = () => resolve(reader.result as string);
-    reader.readAsDataURL(file);
-  });
-}
-
-async function prepareImage(file: File): Promise<string> {
-  const original = await readAsDataUrl(file);
-  if (file.type === "image/gif") return original;
-  const image = await new Promise<HTMLImageElement | null>((resolve) => {
-    const img = new Image();
-    img.onerror = () => resolve(null);
-    img.onload = () => resolve(img);
-    img.src = original;
-  });
-  if (!image || image.naturalWidth <= 1600) return original;
-  try {
-    const scale = 1600 / image.naturalWidth;
-    const canvas = document.createElement("canvas");
-    canvas.width = 1600;
-    canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return original;
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
-    if (!blob) return original;
-    return await readAsDataUrl(new File([blob], file.name.replace(/\.\w+$/, ".webp"), { type: "image/webp" }));
-  } catch {
-    return original;
-  }
-}
 
 type Category = "outbound" | "sri-lanka";
 type PackageItem = Package & { _id: string; createdAt?: string };
@@ -134,33 +96,22 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [galleryUploading, setGalleryUploading] = useState(false);
+  const [galleryUploadProgress, setGalleryUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState("");
   const [catNotice, setCatNotice] = useState("");
   const [catDraft, setCatDraft] = useState({ key: "", label: "", sortOrder: 0 });
   const [catEditingId, setCatEditingId] = useState<string | null>(null);
 
-  async function uploadToR2(file: File, folder: string): Promise<string> {
-    if (!file.type.startsWith("image/")) throw new Error("Choose an image file.");
-    if (file.size > MAX_IMAGE_BYTES) throw new Error("Image must be 5MB or smaller.");
-    const prepared = await prepareImage(file);
-    const response = await fetch(UPLOAD, {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ image: prepared, folder }),
-    });
-    const data: { url?: string; message?: string } = await response.json().catch(() => ({}));
-    if (!response.ok || !data.url) throw new Error(data.message ?? "Upload failed.");
-    return data.url;
-  }
-
   async function uploadImage(file?: File | null) {
     if (!file) return;
     setUploadError("");
     setUploading(true);
+    setUploadProgress(0);
     try {
-      update("image", await uploadToR2(file, "packages"));
+      const url = await uploadMediaFile(file, { folder: "packages", kind: "image", onProgress: setUploadProgress });
+      update("image", url);
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : "Upload failed.");
     } finally {
@@ -172,8 +123,9 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
     if (!file) return;
     setUploadError("");
     setGalleryUploading(true);
+    setGalleryUploadProgress(0);
     try {
-      const url = await uploadToR2(file, "packages");
+      const url = await uploadMediaFile(file, { folder: "packages", kind: "image", onProgress: setGalleryUploadProgress });
       setDraft((current) => ({ ...current, gallery: [...current.gallery, url] }));
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : "Upload failed.");
@@ -528,6 +480,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                 onFile={(file) => void uploadImage(file)}
                 onRemove={() => update("image", "")}
                 uploading={uploading}
+                progress={uploadProgress}
                 value={draft.image}
               />
             </div>
