@@ -472,21 +472,46 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
         </div>
 
         {activeTab === "Details" && (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <Field label="Package Name"><input className={inputShell} value={draft.title} onChange={(event) => update("title", event.target.value)} /></Field>
-            <Field label="Slug"><input className={inputShell} placeholder="sigiriya-culture-escape" value={draft.slug} onChange={(event) => update("slug", event.target.value)} /></Field>
-            <Field label="Region"><input className={inputShell} placeholder="Sri Lanka" value={draft.region} onChange={(event) => update("region", event.target.value)} /></Field>
-            <Field label="Area label"><input className={inputShell} placeholder="Sigiriya" value={draft.area} onChange={(event) => update("area", event.target.value)} /></Field>
-            <Field label="Top category"><select className={inputShell} value={draft.category} onChange={(event) => update("category", event.target.value as Category)}><option value="outbound">Outbound</option><option value="sri-lanka">Sri Lanka</option></select></Field>
-            <Field label="Badge (optional)"><input className={inputShell} placeholder="Best seller" value={draft.badge} onChange={(event) => update("badge", event.target.value)} /></Field>
-            <Field label="Days"><input className={inputShell} min="1" type="number" value={draft.days} onChange={(event) => update("days", Number(event.target.value))} /></Field>
-            <Field label="Nights"><input className={inputShell} min="0" type="number" value={draft.nights} onChange={(event) => update("nights", Number(event.target.value))} /></Field>
-            <Field label="Price (LKR)"><input className={inputShell} min="0" type="number" value={draft.price} onChange={(event) => update("price", Number(event.target.value))} /></Field>
-            <div className="sm:col-span-2">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_1px_360px] lg:items-start">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field label="Package Name"><input className={inputShell} value={draft.title} onChange={(event) => update("title", event.target.value)} /></Field>
+              <Field label="Slug"><input className={inputShell} placeholder="sigiriya-culture-escape" value={draft.slug} onChange={(event) => update("slug", event.target.value)} /></Field>
+              <Field label="Region"><input className={inputShell} placeholder="Sri Lanka" value={draft.region} onChange={(event) => update("region", event.target.value)} /></Field>
+              <Field label="Area label"><input className={inputShell} placeholder="Sigiriya" value={draft.area} onChange={(event) => update("area", event.target.value)} /></Field>
+              <Field label="Top category"><select className={inputShell} value={draft.category} onChange={(event) => update("category", event.target.value as Category)}><option value="outbound">Outbound</option><option value="sri-lanka">Sri Lanka</option></select></Field>
+              <Field label="Badge (optional)"><input className={inputShell} placeholder="Best seller" value={draft.badge} onChange={(event) => update("badge", event.target.value)} /></Field>
+              <Field label="Days"><input className={inputShell} min="1" type="number" value={draft.days} onChange={(event) => update("days", Number(event.target.value))} /></Field>
+              <Field label="Nights"><input className={inputShell} min="0" type="number" value={draft.nights} onChange={(event) => update("nights", Number(event.target.value))} /></Field>
+              <Field label="Price (LKR)"><input className={inputShell} min="0" type="number" value={draft.price} onChange={(event) => update("price", Number(event.target.value))} /></Field>
+              <label className="mt-7 inline-flex items-center gap-2 text-[13px] font-semibold text-cms-text"><input checked={draft.flightsIncluded} onChange={(event) => update("flightsIncluded", event.target.checked)} type="checkbox" /> Flights included</label>
+              {draft.category === "sri-lanka" && (
+                <fieldset className="sm:col-span-2">
+                  <legend className="text-[12.5px] font-semibold text-cms-text">Category (filter chips)</legend>
+                  <div className="mt-2 flex flex-wrap gap-3">
+                    {categories.length ? (
+                      categories.map((cat) => (
+                        <label className="inline-flex items-center gap-1.5 text-[12px] text-cms-text" key={cat.key}>
+                          <input checked={draft.themes.includes(cat.key)} onChange={() => toggleTheme(cat.key)} type="checkbox" /> {cat.label}
+                        </label>
+                      ))
+                    ) : (
+                      <span className="text-[12px] text-cms-muted">No dynamic categories loaded — add them in Categories above.</span>
+                    )}
+                  </div>
+                  {draft.themes.length > 0 && (
+                    <p className="mt-2 text-[11.5px] text-cms-muted">Selected: {draft.themes.map(themeLabel).join(", ")}</p>
+                  )}
+                </fieldset>
+              )}
+            </div>
+
+            <div aria-hidden className="hidden self-stretch bg-gradient-to-b from-transparent via-gray-300/80 to-transparent dark:via-[#2a2e63] lg:block" />
+
+            <div className="lg:sticky lg:top-4">
               <ImageUpload
                 accept="image/*"
                 error={uploadError}
-                height="h-[150px]"
+                height="h-[180px]"
                 hint="JPEG, PNG, WebP or GIF · up to 5MB"
                 label="Cover image"
                 onFile={(file) => void uploadImage(file)}
@@ -495,26 +520,6 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                 value={draft.image}
               />
             </div>
-            <label className="mt-7 inline-flex items-center gap-2 text-[13px] font-semibold text-cms-text"><input checked={draft.flightsIncluded} onChange={(event) => update("flightsIncluded", event.target.checked)} type="checkbox" /> Flights included</label>
-            {draft.category === "sri-lanka" && (
-              <fieldset className="sm:col-span-2 lg:col-span-3">
-                <legend className="text-[12.5px] font-semibold text-cms-text">Category (filter chips)</legend>
-                <div className="mt-2 flex flex-wrap gap-3">
-                  {categories.length ? (
-                    categories.map((cat) => (
-                      <label className="inline-flex items-center gap-1.5 text-[12px] text-cms-text" key={cat.key}>
-                        <input checked={draft.themes.includes(cat.key)} onChange={() => toggleTheme(cat.key)} type="checkbox" /> {cat.label}
-                      </label>
-                    ))
-                  ) : (
-                    <span className="text-[12px] text-cms-muted">No dynamic categories loaded — add them in Categories above.</span>
-                  )}
-                </div>
-                {draft.themes.length > 0 && (
-                  <p className="mt-2 text-[11.5px] text-cms-muted">Selected: {draft.themes.map(themeLabel).join(", ")}</p>
-                )}
-              </fieldset>
-            )}
           </div>
         )}
 

@@ -645,7 +645,7 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
             </div>
             <span className={`ml-auto inline-flex min-h-[23px] shrink-0 items-center rounded-full px-2 text-[10px] font-semibold ${statusClass(draft.status)}`}>{draft.status === "published" ? "Published" : "Draft"}</span>
           </header>
-          <div className="grid items-start gap-4 grid-cols-1 min-[1101px]:grid-cols-[minmax(0,1.55fr)_minmax(260px,0.8fr)]">
+          <div className="grid items-start gap-4 grid-cols-1 min-[1101px]:grid-cols-[minmax(0,1.55fr)_1px_minmax(260px,0.8fr)]">
             <div className="grid gap-3.5">
               <section className={panelShell}>
                 <header className="mb-3.5 flex items-start justify-between gap-3">
@@ -746,6 +746,7 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
                 </div>
               </section>
             </div>
+            <div aria-hidden className="hidden self-stretch bg-gradient-to-b from-transparent via-gray-300/80 to-transparent dark:via-[#2a2e63] min-[1101px]:block" />
             <aside className="grid gap-3.5 grid-cols-1 min-[761px]:max-[1100px]:grid-cols-2">
               <section className={panelShell}>
                 <header className="mb-3.5 flex items-start justify-between gap-3">

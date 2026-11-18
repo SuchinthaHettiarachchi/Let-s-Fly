@@ -434,34 +434,40 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
           {itemEditingId && <CmsButton variant="secondary" onClick={resetItem}>Cancel edit</CmsButton>}
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <Field label="Caption (Location)">
-            <input
-              className={inputShell}
-              placeholder="Mirissa beach"
-              value={itemDraft.caption}
-              onChange={(event) => setItemDraft((d) => ({ ...d, caption: event.target.value }))}
-            />
-          </Field>
-          <Field label="Category">
-            <CmsSelect
-              aria-label="Category"
-              className="mt-1.5"
-              onChange={(category) => setItemDraft((d) => ({ ...d, category }))}
-              options={categories.map((cat) => ({ value: cat._id, label: cat.name }))}
-              placeholder="Select a category…"
-              value={itemDraft.category}
-            />
-          </Field>
-          <Field label="Order position">
-            <span className="mt-1.5 block h-10 items-center rounded-[9px] border border-[#e6e4f5] bg-[#f7f6fc] px-3 text-[13px] text-cms-muted dark:border-[#2a2e63] dark:bg-[#101435]">
-              {itemEditingId
-                ? `Position ${(items.find((i) => i._id === itemEditingId)?.sortOrder ?? 1)} of ${items.length}`
-                : `New items are added at position ${items.reduce((max, i) => Math.max(max, i.sortOrder ?? 0), 0) + 1}`}
-            </span>
-          </Field>
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_1px_360px] lg:items-start">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field label="Caption (Location)">
+              <input
+                className={inputShell}
+                placeholder="Mirissa beach"
+                value={itemDraft.caption}
+                onChange={(event) => setItemDraft((d) => ({ ...d, caption: event.target.value }))}
+              />
+            </Field>
+            <Field label="Category">
+              <CmsSelect
+                aria-label="Category"
+                className="mt-1.5"
+                onChange={(category) => setItemDraft((d) => ({ ...d, category }))}
+                options={categories.map((cat) => ({ value: cat._id, label: cat.name }))}
+                placeholder="Select a category…"
+                value={itemDraft.category}
+              />
+            </Field>
+            <div className="sm:col-span-2">
+              <Field label="Order position">
+                <span className="mt-1.5 flex h-10 items-center rounded-[9px] border border-[#e6e4f5] bg-[#f7f6fc] px-3 text-[13px] text-cms-muted dark:border-[#2a2e63] dark:bg-[#101435]">
+                  {itemEditingId
+                    ? `Position ${(items.find((i) => i._id === itemEditingId)?.sortOrder ?? 1)} of ${items.length}`
+                    : `New items are added at position ${items.reduce((max, i) => Math.max(max, i.sortOrder ?? 0), 0) + 1}`}
+                </span>
+              </Field>
+            </div>
+          </div>
 
-          <div className="sm:col-span-2 lg:col-span-3">
+          <div aria-hidden className="hidden self-stretch bg-gradient-to-b from-transparent via-gray-300/80 to-transparent dark:via-[#2a2e63] lg:block" />
+
+          <div className="lg:sticky lg:top-4">
             <ImageUpload
               accept="image/*,video/*"
               chooseText="Choose media"
@@ -478,7 +484,7 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
           </div>
         </div>
 
-        <div className="mt-4 flex items-center gap-2">
+        <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-cms-line pt-4">
           <CmsButton variant="primary" disabled={!itemValid || savingItem || uploading} onClick={() => void saveItem()}>
             {savingItem ? "Saving…" : itemEditingId ? "Update item" : "Add item"}
           </CmsButton>

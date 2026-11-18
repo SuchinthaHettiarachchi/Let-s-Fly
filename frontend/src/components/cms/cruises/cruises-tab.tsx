@@ -281,7 +281,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
           <p className="mt-1 text-[12px] text-cms-muted">Fill in all fields.</p>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_1px_360px] lg:items-start">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Name (e.g. Singapore → Penang → Phuket)">
               <input className={inputShell} placeholder="Singapore → Penang → Phuket" value={draft.name} onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))} />
@@ -372,6 +372,8 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
               </Field>
             </div>
           </div>
+
+          <div aria-hidden className="hidden self-stretch bg-gradient-to-b from-transparent via-gray-300/80 to-transparent dark:via-[#2a2e63] lg:block" />
 
           <div className="lg:sticky lg:top-4">
             <ImageUpload

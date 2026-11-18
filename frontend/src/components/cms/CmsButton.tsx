@@ -26,7 +26,7 @@ const sizes: Record<CmsButtonSize, string> = {
   sm: "h-7 px-2.5 text-[11px] py-2 pt-3",
   md: "h-8 px-3 text-[12px] py-2 pt-3",
   lg: "h-9 px-4 text-[12.5px] py-2 pt-3",
-  icon: "size-8 p-0 text-[18px] leading-none py-3",
+  icon: "size-8 p-0 text-[18px] leading-none py-3 pt-3",
 };
 
 /** Class string for the shared button (use on <label> file-pickers etc.). */

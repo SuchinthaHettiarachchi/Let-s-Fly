@@ -179,12 +179,12 @@ export default function RentalTeaserSection() {
         </p>
       </div>
 
-      <div className="grid gap-3 lg:grid-cols-2">
-        {rentalSlotIds.map((id) => {
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)]">
+        {rentalSlotIds.map((id, index) => {
           const meta = rentalSlotMeta[id];
           const slot = content.slots.find((item) => item.id === id);
           if (!slot) return null;
-          return (
+          const card = (
             <div className="rounded-[12px] border border-dashed border-cms-line bg-[#f5f5f7] p-3 dark:border-[#2a2e63] dark:bg-[#101435]" key={id}>
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <b className="text-[13px] text-cms-text">{meta.label}</b>
@@ -215,6 +215,10 @@ export default function RentalTeaserSection() {
               </div>
             </div>
           );
+          if (index === 0) {
+            return [card, <div key="rental-sep" aria-hidden className="hidden self-stretch bg-gradient-to-b from-transparent via-gray-300/80 to-transparent dark:via-[#2a2e63] lg:block" />];
+          }
+          return card;
         })}
       </div>
 

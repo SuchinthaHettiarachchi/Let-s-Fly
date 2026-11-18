@@ -421,7 +421,7 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
           {vehicleEditingId && <CmsButton variant="secondary" onClick={resetVehicle}>Cancel edit</CmsButton>}
         </div>
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(280px,340px)]">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_1px_minmax(280px,340px)]">
           {/* Left: vehicle input fields */}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Field label="Vehicle title">
@@ -507,6 +507,8 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
               {!vehicleDraft.modes.length && <span className="mt-1 block text-[11.5px] text-[#d42a45] dark:text-[#ff9aa8]">Select at least one drive mode.</span>}
             </fieldset>
           </div>
+
+          <div aria-hidden className="hidden self-stretch bg-gradient-to-b from-transparent via-gray-300/80 to-transparent dark:via-[#2a2e63] lg:block" />
 
           {/* Right: shared vehicle image upload */}
           <div className="rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#101435] lg:self-start">
