@@ -14,10 +14,9 @@ export const metadata: Metadata = {
     "Book scenic train journeys like Kandy to Ella, plus international cruise holidays. Reserved seats and cruise packages arranged by Let's Fly, Colombo.",
 };
 
-export const dynamic = "force-dynamic";
-
 export default async function TrainsCruisesPage() {
-  const journeys = (await getJourneys()).map((journey) => ({
+  const dbJourneys = await getJourneys();
+  const journeys = dbJourneys.map((journey) => ({
     id: journey.id,
     kind: journey.kind,
     label: journey.label,
