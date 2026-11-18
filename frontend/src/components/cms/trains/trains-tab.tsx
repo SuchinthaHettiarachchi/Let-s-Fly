@@ -163,16 +163,23 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
           body: JSON.stringify(body),
         },
       );
-      const data: { message?: string } = await response.json().catch(() => ({}));
+      const data: { message?: string; journey?: Journey } = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.message ?? "Could not save journey.");
       setNotice(draftEditingId ? "Journey updated." : "Journey added.");
+      const saved = data.journey;
+      if (saved && saved.id) {
+        setJourneys((prev) =>
+          draftEditingId ? prev.map((j) => (j.id === saved.id ? saved : j)) : [saved, ...prev],
+        );
+      } else {
+        await load();
+      }
       setDraft(blankJourney());
       setChipsInput("");
       setDraftEditingId(null);
       setStops([]);
       setStopInput("");
       setUploadError("");
-      await load();
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Could not save journey.");
     } finally {
@@ -226,8 +233,8 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
       }
       setNotice("Journey deleted.");
       if (deleteTarget.kind === "journey" && draftEditingId === deleteTarget.id) resetDraft();
+      setJourneys((prev) => prev.filter((j) => j.id !== id));
       setDeleteTarget(null);
-      await load();
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Could not delete.");
       setDeleteTarget(null);

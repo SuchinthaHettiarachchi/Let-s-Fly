@@ -18,6 +18,34 @@ const VEHICLES_API = apiUrl("/rental-vehicles");
 
 const inputShell = "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[13px] text-cms-ink outline-none focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
 
+const TRANSMISSIONS: Transmission[] = ["Automatic", "Manual"];
+const FUELS: FuelType[] = ["Hybrid", "Diesel", "Petrol"];
+const DRIVE_MODES: { id: DriveMode; label: string }[] = [
+  { id: "self-drive", label: "Self-drive" },
+  { id: "with-driver", label: "With driver" },
+];
+
+type CategoryDraft = { name: string; icon: string };
+type VehicleDraft = {
+  name: string;
+  category: string;
+  seats: number | "";
+  transmission: Transmission | "";
+  fuel: FuelType | "";
+  modes: DriveMode[];
+  image: string;
+};
+
+const blankCategory = (): CategoryDraft => ({ name: "", icon: "" });
+const blankVehicle = (): VehicleDraft => ({
+  name: "",
+  category: "",
+  seats: "",
+  transmission: "",
+  fuel: "",
+  modes: ["self-drive", "with-driver"],
+  image: "",
+});
 type DeleteTarget = { kind: "category" | "vehicle"; id: string; label: string };
 
 export default function RentalsTab({ onNavigate }: { onNavigate: (section: string) => void }) {

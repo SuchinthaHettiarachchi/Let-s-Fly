@@ -180,7 +180,9 @@ export default function CmsFrame() {
           ) : activeSection === "inquiries" ? (
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><InquiriesTab onNavigate={navigate} /></div>
           ) : activeSection === "outbound" || activeSection === "srilanka" ? (
-            <PackagesTab key={activeSection} category={activeSection === "outbound" ? "outbound" : "sri-lanka"} onNavigate={navigate} />
+            <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8">
+              <PackagesTab key={activeSection} category={activeSection === "outbound" ? "outbound" : "sri-lanka"} onNavigate={navigate} />
+            </div>
           ) : activeSection === "projects" ? (
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><ProjectsTab onDirtyChange={setProjectDirty} onNavigate={navigate} /></div>
           ) : activeSection === "rental" ? (

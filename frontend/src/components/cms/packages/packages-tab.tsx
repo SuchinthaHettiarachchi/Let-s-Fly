@@ -24,6 +24,7 @@ import {
   type TourCategory,
 } from "@/lib/package-cms";
 import type { Package } from "@/data/packages";
+import { outboundRegions } from "@/data/package-config";
 
 const API = apiUrl("/packages");
 const CATEGORIES_API = apiUrl("/categories");
@@ -32,6 +33,9 @@ const areaShell = `${inputShell} min-h-[72px] py-2 leading-[1.5] resize-y`;
 const primary = cmsButtonClasses("primary");
 const secondary = cmsButtonClasses("secondary");
 
+const TABS = ["Details", "Gallery", "Overview", "Itinerary", "Inclusions", "Payment"] as const;
+type FormTab = (typeof TABS)[number];
+
 type Category = "outbound" | "sri-lanka";
 type PackageItem = Package & { _id: string; createdAt?: string };
 
@@ -39,15 +43,19 @@ type DraftBase = {
   slug: string;
   title: string;
   region: string;
+  location: string;
   area: string;
   category: Category;
+  outboundRegion: string;
   themes: string[];
   badge: string;
   days: number;
   nights: number;
   price: number;
+  priceNote: string;
   image: string;
   flightsIncluded: boolean;
+  featured: boolean;
 };
 
 type Draft = DraftBase & PackageDetailFields;
@@ -56,15 +64,19 @@ const blankDraft = (category: Category): Draft => ({
   slug: "",
   title: "",
   region: "",
+  location: "",
   area: "",
   category,
+  outboundRegion: "",
   themes: [],
   badge: "",
   days: 1,
   nights: 0,
   price: 0,
+  priceNote: "",
   image: "",
   flightsIncluded: false,
+  featured: false,
   gallery: [],
   overview: defaultOverview(),
   itinerary: defaultItinerary(),
@@ -190,15 +202,19 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
       slug: item.slug,
       title: item.title,
       region: item.region,
+      location: item.location ?? "",
       area: item.area ?? "",
       category: item.category,
+      outboundRegion: item.outboundRegion ?? "",
       themes: item.themes ?? [],
       badge: item.badge ?? "",
       days: item.days,
       nights: item.nights,
       price: item.price,
+      priceNote: item.priceNote ?? "",
       image: item.image ?? "",
       flightsIncluded: item.flightsIncluded === true,
+      featured: item.featured === true,
       ...detail,
     });
     setActiveTab("Details");
@@ -227,15 +243,19 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
         slug: draft.slug,
         title: draft.title,
         region: draft.region,
+        location: draft.location,
         area: draft.area,
         category: draft.category,
+        outboundRegion: draft.category === "outbound" ? draft.outboundRegion : "",
         themes: draft.themes,
         badge: draft.badge,
         days: draft.days,
         nights: draft.nights,
         price: draft.price,
+        priceNote: draft.priceNote,
         image: draft.image,
         flightsIncluded: draft.flightsIncluded,
+        featured: draft.featured,
         gallery: draft.gallery,
         overview: draft.overview,
         itinerary: draft.itinerary,
@@ -533,9 +553,14 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                 </div>
               ))}
             </div>
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              <label className={`${secondary} ${galleryUploading ? "pointer-events-none opacity-50" : "cursor-pointer"}`}>
-                {galleryUploading ? "Uploading…" : "Add gallery image"}
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <label className={`${secondary} ${galleryUploading ? "pointer-events-none opacity-70" : "cursor-pointer"}`}>
+                {galleryUploading ? (
+                  <span className="inline-flex items-center gap-2">
+                    <UploadProgressCircle progress={galleryUploadProgress} size={28} />
+                    <span>Uploading {galleryUploadProgress >= 0 ? `${galleryUploadProgress}%` : "..."}</span>
+                  </span>
+                ) : "Add gallery image"}
                 <input accept="image/*" hidden disabled={galleryUploading} onChange={(event) => { void addGalleryImage(event.target.files?.[0]); event.target.value = ""; }} type="file" />
               </label>
               <span className="text-[11.5px] text-cms-muted">{draft.gallery.length}/20 images</span>

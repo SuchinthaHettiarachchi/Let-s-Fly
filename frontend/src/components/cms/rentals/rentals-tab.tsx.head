@@ -1,0 +1,2 @@
+fatal: path 'frontend/src/components/cms/rentals/rentals-tab.tsx' exists, but not 'src/components/cms/rentals/rentals-tab.tsx'
+hint: Did you mean 'HEAD:frontend/src/components/cms/rentals/rentals-tab.tsx' aka 'HEAD:./src/components/cms/rentals/rentals-tab.tsx'?
