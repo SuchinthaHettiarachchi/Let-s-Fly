@@ -239,7 +239,7 @@ export default function HomeAboutSection() {
         <div>
           <h2 className="text-[16px] font-semibold text-cms-ink">Home — Who We Are</h2>
           <p className="mt-[2px] max-w-[760px] text-[12.5px] leading-[1.5] text-cms-muted">
-            The “Who we are” section on the website home page — eyebrow, heading, paragraph, stat cards, brand video (autoplay) and the Google rating card.
+            The “Who we are” section on the website home page
           </p>
         </div>
       </div>

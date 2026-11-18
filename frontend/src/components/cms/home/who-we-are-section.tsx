@@ -231,7 +231,7 @@ export default function WhoWeAreSection() {
         <div>
           <h2 className="text-[16px] font-semibold text-cms-ink">Who We Are</h2>
           <p className="mt-[2px] max-w-[760px] text-[12.5px] leading-[1.5] text-cms-muted">
-            The “Who we are” section on the About page — eyebrow, heading, paragraphs, founder quote, stat card, photos and one video.
+            The “Who we are” section on the About page
           </p>
         </div>
       </div>
