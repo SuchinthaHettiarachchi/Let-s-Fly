@@ -458,7 +458,8 @@ body:has(.cms-app) > footer {
 .cms-app select,
 .cms-app textarea,
 .cms-app [contenteditable="true"] {
-  font: inherit;
+  font-family: inherit;
+  font-size: inherit;
 }
 
 .cms-app button {

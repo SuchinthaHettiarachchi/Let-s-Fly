@@ -431,8 +431,8 @@ async function uploadImage(id: string, kind: HeroKind, file?: File) {
               <button suppressHydrationWarning className={btnGhost} onClick={() => deleteSlide(slide.id)} type="button">Delete</button>
             </div>
             <div className="mb-3 grid grid-cols-2 gap-3 max-[760px]:grid-cols-1">
-              <label className="block text-[12.5px] font-semibold text-cms-text">Banner title (alt text)<input className={inputShell} suppressHydrationWarning maxLength={120} placeholder="e.g. Summer in Maldives" type="text" value={slide.title} onChange={(event) => updateSlide(slide.id, "title", event.target.value)} /></label>
-              <label className="block text-[12.5px] font-semibold text-cms-text">
+              <label className="block text-[12.5px] font-normal text-cms-text">Banner title (alt text)<input className={inputShell} suppressHydrationWarning maxLength={120} placeholder="e.g. Summer in Maldives" type="text" value={slide.title} onChange={(event) => updateSlide(slide.id, "title", event.target.value)} /></label>
+              <label className="block text-[12.5px] font-normal text-cms-text">
                 Link URL (optional)
                 <div className="mt-1.5">
                   <CmsSelect

@@ -16,7 +16,7 @@ import {
 const URL_API = apiUrl("/rental-teaser");
 const UPLOAD_API = apiUrl("/upload");
 const inputShell =
-  "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[14px] text-cms-ink outline-none placeholder:text-cms-muted focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
+  "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[14px] font-normal text-cms-ink outline-none placeholder:text-cms-muted focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
 
 const btnGhost = cmsButtonClasses("secondary");
 const btnPrimary = cmsButtonClasses("primary");
