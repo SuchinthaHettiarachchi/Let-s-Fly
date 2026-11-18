@@ -123,6 +123,15 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
   const removeStop = useCallback((name: string) => {
     setStops((prev) => prev.filter((s) => s !== name));
   }, []);
+  const moveStop = useCallback((index: number, direction: -1 | 1) => {
+    setStops((prev) => {
+      const nextIndex = index + direction;
+      if (nextIndex < 0 || nextIndex >= prev.length) return prev;
+      const next = [...prev];
+      [next[index], next[nextIndex]] = [next[nextIndex], next[index]];
+      return next;
+    });
+  }, []);
 
   // ── Draft sync ───────────────────────────────────────────────────
   const draftValid =
@@ -318,9 +327,29 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
               <div className="block text-[12.5px] font-semibold text-cms-text">
                 Stops
                 <div className="mt-1.5 space-y-2 font-normal">
-                  {stops.map((stop) => (
+                  {stops.map((stop, index) => (
                     <div key={stop} className="flex items-center gap-2 rounded border border-cms-line px-2 py-1 text-[12px] text-cms-ink dark:border-[#2a2e63] dark:bg-[#101435]">
                       <span className="flex-1 truncate">{stop}</span>
+                      <CmsButton
+                        size="icon"
+                        variant="secondary"
+                        aria-label="Move stop up"
+                        className="shrink-0"
+                        disabled={index === 0}
+                        onClick={() => moveStop(index, -1)}
+                      >
+                        ↑
+                      </CmsButton>
+                      <CmsButton
+                        size="icon"
+                        variant="secondary"
+                        aria-label="Move stop down"
+                        className="shrink-0"
+                        disabled={index === stops.length - 1}
+                        onClick={() => moveStop(index, 1)}
+                      >
+                        ↓
+                      </CmsButton>
                       <CmsButton
                         size="icon"
                         variant="danger"
@@ -328,7 +357,7 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
                         className="shrink-0"
                         onClick={() => removeStop(stop)}
                       >
-                        ×
+                        x
                       </CmsButton>
                     </div>
                   ))}
