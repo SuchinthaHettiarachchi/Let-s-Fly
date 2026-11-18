@@ -358,8 +358,9 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
               />
             </Field>
             <div className="sm:col-span-2">
-              <Field label="Stops">
-                <div className="mt-2 space-y-2">
+              <div className="block text-[12.5px] font-semibold text-cms-text">
+                Stops
+                <div className="mt-1.5 space-y-2 font-normal">
                   {stops.map((stop) => (
                     <div key={stop} className="flex items-center gap-2 rounded border border-cms-line px-2 py-1 text-[12px] text-cms-ink dark:border-[#2a2e63] dark:bg-[#101435]">
                       <span className="flex-1 truncate">{stop}</span>
@@ -367,6 +368,7 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
                         size="icon"
                         variant="danger"
                         aria-label="Remove stop"
+                        className="shrink-0"
                         onClick={() => removeStop(stop)}
                       >
                         ×
@@ -398,6 +400,8 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
                       size="icon"
                       variant="primary"
                       type="button"
+                      className="shrink-0"
+                      onMouseDown={(e) => e.preventDefault()}
                       onClick={() => {
                         addStop(stopInput);
                         setStopInput("");
@@ -407,8 +411,8 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
                     </CmsButton>
                   </div>
                 </div>
-                <span className="mt-1.5 block text-[11px] text-cms-muted">Maximum 10 stops</span>
-              </Field>
+                <span className="mt-1.5 block text-[11px] font-normal text-cms-muted">Maximum 10 stops</span>
+              </div>
             </div>
           </div>
 
