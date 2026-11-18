@@ -2,10 +2,10 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
+import { CmsCheckbox } from "@/components/cms/CmsCheckbox";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
 import { CmsSelect } from "@/components/cms/CmsSelect";
 import { ImageUpload } from "@/components/cms/ImageUpload";
-import WhoWeAreSection from "@/components/cms/home/who-we-are-section";
 import HomeAboutSection from "@/components/cms/home/home-about-section";
 import RentalTeaserSection from "@/components/cms/home/rental-teaser-section";
 import { aboutLink, contactGroup, footerColumns, navGroups } from "@/data/site";
@@ -423,9 +423,13 @@ async function uploadImage(id: string, kind: HeroKind, file?: File) {
           <article className="mb-3 rounded-[14px] border border-cms-line bg-cms-card p-4" key={slide.id}>
             <div className="mb-3 flex flex-wrap items-center justify-end gap-2">
               <h3 className="mr-auto text-[14.5px] font-semibold">Slot {index + 1}</h3>
-              <label className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold">
-                <input className="accent-cms-primary" suppressHydrationWarning checked={slide.active} onChange={(event) => updateSlide(slide.id, "active", event.target.checked)} type="checkbox" /> Visible
-              </label>
+              <CmsCheckbox
+                checked={slide.active}
+                onChange={(checked) => updateSlide(slide.id, "active", checked)}
+                label="Visible"
+                labelClassName="text-[12.5px] font-normal text-cms-text"
+                suppressHydrationWarning
+              />
               <button suppressHydrationWarning className={btnGhost} disabled={index === 0} onClick={() => moveSlide(index, -1)} type="button" aria-label="Move slot up">↑</button>
               <button suppressHydrationWarning className={btnGhost} disabled={index === slides.length - 1} onClick={() => moveSlide(index, 1)} type="button" aria-label="Move slot down">↓</button>
               <button suppressHydrationWarning className={btnGhost} onClick={() => deleteSlide(slide.id)} type="button">Delete</button>
@@ -462,7 +466,7 @@ async function uploadImage(id: string, kind: HeroKind, file?: File) {
                     <ImageUpload
                       accept="image/*"
                       error={errors[dropKey] ?? ""}
-                      height="h-[230px]"
+                      height="h-[450px]"
                       onFile={(file) => void uploadImage(slide.id, kind, file)}
                       onRemove={() => removeImage(slide.id, kind)}
                       uploading={uploading === dropKey}
@@ -498,10 +502,6 @@ async function uploadImage(id: string, kind: HeroKind, file?: File) {
         </div>
       </section>
 
-      <div className="mt-9">
-        <h2 className="mb-4 text-[16px] font-semibold text-cms-ink">Home — Who We Are</h2>
-        <WhoWeAreSection />
-      </div>
       <HomeAboutSection />
       <RentalTeaserSection />
     </div>

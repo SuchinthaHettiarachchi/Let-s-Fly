@@ -87,8 +87,8 @@ export function ImageUpload({
   hint,
   accept = "image/*",
   height = "h-[150px]",
-  className = "",
-  emptyText = "Choose an Image",
+  className = "font-normal",
+  emptyText = "Drag and drop or click to upload an image",
   chooseText = "Choose Files",
 }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -135,7 +135,7 @@ export function ImageUpload({
 
   return (
     <div className={`flex flex-col ${className}`.trim()}>
-      {label && <span className="mb-1.5 block text-[12.5px] font-semibold text-cms-text">{label}</span>}
+      {label && <span className="mb-1.5 block text-[12.5px] font-normal text-cms-text">{label}</span>}
 
       <div
         aria-label={interactive ? `${label ?? "Image"} upload area` : undefined}
@@ -170,7 +170,7 @@ export function ImageUpload({
         ) : (
           <>
             <UploadIcon />
-            <span className="block text-[13px] font-semibold text-cms-ink">{emptyText}</span>
+            <span className="block text-[13px] font-normal text-cms-ink">{emptyText}</span>
             <span className={cmsButtonClasses("secondary", "sm")}>{chooseText}</span>
           </>
         )}

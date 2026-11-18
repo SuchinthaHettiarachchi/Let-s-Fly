@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
+import { CmsCheckbox } from "@/components/cms/CmsCheckbox";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { apiUrl } from "@/lib/api-url";
@@ -483,17 +484,27 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
               <Field label="Days"><input className={inputShell} min="1" type="number" value={draft.days} onChange={(event) => update("days", Number(event.target.value))} /></Field>
               <Field label="Nights"><input className={inputShell} min="0" type="number" value={draft.nights} onChange={(event) => update("nights", Number(event.target.value))} /></Field>
               <Field label="Price (LKR)"><input className={inputShell} min="0" type="number" value={draft.price} onChange={(event) => update("price", Number(event.target.value))} /></Field>
-              <label className="mt-7 inline-flex items-center gap-2 text-[13px] font-semibold text-cms-text"><input checked={draft.flightsIncluded} onChange={(event) => update("flightsIncluded", event.target.checked)} type="checkbox" /> Flights included</label>
+              <CmsCheckbox
+                checked={draft.flightsIncluded}
+                onChange={(checked) => update("flightsIncluded", checked)}
+                label="Flights included"
+                containerClassName="mt-7"
+                labelClassName="text-[13px] font-normal text-cms-text"
+              />
               {draft.category === "sri-lanka" && (
                 <fieldset className="sm:col-span-2">
                   <legend className="text-[12.5px] font-semibold text-cms-text">Category (filter chips)</legend>
                   <div className="mt-2 flex flex-wrap gap-3">
                     {categories.length ? (
-                      categories.map((cat) => (
-                        <label className="inline-flex items-center gap-1.5 text-[12px] text-cms-text" key={cat.key}>
-                          <input checked={draft.themes.includes(cat.key)} onChange={() => toggleTheme(cat.key)} type="checkbox" /> {cat.label}
-                        </label>
-                      ))
+                    categories.map((cat) => (
+                      <CmsCheckbox
+                        key={cat.key}
+                        checked={draft.themes.includes(cat.key)}
+                        onChange={() => toggleTheme(cat.key)}
+                        label={cat.label}
+                        labelClassName="text-[12px] font-normal text-cms-text"
+                      />
+                    ))
                     ) : (
                       <span className="text-[12px] text-cms-muted">No dynamic categories loaded — add them in Categories above.</span>
                     )}

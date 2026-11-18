@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsButton } from "@/components/cms/CmsButton";
+import { CmsCheckbox } from "@/components/cms/CmsCheckbox";
 import { CmsSelect } from "@/components/cms/CmsSelect";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
@@ -488,21 +489,23 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
             <fieldset className="sm:col-span-2">
               <legend className="text-[12.5px] font-semibold text-cms-text">Drive modes</legend>
               <div className="mt-2 flex flex-wrap gap-4">
-                {DRIVE_MODES.map((mode) => (
-                  <label key={mode.id} className="inline-flex items-center gap-1.5 text-[12px] text-cms-text">
-                    <input
-                      type="checkbox"
-                      checked={vehicleDraft.modes.includes(mode.id)}
+                {DRIVE_MODES.map((mode) => {
+                  const checked = vehicleDraft.modes.includes(mode.id);
+                  return (
+                    <CmsCheckbox
+                      key={mode.id}
+                      checked={checked}
                       onChange={() =>
-                        setVehicleDraft((d) => ({
-                          ...d,
-                          modes: d.modes.includes(mode.id) ? d.modes.filter((m) => m !== mode.id) : [...d.modes, mode.id],
-                        }))
+                        setVehicleDraft((d) => {
+                          const next = checked ? d.modes.filter((m) => m !== mode.id) : [...d.modes, mode.id];
+                          return { ...d, modes: next.length ? next : d.modes };
+                        })
                       }
+                      label={mode.label}
+                      labelClassName="text-[12px] font-normal text-cms-text"
                     />
-                    {mode.label}
-                  </label>
-                ))}
+                  );
+                })}
               </div>
               {!vehicleDraft.modes.length && <span className="mt-1 block text-[11.5px] text-[#d42a45] dark:text-[#ff9aa8]">Select at least one drive mode.</span>}
             </fieldset>
