@@ -177,6 +177,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
     try {
       const chips = chipsInput.split(",").map((c) => c.trim()).filter(Boolean);
       const body = {
+        kind: "cruise" as const,
         name: draft.name.trim(),
         label: draft.label.trim(),
         text: draft.text.trim(),
@@ -185,7 +186,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
         image: draft.image,
         chips,
         startingPoint: draft.startingPoint.trim(),
-        stops: draft.stops,
+        stops,
       };
       const response = await fetch(
         draftEditingId ? `${JOURNEYS_API}/${draftEditingId}` : JOURNEYS_API,
@@ -352,6 +353,12 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
                       placeholder="Add a stop..."
                       value={stopInput}
                       onChange={(e) => setStopInput(e.target.value)}
+                      onBlur={() => {
+                        if (stopInput.trim()) {
+                          addStop(stopInput);
+                          setStopInput("");
+                        }
+                      }}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
                           e.preventDefault();

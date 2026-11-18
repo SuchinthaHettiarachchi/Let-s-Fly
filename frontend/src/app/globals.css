@@ -462,6 +462,13 @@ body:has(.cms-app) > footer {
   font-size: inherit;
 }
 
+.cms-app input,
+.cms-app select,
+.cms-app textarea,
+.cms-app [contenteditable="true"] {
+  font-weight: 400;
+}
+
 .cms-app button {
   cursor: pointer;
 }
