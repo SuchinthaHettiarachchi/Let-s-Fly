@@ -3,7 +3,8 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Container } from "@/components/ui/Container";
-import { contact } from "@/data/site";
+import { FormError, Honeypot, isBot } from "@/components/forms/FormStatus";
+import { sendFormEmail } from "@/lib/email";
 
 const avatars = [
   { src: "/images/footer/traveller-1.jpg", className: "top-9 left-[6%] size-[84px]" },
@@ -15,19 +16,42 @@ const avatars = [
 const stack = [5, 6, 7, 8].map((n) => `/images/footer/traveller-${n}.jpg`);
 
 /**
- * Sand card above the footer. There's no mailing list service yet, so subscribing opens an email
- * to the office with the address filled in.
+ * Sand card above the footer. There's no mailing list service yet, so each sign-up is emailed to
+ * the office (see lib/email.ts) to add by hand.
  */
 export function Newsletter() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
 
-  function subscribe(e: React.FormEvent<HTMLFormElement>) {
+  async function subscribe(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!e.currentTarget.reportValidity()) return;
-    const body = `Please add ${email} to the Let's Fly newsletter.`;
-    window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent("Newsletter subscription")}&body=${encodeURIComponent(body)}`;
-    setDone(true);
+    const form = e.currentTarget;
+    if (sending || !form.reportValidity()) return;
+    if (isBot(form)) return setDone(true);
+
+    const address = email.trim();
+    setSending(true);
+    setFailed(false);
+    try {
+      await sendFormEmail({
+        form: "Newsletter sign-up",
+        subject: `New newsletter subscriber: ${address}`,
+        replyTo: address,
+        fields: [
+          ["Email", address],
+          ["Action", "Add this address to the Let's Fly newsletter list"],
+          ["Signed up on page", window.location.href],
+        ],
+      });
+      setDone(true);
+    } catch (err) {
+      console.error(err);
+      setFailed(true);
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -58,7 +82,8 @@ export function Newsletter() {
                 Thanks for subscribing. Look out for our next update.
               </p>
             ) : (
-              <form onSubmit={subscribe} className="mx-auto mt-7 flex max-w-[460px] flex-col gap-2.5 min-[480px]:flex-row">
+              <form onSubmit={subscribe} className="relative mx-auto mt-7 flex max-w-[460px] flex-col gap-2.5 min-[480px]:flex-row">
+                <Honeypot />
                 <label htmlFor="newsletter-email" className="sr-only">
                   Email address
                 </label>
@@ -74,12 +99,14 @@ export function Newsletter() {
                 />
                 <button suppressHydrationWarning
                   type="submit"
-                  className="h-[52px] cursor-pointer rounded-full bg-navy-900 px-[26px] text-[0.9375rem] font-semibold text-white transition-[background-color,scale] duration-200 hover:bg-ocean-600 press"
+                  disabled={sending}
+                  className="disabled:pointer-events-none disabled:opacity-60 h-[52px] cursor-pointer rounded-full bg-navy-900 px-[26px] text-[0.9375rem] font-semibold text-white transition-[background-color,scale] duration-200 hover:bg-ocean-600 press"
                 >
-                  Subscribe
+                  {sending ? "Sending…" : "Subscribe"}
                 </button>
               </form>
             )}
+            {failed && <FormError className="mx-auto mt-3 max-w-[460px] text-left" />}
 
             <div className="mt-[22px] flex flex-col items-center justify-center gap-2 text-small font-medium text-ink-900 min-[480px]:flex-row min-[480px]:gap-3">
               <div aria-hidden="true" className="flex">

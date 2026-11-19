@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Button, ButtonLink } from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import { ConsentBlock } from "@/components/forms/ConsentBlock";
 import { FormSent } from "@/components/forms/FormSent";
-import { SocialIcon } from "@/components/ui/SocialIcon";
 import { SubjectField } from "@/components/contact/ContactForm";
 import { fieldClass, labelClass, serviceOptions, textareaClass, titleOptions } from "@/components/forms/styles";
-import { contact } from "@/data/site";
+import { FormError, Honeypot, isBot } from "@/components/forms/FormStatus";
+import { oneLine, sendFormEmail } from "@/lib/email";
 
 export type InquiryPrefill = { subject?: string; service?: string; destination?: string; details?: string };
 
@@ -15,6 +15,15 @@ export type InquiryPrefill = { subject?: string; service?: string; destination?:
 function today() {
   const d = new Date();
   return new Date(d.getTime() - d.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
+}
+
+/** "2026-12-24" becomes "Thu, 24 Dec 2026" so the email reads the same whatever the visitor's locale. */
+function formatDate(value: string) {
+  if (!value) return "";
+  const d = new Date(`${value}T00:00:00`);
+  return Number.isNaN(d.getTime())
+    ? value
+    : d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
 }
 
 type Props = {
@@ -28,18 +37,65 @@ type Props = {
  */
 export function InquiryForm({ prefill = {}, autoFocus = false }: Props) {
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // TODO: send to the inquiry endpoint / CMS once the backend exists.
-    setSent(true);
+    if (sending) return;
+    const form = e.currentTarget;
+    if (isBot(form)) return setSent(true);
+
+    const data = new FormData(form);
+    const get = (key: string) => String(data.get(key) ?? "").trim();
+    const name = oneLine(`${get("title")} ${get("name")}`);
+    const service = get("service");
+    const destination = oneLine(get("destination"));
+    setSending(true);
+    setFailed(false);
+    try {
+      await sendFormEmail({
+        form: "Trip inquiry",
+        subject: `New inquiry: ${prefill.subject ?? `${service}, ${destination}`} from ${name}`,
+        fromName: name,
+        replyTo: get("email"),
+        fields: [
+          ["Subject", prefill.subject],
+          ["Service", service],
+          ["Name", name],
+          ["Phone", get("phone")],
+          ["Email", get("email")],
+          ["Destination", destination],
+          ["Departure date", formatDate(get("departure"))],
+          ["Inquiry date", formatDate(get("inquiryDate"))],
+          ["Inquiry details", get("details")],
+          ["Sent from page", window.location.href],
+        ],
+        consent: data.get("consent") === "on",
+      });
+      setSent(true);
+    } catch (err) {
+      console.error(err);
+      setFailed(true);
+    } finally {
+      setSending(false);
+    }
   }
 
-  if (sent) return <FormSent onReset={() => setSent(false)} />;
+  if (sent)
+    return (
+      <FormSent
+        onReset={() => {
+          setFailed(false);
+          setSent(false);
+        }}
+      />
+    );
 
   return (
     <div className="@container">
       <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 @min-[21rem]:grid-cols-2">
+        <Honeypot />
         {prefill.subject && <SubjectField value={prefill.subject} className="@min-[21rem]:col-span-2" />}
         <div className="grid grid-cols-[100px_1fr] gap-4 @min-[21rem]:col-span-2 @min-[21rem]:grid-cols-[120px_1fr]">
           <label className={labelClass}>
@@ -101,26 +157,17 @@ export function InquiryForm({ prefill = {}, autoFocus = false }: Props) {
           />
         </label>
         <ConsentBlock className="@min-[21rem]:col-span-2" />
-        <Button type="submit" variant="primary" size="lg" icon="arrow_forward" className="h-[52px] w-full @min-[21rem]:col-span-2">
-          Inquire Now · Send Inquiry
-        </Button>
-        <ButtonLink
-          href={
-            prefill.subject
-              ? `${contact.whatsappHref}?text=${encodeURIComponent(`Hi Let's Fly, ${prefill.subject}: `)}`
-              : contact.whatsappHref
-          }
-          target="_blank"
-          rel="noopener noreferrer"
-          variant="outline"
+        <Button
+          type="submit"
+          variant="primary"
           size="lg"
+          icon={sending ? undefined : "arrow_forward"}
+          disabled={sending}
           className="h-[52px] w-full @min-[21rem]:col-span-2"
         >
-          <span className="flex size-6 items-center justify-center rounded-full bg-[#25d366] text-white">
-            <SocialIcon name="WhatsApp" size={14} />
-          </span>
-          WhatsApp Us
-        </ButtonLink>
+          {sending ? "Sending…" : "Inquire Now · Send Inquiry"}
+        </Button>
+        {failed && <FormError className="@min-[21rem]:col-span-2" />}
       </form>
     </div>
   );
