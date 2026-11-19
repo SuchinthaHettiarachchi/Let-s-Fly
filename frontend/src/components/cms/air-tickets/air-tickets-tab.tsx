@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsButton } from "@/components/cms/CmsButton";
 import { ImageUpload } from "@/components/cms/ImageUpload";
+import { CmsViewModal } from "@/components/cms/CmsViewModal";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
 import { apiUrl } from "@/lib/api-url";
 import { uploadMediaFile } from "@/lib/cms-upload";
@@ -56,6 +57,7 @@ export default function AirTicketsTab({ onNavigate }: { onNavigate: (section: st
   const [notice, setNotice] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<AirTicketRoute | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [viewTarget, setViewTarget] = useState<AirTicketRoute | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -359,6 +361,7 @@ export default function AirTicketsTab({ onNavigate }: { onNavigate: (section: st
                     <td className="py-2.5 pr-3 text-[13px] text-cms-muted">{route.sortOrder ?? 0}</td>
                     <td className="py-2.5 text-right">
                       <span className="inline-flex gap-1.5">
+                        <CmsButton size="sm" variant="secondary" onClick={() => setViewTarget(route)}>View</CmsButton>
                         <CmsButton size="sm" variant="secondary" onClick={() => editRoute(route)}>Edit</CmsButton>
                         <CmsButton size="sm" variant="danger" onClick={() => setDeleteTarget(route)}>Delete</CmsButton>
                       </span>
@@ -379,6 +382,25 @@ export default function AirTicketsTab({ onNavigate }: { onNavigate: (section: st
         busy={deleting}
         onConfirm={() => void confirmDelete()}
         onCancel={() => { if (!deleting) setDeleteTarget(null); }}
+      />
+
+      <CmsViewModal
+        open={viewTarget !== null}
+        title={viewTarget ? `${viewTarget.startLocation} → ${viewTarget.endLocation}` : ""}
+        subtitle="Popular route"
+        image={viewTarget?.image}
+        sections={viewTarget ? [{
+          title: "Route details",
+          fields: [
+            { label: "From", value: viewTarget.startLocation },
+            { label: "To", value: viewTarget.endLocation },
+            { label: "Price / person", value: `LKR ${viewTarget.pricePerPerson.toLocaleString()}` },
+            { label: "Sort order", value: viewTarget.sortOrder ?? 0 },
+            { label: "Record ID", value: viewTarget._id },
+            ...(viewTarget.createdAt ? [{ label: "Created", value: viewTarget.createdAt }] : []),
+          ],
+        }] : []}
+        onClose={() => setViewTarget(null)}
       />
     </div>
   );

@@ -5,6 +5,7 @@ import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsCheckbox } from "@/components/cms/CmsCheckbox";
 import { CmsButton, cmsButtonClasses } from "@/components/cms/CmsButton";
 import { ImageUpload } from "@/components/cms/ImageUpload";
+import { CmsViewModal, ViewLines, ViewPills, type CmsViewSection } from "@/components/cms/CmsViewModal";
 import { UploadProgressCircle } from "@/components/cms/UploadProgress";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
 import { apiUrl } from "@/lib/api-url";
@@ -121,6 +122,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   const [deletingCategory, setDeletingCategory] = useState(false);
   const [packageDeleteTarget, setPackageDeleteTarget] = useState<PackageItem | null>(null);
   const [deletingPackage, setDeletingPackage] = useState(false);
+  const [packageViewTarget, setPackageViewTarget] = useState<PackageItem | null>(null);
 
   const categoryValid = catDraft.key.trim().length > 0 && catDraft.label.trim().length > 0;
 
@@ -996,6 +998,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                     </td>
                     <td className="py-2.5 text-right">
                       <span className="inline-flex gap-1.5">
+                        <CmsButton size="sm" variant="secondary" onClick={() => setPackageViewTarget(item)}>View</CmsButton>
                         <CmsButton size="sm" variant="secondary" onClick={() => edit(item)}>Edit</CmsButton>
                         <CmsButton size="sm" variant="danger" onClick={() => setPackageDeleteTarget(item)}>Delete</CmsButton>
                       </span>
@@ -1017,8 +1020,92 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
         onConfirm={() => void remove()}
         onCancel={() => { if (!deletingPackage) setPackageDeleteTarget(null); }}
       />
+
+      <CmsViewModal
+        open={packageViewTarget !== null}
+        title={packageViewTarget?.title ?? ""}
+        subtitle={packageViewTarget
+          ? `${packageViewTarget.region}${packageViewTarget.area ? ` · ${packageViewTarget.area}` : ""} · ${packageViewTarget.days}D / ${packageViewTarget.nights}N`
+          : undefined}
+        image={packageViewTarget?.image}
+        badge={packageViewTarget?.badge ? (
+          <span className="rounded-full bg-[#fff8c2] px-2 py-1 text-[10px] font-semibold text-[#796900]">
+            {packageViewTarget.badge}
+          </span>
+        ) : undefined}
+        sections={packageViewSections(packageViewTarget, themeLabel)}
+        onClose={() => setPackageViewTarget(null)}
+      />
     </div>
   );
+}
+
+function packageViewSections(item: PackageItem | null, themeLabel: (key: string) => string): CmsViewSection[] {
+  if (!item) return [];
+  return [
+    {
+      title: "Package",
+      fields: [
+        { label: "Title", value: item.title },
+        { label: "Slug", value: item.slug },
+        { label: "Category", value: item.category },
+        { label: "Region", value: item.region },
+        { label: "Location", value: item.location },
+        ...(item.outboundRegion ? [{ label: "Outbound region", value: item.outboundRegion }] : []),
+        ...(item.area ? [{ label: "Area", value: item.area }] : []),
+        ...(item.badge ? [{ label: "Badge", value: item.badge }] : []),
+        { label: "Featured", value: item.featured ? "Yes" : "No" },
+        { label: "Duration", value: `${item.days} days / ${item.nights} nights` },
+        { label: "Price / person", value: `LKR ${item.price.toLocaleString("en-LK")}` },
+        ...(item.priceNote ? [{ label: "Price note", value: item.priceNote }] : []),
+        { label: "Flights included", value: item.flightsIncluded ? "Yes" : "No" },
+        ...(item.rating ? [{ label: "Rating", value: `${item.rating.score} / 5 · ${item.rating.count} reviews` }] : []),
+        ...(item.brochureUrl ? [{ label: "Brochure", value: <a className="text-cms-primary hover:underline" href={item.brochureUrl} rel="noopener noreferrer" target="_blank">Open brochure</a> }] : []),
+        { label: "Record ID", value: item._id },
+        ...(item.createdAt ? [{ label: "Created", value: item.createdAt }] : []),
+      ],
+    },
+    {
+      title: "Themes & media",
+      fields: [
+        { label: "Themes", value: <ViewPills items={item.themes?.map(themeLabel)} />, wide: true },
+        { label: "Gallery", value: item.gallery?.length ? `${item.gallery.length} image(s)` : "—" },
+        { label: "Related", value: <ViewPills items={item.related} /> },
+      ],
+    },
+    ...(item.overview ? [{
+      title: "Overview",
+      fields: [
+        { label: "Summary", value: item.overview.summary, wide: true },
+        { label: "Highlights", value: <ViewLines items={item.overview.highlights.map((h) => ({ title: h.label }))} />, wide: true },
+      ],
+    }] : []),
+    ...(item.itinerary ? [{
+      title: "Itinerary",
+      fields: [
+        { label: "Endpoints", value: item.itinerary.endpoints },
+        { label: "Route", value: <ViewPills items={item.itinerary.route} />, wide: true },
+        { label: "Footnote", value: item.itinerary.footnote, wide: true },
+        { label: "Days", value: <ViewLines items={item.itinerary.days.map((d) => ({ title: `${d.category} · ${d.title}`, note: d.body }))} />, wide: true },
+      ],
+    }] : []),
+    ...(item.inclusions ? [{
+      title: "Inclusions",
+      fields: [
+        { label: "Intro", value: item.inclusions.intro, wide: true },
+        { label: "Included", value: <ViewLines items={item.inclusions.included} />, wide: true },
+        { label: "Excluded", value: <ViewLines items={item.inclusions.excluded} />, wide: true },
+      ],
+    }] : []),
+    ...(item.payment ? [{
+      title: "Payment",
+      fields: [
+        { label: "Methods", value: <ViewLines items={item.payment.methods.map((m) => ({ title: m.title, note: m.text }))} />, wide: true },
+        { label: "Steps", value: <ViewLines items={item.payment.steps.map((s) => ({ title: s.title, note: s.text }))} />, wide: true },
+        { label: "Note", value: item.payment.note, wide: true },
+      ],
+    }] : []),
+  ];
 }
 
 function Field({ label, children }: { label: string; children: ReactNode }) {

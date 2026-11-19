@@ -5,6 +5,7 @@ import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsButton } from "@/components/cms/CmsButton";
 import { CmsSelect } from "@/components/cms/CmsSelect";
 import { ImageUpload } from "@/components/cms/ImageUpload";
+import { CmsViewModal, ViewPills } from "@/components/cms/CmsViewModal";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
 import { apiUrl } from "@/lib/api-url";
 import { uploadMediaFile } from "@/lib/cms-upload";
@@ -60,6 +61,7 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
 
   const [deleteTarget, setDeleteTarget] = useState<DeleteTarget | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [viewTarget, setViewTarget] = useState<Journey | null>(null);
 
   const fetchAll = useCallback(async (): Promise<Journey[]> => {
     const res = await fetch(`${JOURNEYS_API}?kind=train`, { credentials: "include" });
@@ -455,16 +457,27 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
             <table className="w-full border-collapse text-left">
               <thead>
                 <tr className="border-b border-cms-line text-[11px] font-semibold uppercase tracking-wide text-cms-muted">
+                  <th className="pb-2 pr-3">Image</th>
                   <th className="pb-2 pr-3">Name</th>
                   <th className="pb-2 pr-3">Country</th>
-                  <th className="pb-2 starting-point">Starting Point</th>
-                  <th className="pb-2 stops">Stops</th>
+                  <th className="pb-2 pr-3">Starting Point</th>
+                  <th className="pb-2 pr-3">Stops</th>
                   <th className="pb-2 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {journeys.map((j) => (
                   <tr className="border-b border-cms-line last:border-0" key={j.id}>
+                    <td className="py-2.5 pr-3">
+                      <div className="h-12 w-16 overflow-hidden rounded-md bg-[#eef1ff] dark:bg-[#101435]">
+                        {j.image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={j.image} alt="" className="h-full w-full object-cover" />
+                        ) : (
+                          <div className="grid h-full w-full place-items-center text-[10px] text-cms-muted">No image</div>
+                        )}
+                      </div>
+                    </td>
                     <td className="py-2.5 pr-3 text-[13px] font-medium text-cms-ink">{j.name}</td>
                     <td className="py-2.5 pr-3 text-[13px] text-cms-muted">{getCountry(j)}</td>
                     <td className="py-2.5 pr-3 text-[13px] text-cms-muted">{j.startingPoint || "—"}</td>
@@ -473,6 +486,7 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
                     </td>
                     <td className="py-2.5 text-right">
                       <span className="inline-flex gap-1.5">
+                        <CmsButton size="sm" variant="secondary" onClick={() => setViewTarget(j)}>View</CmsButton>
                         <CmsButton size="sm" variant="secondary" onClick={() => editJourney(j)}>Edit</CmsButton>
                         <CmsButton
                           size="sm"
@@ -505,6 +519,28 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
         onCancel={() => {
           if (!deleting) setDeleteTarget(null);
         }}
+      />
+
+      <CmsViewModal
+        open={viewTarget !== null}
+        title={viewTarget?.name ?? ""}
+        subtitle={viewTarget?.label}
+        image={viewTarget?.image}
+        sections={viewTarget ? [{
+          title: "Journey details",
+          fields: [
+            ...(viewTarget.country ? [{ label: "Country", value: viewTarget.country }] : []),
+            { label: "Label", value: viewTarget.label },
+            { label: "Starting point", value: viewTarget.startingPoint || "—" },
+            { label: "Stops", value: <ViewPills items={viewTarget.stops} />, wide: true },
+            { label: "Price", value: `LKR ${viewTarget.price.toLocaleString("en-LK")}` },
+            { label: "Price note", value: viewTarget.priceNote || "—" },
+            { label: "Chips", value: <ViewPills items={viewTarget.chips} />, wide: true },
+            { label: "Description", value: viewTarget.text || "—", wide: true },
+            { label: "Record ID", value: viewTarget.id },
+          ],
+        }] : []}
+        onClose={() => setViewTarget(null)}
       />
     </div>
   );

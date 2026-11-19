@@ -227,7 +227,7 @@ export default function VisasTab({ onNavigate }: { onNavigate: (section: string)
 
       {view === "records" && (
         <>
-          <div className="mb-5 grid grid-cols-1 gap-5 lg:grid-cols-2">
+          <div className="mb-5 flex flex-col gap-5">
             <NamedManager title="Visa categories" subtitle="Used in visitor filter dropdowns and visa type labels." draft={catDraft} setDraft={setCatDraft} items={categories} editId={catEditId} saving={catSaving}
               onEdit={(c) => { setCatEditId(c._id); setCatDraft({ key: c.key, label: c.label, sortOrder: c.sortOrder ?? 0 }); }}
               onCancel={() => { setCatEditId(null); setCatDraft({ key: "", label: "", sortOrder: 0 }); }}
