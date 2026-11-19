@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Icon } from "@/components/ui/Icon";
@@ -12,11 +12,15 @@ import type { Package } from "@/data/packages";
 import { journeys } from "@/data/journeys";
 import { apiUrl } from "@/lib/api-url";
 
-/** At most 3 rows of 4. Packages are listed newest first in data/packages.ts. */
+/** At most 3 rows of 4, balanced across Travel Sri Lanka and Outbound. */
 const MAX_SHOWN = 12;
 const PACKAGES_URL = apiUrl("/packages");
 
-type CmsPackage = PackageCardData & { category: Package["category"] };
+type CmsPackage = PackageCardData & {
+  category: Package["category"];
+  _id?: string;
+  createdAt?: string;
+};
 type Filter = { label: string; href: string; show: "packages" | "hotels" | "journeys"; category?: Package["category"] };
 
 const filters: Filter[] = [
@@ -27,29 +31,80 @@ const filters: Filter[] = [
   { label: "Train & Cruise", show: "journeys", href: "/holidays/trains-cruises" },
 ];
 
+function packageTime(p: CmsPackage) {
+  const t = p.createdAt ? Date.parse(p.createdAt) : 0;
+  return Number.isFinite(t) ? t : 0;
+}
+
+function byNewest(a: CmsPackage, b: CmsPackage) {
+  return packageTime(b) - packageTime(a) || String(b._id ?? b.slug).localeCompare(String(a._id ?? a.slug));
+}
+
+function balanceLatest(sriLanka: CmsPackage[], outbound: CmsPackage[]): CmsPackage[] {
+  const primary = [...sriLanka.slice(0, 6), ...outbound.slice(0, 6)];
+  const seen = new Set(primary.map((p) => p.slug || String(p._id ?? "")));
+  const chosen = [...primary];
+
+  if (chosen.length < 12) {
+    const rest = [...sriLanka.slice(6), ...outbound.slice(6)].sort(byNewest);
+    for (const p of rest) {
+      if (chosen.length >= 12) break;
+      const key = p.slug || String(p._id ?? "");
+      if (seen.has(key)) continue;
+      seen.add(key);
+      chosen.push(p);
+    }
+  }
+
+  return chosen.sort(byNewest).slice(0, 12);
+}
+
 export function LatestPackages() {
   const [active, setActive] = useState(0);
-  const [cmsPackages, setCmsPackages] = useState<CmsPackage[]>([]);
+  const [sriLankaPackages, setSriLankaPackages] = useState<CmsPackage[]>([]);
+  const [outboundPackages, setOutboundPackages] = useState<CmsPackage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const pills = useRef<HTMLDivElement>(null);
   const { show, category, href } = filters[active];
-  const shown = (category ? cmsPackages.filter((p) => p.category === category) : cmsPackages).slice(0, MAX_SHOWN);
+
+  const allPackages = useMemo(
+    () => balanceLatest(sriLankaPackages, outboundPackages),
+    [sriLankaPackages, outboundPackages],
+  );
+
+  const shown =
+    category === "sri-lanka"
+      ? sriLankaPackages.slice(0, MAX_SHOWN)
+      : category === "outbound"
+        ? outboundPackages.slice(0, MAX_SHOWN)
+        : allPackages;
 
   useEffect(() => {
     let cancelled = false;
-    fetch(PACKAGES_URL)
-      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`))))
-      .then((data: { packages?: CmsPackage[] }) => {
-        if (cancelled || !Array.isArray(data.packages)) return;
-        setCmsPackages(data.packages);
-      })
-      .catch(() => {
+
+    async function load() {
+      try {
+        const [sriRes, outRes] = await Promise.all([
+          fetch(`${PACKAGES_URL}?category=sri-lanka`),
+          fetch(`${PACKAGES_URL}?category=outbound`),
+        ]);
+        if (!sriRes.ok || !outRes.ok) throw new Error("Failed to load packages");
+        const [sriData, outData] = (await Promise.all([sriRes.json(), outRes.json()])) as [
+          { packages?: CmsPackage[] },
+          { packages?: CmsPackage[] },
+        ];
+        if (cancelled) return;
+        setSriLankaPackages(Array.isArray(sriData.packages) ? sriData.packages : []);
+        setOutboundPackages(Array.isArray(outData.packages) ? outData.packages : []);
+      } catch {
         if (!cancelled) setError(true);
-      })
-      .finally(() => {
+      } finally {
         if (!cancelled) setLoading(false);
-      });
+      }
+    }
+
+    void load();
     return () => {
       cancelled = true;
     };
