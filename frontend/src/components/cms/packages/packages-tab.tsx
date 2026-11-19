@@ -119,6 +119,8 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   const [savingCategory, setSavingCategory] = useState(false);
   const [catDeleteTarget, setCatDeleteTarget] = useState<TourCategory | null>(null);
   const [deletingCategory, setDeletingCategory] = useState(false);
+  const [packageDeleteTarget, setPackageDeleteTarget] = useState<PackageItem | null>(null);
+  const [deletingPackage, setDeletingPackage] = useState(false);
 
   const categoryValid = catDraft.key.trim().length > 0 && catDraft.label.trim().length > 0;
 
@@ -286,16 +288,25 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
     }
   }
 
-  async function remove(item: PackageItem) {
-    if (!window.confirm(`Delete “${item.title}”?`)) return;
-    const response = await fetch(`${API}/${item._id}`, { method: "DELETE", credentials: "include" });
-    if (!response.ok) {
+  async function remove() {
+    const item = packageDeleteTarget;
+    if (!item) return;
+    setDeletingPackage(true);
+    try {
+      const response = await fetch(`${API}/${item._id}`, { method: "DELETE", credentials: "include" });
+      if (!response.ok) {
+        setNotice("Could not delete package.");
+        return;
+      }
+      setNotice("Package deleted.");
+      if (editingId === item._id) reset();
+      await load();
+      setPackageDeleteTarget(null);
+    } catch {
       setNotice("Could not delete package.");
-      return;
+    } finally {
+      setDeletingPackage(false);
     }
-    setNotice("Package deleted.");
-    if (editingId === item._id) reset();
-    await load();
   }
 
   async function saveCategory() {
@@ -937,20 +948,75 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
       </section>
 
       <section className="rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-        <div className="mb-4 flex items-center justify-between"><h2 className="text-[16px] font-semibold text-cms-ink">Packages ({items.length})</h2><button className={secondary} onClick={() => void load()} type="button">Refresh</button></div>
-        {!loaded ? <p className="text-[13px] text-cms-muted">Loading packages…</p> : items.length === 0 ? <p className="text-[13px] text-cms-muted">No packages in this category yet.</p> : (
-          <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-            {items.map((item) => <article className="rounded-[11px] border border-cms-line p-4" key={item._id}>
-              <div className="flex items-start justify-between gap-3"><div><h3 className="font-semibold text-cms-ink">{item.title}</h3><p className="mt-1 text-[12px] text-cms-muted">{item.region}{item.area ? ` · ${item.area}` : ""} · {item.days}D / {item.nights}N</p></div>{item.badge && <span className="rounded-full bg-[#fff8c2] px-2 py-1 text-[10px] font-semibold text-[#796900]">{item.badge}</span>}</div>
-              <p className="mt-2 text-[13px] font-semibold text-cms-primary">LKR {item.price.toLocaleString("en-LK")}</p>
-              {item.themes?.length ? (
-                <p className="mt-1 text-[11.5px] text-cms-muted">{item.themes.map(themeLabel).join(" · ")}</p>
-              ) : null}
-              <div className="mt-3 flex gap-2"><button className={secondary} onClick={() => edit(item)} type="button">Edit</button><button className={cmsButtonClasses("danger")} onClick={() => void remove(item)} type="button">Delete</button></div>
-            </article>)}
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <h2 className="text-[16px] font-semibold text-cms-ink">Packages ({items.length})</h2>
+          <CmsButton variant="secondary" onClick={() => void load()}>Refresh</CmsButton>
+        </div>
+        {!loaded ? (
+          <p className="text-[13px] text-cms-muted">Loading packages...</p>
+        ) : !items.length ? (
+          <p className="text-[13px] text-cms-muted">No packages in this category yet.</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-left">
+              <thead>
+                <tr className="border-b border-cms-line text-[11px] font-semibold uppercase tracking-wide text-cms-muted">
+                  <th className="pb-2 pr-3">Image</th>
+                  <th className="pb-2 pr-3">Package</th>
+                  <th className="pb-2 pr-3">Price / person</th>
+                  <th className="pb-2 pr-3">Categories</th>
+                  <th className="pb-2 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((item) => (
+                  <tr className="border-b border-cms-line last:border-0" key={item._id}>
+                    <td className="py-2.5 pr-3">
+                      <div className="h-12 w-16 overflow-hidden rounded-md bg-[#eef1ff] dark:bg-[#101435]">
+                        {item.image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={item.image} alt="" className="h-full w-full object-cover" />
+                        ) : (
+                          <div className="grid h-full w-full place-items-center text-[10px] text-cms-muted">No image</div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="py-2.5 pr-3 text-[13px] font-medium text-cms-ink">
+                      <span className="inline-flex flex-wrap items-center gap-1.5">
+                        {item.title}
+                        {item.badge && <span className="rounded-full bg-[#fff8c2] px-2 py-1 text-[10px] font-semibold text-[#796900]">{item.badge}</span>}
+                      </span>
+                      <span className="mt-0.5 block text-[12px] font-normal text-cms-muted">
+                        {item.region}{item.area ? ` · ${item.area}` : ""} · {item.days}D / {item.nights}N
+                      </span>
+                    </td>
+                    <td className="py-2.5 pr-3 text-[13px] text-cms-muted">LKR {item.price.toLocaleString("en-LK")}</td>
+                    <td className="py-2.5 pr-3 text-[13px] text-cms-muted">
+                      {item.themes?.length ? item.themes.map(themeLabel).join(" · ") : "—"}
+                    </td>
+                    <td className="py-2.5 text-right">
+                      <span className="inline-flex gap-1.5">
+                        <CmsButton size="sm" variant="secondary" onClick={() => edit(item)}>Edit</CmsButton>
+                        <CmsButton size="sm" variant="danger" onClick={() => setPackageDeleteTarget(item)}>Delete</CmsButton>
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </section>
+
+      <DeleteConfirmModal
+        open={packageDeleteTarget !== null}
+        title="Delete package?"
+        message={packageDeleteTarget ? `“${packageDeleteTarget.title}” will be permanently removed. This cannot be undone.` : ""}
+        confirmLabel="Delete"
+        busy={deletingPackage}
+        onConfirm={() => void remove()}
+        onCancel={() => { if (!deletingPackage) setPackageDeleteTarget(null); }}
+      />
     </div>
   );
 }
