@@ -8,16 +8,11 @@ import { ImageUpload } from "@/components/cms/ImageUpload";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
 import { uploadMediaFile } from "@/lib/cms-upload";
 import {
-  defaultVisaPage,
   fetchVisaManage,
   visaCmsApi,
-  type ResidenceCategory,
-  type SriLankaVisa,
   type Visa,
   type VisaCategory,
   type VisaCountry,
-  type VisaPageContent,
-  type VisaStep,
 } from "@/lib/visa-api";
 
 const input = "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[13px] font-normal text-cms-ink outline-none placeholder:text-cms-muted focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
@@ -26,7 +21,7 @@ const subcard = "rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#1
 
 const slugify = (v: string) => v.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
-type View = "records" | "detail" | "page";
+type View = "records" | "detail";
 
 type Named = { _id: string; key: string; label: string; sortOrder?: number };
 type NamedDraft = { key: string; label: string; sortOrder: number };
@@ -45,7 +40,6 @@ export default function VisasTab({ onNavigate }: { onNavigate: (section: string)
   const [categories, setCategories] = useState<VisaCategory[]>([]);
   const [countries, setCountries] = useState<VisaCountry[]>([]);
   const [visas, setVisas] = useState<Visa[]>([]);
-  const [page, setPage] = useState<VisaPageContent>(defaultVisaPage);
 
   const [catDraft, setCatDraft] = useState<NamedDraft>({ key: "", label: "", sortOrder: 0 });
   const [catEditId, setCatEditId] = useState<string | null>(null);
@@ -68,15 +62,12 @@ export default function VisasTab({ onNavigate }: { onNavigate: (section: string)
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState("");
 
-  const [savingPage, setSavingPage] = useState(false);
-
   const load = useCallback(async () => {
     try {
       const data = await fetchVisaManage();
       setCategories(data.categories);
       setCountries(data.countries);
       setVisas(data.visas);
-      setPage({ ...defaultVisaPage, ...data.page });
     } catch {
       setNotice("Could not load visa CMS data. Please sign in again or try again.");
     } finally {
@@ -189,18 +180,6 @@ export default function VisasTab({ onNavigate }: { onNavigate: (section: string)
     finally { setVisaDeleting(false); }
   }
 
-  async function savePageContent() {
-    setSavingPage(true); setNotice("");
-    try {
-      const res = await visaCmsApi.savePage(page);
-      const data = (await res.json().catch(() => ({}))) as { message?: string; page?: VisaPageContent };
-      if (!res.ok) throw new Error(data.message || "Could not save visa page content.");
-      if (data.page) setPage({ ...defaultVisaPage, ...data.page });
-      setNotice("Visa page content saved.");
-    } catch (e) { setNotice(e instanceof Error ? e.message : "Could not save visa page content."); }
-    finally { setSavingPage(false); }
-  }
-
   return (
     <div className="w-full">
       <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
@@ -216,7 +195,6 @@ export default function VisasTab({ onNavigate }: { onNavigate: (section: string)
         {([
           ["records", "Visas & Filters"],
           ["detail", editingId ? "Edit Visa" : "Add Visa"],
-          ["page", "Listing Page Content"],
         ] as [View, string][]).map(([id, label]) => (
           <button key={id} role="tab" aria-selected={view === id} type="button" onClick={() => setView(id)}
             className={`rounded-full border px-3.5 py-1.5 text-[12px] font-semibold transition-colors ${view === id ? "border-cms-primary bg-cms-primary text-white" : "border-cms-line bg-cms-card text-cms-ink hover:bg-[#f5f5f7] dark:hover:bg-[#101435]"}`}>
@@ -336,52 +314,6 @@ export default function VisasTab({ onNavigate }: { onNavigate: (section: string)
             <CmsButton variant="primary" disabled={savingVisa || uploading !== null} onClick={() => void saveVisa()}>{savingVisa ? "Saving..." : editingId ? "Update visa" : "Create visa"}</CmsButton>
             <CmsButton variant="secondary" onClick={() => { resetVisa(); setView("records"); }}>Cancel</CmsButton>
             <span className="text-[12px] text-cms-muted">Detail page is shown when the visa has document groups, fees, or extra sections.</span>
-          </div>
-        </section>
-      )}
-
-      {view === "page" && (
-        <section className="rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-          <div className="mb-4">
-            <h2 className="text-[16px] font-semibold text-cms-ink">Visa listing page content</h2>
-            <p className="mt-1 text-[12px] text-cms-muted">Customize visitor-facing headings and content for outbound, Sri Lanka visit/residence, and steps sections.</p>
-          </div>
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            <div className={subcard}><h3 className="mb-3 text-[14px] font-semibold">Outbound section</h3>
-              <Field label="Eyebrow"><input className={input} value={page.outboundEyebrow} onChange={(e) => setPage((p) => ({ ...p, outboundEyebrow: e.target.value }))} /></Field>
-              <Field label="Title"><input className={input} value={page.outboundTitle} onChange={(e) => setPage((p) => ({ ...p, outboundTitle: e.target.value }))} /></Field>
-            </div>
-            <div className={subcard}><h3 className="mb-3 text-[14px] font-semibold">Steps section</h3>
-              <Field label="Eyebrow"><input className={input} value={page.stepsEyebrow} onChange={(e) => setPage((p) => ({ ...p, stepsEyebrow: e.target.value }))} /></Field>
-              <Field label="Title"><input className={input} value={page.stepsTitle} onChange={(e) => setPage((p) => ({ ...p, stepsTitle: e.target.value }))} /></Field>
-            </div>
-            <div className={`${subcard} lg:col-span-2`}>
-              <h3 className="mb-3 text-[14px] font-semibold">Sri Lanka visit section</h3>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field label="Eyebrow"><input className={input} value={page.inboundEyebrow} onChange={(e) => setPage((p) => ({ ...p, inboundEyebrow: e.target.value }))} /></Field>
-                <Field label="Title"><input className={input} value={page.inboundTitle} onChange={(e) => setPage((p) => ({ ...p, inboundTitle: e.target.value }))} /></Field>
-              </div>
-              <Field label="Intro"><textarea className={area} rows={3} value={page.inboundIntro} onChange={(e) => setPage((p) => ({ ...p, inboundIntro: e.target.value }))} /></Field>
-            </div>
-            <div className={`${subcard} lg:col-span-2`}>
-              <h3 className="mb-3 text-[14px] font-semibold">Residence section</h3>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field label="Eyebrow"><input className={input} value={page.residenceEyebrow} onChange={(e) => setPage((p) => ({ ...p, residenceEyebrow: e.target.value }))} /></Field>
-                <Field label="Title"><input className={input} value={page.residenceTitle} onChange={(e) => setPage((p) => ({ ...p, residenceTitle: e.target.value }))} /></Field>
-                <div className="sm:col-span-2"><Field label="Description"><textarea className={area} rows={3} value={page.residenceDescription} onChange={(e) => setPage((p) => ({ ...p, residenceDescription: e.target.value }))} /></Field></div>
-                <Field label="Renewal title"><input className={input} value={page.residenceRenewalTitle} onChange={(e) => setPage((p) => ({ ...p, residenceRenewalTitle: e.target.value }))} /></Field>
-                <Field label="Renewal text"><input className={input} value={page.residenceRenewalText} onChange={(e) => setPage((p) => ({ ...p, residenceRenewalText: e.target.value }))} /></Field>
-              </div>
-            </div>
-            <div className={`${subcard} lg:col-span-2`}><Field label="Rules note"><textarea className={area} rows={3} value={page.rulesNote} onChange={(e) => setPage((p) => ({ ...p, rulesNote: e.target.value }))} /></Field></div>
-          </div>
-
-          <StepsEditor steps={page.steps} onChange={(steps) => setPage((p) => ({ ...p, steps }))} />
-          <SriLankaEditor items={page.sriLankaVisas} onChange={(sriLankaVisas) => setPage((p) => ({ ...p, sriLankaVisas }))} />
-          <ResidenceEditor items={page.residenceCategories} onChange={(residenceCategories) => setPage((p) => ({ ...p, residenceCategories }))} />
-
-          <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-cms-line pt-4">
-            <CmsButton variant="primary" disabled={savingPage} onClick={() => void savePageContent()}>{savingPage ? "Saving..." : "Save page content"}</CmsButton>
           </div>
         </section>
       )}
@@ -531,67 +463,3 @@ function ExtraSectionsEditor({ sections, onChange }: { sections: { title: string
   );
 }
 
-function StepsEditor({ steps, onChange }: { steps: VisaStep[]; onChange: (s: VisaStep[]) => void }) {
-  return (
-    <div className={`${subcard} mt-5`}>
-      <div className="mb-2 flex items-center justify-between"><h3 className="text-[14px] font-semibold">Steps</h3><CmsButton size="sm" variant="secondary" onClick={() => onChange([...steps, { title: "", text: "" }])}>+ Add step</CmsButton></div>
-      {steps.map((s, i) => (
-        <div key={i} className="mb-2 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1.4fr_auto]">
-          <input className={input} placeholder="Title" value={s.title} onChange={(e) => onChange(steps.map((x, idx) => idx === i ? { ...x, title: e.target.value } : x))} />
-          <input className={input} placeholder="Text" value={s.text} onChange={(e) => onChange(steps.map((x, idx) => idx === i ? { ...x, text: e.target.value } : x))} />
-          <button className="text-[12px] font-semibold text-[#d42a45]" type="button" onClick={() => onChange(steps.filter((_, idx) => idx !== i))}>Remove</button>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function SriLankaEditor({ items, onChange }: { items: SriLankaVisa[]; onChange: (v: SriLankaVisa[]) => void }) {
-  return (
-    <div className={`${subcard} mt-5`}>
-      <div className="mb-2 flex items-center justify-between"><h3 className="text-[14px] font-semibold">Sri Lanka visit visa cards</h3><CmsButton size="sm" variant="secondary" onClick={() => onChange([...items, { name: "", short: "", icon: "beach_access", image: "", text: "", purposes: [], facts: [] }])}>+ Add card</CmsButton></div>
-      <div className="flex flex-col gap-3">
-        {items.map((v, i) => (
-          <div key={i} className="rounded-[10px] border border-cms-line p-3">
-            <div className="mb-2 flex justify-end"><button className="text-[12px] font-semibold text-[#d42a45]" type="button" onClick={() => onChange(items.filter((_, idx) => idx !== i))}>Remove card</button></div>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-              <input className={input} placeholder="Name" value={v.name} onChange={(e) => onChange(items.map((x, idx) => idx === i ? { ...x, name: e.target.value } : x))} />
-              <input className={input} placeholder="Short name" value={v.short} onChange={(e) => onChange(items.map((x, idx) => idx === i ? { ...x, short: e.target.value } : x))} />
-              <input className={input} placeholder="Icon" value={v.icon} onChange={(e) => onChange(items.map((x, idx) => idx === i ? { ...x, icon: e.target.value } : x))} />
-              <input className={input} placeholder="Image path/URL" value={v.image} onChange={(e) => onChange(items.map((x, idx) => idx === i ? { ...x, image: e.target.value } : x))} />
-            </div>
-            <textarea className={`${area} mt-2`} rows={2} placeholder="Description" value={v.text} onChange={(e) => onChange(items.map((x, idx) => idx === i ? { ...x, text: e.target.value } : x))} />
-            <Field label="Purposes (comma-separated)"><input className={input} value={(v.purposes || []).join(", ")} onChange={(e) => onChange(items.map((x, idx) => idx === i ? { ...x, purposes: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) } : x))} /></Field>
-            <div className="mt-2">
-              <div className="mb-1 flex items-center justify-between"><span className="text-[12.5px] font-semibold">Facts</span><button className="text-[12px] font-semibold text-cms-primary" type="button" onClick={() => onChange(items.map((x, idx) => idx === i ? { ...x, facts: [...(x.facts || []), { label: "", value: "" }] } : x))}>+ Add fact</button></div>
-              {(v.facts || []).map((f, fi) => (
-                <div key={fi} className="mb-2 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_auto]">
-                  <input className={input} placeholder="Label" value={f.label} onChange={(e) => onChange(items.map((x, idx) => idx === i ? { ...x, facts: x.facts.map((y, j) => j === fi ? { ...y, label: e.target.value } : y) } : x))} />
-                  <input className={input} placeholder="Value" value={f.value} onChange={(e) => onChange(items.map((x, idx) => idx === i ? { ...x, facts: x.facts.map((y, j) => j === fi ? { ...y, value: e.target.value } : y) } : x))} />
-                  <button className="text-[12px] font-semibold text-[#d42a45]" type="button" onClick={() => onChange(items.map((x, idx) => idx === i ? { ...x, facts: x.facts.filter((_, j) => j !== fi) } : x))}>Remove</button>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ResidenceEditor({ items, onChange }: { items: ResidenceCategory[]; onChange: (v: ResidenceCategory[]) => void }) {
-  return (
-    <div className={`${subcard} mt-5`}>
-      <div className="mb-2 flex items-center justify-between"><h3 className="text-[14px] font-semibold">Residence categories</h3><CmsButton size="sm" variant="secondary" onClick={() => onChange([...items, { title: "", icon: "badge", text: "", highlight: "" }])}>+ Add</CmsButton></div>
-      {items.map((r, i) => (
-        <div key={i} className="mb-2 grid grid-cols-1 gap-2 rounded-[10px] border border-cms-line p-3 sm:grid-cols-2">
-          <input className={input} placeholder="Title" value={r.title} onChange={(e) => onChange(items.map((x, idx) => idx === i ? { ...x, title: e.target.value } : x))} />
-          <input className={input} placeholder="Icon" value={r.icon} onChange={(e) => onChange(items.map((x, idx) => idx === i ? { ...x, icon: e.target.value } : x))} />
-          <input className={`${input} sm:col-span-2`} placeholder="Text" value={r.text} onChange={(e) => onChange(items.map((x, idx) => idx === i ? { ...x, text: e.target.value } : x))} />
-          <input className={input} placeholder="Highlight (optional)" value={r.highlight || ""} onChange={(e) => onChange(items.map((x, idx) => idx === i ? { ...x, highlight: e.target.value } : x))} />
-          <div className="sm:col-span-2 flex justify-end"><button className="text-[12px] font-semibold text-[#d42a45]" type="button" onClick={() => onChange(items.filter((_, idx) => idx !== i))}>Remove</button></div>
-        </div>
-      ))}
-    </div>
-  );
-}

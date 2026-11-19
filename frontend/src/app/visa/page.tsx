@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/SectionHeading";
 import { MessageSection } from "@/components/contact/MessageSection";
 import { VisaTabs } from "@/components/visa/VisaTabs";
+import { visaSteps } from "@/data/visas";
 import { getVisaPublic } from "@/lib/visa-api";
 
 export const metadata: Metadata = {
@@ -15,13 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default async function VisaServicesPage() {
-  const { visas, categories, countries, page } = await getVisaPublic();
-  const steps = page.steps?.length ? page.steps : [
-    { title: "Share details", text: "Tell us your destination and travel dates." },
-    { title: "Document check", text: "We review everything and flag gaps." },
-    { title: "We submit", text: "Forms, fees and appointment, all handled." },
-    { title: "Visa in hand", text: "Track progress on WhatsApp until approval." },
-  ];
+  const { visas, categories, countries } = await getVisaPublic();
 
   return (
     <>
@@ -33,18 +28,18 @@ export default async function VisaServicesPage() {
         overlap="md"
       />
 
-      <VisaTabs visas={visas} categories={categories} countries={countries} page={page} />
+      <VisaTabs visas={visas} categories={categories} countries={countries} />
 
       <section className="on-dark bg-navy-900 py-16 text-white lg:py-20">
         <Container className="flex flex-col gap-10">
           <div data-reveal className="flex flex-col items-center gap-2.5 text-center">
-            <Eyebrow onDark>{page.stepsEyebrow || "How it works"}</Eyebrow>
-            <h2>{page.stepsTitle || "Four steps to your visa"}</h2>
+            <Eyebrow onDark>How it works</Eyebrow>
+            <h2>Four steps to your visa</h2>
           </div>
           <ol className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {steps.map((s, i) => (
+            {visaSteps.map((s, i) => (
               <li
-                key={s.title || i}
+                key={s.title}
                 data-reveal={i * 100}
                 className="group flex flex-col gap-3 rounded-xl border border-white/12 bg-white/4 p-6 transition-[translate,background-color,border-color] duration-300 hover:-translate-y-1 hover:border-white/30 hover:bg-white/8"
               >

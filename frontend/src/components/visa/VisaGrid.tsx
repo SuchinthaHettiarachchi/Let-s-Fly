@@ -29,16 +29,28 @@ export function VisaGrid({ visas, categories = [], countries = [] }: { visas: Vi
   const top = useRef<HTMLDivElement>(null);
   const { openInquiry } = useInquiry();
 
-  const typeOptions = categories.length
-    ? categories.map((c) => ({ value: c.key, label: c.label }))
-    : Array.from(new Map(visas.map((v) => [v.categoryKey || v.type || "", v.type || v.categoryKey || ""])).entries())
-        .filter(([value, label]) => Boolean(value && label))
-        .map(([value, label]) => ({ value, label }));
-  const countryOptions = countries.length
-    ? countries.map((c) => ({ value: c.key, label: c.label }))
-    : Array.from(new Map(visas.map((v) => [v.countryKey || v.country || "", v.country || v.countryKey || ""])).entries())
-        .filter(([value, label]) => Boolean(value && label))
-        .map(([value, label]) => ({ value, label }));
+  // Only offer filters that actually have visa records behind them; the CMS
+  // lists supply the labels but may contain categories/countries with no visas.
+  const typeOptions = Array.from(
+    new Map(
+      visas
+        .map((v) => {
+          const value = v.categoryKey || v.type || "";
+          return [value, categories.find((c) => c.key === value)?.label || v.type || value] as const;
+        })
+        .filter(([value]) => Boolean(value)),
+    ).entries(),
+  ).map(([value, label]) => ({ value, label }));
+  const countryOptions = Array.from(
+    new Map(
+      visas
+        .map((v) => {
+          const value = v.countryKey || v.country || "";
+          return [value, countries.find((c) => c.key === value)?.label || v.country || value] as const;
+        })
+        .filter(([value]) => Boolean(value)),
+    ).entries(),
+  ).map(([value, label]) => ({ value, label }));
 
   const q = query.trim().toLowerCase();
   const matches = visas.filter((v) => {
