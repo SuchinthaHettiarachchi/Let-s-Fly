@@ -1,20 +1,24 @@
+"use client";
+
 import Image from "next/image";
 import { Icon } from "@/components/ui/Icon";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { buttonClasses } from "@/components/ui/Button";
-import { contact } from "@/data/site";
+import { useInquiry } from "@/components/inquiry/InquiryProvider";
+import { bookingPortals } from "@/data/site";
 import { formatLKR } from "@/lib/package-format";
 import type { AirTicketRoute } from "@/lib/air-tickets-api";
 
-/** "Top fares from Colombo": photo cards from CMS with WhatsApp CTA per route. */
+/** "Top fares from Colombo": photo cards; actions appear on hover (always visible on touch screens). */
 export function FareGrid({ fares }: { fares: AirTicketRoute[] }) {
+  const { openInquiry } = useInquiry();
+  const portal = bookingPortals.flights;
+
   return (
     <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {fares.map((f, i) => {
         const from = f.startLocation || "Colombo";
         const to = f.endLocation || "Destination";
-        const whatsappText = `Hi Let's Fly, I'm interested in an air ticket from ${from} to ${to} (from ${formatLKR(f.pricePerPerson)} per person). Please share available options.`;
-        const whatsappHref = `${contact.whatsappHref}?text=${encodeURIComponent(whatsappText)}`;
         return (
           <li
             key={f._id ?? `${from}-${to}-${i}`}
@@ -34,15 +38,24 @@ export function FareGrid({ fares }: { fares: AirTicketRoute[] }) {
             )}
             <span className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,37,69,0)_35%,rgba(11,37,69,.88)_100%)]" />
             <div className="absolute top-3.5 right-3.5 flex gap-2 transition-opacity lg:opacity-0 lg:group-focus-within:opacity-100 lg:group-hover:opacity-100">
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
+              {portal && (
+                <a
+                  href={portal}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={buttonClasses("outline", "md", "h-10 px-3 text-caption lg:h-8")}
+                >
+                  Book on Portal
+                  <Icon name="north_east" size={14} />
+                </a>
+              )}
+              <button
+                type="button"
+                onClick={() => openInquiry({ service: "Air tickets", destination: `${from} to ${to}` })}
                 className={buttonClasses("primary", "md", "h-10 px-3 text-caption lg:h-8")}
               >
-                Inquire on WhatsApp
-                <Icon name="chat" size={14} />
-              </a>
+                Ask for this fare
+              </button>
             </div>
             <div className="absolute inset-x-4 bottom-4 flex items-end justify-between text-white">
               <div className="flex flex-col">
