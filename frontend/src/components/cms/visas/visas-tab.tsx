@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsButton } from "@/components/cms/CmsButton";
 import { CmsSelect } from "@/components/cms/CmsSelect";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
+import { Icon } from "@/components/ui/Icon";
 import { uploadMediaFile } from "@/lib/cms-upload";
 import {
   fetchVisaManage,
@@ -21,8 +22,6 @@ const subcard = "rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#1
 
 const slugify = (v: string) => v.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
-type View = "records" | "detail";
-
 type Named = { _id: string; key: string; label: string; sortOrder?: number };
 type NamedDraft = { key: string; label: string; sortOrder: number };
 
@@ -35,7 +34,7 @@ const blankVisa = (): Visa => ({
 export default function VisasTab({ onNavigate }: { onNavigate: (section: string) => void }) {
   const [loaded, setLoaded] = useState(false);
   const [notice, setNotice] = useState("");
-  const [view, setView] = useState<View>("records");
+  const [formOpen, setFormOpen] = useState(false);
 
   const [categories, setCategories] = useState<VisaCategory[]>([]);
   const [countries, setCountries] = useState<VisaCountry[]>([]);
@@ -127,7 +126,7 @@ export default function VisasTab({ onNavigate }: { onNavigate: (section: string)
       warning: v.warning || "", feeGroups: v.feeGroups || [], extraSections: v.extraSections || [], sortOrder: v.sortOrder ?? 0,
     });
     setUploadError("");
-    setView("detail");
+    setFormOpen(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -160,7 +159,7 @@ export default function VisasTab({ onNavigate }: { onNavigate: (section: string)
       const data = (await res.json().catch(() => ({}))) as { message?: string };
       if (!res.ok) throw new Error(data.message || "Could not save visa.");
       setNotice(editingId ? "Visa updated." : "Visa created.");
-      resetVisa(); setView("records");
+      resetVisa(); setFormOpen(false);
       await load();
     } catch (e) { setNotice(e instanceof Error ? e.message : "Could not save visa."); }
     finally { setSavingVisa(false); }
@@ -173,7 +172,7 @@ export default function VisasTab({ onNavigate }: { onNavigate: (section: string)
       const res = await visaCmsApi.deleteVisa(visaDelete._id);
       if (!res.ok) throw new Error("Delete failed");
       setNotice("Visa deleted.");
-      if (editingId === visaDelete._id) { resetVisa(); setView("records"); }
+      if (editingId === visaDelete._id) { resetVisa(); setFormOpen(false); }
       setVisaDelete(null);
       await load();
     } catch { setNotice("Could not delete visa."); }
@@ -191,79 +190,22 @@ export default function VisasTab({ onNavigate }: { onNavigate: (section: string)
         <span className="text-[12px] text-cms-muted" aria-live="polite">{notice || (loaded ? "All changes saved" : "Loading...")}</span>
       </div>
 
-      <div role="tablist" aria-label="Visa CMS sections" className="mb-5 flex flex-wrap gap-2 border-b border-cms-line pb-3">
-        {([
-          ["records", "Visas & Filters"],
-          ["detail", editingId ? "Edit Visa" : "Add Visa"],
-        ] as [View, string][]).map(([id, label]) => (
-          <button key={id} role="tab" aria-selected={view === id} type="button" onClick={() => setView(id)}
-            className={`rounded-full border px-3.5 py-1.5 text-[12px] font-semibold transition-colors ${view === id ? "border-cms-primary bg-cms-primary text-white" : "border-cms-line bg-cms-card text-cms-ink hover:bg-[#f5f5f7] dark:hover:bg-[#101435]"}`}>
-            {label}
-          </button>
-        ))}
-      </div>
+      <div className="mb-5 flex flex-col gap-5">
+        <NamedManager title="Visa categories" subtitle="Used in visitor filter dropdowns and visa type labels." draft={catDraft} setDraft={setCatDraft} items={categories} editId={catEditId} saving={catSaving}
+          onEdit={(c) => { setCatEditId(c._id); setCatDraft({ key: c.key, label: c.label, sortOrder: c.sortOrder ?? 0 }); }}
+          onCancel={() => { setCatEditId(null); setCatDraft({ key: "", label: "", sortOrder: 0 }); }}
+          onSave={() => void saveNamed("category")} onDelete={(c) => setCatDelete(c as VisaCategory)} />
+        <NamedManager title="Countries" subtitle="Used in visitor filter dropdowns and visa country labels." draft={countryDraft} setDraft={setCountryDraft} items={countries} editId={countryEditId} saving={countrySaving}
+          onEdit={(c) => { setCountryEditId(c._id); setCountryDraft({ key: c.key, label: c.label, sortOrder: c.sortOrder ?? 0 }); }}
+          onCancel={() => { setCountryEditId(null); setCountryDraft({ key: "", label: "", sortOrder: 0 }); }}
+          onSave={() => void saveNamed("country")} onDelete={(c) => setCountryDelete(c as VisaCountry)} />
 
-      {view === "records" && (
-        <>
-          <div className="mb-5 flex flex-col gap-5">
-            <NamedManager title="Visa categories" subtitle="Used in visitor filter dropdowns and visa type labels." draft={catDraft} setDraft={setCatDraft} items={categories} editId={catEditId} saving={catSaving}
-              onEdit={(c) => { setCatEditId(c._id); setCatDraft({ key: c.key, label: c.label, sortOrder: c.sortOrder ?? 0 }); }}
-              onCancel={() => { setCatEditId(null); setCatDraft({ key: "", label: "", sortOrder: 0 }); }}
-              onSave={() => void saveNamed("category")} onDelete={(c) => setCatDelete(c as VisaCategory)} />
-            <NamedManager title="Countries" subtitle="Used in visitor filter dropdowns and visa country labels." draft={countryDraft} setDraft={setCountryDraft} items={countries} editId={countryEditId} saving={countrySaving}
-              onEdit={(c) => { setCountryEditId(c._id); setCountryDraft({ key: c.key, label: c.label, sortOrder: c.sortOrder ?? 0 }); }}
-              onCancel={() => { setCountryEditId(null); setCountryDraft({ key: "", label: "", sortOrder: 0 }); }}
-              onSave={() => void saveNamed("country")} onDelete={(c) => setCountryDelete(c as VisaCountry)} />
-          </div>
-
-          <section className="rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <div>
-                <h2 className="text-[16px] font-semibold text-cms-ink">Visa records ({visas.length})</h2>
-                <p className="mt-1 text-[12px] text-cms-muted">All information shown on visitor visa cards and detail pages. Click Add/Edit to customize detail content.</p>
-              </div>
-              <div className="flex gap-2">
-                <CmsButton variant="secondary" onClick={() => void load()}>Refresh</CmsButton>
-                <CmsButton variant="primary" onClick={() => { resetVisa(); setView("detail"); }}>+ Add visa</CmsButton>
-              </div>
-            </div>
-            {!loaded ? <p className="text-[13px] text-cms-muted">Loading visas...</p> : !visas.length ? <p className="text-[13px] text-cms-muted">No visas yet.</p> : (
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-left">
-                  <thead><tr className="border-b border-cms-line text-[11px] font-semibold uppercase tracking-wide text-cms-muted">
-                    <th className="pb-2 pr-3">City / Country</th><th className="pb-2 pr-3">Category</th><th className="pb-2 pr-3">Slug</th><th className="pb-2 pr-3">Detail</th><th className="pb-2 text-right">Actions</th>
-                  </tr></thead>
-                  <tbody>
-                    {visas.map((v) => (
-                      <tr key={v._id || v.slug} className="border-b border-cms-line last:border-0">
-                        <td className="py-2.5 pr-3 text-[13px] font-medium text-cms-ink">{v.city || "-"} <span className="ml-1 font-normal text-cms-muted">{v.country || labelForCountry(v.countryKey)}</span></td>
-                        <td className="py-2.5 pr-3 text-[13px] text-cms-muted">{v.type || labelForCat(v.categoryKey)}</td>
-                        <td className="py-2.5 pr-3 text-[12px] text-cms-muted">{v.slug}</td>
-                        <td className="py-2.5 pr-3 text-[12px] text-cms-muted">{(v.documentGroups?.length || v.feeGroups?.length || v.extraSections?.length) ? "Custom" : "Card only"}</td>
-                        <td className="py-2.5 text-right"><span className="inline-flex gap-1.5">
-                          <CmsButton size="sm" variant="secondary" onClick={() => editVisa(v)}>Edit</CmsButton>
-                          <CmsButton size="sm" variant="danger" onClick={() => setVisaDelete(v)}>Delete</CmsButton>
-                        </span></td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </section>
-        </>
-      )}
-
-      {view === "detail" && (
-        <section className="rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <h2 className="text-[16px] font-semibold text-cms-ink">{editingId ? "Edit visa" : "Add visa"}</h2>
-            <div className="flex gap-2">
-              <CmsButton variant="secondary" onClick={() => { resetVisa(); setView("records"); }}>Back to list</CmsButton>
-              {editingId && <CmsButton variant="secondary" onClick={resetVisa}>New visa</CmsButton>}
-            </div>
-          </div>
-
+        <CollapsiblePanel
+          onToggle={() => setFormOpen((current) => !current)}
+          open={formOpen}
+          subtitle="Create a visa record with card details and an optional document checklist."
+          title={editingId ? "Edit visa" : "Add visa"}
+        >
           <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_1px_320px]">
             <div className="flex flex-col gap-5">
               <div className={subcard}>
@@ -312,11 +254,47 @@ export default function VisasTab({ onNavigate }: { onNavigate: (section: string)
 
           <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-cms-line pt-4">
             <CmsButton variant="primary" disabled={savingVisa || uploading !== null} onClick={() => void saveVisa()}>{savingVisa ? "Saving..." : editingId ? "Update visa" : "Create visa"}</CmsButton>
-            <CmsButton variant="secondary" onClick={() => { resetVisa(); setView("records"); }}>Cancel</CmsButton>
+            <CmsButton variant="secondary" onClick={() => { resetVisa(); setFormOpen(false); }}>Cancel</CmsButton>
             <span className="text-[12px] text-cms-muted">Detail page is shown when the visa has document groups, fees, or extra sections.</span>
           </div>
-        </section>
-      )}
+        </CollapsiblePanel>
+      </div>
+
+          <section className="rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div>
+                <h2 className="text-[16px] font-semibold text-cms-ink">Visa records ({visas.length})</h2>
+                <p className="mt-1 text-[12px] text-cms-muted">All information shown on visitor visa cards and detail pages. Click Add/Edit to customize detail content.</p>
+              </div>
+              <div className="flex gap-2">
+                <CmsButton variant="secondary" onClick={() => void load()}>Refresh</CmsButton>
+                <CmsButton variant="primary" onClick={() => { resetVisa(); setFormOpen(true); }}>+ Add visa</CmsButton>
+              </div>
+            </div>
+            {!loaded ? <p className="text-[13px] text-cms-muted">Loading visas...</p> : !visas.length ? <p className="text-[13px] text-cms-muted">No visas yet.</p> : (
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse text-left">
+                  <thead><tr className="border-b border-cms-line text-[11px] font-semibold uppercase tracking-wide text-cms-muted">
+                    <th className="pb-2 pr-3">City / Country</th><th className="pb-2 pr-3">Category</th><th className="pb-2 pr-3">Slug</th><th className="pb-2 pr-3">Detail</th><th className="pb-2 text-right">Actions</th>
+                  </tr></thead>
+                  <tbody>
+                    {visas.map((v) => (
+                      <tr key={v._id || v.slug} className="border-b border-cms-line last:border-0">
+                        <td className="py-2.5 pr-3 text-[13px] font-medium text-cms-ink">{v.city || "-"} <span className="ml-1 font-normal text-cms-muted">{v.country || labelForCountry(v.countryKey)}</span></td>
+                        <td className="py-2.5 pr-3 text-[13px] text-cms-muted">{v.type || labelForCat(v.categoryKey)}</td>
+                        <td className="py-2.5 pr-3 text-[12px] text-cms-muted">{v.slug}</td>
+                        <td className="py-2.5 pr-3 text-[12px] text-cms-muted">{(v.documentGroups?.length || v.feeGroups?.length || v.extraSections?.length) ? "Custom" : "Card only"}</td>
+                        <td className="py-2.5 text-right"><span className="inline-flex gap-1.5">
+                          <CmsButton size="sm" variant="secondary" onClick={() => editVisa(v)}>Edit</CmsButton>
+                          <CmsButton size="sm" variant="danger" onClick={() => setVisaDelete(v)}>Delete</CmsButton>
+                        </span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
 
       <DeleteConfirmModal open={catDelete !== null} title="Delete category?" message={`"${catDelete?.label ?? ""}" will be removed.`} busy={catDeleting} onConfirm={() => void confirmDeleteNamed("category")} onCancel={() => { if (!catDeleting) setCatDelete(null); }} />
       <DeleteConfirmModal open={countryDelete !== null} title="Delete country?" message={`"${countryDelete?.label ?? ""}" will be removed.`} busy={countryDeleting} onConfirm={() => void confirmDeleteNamed("country")} onCancel={() => { if (!countryDeleting) setCountryDelete(null); }} />
@@ -329,42 +307,69 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   return <label className="block text-[12.5px] font-semibold text-cms-text">{label}{children}</label>;
 }
 
+function CollapsiblePanel({ title, subtitle, count, open, onToggle, children }: {
+  title: string; subtitle?: string; count?: number; open: boolean; onToggle: () => void; children: ReactNode;
+}) {
+  const bodyId = useId();
+  return (
+    <section className="rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
+      <button
+        aria-controls={bodyId}
+        aria-expanded={open}
+        className="flex w-full cursor-pointer items-center justify-between gap-3 text-left"
+        onClick={onToggle}
+        type="button"
+      >
+        <span className="min-w-0">
+          <span className="block text-[16px] font-semibold text-cms-ink">{title}</span>
+          {subtitle && <span className="mt-1.5 block text-[12px] text-cms-muted">{subtitle}</span>}
+        </span>
+        <span className="flex shrink-0 items-center gap-2">
+          {count !== undefined && <span className="rounded-full bg-cms-card2 px-2 py-0.5 text-[11px] font-semibold text-cms-muted">{count}</span>}
+          <Icon className="text-cms-muted" name={open ? "expand_less" : "expand_more"} size={20} />
+        </span>
+      </button>
+      {open && <div className="mt-4" id={bodyId}>{children}</div>}
+    </section>
+  );
+}
+
 function NamedManager({ title, subtitle, draft, setDraft, items, editId, saving, onEdit, onCancel, onSave, onDelete }: {
   title: string; subtitle: string; draft: NamedDraft; setDraft: (d: NamedDraft) => void; items: Named[]; editId: string | null; saving: boolean;
   onEdit: (i: Named) => void; onCancel: () => void; onSave: () => void; onDelete: (i: Named) => void;
 }) {
+  const [open, setOpen] = useState(false);
   const valid = draft.key.trim() && draft.label.trim();
   return (
-    <section className="rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-      <div className="mb-4"><h2 className="text-[16px] font-semibold text-cms-ink">{title}</h2><p className="mt-1.5 text-[12px] text-cms-muted">{subtitle}</p></div>
+    <CollapsiblePanel count={items.length} onToggle={() => setOpen((current) => !current)} open={open} subtitle={subtitle} title={title}>
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <div className={subcard}>
-          <h3 className="text-[13px] font-semibold text-cms-ink">{editId ? "Edit" : "Add"}</h3>
-          <div className="mt-3 grid gap-3">
-            <Field label="Key (slug)"><input className={input} value={draft.key} onChange={(e) => setDraft({ ...draft, key: e.target.value })} placeholder="tourist-visa" /></Field>
-            <Field label="Label"><input className={input} value={draft.label} onChange={(e) => setDraft({ ...draft, label: e.target.value })} placeholder="Tourist Visa" /></Field>
-            <Field label="Sort order"><input className={input} type="number" value={draft.sortOrder} onChange={(e) => setDraft({ ...draft, sortOrder: Number(e.target.value) || 0 })} /></Field>
+          <div className={subcard}>
+            <h3 className="text-[13px] font-semibold text-cms-ink">{editId ? "Edit" : "Add"}</h3>
+            <div className="mt-3 grid gap-3">
+              <Field label="Key (slug)"><input className={input} value={draft.key} onChange={(e) => setDraft({ ...draft, key: e.target.value })} placeholder="tourist-visa" /></Field>
+              <Field label="Label"><input className={input} value={draft.label} onChange={(e) => setDraft({ ...draft, label: e.target.value })} placeholder="Tourist Visa" /></Field>
+              <Field label="Sort order"><input className={input} type="number" value={draft.sortOrder} onChange={(e) => setDraft({ ...draft, sortOrder: Number(e.target.value) || 0 })} /></Field>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <CmsButton variant="primary" disabled={!valid || saving} onClick={onSave}>{saving ? "Saving..." : editId ? "Update" : "Add"}</CmsButton>
+              {editId && <CmsButton variant="secondary" onClick={onCancel}>Cancel</CmsButton>}
+            </div>
           </div>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <CmsButton variant="primary" disabled={!valid || saving} onClick={onSave}>{saving ? "Saving..." : editId ? "Update" : "Add"}</CmsButton>
-            {editId && <CmsButton variant="secondary" onClick={onCancel}>Cancel</CmsButton>}
+          <div className={subcard}>
+            <h3 className="text-[13px] font-semibold text-cms-ink">Existing</h3>
+            {!items.length ? <p className="mt-3 text-[12.5px] text-cms-muted">None yet.</p> : (
+              <div className="mt-3 overflow-x-auto"><table className="w-full border-collapse text-left"><tbody>
+                {items.map((item) => (
+                  <tr key={item._id} className="border-b border-cms-line last:border-0">
+                    <td className="py-2 pr-2 text-[13px] font-medium text-cms-ink">{item.label}<div className="text-[11px] font-normal text-cms-muted">{item.key}</div></td>
+                    <td className="py-2 text-right"><span className="inline-flex gap-1.5"><CmsButton size="sm" variant="secondary" onClick={() => onEdit(item)}>Edit</CmsButton><CmsButton size="sm" variant="danger" onClick={() => onDelete(item)}>Delete</CmsButton></span></td>
+                  </tr>
+                ))}
+              </tbody></table></div>
+            )}
           </div>
         </div>
-        <div className={subcard}>
-          <h3 className="text-[13px] font-semibold text-cms-ink">Existing</h3>
-          {!items.length ? <p className="mt-3 text-[12.5px] text-cms-muted">None yet.</p> : (
-            <div className="mt-3 overflow-x-auto"><table className="w-full border-collapse text-left"><tbody>
-              {items.map((item) => (
-                <tr key={item._id} className="border-b border-cms-line last:border-0">
-                  <td className="py-2 pr-2 text-[13px] font-medium text-cms-ink">{item.label}<div className="text-[11px] font-normal text-cms-muted">{item.key}</div></td>
-                  <td className="py-2 text-right"><span className="inline-flex gap-1.5"><CmsButton size="sm" variant="secondary" onClick={() => onEdit(item)}>Edit</CmsButton><CmsButton size="sm" variant="danger" onClick={() => onDelete(item)}>Delete</CmsButton></span></td>
-                </tr>
-              ))}
-            </tbody></table></div>
-          )}
-        </div>
-      </div>
-    </section>
+    </CollapsiblePanel>
   );
 }
 
