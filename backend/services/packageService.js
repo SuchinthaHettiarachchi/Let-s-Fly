@@ -1,5 +1,27 @@
 const Package = require('../models/Package');
 
+const slugify = (value) =>
+  String(value || '')
+    .toLowerCase()
+    .trim()
+    .replace(/['"]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 120);
+
+const ensureUniqueSlug = async (base, excludeId) => {
+  const root = slugify(base) || 'package';
+  let slug = root;
+  let n = 2;
+  while (true) {
+    const query = excludeId ? { slug, _id: { $ne: excludeId } } : { slug };
+    // eslint-disable-next-line no-await-in-loop
+    const exists = await Package.exists(query);
+    if (!exists) return slug;
+    slug = `${root}-${n++}`.slice(0, 120);
+  }
+};
+
 const getLatestPackages = async () => {
   const [sriLanka, outbound] = await Promise.all([
     Package.find({ category: 'sri-lanka' }).sort({ createdAt: -1, _id: -1 }).limit(12).lean(),
@@ -33,11 +55,23 @@ const listPackages = (category) => {
 };
 
 const getPackageBySlug = (slug) => Package.findOne({ slug }).lean();
-const createPackage = (data) => Package.create(data);
-const updatePackage = (id, data) => {
+
+const createPackage = async (data) => {
+  const slug = await ensureUniqueSlug(data.title || data.slug);
+  return Package.create({ ...data, slug });
+};
+
+const updatePackage = async (id, data) => {
   const changes = Object.fromEntries(Object.entries(data).filter(([, value]) => value !== undefined));
+  // Slugs are generated automatically from title.
+  if (Object.prototype.hasOwnProperty.call(data, 'title') || !data.slug) {
+    const base = data.title || data.slug;
+    if (base) changes.slug = await ensureUniqueSlug(base, id);
+    else delete changes.slug;
+  }
   return Package.findByIdAndUpdate(id, changes, { new: true, runValidators: true }).lean();
 };
+
 const deletePackage = (id) => Package.findByIdAndDelete(id);
 
 module.exports = { getLatestPackages, listPackages, getPackageBySlug, createPackage, updatePackage, deletePackage };

@@ -5,7 +5,8 @@ export type TourCategory = {
   _id: string;
   key: string;
   label: string;
-  scope: "sri-lanka";
+  scope: "sri-lanka" | "outbound";
+  image?: string;
   sortOrder?: number;
 };
 
@@ -116,9 +117,9 @@ export function hydrateDetailFields(pkg: Partial<Package>): PackageDetailFields 
   };
 }
 
-export async function getTourCategories(): Promise<TourCategory[]> {
+export async function getCategories(scope: "sri-lanka" | "outbound" = "sri-lanka"): Promise<TourCategory[]> {
   try {
-    const response = await fetch(apiUrl("/categories"), { next: { revalidate: 60 } });
+    const response = await fetch(apiUrl(`/categories?scope=${scope}`), { next: { revalidate: 60 } });
     if (!response.ok) return [];
     const data: { categories?: TourCategory[] } = await response.json();
     return Array.isArray(data.categories) ? data.categories : [];
@@ -127,15 +128,23 @@ export async function getTourCategories(): Promise<TourCategory[]> {
   }
 }
 
-export async function fetchTourCategories(): Promise<TourCategory[]> {
+export async function fetchCategoriesManage(scope: "sri-lanka" | "outbound" = "sri-lanka"): Promise<TourCategory[]> {
   try {
-    const response = await fetch(apiUrl("/categories"), { cache: "no-store" });
+    const response = await fetch(apiUrl(`/categories?scope=${scope}`), { cache: "no-store", credentials: "include" });
     if (!response.ok) return [];
     const data: { categories?: TourCategory[] } = await response.json();
     return Array.isArray(data.categories) ? data.categories : [];
   } catch {
     return [];
   }
+}
+
+export async function getTourCategories(): Promise<TourCategory[]> {
+  return getCategories("sri-lanka");
+}
+
+export async function fetchTourCategories(): Promise<TourCategory[]> {
+  return fetchCategoriesManage("sri-lanka");
 }
 
 export type PackageListItem = Package & { _id?: string };

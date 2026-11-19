@@ -121,7 +121,7 @@ exports.validatePackage = (body) => {
   if (!Number.isInteger(nights) || nights < 0) throw httpError(400, 'Nights must be a non-negative whole number');
   if (!Number.isFinite(price) || price < 0) throw httpError(400, 'Price must be a non-negative number');
   const result = {
-    slug: requiredText(body.slug, 'Slug', 120).toLowerCase(),
+    slug: optionalText(body.slug, 'Slug', 120).toLowerCase(),
     title: requiredText(body.title, 'Title', 160),
     region: requiredText(body.region, 'Region', 100),
     location: optionalText(body.location, 'Location', 160),

@@ -6,30 +6,41 @@ import { PackageCard } from "@/components/package/PackageCard";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { useInquiry } from "@/components/inquiry/InquiryProvider";
-import type { OutboundRegion, Package } from "@/data/packages";
-import { outboundRegions } from "@/data/package-config";
+import type { Package } from "@/data/packages";
 
-/** "Where to next?" region cards that filter the outbound package grid below them. */
-export function RegionPackages({ tours }: { tours: Package[] }) {
-  const [region, setRegion] = useState<OutboundRegion>(outboundRegions[0].id);
+export type OutboundCategory = { _id?: string; key: string; label: string; image?: string; sortOrder?: number };
+
+/** "Where to next?" category cards from CMS that filter the outbound package grid below them. */
+export function RegionPackages({ tours, categories }: { tours: Package[]; categories: OutboundCategory[] }) {
+  const [region, setRegion] = useState("");
   const { openInquiry } = useInquiry();
-  const count = (id: OutboundRegion) => tours.filter((t) => t.outboundRegion === id).length;
-  const visible = tours.filter((t) => t.outboundRegion === region);
-  const regionLabel = outboundRegions.find((r) => r.id === region)?.label ?? "";
+  const selected = categories.some((c) => c.key === region) ? region : (categories[0]?.key ?? "");
+
+  const count = (id: string) => tours.filter((t) => t.outboundRegion === id).length;
+  const visible = tours.filter((t) => t.outboundRegion === selected);
+  const regionLabel = categories.find((r) => r.key === selected)?.label ?? "";
+
+  if (!categories.length) {
+    return (
+      <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-sand-400 bg-sand-50 px-6 py-12 text-center">
+        <p className="max-w-md text-body text-ink-600">No outbound categories available yet.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-9">
       <div role="group" aria-label="Region" className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
-        {outboundRegions.map((r, i) => {
-          const on = r.id === region;
-          const n = count(r.id);
+        {categories.map((r, i) => {
+          const on = r.key === selected;
+          const n = count(r.key);
           return (
             <button
-              key={r.id}
+              key={r.key}
               type="button"
               aria-pressed={on}
               data-reveal={i * 90}
-              onClick={() => setRegion(r.id)}
+              onClick={() => setRegion(r.key)}
               className={`group relative h-[120px] cursor-pointer overflow-hidden rounded-xl bg-navy-900 text-left outline-offset-2 transition-[translate,box-shadow,scale] duration-300 ease-lf press-card hover:-translate-y-1 hover:shadow-lf-card-hover sm:h-[140px] ${
                 on ? "-translate-y-1 shadow-lf-card-hover ring-[3px] ring-sun-400" : ""
               }`}

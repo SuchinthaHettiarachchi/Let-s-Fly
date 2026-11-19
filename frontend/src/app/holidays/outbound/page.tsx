@@ -7,6 +7,7 @@ import { Eyebrow, SectionHeading } from "@/components/ui/SectionHeading";
 import { Icon } from "@/components/ui/Icon";
 import { RegionPackages } from "@/components/holidays/RegionPackages";
 import { getPackagesByCategory } from "@/lib/package-api";
+import { getCategories } from "@/lib/package-cms";
 
 export const metadata: Metadata = {
   title: { absolute: "Holiday Packages from Sri Lanka | Outbound Tours | Let's Fly" },
@@ -22,7 +23,10 @@ const reasons = [
 ];
 
 export default async function OutboundPage() {
-  const tours = await getPackagesByCategory("outbound");
+  const [tours, categories] = await Promise.all([
+    getPackagesByCategory("outbound"),
+    getCategories("outbound"),
+  ]);
   return (
     <>
       <PageHero
@@ -38,7 +42,7 @@ export default async function OutboundPage() {
           <div data-reveal>
             <SectionHeading eyebrow="Choose a region" title="Where to next?" />
           </div>
-          <RegionPackages tours={tours} />
+          <RegionPackages tours={tours} categories={categories} />
         </Container>
       </section>
 

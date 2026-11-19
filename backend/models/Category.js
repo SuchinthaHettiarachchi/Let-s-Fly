@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const categorySchema = new mongoose.Schema({
   key: { type: String, required: true, unique: true, trim: true, lowercase: true },
   label: { type: String, required: true, trim: true },
-  scope: { type: String, enum: ['sri-lanka'], default: 'sri-lanka' },
+  scope: { type: String, enum: ['sri-lanka', 'outbound'], required: true },
+  image: { type: String, default: '' },
   sortOrder: { type: Number, default: 0 },
 }, { timestamps: true });
 
