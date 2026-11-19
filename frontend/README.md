@@ -90,7 +90,7 @@ Most text, prices and lists are in `src/data/`. You can edit them without touchi
 
 - **Contact details** (phone, email, address, WhatsApp, socials): `src/data/site.ts`
 - **Holiday packages**: `src/data/packages.ts`
-- **Visas**: `src/data/visas.ts`
+- **Visas**: managed in CMS (`/cms` → Visa Services), served via `/api/visas` and rendered on `/visa` and `/visa/[slug]`
 - **Rental vehicles**: `src/data/rentals.ts`
 - **Projects**: `src/data/projects.ts`
 - **Gallery photos**: `src/data/gallery.ts`

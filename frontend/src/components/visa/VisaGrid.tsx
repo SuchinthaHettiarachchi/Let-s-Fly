@@ -7,35 +7,52 @@ import { Icon } from "@/components/ui/Icon";
 import { Placeholder } from "@/components/ui/Placeholder";
 import { ArrowButton, buttonClasses } from "@/components/ui/Button";
 import { useInquiry } from "@/components/inquiry/InquiryProvider";
-import type { Visa } from "@/data/visas";
+import type { Visa, VisaCategory, VisaCountry } from "@/lib/visa-api";
 
 const ANY = "";
 /** Three rows of three on desktop. */
 const PAGE_SIZE = 9;
 
+function hasDetail(v: Visa) {
+  return Boolean(v.documentGroups?.length || v.feeGroups?.length || v.extraSections?.length || v.summary || v.facts?.length || v.warning);
+}
+
 /**
- * "Where Sri Lankans are heading": visa cards with a country search and a type filter,
- * shown 9 at a time with arrows and page dots (the list will grow to about 90 countries).
+ * "Where Sri Lankans are heading": visa cards with search and CMS-driven filters,
+ * shown 9 at a time with arrows and page dots.
  */
-export function VisaGrid({ visas }: { visas: Visa[] }) {
+export function VisaGrid({ visas, categories = [], countries = [] }: { visas: Visa[]; categories?: VisaCategory[]; countries?: VisaCountry[] }) {
   const [type, setType] = useState(ANY);
+  const [country, setCountry] = useState(ANY);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(0);
   const top = useRef<HTMLDivElement>(null);
   const { openInquiry } = useInquiry();
 
-  const types = [...new Set(visas.map((v) => v.type))];
+  const typeOptions = categories.length
+    ? categories.map((c) => ({ value: c.key, label: c.label }))
+    : Array.from(new Map(visas.map((v) => [v.categoryKey || v.type || "", v.type || v.categoryKey || ""])).entries())
+        .filter(([value, label]) => Boolean(value && label))
+        .map(([value, label]) => ({ value, label }));
+  const countryOptions = countries.length
+    ? countries.map((c) => ({ value: c.key, label: c.label }))
+    : Array.from(new Map(visas.map((v) => [v.countryKey || v.country || "", v.country || v.countryKey || ""])).entries())
+        .filter(([value, label]) => Boolean(value && label))
+        .map(([value, label]) => ({ value, label }));
+
   const q = query.trim().toLowerCase();
-  const matches = visas.filter(
-    (v) => (!type || v.type === type) && (!q || v.country.toLowerCase().includes(q) || v.city.toLowerCase().includes(q)),
-  );
+  const matches = visas.filter((v) => {
+    if (type && v.categoryKey !== type && v.type !== type) return false;
+    if (country && v.countryKey !== country && v.country !== country) return false;
+    if (q && !v.country.toLowerCase().includes(q) && !v.city.toLowerCase().includes(q) && !(v.type || "").toLowerCase().includes(q)) return false;
+    return true;
+  });
   const pages = Math.max(1, Math.ceil(matches.length / PAGE_SIZE));
   const current = Math.min(page, pages - 1);
   const visible = matches.slice(current * PAGE_SIZE, current * PAGE_SIZE + PAGE_SIZE);
 
   const goTo = (p: number) => {
     setPage(p);
-    // Bring the top of the grid back into view when paging from further down.
     const box = top.current?.getBoundingClientRect();
     if (box && box.top < 0) top.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -61,23 +78,21 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
           />
         </label>
         <label className="relative flex items-center">
-          <span className="sr-only">Visa type</span>
-          <select
-            value={type}
-            onChange={(e) => {
-              setType(e.target.value);
-              setPage(0);
-            }}
-            className={pill}
-          >
-            <option value={ANY}>Visa Type</option>
-            {types.map((t) => (
-              <option key={t}>{t}</option>
-            ))}
+          <span className="sr-only">Country</span>
+          <select value={country} onChange={(e) => { setCountry(e.target.value); setPage(0); }} className={pill}>
+            <option value={ANY}>Country</option>
+            {countryOptions.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
           </select>
           <Icon name="expand_more" size={18} className="pointer-events-none absolute right-3 text-ink-400" />
         </label>
-        {/* Page arrows sit above the cards, so they're in reach without scrolling past 3 rows. */}
+        <label className="relative flex items-center">
+          <span className="sr-only">Visa type</span>
+          <select value={type} onChange={(e) => { setType(e.target.value); setPage(0); }} className={pill}>
+            <option value={ANY}>Visa Type</option>
+            {typeOptions.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+          </select>
+          <Icon name="expand_more" size={18} className="pointer-events-none absolute right-3 text-ink-400" />
+        </label>
         {pages > 1 && (
           <nav aria-label="Visa pages" className="flex items-center gap-3 sm:ml-auto">
             <ArrowButton direction="prev" disabled={current === 0} onClick={() => goTo(current - 1)} />
@@ -106,7 +121,7 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
       {visible.length ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((v, i) => {
-            const hasPage = Boolean(v.documentGroups?.length);
+            const detail = hasDetail(v);
             const body = (
               <>
                 {v.image ? (
@@ -122,22 +137,22 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
                 )}
                 <span className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,37,69,.55)_0%,rgba(11,37,69,0)_40%,rgba(11,37,69,0)_70%,rgba(11,37,69,.55)_100%)]" />
                 <span className="absolute top-4 left-4 flex flex-col text-white">
-                  <span className="text-caption font-normal text-white/85">{v.type}</span>
+                  <span className="text-caption font-normal text-white/85">{v.type || ""}</span>
                   <span className="flex items-center gap-1.5 text-h4">
                     <Icon name="flight" size={20} className="text-sun-400" />
                     {v.city}
                   </span>
                 </span>
                 <span className={buttonClasses("primary", "md", "absolute right-4 bottom-4 h-10 px-4 text-small")}>
-                  {hasPage ? "View More" : "Ask about this visa"}
+                  {detail ? "View More" : "Ask about this visa"}
                   <Icon name="arrow_forward" size={18} />
                 </span>
               </>
             );
             const card =
               "group relative block h-[300px] overflow-hidden sm:h-[360px] rounded-xl bg-navy-900 text-left transition-[translate,box-shadow,scale] duration-300 ease-lf press-card hover:-translate-y-1 hover:shadow-lf-card-hover";
-            return hasPage ? (
-              <Link key={v.slug} href={`/visa/${v.slug}`} data-reveal={(i % 3) * 100} className={card} aria-label={`${v.city} ${v.type}`}>
+            return detail ? (
+              <Link key={v.slug} href={`/visa/${v.slug}`} data-reveal={(i % 3) * 100} className={card} aria-label={`${v.city} ${v.type || "visa"}`}>
                 {body}
               </Link>
             ) : (
@@ -147,7 +162,7 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
                 type="button"
                 onClick={() => openInquiry({ subject: `${v.city} visa`, service: "Visa services", destination: v.city })}
                 className={`${card} cursor-pointer`}
-                aria-label={`Ask about a ${v.city} ${v.type}`}
+                aria-label={`Ask about a ${v.city} ${v.type || "visa"}`}
               >
                 {body}
               </button>
@@ -159,15 +174,14 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
           <p className="text-ink-600">No visas match your search. We can still help with your destination.</p>
           <button
             type="button"
-            onClick={() => openInquiry({ subject: "Visa enquiry", service: "Visa services", destination: query.trim() })}
+            onClick={() => openInquiry({ subject: "Visa enquiry", service: "Visa services", destination: query.trim() || countryOptions.find((c) => c.value === country)?.label || "" })}
             className={buttonClasses("primary", "md")}
           >
-            Ask about {query.trim() || "a visa"}
+            Ask about {query.trim() || countryOptions.find((c) => c.value === country)?.label || "a visa"}
             <Icon name="arrow_forward" size={18} />
           </button>
         </div>
       )}
-
     </div>
   );
 }

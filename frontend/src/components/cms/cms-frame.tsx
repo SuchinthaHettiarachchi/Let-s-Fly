@@ -15,6 +15,7 @@ import CruisesTab from "@/components/cms/cruises/cruises-tab";
 import AboutTab from "@/components/cms/about/about-tab";
 import HotelBookingTab from "@/components/cms/hotels/hotel-booking-tab";
 import AirTicketsTab from "@/components/cms/air-tickets/air-tickets-tab";
+import VisasTab from "@/components/cms/visas/visas-tab";
 import CmsSectionTab from "@/components/cms/cms-section-tab";
 
 const sections = [
@@ -27,6 +28,7 @@ const sections = [
   { id: "trains", title: "Trains", description: "Manage train routes, schedules and reservations." },
   { id: "cruises", title: "Cruises", description: "Manage cruise packages and sailing dates." },
   { id: "air-tickets", title: "Air Tickets", description: "Manage the Air Tickets hero card and popular routes shown on the visitor page." },
+  { id: "visas", title: "Visa Services", description: "Manage visa categories, countries, visa records and visa detail content." },
   { id: "gallery", title: "Gallery", description: "Manage gallery categories and the photos and videos shown on the Travellers Gallery page." },
   { id: "rental", title: "Rental", description: "Manage rental categories and vehicle cards shown on the Rentals page." },
   { id: "inquiries", title: "Inquiries", description: "Review customer inquiries, comments and responses." },
@@ -42,6 +44,7 @@ const navigationIcons: Record<string, ReactNode> = {
   trains: <><rect height="14" rx="3" width="14" x="5" y="3" /><path d="M5 11h14M9 21l-2-4M15 21l2-4M9 7h6" /></>,
   cruises: <><path d="M2 20c2 1 4 1 6 0s4-1 6 0 4 1 6 0" /><path d="M4 17 3 12h18l-2 5M6 12V8h12v4M12 8V4" /></>,
   "air-tickets": <><path d="M2 22h20" /><path d="M6.4 17.4 3 13l2-1 3 2 4-2.5L6 6l2.5-1 8 4 3.6-2a2 2 0 0 1 2 3.4L9 17.4z" /></>,
+  visas: <><rect height="14" rx="2" width="18" x="3" y="5" /><path d="M7 9h4M7 13h2M14 15a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" /></>,
   gallery: <><rect height="18" rx="2" width="18" x="3" y="3" /><circle cx="9" cy="9" r="2" /><path d="m21 15-5-5L5 21" /></>,
   rental: <><path d="M5 17h14M5 17a2 2 0 1 0 4 0M15 17a2 2 0 1 0 4 0" /><path d="M3 17v-5l2-5h11l3 5h2v5M5 12h16" /></>,
   inquiries: <><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z" /><path d="M8 12h8M8 9h5" /></>,
@@ -197,6 +200,8 @@ export default function CmsFrame() {
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><CruisesTab onNavigate={navigate} /></div>
           ) : activeSection === "air-tickets" ? (
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><AirTicketsTab onNavigate={navigate} /></div>
+          ) : activeSection === "visas" ? (
+            <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><VisasTab onNavigate={navigate} /></div>
           ) : activeSection === "gallery" ? (
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><GalleryTab onNavigate={navigate} /></div>
           ) : activeSection === "hotels" ? (
