@@ -9,7 +9,8 @@ import { PortalCard } from "@/components/flights/PortalCard";
 import { FareGrid } from "@/components/flights/FareGrid";
 import { MessageSection } from "@/components/contact/MessageSection";
 import { AirlineLogos } from "@/components/flights/AirlineLogos";
-import { flightFeatures, topFares } from "@/data/flights";
+import { flightFeatures } from "@/data/flights";
+import { getAirTickets } from "@/lib/air-tickets-api";
 
 export const metadata: Metadata = {
   title: { absolute: "Air Tickets Sri Lanka | Book Cheap Flights | Let's Fly" },
@@ -17,7 +18,9 @@ export const metadata: Metadata = {
     "Book international air tickets from Colombo on SriLankan, Emirates, Qatar, Singapore Airlines and more. Great fares, expert help, and pay later with KOKO.",
 };
 
-export default function AirTicketsPage() {
+export default async function AirTicketsPage() {
+  const { content, routes } = await getAirTickets();
+
   return (
     <>
       <PageHero
@@ -29,16 +32,16 @@ export default function AirTicketsPage() {
       />
 
       <Container className="relative -mt-20 animate-rise [animation-delay:480ms] lg:-mt-24">
-        <PortalCard />
+        <PortalCard content={content} />
       </Container>
 
       <section className="py-16 lg:py-20">
         <Container className="flex flex-col gap-8">
           <div data-reveal className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-end">
             <SectionHeading eyebrow="Popular routes" title="Top fares from Colombo" />
-            <p className="text-caption font-normal text-ink-400">Return fares per person, incl. taxes · Prices indicative</p>
+            <p className="text-caption font-normal text-ink-400">Return fares per person, incl. taxes � Prices indicative</p>
           </div>
-          <FareGrid fares={topFares} />
+          <FareGrid fares={routes} />
         </Container>
       </section>
 

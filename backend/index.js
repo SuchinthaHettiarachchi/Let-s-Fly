@@ -19,6 +19,7 @@ const galleryCategoryRouter = require('./routers/galleryCategoryRouter');
 const galleryItemRouter = require('./routers/galleryItemRouter');
 const journeyRouter = require('./routers/journeyRouter');
 const hotelBookingRouter = require('./routers/hotelBookingRouter');
+const airTicketsRouter = require('./routers/airTicketsRouter');
 const { errorHandler } = require('./middleware/error');
 
 const app = express();
@@ -42,6 +43,7 @@ app.use((req, res, next) => {
     || req.originalUrl.startsWith('/api/journey-categories')
     || req.originalUrl.startsWith('/api/journey-items')
     || req.originalUrl.startsWith('/api/hotel-booking')
+    || req.originalUrl.startsWith('/api/air-tickets')
   ) return next();
   express.json({ limit: '10kb' })(req, res, next);
 });
@@ -74,6 +76,7 @@ app.use('/api/gallery-categories', galleryCategoryRouter);
 app.use('/api/gallery-items', galleryItemRouter);
 app.use('/api/journey-categories', journeyRouter);
 app.use('/api/hotel-booking', hotelBookingRouter);
+app.use('/api/air-tickets', airTicketsRouter);
 app.use(errorHandler);
 
 mongoose.connect(config.mongoUri)

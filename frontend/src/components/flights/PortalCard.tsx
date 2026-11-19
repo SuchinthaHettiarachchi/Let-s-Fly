@@ -1,16 +1,27 @@
+import Image from "next/image";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Placeholder } from "@/components/ui/Placeholder";
-import { bookingPortals, contact } from "@/data/site";
+import { bookingPortals } from "@/data/site";
 import { portalSteps } from "@/data/flights";
+import type { AirTicketContent } from "@/lib/air-tickets-api";
+
+function toTelHref(phone: string) {
+  const cleaned = phone.replace(/[^\d+]/g, "");
+  return cleaned ? `tel:${cleaned}` : "tel:";
+}
 
 /** "Book your flight on our booking portal" card that overlaps the hero. */
-export function PortalCard() {
+export function PortalCard({ content }: { content: AirTicketContent }) {
   const portal = bookingPortals.flights;
   return (
     <div className="grid grid-cols-1 overflow-hidden rounded-2xl border border-sand-300 bg-white shadow-lf-lg lg:grid-cols-[1fr_1.35fr]">
       <div className="relative min-h-[220px] bg-sand-100 p-6">
-        <Placeholder label="PHOTO" className="absolute inset-0 rounded-none border-0" />
+        {content.photo ? (
+          <Image src={content.photo} alt="" fill sizes="(min-width: 1024px) 520px, 100vw" className="object-cover" priority />
+        ) : (
+          <Placeholder label="PHOTO" className="absolute inset-0 rounded-none border-0" />
+        )}
         <span className="absolute bottom-5 left-5 flex items-center gap-2 rounded-full bg-white px-3.5 py-2 text-small font-semibold text-ink-900 shadow-lf-md">
           <span className="flex size-5 items-center justify-center rounded-full bg-ocean-600 text-white">
             <Icon name="check" size={14} />
@@ -20,14 +31,11 @@ export function PortalCard() {
       </div>
       <div className="flex flex-col gap-5 p-6 sm:p-10">
         <span className="self-start rounded-full bg-sand-50 px-3 py-1 text-caption text-ocean-600">
-          Self-booking · By Let&apos;s Fly.lk
+          Self-booking � By Let&apos;s Fly.lk
         </span>
         <div className="flex flex-col gap-2">
-          <h2 className="text-h3">Book your flight on our booking portal</h2>
-          <p className="text-body text-ink-600">
-            Built by the Let&apos;s Fly.lk team, our portal lets you compare live fares, pick seats and pay securely, all
-            in one place.
-          </p>
+          <h2 className="text-h3">{content.title}</h2>
+          <p className="text-body text-ink-600">{content.description}</p>
         </div>
         <ol className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {portalSteps.map((s, i) => (
@@ -51,7 +59,7 @@ export function PortalCard() {
             </ButtonLink>
           )}
           <a href="#flight-inquiry" className="text-small font-semibold">
-            Prefer we book it for you? Send an inquiry ↓
+            Prefer we book it for you? Send an inquiry 
           </a>
         </div>
         <ul className="flex flex-wrap gap-x-5 gap-y-2 border-t border-sand-300 pt-4 text-caption font-normal text-ink-600">
@@ -65,7 +73,7 @@ export function PortalCard() {
           </li>
           <li className="flex items-center gap-1.5">
             <Icon name="call" size={16} className="text-ocean-600" />
-            Need a person? Call&nbsp;<a href={contact.phoneHref}>{contact.phone}</a>
+            Need a person? Call&nbsp;<a href={toTelHref(content.phoneNumber)}>{content.phoneNumber}</a>
           </li>
         </ul>
       </div>
