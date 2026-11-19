@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsCheckbox } from "@/components/cms/CmsCheckbox";
-import { cmsButtonClasses } from "@/components/cms/CmsButton";
+import { CmsButton, cmsButtonClasses } from "@/components/cms/CmsButton";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { UploadProgressCircle } from "@/components/cms/UploadProgress";
+import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
 import { apiUrl } from "@/lib/api-url";
 import { uploadMediaFile } from "@/lib/cms-upload";
 import {
@@ -115,6 +116,11 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   const [catNotice, setCatNotice] = useState("");
   const [catDraft, setCatDraft] = useState({ key: "", label: "", sortOrder: 0 });
   const [catEditingId, setCatEditingId] = useState<string | null>(null);
+  const [savingCategory, setSavingCategory] = useState(false);
+  const [catDeleteTarget, setCatDeleteTarget] = useState<TourCategory | null>(null);
+  const [deletingCategory, setDeletingCategory] = useState(false);
+
+  const categoryValid = catDraft.key.trim().length > 0 && catDraft.label.trim().length > 0;
 
   async function uploadImage(file?: File | null) {
     if (!file) return;
@@ -293,7 +299,9 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   }
 
   async function saveCategory() {
+    if (!categoryValid) return;
     setCatNotice("");
+    setSavingCategory(true);
     try {
       const response = await fetch(catEditingId ? `${CATEGORIES_API}/${catEditingId}` : CATEGORIES_API, {
         method: catEditingId ? "PUT" : "POST",
@@ -304,11 +312,12 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
       const data: { message?: string } = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.message ?? "Could not save category.");
       setCatNotice(catEditingId ? "Category updated." : "Category created.");
-      setCatDraft({ key: "", label: "", sortOrder: 0 });
-      setCatEditingId(null);
+      resetCategory();
       await loadCategories();
     } catch (error) {
       setCatNotice(error instanceof Error ? error.message : "Could not save category.");
+    } finally {
+      setSavingCategory(false);
     }
   }
 
@@ -317,19 +326,30 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
     setCatDraft({ key: cat.key, label: cat.label, sortOrder: cat.sortOrder ?? 0 });
   }
 
-  async function removeCategory(cat: TourCategory) {
-    if (!window.confirm(`Delete category “${cat.label}”? Packages keep their keys until you edit them.`)) return;
-    const response = await fetch(`${CATEGORIES_API}/${cat._id}`, { method: "DELETE", credentials: "include" });
-    if (!response.ok) {
+  function resetCategory() {
+    setCatEditingId(null);
+    setCatDraft({ key: "", label: "", sortOrder: 0 });
+  }
+
+  async function removeCategory() {
+    const cat = catDeleteTarget;
+    if (!cat) return;
+    setDeletingCategory(true);
+    try {
+      const response = await fetch(`${CATEGORIES_API}/${cat._id}`, { method: "DELETE", credentials: "include" });
+      if (!response.ok) {
+        setCatNotice("Could not delete category.");
+        return;
+      }
+      setCatNotice("Category deleted.");
+      if (catEditingId === cat._id) resetCategory();
+      await loadCategories();
+      setCatDeleteTarget(null);
+    } catch {
       setCatNotice("Could not delete category.");
-      return;
+    } finally {
+      setDeletingCategory(false);
     }
-    setCatNotice("Category deleted.");
-    if (catEditingId === cat._id) {
-      setCatEditingId(null);
-      setCatDraft({ key: "", label: "", sortOrder: 0 });
-    }
-    await loadCategories();
   }
 
   function updateOverview<K extends keyof PackageOverview>(field: K, value: PackageOverview[K]) {
@@ -386,36 +406,103 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
 
       {category === "sri-lanka" && (
         <section className="mb-5 rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <div>
-              <h2 className="text-[16px] font-semibold text-cms-ink">Categories</h2>
-              <p className="mt-1 text-[12px] text-cms-muted">Filter chips on the Sri Lanka listing page. Create, edit and delete here.</p>
+          <div className="mb-4">
+            <h2 className="text-[16px] font-semibold text-cms-ink">Categories</h2>
+            <p className="mt-1.5 text-[12px] text-cms-muted">Filter chips on the Sri Lanka listing page. Each category groups packages of one theme.</p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+            {/* Left: add / edit form */}
+            <div className="rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#101435]">
+              <h3 className="text-[13px] font-semibold text-cms-ink">{catEditingId ? "Edit category" : "Add category"}</h3>
+              <div className="mt-3 grid gap-3">
+                <Field label="Key (slug)">
+                  <input
+                    className={inputShell}
+                    placeholder="cultural"
+                    value={catDraft.key}
+                    onChange={(event) => setCatDraft((d) => ({ ...d, key: event.target.value }))}
+                  />
+                </Field>
+                <Field label="Label">
+                  <input
+                    className={inputShell}
+                    placeholder="Cultural Triangle"
+                    value={catDraft.label}
+                    onChange={(event) => setCatDraft((d) => ({ ...d, label: event.target.value }))}
+                  />
+                </Field>
+                <Field label="Sort order">
+                  <input
+                    className={inputShell}
+                    min="0"
+                    type="number"
+                    value={catDraft.sortOrder}
+                    onChange={(event) => setCatDraft((d) => ({ ...d, sortOrder: Number(event.target.value) }))}
+                  />
+                </Field>
+              </div>
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <CmsButton variant="primary" disabled={!categoryValid || savingCategory} onClick={() => void saveCategory()}>
+                  {savingCategory ? "Saving…" : catEditingId ? "Update category" : "Add category"}
+                </CmsButton>
+                {catEditingId && <CmsButton variant="secondary" onClick={resetCategory}>Cancel edit</CmsButton>}
+                {!categoryValid && <span className="text-[12px] text-cms-muted">Key and label are required.</span>}
+                <span className="text-[12px] text-cms-muted" aria-live="polite">{catNotice}</span>
+              </div>
             </div>
-            <button className={secondary} onClick={() => void loadCategories()} type="button">Refresh</button>
+
+            {/* Right: existing categories table */}
+            <div className="rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#101435]">
+              <h3 className="text-[13px] font-semibold text-cms-ink">Existing categories</h3>
+              {!loaded ? (
+                <p className="mt-3 text-[12.5px] text-cms-muted">Loading…</p>
+              ) : !categories.length ? (
+                <p className="mt-3 text-[12.5px] text-cms-muted">No categories yet — add one on the left.</p>
+              ) : (
+                <div className="mt-3 overflow-x-auto">
+                  <table className="w-full border-collapse text-left">
+                    <thead>
+                      <tr className="border-b border-cms-line text-[11px] font-semibold uppercase tracking-wide text-cms-muted">
+                        <th className="pb-2 pr-3">Name</th>
+                        <th className="pb-2 pr-3">Packages</th>
+                        <th className="pb-2 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {categories.map((cat) => (
+                        <tr className="border-b border-cms-line last:border-0" key={cat._id}>
+                          <td className="py-2.5 pr-3 text-[13px] font-medium text-cms-ink">
+                            {cat.label}
+                            <span className="ml-1.5 text-[11.5px] font-normal text-cms-muted">{cat.key}</span>
+                          </td>
+                          <td className="py-2.5 pr-3 text-[13px] text-cms-muted">
+                            {items.filter((item) => item.themes?.includes(cat.key)).length}
+                          </td>
+                          <td className="py-2.5 text-right">
+                            <span className="inline-flex gap-1.5">
+                              <CmsButton size="sm" variant="secondary" onClick={() => editCategory(cat)}>Edit</CmsButton>
+                              <CmsButton size="sm" variant="danger" onClick={() => setCatDeleteTarget(cat)}>Delete</CmsButton>
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <Field label="Key (slug)"><input className={inputShell} placeholder="cultural" value={catDraft.key} onChange={(e) => setCatDraft((d) => ({ ...d, key: e.target.value }))} /></Field>
-            <Field label="Label"><input className={inputShell} placeholder="Cultural Triangle" value={catDraft.label} onChange={(e) => setCatDraft((d) => ({ ...d, label: e.target.value }))} /></Field>
-            <Field label="Sort order"><input className={inputShell} min="0" type="number" value={catDraft.sortOrder} onChange={(e) => setCatDraft((d) => ({ ...d, sortOrder: Number(e.target.value) }))} /></Field>
-          </div>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            <button className={primary} onClick={() => void saveCategory()} type="button">{catEditingId ? "Update category" : "Add category"}</button>
-            {catEditingId && (
-              <button className={secondary} onClick={() => { setCatEditingId(null); setCatDraft({ key: "", label: "", sortOrder: 0 }); }} type="button">Cancel</button>
-            )}
-            <span className="text-[12px] text-cms-muted" aria-live="polite">{catNotice}</span>
-          </div>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {categories.map((cat) => (
-              <span key={cat._id} className="inline-flex items-center gap-2 rounded-full border border-cms-line bg-cms-bg px-3 py-1.5 text-[12px] text-cms-ink dark:bg-[#101435]">
-                <strong className="font-semibold">{cat.label}</strong>
-                <span className="text-cms-muted">{cat.key}</span>
-                <button className="text-cms-primary hover:underline" onClick={() => editCategory(cat)} type="button">Edit</button>
-                <button className={cmsButtonClasses("danger", "sm")} onClick={() => void removeCategory(cat)} type="button">Delete</button>
-              </span>
-            ))}
-            {!categories.length && <span className="text-[12px] text-cms-muted">No categories yet — defaults seed on first load.</span>}
-          </div>
+
+          <DeleteConfirmModal
+            open={catDeleteTarget !== null}
+            title="Delete category?"
+            message={`“${catDeleteTarget?.label ?? ""}” will be removed. Packages keep their keys until you edit them.`}
+            confirmLabel="Delete"
+            busy={deletingCategory}
+            onConfirm={() => void removeCategory()}
+            onCancel={() => { if (!deletingCategory) setCatDeleteTarget(null); }}
+          />
         </section>
       )}
 
