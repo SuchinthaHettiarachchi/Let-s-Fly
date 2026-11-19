@@ -5,12 +5,10 @@ import { PageHero } from "@/components/layout/PageHero";
 import { CtaBand } from "@/components/layout/CtaBand";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/SectionHeading";
-import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { InquiryCard } from "@/components/inquiry/InquiryCard";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { MobileActionBar } from "@/components/layout/MobileActionBar";
-import { contact } from "@/data/site";
 import { detailVisas, getVisa } from "@/data/visas";
 
 export const dynamicParams = false;
@@ -113,17 +111,6 @@ export default async function VisaDetailPage({ params }: PageProps<"/visa/[slug]
 
         <aside data-reveal="150" className="flex flex-col gap-3 lg:sticky lg:top-[160px] lg:self-start">
           <InquiryCard prefill={{ subject: `${visa.city} visa`, service: "Visa services", destination: visa.city }} />
-          <ButtonLink
-            href={`${contact.whatsappHref}?text=${encodeURIComponent(`Hi Let's Fly, I need help with a ${visa.city} visa.`)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="outline"
-            size="lg"
-            leadingIcon="chat"
-            className="w-full"
-          >
-            WhatsApp Us
-          </ButtonLink>
         </aside>
       </Container>
 
