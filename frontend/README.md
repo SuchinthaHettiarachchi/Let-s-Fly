@@ -108,7 +108,7 @@ To add a photo, put it in `public/images/...` and set the `image` field to its p
 
 ## Not finished yet
 
-- **Forms** (inquiry, contact, flight search) show a "sent" message but don't send anything yet. They need an email service or backend.
+- **Form emails** need 3 EmailJS keys before they send. All forms email kasun@letsfly.lk; follow [docs/emailjs-setup.md](docs/emailjs-setup.md).
 - **Booking portal links** for hotels and flights are not set yet (`bookingPortals` in `src/data/site.ts`).
 - **Placeholders:** some photos are missing, and some text is draft copy waiting to be confirmed.
 - **Missing pages:** Privacy Policy and Terms are not built yet. Only the Dubai package has a full detail page.
