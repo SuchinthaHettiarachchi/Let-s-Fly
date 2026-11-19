@@ -129,7 +129,7 @@ export function VisaGrid({ visas }: { visas: Visa[] }) {
                   </span>
                 </span>
                 <span className={buttonClasses("primary", "md", "absolute right-4 bottom-4 h-10 px-4 text-small")}>
-                  {hasPage ? "View More" : "Ask about this visa"}
+                  View More
                   <Icon name="arrow_forward" size={18} />
                 </span>
               </>
