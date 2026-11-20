@@ -9,7 +9,8 @@ import { ContactForm } from "@/components/contact/ContactForm";
 import { ConsentGate } from "@/components/consent/ConsentGate";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { contact } from "@/data/site";
-import { jobs, officeHours, type Job } from "@/data/careers";
+import { officeHours } from "@/data/careers";
+import { getPublicJobs, type Job } from "@/lib/job-api";
 
 export const metadata: Metadata = {
   title: { absolute: "Contact Let's Fly | Travel Agency in Colombo, Sri Lanka" },
@@ -29,7 +30,8 @@ const statusStyle: Record<Job["status"], string> = {
   Open: "bg-ocean-600/10 text-ocean-600",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const { jobs, sectionVisible } = await getPublicJobs();
   return (
     <>
       <PageHero
@@ -112,6 +114,7 @@ export default function ContactPage() {
           </div>
         </Container>
       </section>
+      {sectionVisible && (
       <section id="careers" className="scroll-mt-[110px] lg:scroll-mt-[156px] py-16 lg:py-24">
         <Container className="flex flex-col gap-10">
           <div data-reveal className="mx-auto flex max-w-[620px] flex-col items-center gap-3 text-center">
@@ -147,7 +150,7 @@ export default function ContactPage() {
                       </li>
                     ))}
                   </ul>
-                  <p className="text-small text-ink-600">{job.text}</p>
+                  <p className="text-small text-ink-600">{job.description}</p>
                   <div className="mt-auto flex items-center justify-between border-t border-sand-300 pt-4">
                     <span className="text-caption font-normal text-ink-400">{job.posted}</span>
                     <ButtonLink
@@ -174,6 +177,7 @@ export default function ContactPage() {
           </p>
         </Container>
       </section>
+      )}
 
       <RevealOnScroll />
     </>

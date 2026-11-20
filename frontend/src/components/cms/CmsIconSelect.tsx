@@ -40,6 +40,10 @@ const ICONS: Record<CmsIconKind, { value: string; label: string }[]> = {
     { value: "flight", label: "Flight" },
     { value: "train", label: "Train" },
     { value: "group", label: "Group" },
+    { value: "support_agent", label: "Support agent" },
+    { value: "campaign", label: "Campaign" },
+    { value: "map", label: "Map" },
+    { value: "school", label: "School" },
   ],
 };
 
