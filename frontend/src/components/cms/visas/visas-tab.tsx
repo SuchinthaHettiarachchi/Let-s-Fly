@@ -143,11 +143,10 @@ export default function VisasTab({ onNavigate }: { onNavigate: (section: string)
   }
 
   async function saveVisa() {
-    if (!draft.slug.trim()) { setNotice("Visa slug is required."); return; }
     if (!draft.city.trim()) { setNotice("City is required."); return; }
     const payload: Visa = {
       ...draft,
-      slug: slugify(draft.slug),
+      slug: draft.slug || slugify(draft.city),
       country: draft.country || labelForCountry(draft.countryKey),
       type: draft.type || labelForCat(draft.categoryKey),
       countryKey: draft.countryKey || slugify(draft.country),
@@ -212,7 +211,6 @@ export default function VisasTab({ onNavigate }: { onNavigate: (section: string)
                 <h3 className="mb-3 text-[14px] font-semibold text-cms-ink">Card & basics</h3>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <Field label="City (card title)"><input className={input} value={draft.city} onChange={(e) => setDraft((d) => ({ ...d, city: e.target.value, slug: d.slug || slugify(e.target.value) }))} placeholder="Dubai" /></Field>
-                  <Field label="Slug (URL)"><input className={input} value={draft.slug} onChange={(e) => setDraft((d) => ({ ...d, slug: e.target.value }))} placeholder="dubai" /></Field>
                   <Field label="Country">
                     <CmsSelect value={draft.countryKey} onChange={(val) => setDraft((d) => ({ ...d, countryKey: val, country: countries.find((c) => c.key === val)?.label || d.country }))} placeholder="Select country" options={countries.map((c) => ({ value: c.key, label: c.label }))} />
                   </Field>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
+import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
 import { apiUrl } from "@/lib/api-url";
 import { uploadMediaFile } from "@/lib/cms-upload";
 import { UploadProgressCircle } from "@/components/cms/UploadProgress";
@@ -20,6 +21,7 @@ const VIDEO_TYPES = ["video/mp4", "video/webm"];
 
 export default function HomeAboutSection() {
   const [content, setContent] = useState<HomeAboutContent | null>(null);
+  const [sectionOpen, setSectionOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -142,28 +144,32 @@ export default function HomeAboutSection() {
 
   if (!content) {
     return (
-      <section aria-label="Home who we are" className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4">
-        <h2 className="text-[16px] font-semibold text-cms-ink">Home - Who We Are</h2>
-        <p className="mt-1.5 text-[12.5px] text-cms-muted" aria-live="polite">{notice || "Loading section content."}</p>
-        <div aria-hidden="true" className="mt-4 grid gap-3 sm:grid-cols-2">
+      <CollapsiblePanel
+        ariaLabel="Home who we are"
+        className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4"
+        onToggle={() => setSectionOpen((current) => !current)}
+        open={sectionOpen}
+        subtitle={notice || "Loading section content."}
+        title="Home - Who We Are"
+      >
+        <div aria-hidden="true" className="grid gap-3 sm:grid-cols-2">
           <div className="h-10 rounded-[9px] bg-[#f5f5f7] dark:bg-[#101435]" />
           <div className="h-10 rounded-[9px] bg-[#f5f5f7] dark:bg-[#101435]" />
           <div className="h-[92px] rounded-[9px] bg-[#f5f5f7] sm:col-span-2 dark:bg-[#101435]" />
         </div>
-      </section>
+      </CollapsiblePanel>
     );
   }
 
   return (
-    <section aria-label="Home who we are" className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4">
-      <div className="mb-4 flex justify-between gap-3">
-        <div>
-          <h2 className="text-[16px] font-semibold text-cms-ink">Home - Who We Are</h2>
-          <p className="mt-1.5 max-w-[760px] text-[12.5px] leading-[1.5] text-cms-muted">
-            The &quot;Who we are&quot; section on the website home page
-          </p>
-        </div>
-      </div>
+    <CollapsiblePanel
+      ariaLabel="Home who we are"
+      className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4"
+      onToggle={() => setSectionOpen((current) => !current)}
+      open={sectionOpen}
+      subtitle={'The "Who we are" section on the website home page'}
+      title="Home - Who We Are"
+    >
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <label className="block text-[12.5px] font-semibold text-cms-text">
@@ -271,6 +277,6 @@ export default function HomeAboutSection() {
           {saving ? "Saving…" : "Save section"}
         </button>
       </div>
-    </section>
+    </CollapsiblePanel>
   );
 }

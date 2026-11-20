@@ -4,7 +4,9 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsCheckbox } from "@/components/cms/CmsCheckbox";
 import { CmsButton, cmsButtonClasses } from "@/components/cms/CmsButton";
+import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
 import { ImageUpload } from "@/components/cms/ImageUpload";
+import { CmsIconSelect } from "@/components/cms/CmsIconSelect";
 import { CmsViewModal, ViewLines, ViewPills, type CmsViewSection } from "@/components/cms/CmsViewModal";
 import { UploadProgressCircle } from "@/components/cms/UploadProgress";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
@@ -107,6 +109,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   const [categories, setCategories] = useState<TourCategory[]>([]);
   const [draft, setDraft] = useState<Draft>(blankDraft(category));
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [formOpen, setFormOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<FormTab>("Details");
   const [loaded, setLoaded] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -230,6 +233,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
       ...detail,
     });
     setActiveTab("Details");
+    setFormOpen(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -252,13 +256,13 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
     setNotice("");
     try {
       const body = {
-        slug: draft.slug,
+        slug: draft.slug || slugify(draft.title),
         title: draft.title,
         region: draft.region,
         location: draft.location,
         area: draft.area,
-        category: draft.category,
-        outboundRegion: draft.category === "outbound" ? draft.outboundRegion : "",
+        category,
+        outboundRegion: category === "outbound" ? draft.outboundRegion : "",
         themes: draft.themes,
         badge: draft.badge,
         days: draft.days,
@@ -270,7 +274,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
         featured: draft.featured,
         gallery: draft.gallery,
         overview: draft.overview,
-        itinerary: draft.itinerary,
+        itinerary: { ...draft.itinerary, route: draft.itinerary.route.map((stop) => stop.trim()).filter(Boolean) },
         inclusions: draft.inclusions,
         payment: draft.payment,
       };
@@ -284,6 +288,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
       if (!response.ok) throw new Error(data.message ?? "Could not save package.");
       setNotice(editingId ? "Package updated." : "Package created.");
       reset();
+      setFormOpen(false);
       await load();
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Could not save package.");
@@ -513,12 +518,12 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
         </section>
       )}
 
-      <section className="mb-5 rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <h2 className="text-[16px] font-semibold text-cms-ink">{editingId ? "Edit package" : "Add package"}</h2>
-          {editingId && <button className={secondary} onClick={reset} type="button">Cancel edit</button>}
-        </div>
-
+      <CollapsiblePanel
+        headerExtra={editingId ? <CmsButton variant="secondary" onClick={reset}>Cancel edit</CmsButton> : undefined}
+        onToggle={() => setFormOpen((current) => !current)}
+        open={formOpen}
+        title={editingId ? "Edit package" : "Add package"}
+      >
         <div role="tablist" aria-label="Package form sections" className="mb-5 flex flex-wrap gap-2 border-b border-cms-line pb-3">
           {TABS.map((tab) => (
             <button
@@ -541,12 +546,10 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
         {activeTab === "Details" && (
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_1px_360px] lg:items-start">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <Field label="Package Name"><input className={inputShell} value={draft.title} onChange={(event) => update("title", event.target.value)} /></Field>
-              <Field label="Slug"><input className={inputShell} placeholder="sigiriya-culture-escape" value={draft.slug} onChange={(event) => update("slug", event.target.value)} /></Field>
+              <Field label="Package Name"><input className={inputShell} value={draft.title} onChange={(event) => { const value = event.target.value; setDraft((d) => ({ ...d, title: value, slug: d.slug || slugify(value) })); }} /></Field>
               <Field label="Region"><input className={inputShell} placeholder="Sri Lanka" value={draft.region} onChange={(event) => update("region", event.target.value)} /></Field>
               <Field label="Area label"><input className={inputShell} placeholder="Sigiriya" value={draft.area} onChange={(event) => update("area", event.target.value)} /></Field>
               <Field label="Location (card/detail)"><input className={inputShell} placeholder="Sigiriya, Central Province" value={draft.location} onChange={(event) => update("location", event.target.value)} /></Field>
-              <Field label="Top category"><select className={inputShell} value={draft.category} onChange={(event) => update("category", event.target.value as Category)}><option value="outbound">Outbound</option><option value="sri-lanka">Sri Lanka</option></select></Field>
               {draft.category === "outbound" && (
                 <Field label="Outbound region">
                   <select className={inputShell} value={draft.outboundRegion} onChange={(event) => update("outboundRegion", event.target.value)}>
@@ -706,12 +709,11 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
               </div>
               <div className="flex flex-col gap-2">
                 {draft.overview.highlights.map((h, index) => (
-                  <div key={index} className="grid grid-cols-1 gap-2 rounded-[10px] border border-cms-line p-3 sm:grid-cols-[140px_1fr_auto]">
-                    <input
-                      className={inputShell}
-                      placeholder="Icon name"
+                  <div key={index} className="grid grid-cols-1 gap-2 rounded-[10px] border border-cms-line p-3 sm:grid-cols-[150px_1fr_auto]">
+                    <CmsIconSelect
+                      kind="highlight"
+                      onChange={(icon) => updateOverview("highlights", draft.overview.highlights.map((item, i) => (i === index ? { ...item, icon } : item)))}
                       value={h.icon}
-                      onChange={(e) => updateOverview("highlights", draft.overview.highlights.map((item, i) => (i === index ? { ...item, icon: e.target.value } : item)))}
                     />
                     <input
                       className={inputShell}
@@ -743,7 +745,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                   className={inputShell}
                   placeholder="Colombo, Kandy, Ella"
                   value={draft.itinerary.route.join(", ")}
-                  onChange={(e) => updateItinerary("route", e.target.value.split(",").map((s) => s.trim()).filter(Boolean))}
+                  onChange={(e) => updateItinerary("route", e.target.value.split(",").map((s) => s.trim()))}
                 />
               </Field>
             </div>
@@ -845,12 +847,11 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
               </div>
               <div className="flex flex-col gap-2">
                 {draft.payment.methods.map((m, index) => (
-                  <div key={index} className="grid grid-cols-1 gap-2 rounded-[10px] border border-cms-line p-3 sm:grid-cols-[120px_1fr_1fr_auto]">
-                    <input
-                      className={inputShell}
-                      placeholder="Icon"
+                  <div key={index} className="grid grid-cols-1 gap-2 rounded-[10px] border border-cms-line p-3 sm:grid-cols-[150px_1fr_1fr_auto]">
+                    <CmsIconSelect
+                      kind="payment"
+                      onChange={(icon) => updatePayment("methods", draft.payment.methods.map((item, i) => (i === index ? { ...item, icon } : item)))}
                       value={m.icon}
-                      onChange={(e) => updatePayment("methods", draft.payment.methods.map((item, i) => (i === index ? { ...item, icon: e.target.value } : item)))}
                     />
                     <input
                       className={inputShell}
@@ -941,7 +942,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
           <button className={primary} disabled={saving} onClick={() => void save()} type="button">{saving ? "Saving…" : editingId ? "Update package" : "Create package"}</button>
           <span className="text-[12px] text-cms-muted" aria-live="polite">{notice}</span>
         </div>
-      </section>
+      </CollapsiblePanel>
 
       <section className="rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
         <div className="mb-4 flex items-center justify-between gap-3">

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsButton } from "@/components/cms/CmsButton";
+import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
 import { CmsCheckbox } from "@/components/cms/CmsCheckbox";
 import { CmsSelect } from "@/components/cms/CmsSelect";
 import { ImageUpload } from "@/components/cms/ImageUpload";
@@ -53,6 +54,8 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
   const [vehicles, setVehicles] = useState<RentalVehicle[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [notice, setNotice] = useState("");
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [vehicleFormOpen, setVehicleFormOpen] = useState(false);
 
   const [categoryDraft, setCategoryDraft] = useState<CategoryDraft>(blankCategory());
   const [categoryEditingId, setCategoryEditingId] = useState<string | null>(null);
@@ -149,6 +152,7 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
     setCategoryEditingId(cat._id);
     setCategoryDraft({ name: cat.name, icon: cat.icon });
     setNotice("");
+    setCategoriesOpen(true);
   }
 
   function resetCategory() {
@@ -229,6 +233,7 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
     });
     setUploadError("");
     setNotice("");
+    setVehicleFormOpen(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -276,12 +281,12 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
       </div>
 
       {/* —— Categories: form | list —— */}
-      <section className="mb-5 rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-        <div className="mb-4">
-          <h2 className="text-[16px] font-semibold text-cms-ink">Categories</h2>
-          <p className="mt-1.5 text-[12px] text-cms-muted">Filter chips on the Rentals page. Each category has a name and a vehicle icon.</p>
-        </div>
-
+      <CollapsiblePanel
+        onToggle={() => setCategoriesOpen((current) => !current)}
+        open={categoriesOpen}
+        subtitle="Filter chips on the Rentals page. Each category has a name and a vehicle icon."
+        title="Categories"
+      >
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
           {/* Left: add / edit form */}
           <div className="rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#101435]">
@@ -360,18 +365,16 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
             )}
           </div>
         </div>
-      </section>
+      </CollapsiblePanel>
 
       {/* —— Vehicles —— */}
-      <section className="mb-5 rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <div>
-            <h2 className="text-[16px] font-semibold text-cms-ink">{vehicleEditingId ? "Edit vehicle" : "Add vehicle"}</h2>
-            <p className="mt-1.5 text-[12px] text-cms-muted">Vehicle cards show the photo, seats, transmission and fuel on the Rentals page.</p>
-          </div>
-          {vehicleEditingId && <CmsButton variant="secondary" onClick={resetVehicle}>Cancel edit</CmsButton>}
-        </div>
-
+      <CollapsiblePanel
+        headerExtra={vehicleEditingId ? <CmsButton variant="secondary" onClick={resetVehicle}>Cancel edit</CmsButton> : undefined}
+        onToggle={() => setVehicleFormOpen((current) => !current)}
+        open={vehicleFormOpen}
+        subtitle="Vehicle cards show the photo, seats, transmission and fuel on the Rentals page."
+        title={vehicleEditingId ? "Edit vehicle" : "Add vehicle"}
+      >
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_1px_minmax(280px,340px)]">
           {/* Left: vehicle input fields */}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -491,7 +494,7 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
             {savingVehicle ? "Saving…" : vehicleEditingId ? "Update vehicle" : "Add vehicle"}
           </CmsButton>
         </div>
-      </section>
+      </CollapsiblePanel>
 
       {/* —— Vehicle listing —— */}
       <section className="rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type DragEvent } from "react";
 import seeds from "./projects.json";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
+import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
 
@@ -235,6 +236,7 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
   const [projects, setProjects] = useState<Project[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [draft, setDraft] = useState<Project | null>(null);
+  const [formOpen, setFormOpen] = useState(false);
   const [view, setView] = useState<"grid" | "list">("grid");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<"all" | ProjectCategory>("all");
@@ -244,7 +246,6 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
   const [notice, setNotice] = useState("");
   const [preview, setPreview] = useState<Project | null>(null);
   const [imageError, setImageError] = useState("");
-  const [slugTouched, setSlugTouched] = useState(false);
   const descriptionEditor = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -301,7 +302,7 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
   function startNew() {
     setDraft(blankProject());
     setActiveId("new");
-    setSlugTouched(false);
+    setFormOpen(true);
     onDirtyChange(false);
     setError("");
     setNotice("");
@@ -310,7 +311,7 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
   function startEdit(project: Project) {
     setDraft({ ...project, cover: { ...project.cover }, gallery: project.gallery.map((image) => ({ ...image })) });
     setActiveId(project.id);
-    setSlugTouched(project.slug !== slugify(project.title));
+    setFormOpen(true);
     onDirtyChange(false);
     setError("");
     setNotice("");
@@ -320,7 +321,7 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
     setDraft((currentDraft) => {
       if (!currentDraft) return currentDraft;
       const next = { ...currentDraft, ...update };
-      if (update.title !== undefined && !slugTouched) next.slug = slugify(update.title);
+      if (update.title !== undefined) next.slug = slugify(update.title);
       return next;
     });
     onDirtyChange(true);
@@ -334,16 +335,14 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
         !window.confirm("This project is currently published. Saving it as a draft will hide it from the Projects page until you publish it again.")) {
       return;
     }
-    const slug = slugify(draft.slug || draft.title);
+    const slug = slugify(draft.title);
     const validation = !draft.title.trim()
       ? "Add a project title."
       : nextStatus === "published" && !(draft.category in categories)
         ? "Choose a category: Meetings, Incentives, Conventions or Exhibitions."
-        : nextStatus === "published" && !slug
-          ? "Add a page URL (slug)."
-          : nextStatus === "published" && projects.some((project) => project.id !== draft.id && project.slug === slug)
-            ? "This URL is already used by another project. Please change it."
-            : nextStatus === "published" && !draft.date
+        : nextStatus === "published" && projects.some((project) => project.id !== draft.id && project.slug === slug)
+          ? "This title produces a URL already used by another project. Please change the title."
+        : nextStatus === "published" && !draft.date
               ? "Choose the project date."
               : nextStatus === "published" && !draft.summary.trim()
                 ? "Write a short card summary."
@@ -500,14 +499,10 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
     }
   }
 
-  const activeEdit = activeId !== null;
-
   return (
     <div className="animate-[cms-home-fade_0.35s_cubic-bezier(.2,.7,.2,1)] text-cms-text">
       {notice && <p className="mb-3 rounded-[7px] bg-[#e6f7ef] px-3 py-2.5 text-[12px] text-[#087a4e] dark:bg-[#12351f] dark:text-[#6ee7a8]" role="status">{notice}</p>}
       {error && <p className="mb-3 rounded-[7px] border-l-[3px] border-[#d42a45] bg-[#fff1f2] px-3 py-2.5 text-[12px] text-[#991b1b] dark:border-[#5c2233] dark:bg-[#3a1420] dark:text-[#ff9aa8]" role="alert">{error}</p>}
-      {!activeEdit ? (
-        <>
           <section className="mb-5 flex flex-col items-start justify-between gap-[18px] min-[481px]:flex-row min-[481px]:items-center">
             <div>
               <h2 className="text-[21px] font-semibold text-cms-ink">Projects</h2>
@@ -518,7 +513,6 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
                 onNavigate={crumbNavigate}
               />
             </div>
-            <button suppressHydrationWarning className={btnPrimary} onClick={startNew} type="button">＋ Add Project</button>
           </section>
           <nav aria-label="Filter by category" className="mb-[15px] flex gap-1.5 overflow-x-auto">
             {(["all", "meetings", "incentives", "conventions", "exhibitions"] as const).map((item) => (
@@ -623,10 +617,14 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
           <p className="mt-[18px] flex flex-wrap items-center gap-2 text-[11px] text-cms-muted max-[480px]:items-start">Prototype: changes are saved in this browser only, not on a server. Published projects appear on the public Projects page, newest first.
             <button suppressHydrationWarning className="ml-auto border-0 bg-transparent p-1 text-[12px] font-semibold text-cms-primary max-[480px]:ml-0" onClick={resetProjects} type="button">Reset sample projects</button>
           </p>
-        </>
-      ) : draft && (
-        <section>
-          <button suppressHydrationWarning className="mb-3.5 border-0 bg-transparent p-0 text-[12px] font-semibold text-cms-primary hover:underline" onClick={closeEditor} type="button">← Back to Projects</button>
+      {draft && (
+        <CollapsiblePanel
+          className="mt-5 rounded-[13px] border border-cms-line bg-cms-card p-4 shadow-[0_1px_2px_rgba(19,8,122,.04)] dark:shadow-none"
+          onToggle={() => setFormOpen((current) => !current)}
+          open={formOpen}
+          subtitle="Add or edit a project. Changes are saved in this browser only."
+          title={activeId === "new" || !draft.title ? "Add Project" : "Edit Project"}
+        >
           <header className="mb-4 flex min-h-[88px] items-center gap-3.5 rounded-[13px] border border-cms-line bg-cms-card p-3 shadow-[0_1px_2px_rgba(19,8,122,.04)] dark:shadow-none max-[480px]:items-start">
             <div className="h-[58px] w-[76px] shrink-0 rounded-lg bg-cms-card2 bg-cover bg-center max-[480px]:h-12 max-[480px]:w-[58px]" style={backgroundStyle(draft.cover.src)} />
             <div className="min-w-0">
@@ -667,13 +665,6 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
                   </fieldset>
                   <label className="grid min-w-0 gap-1.5 text-[11px] font-semibold text-cms-ink col-span-full">Project title *
                     <input suppressHydrationWarning className={inputShell} maxLength={100} onChange={(event) => updateDraft({ title: event.target.value })} placeholder="e.g. Beach Clean-up at Mount Lavinia" value={draft.title} />
-                  </label>
-                  <label className="grid min-w-0 gap-1.5 text-[11px] font-semibold text-cms-ink col-span-full">Page URL (slug) *
-                    <span className="flex items-center overflow-hidden rounded-lg border border-[#dcdaf0] bg-white text-[10px] font-normal text-cms-muted focus-within:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]">
-                      <span className="pl-[9px] whitespace-nowrap">letsfly.lk/projects/</span>
-                      <input suppressHydrationWarning className="min-h-[38px] w-full border-0 bg-transparent px-2.5 text-[12px] text-cms-ink outline-none focus-visible:outline-none!" maxLength={80} onChange={(event) => { setSlugTouched(true); updateDraft({ slug: event.target.value }); }} value={draft.slug} />
-                    </span>
-                    <small className="text-[10.5px] font-normal leading-[1.5] text-cms-muted">Created automatically from the title. Use lowercase letters, numbers and hyphens.</small>
                   </label>
                   <label className="grid min-w-0 gap-1.5 text-[11px] font-semibold text-cms-ink">Project date *
                     <input suppressHydrationWarning className={inputShell} onChange={(event) => updateDraft({ date: event.target.value })} type="date" value={draft.date} />
@@ -788,7 +779,7 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
               <button suppressHydrationWarning className={btnPrimary} onClick={() => saveProject("published")} type="button">Publish</button>
             </div>
           </footer>
-        </section>
+        </CollapsiblePanel>
       )}
       {preview && <div className="fixed inset-0 z-[110] flex items-center justify-center bg-[rgba(10,4,70,.52)] p-5 backdrop-blur-[3px]" onClick={() => setPreview(null)}>
         <section aria-label="Project preview" aria-modal="true" onClick={(event) => event.stopPropagation()} role="dialog"
