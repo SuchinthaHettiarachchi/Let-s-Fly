@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { FormError, Honeypot, isBot } from "@/components/forms/FormStatus";
-import { sendFormEmail } from "@/lib/email";
+import { subscribeNewsletter } from "@/lib/newsletter-api";
 
 const avatars = [
   { src: "/images/footer/traveller-1.jpg", className: "top-9 left-[6%] size-[84px]" },
@@ -15,10 +15,7 @@ const avatars = [
 
 const stack = [5, 6, 7, 8].map((n) => `/images/footer/traveller-${n}.jpg`);
 
-/**
- * Sand card above the footer. There's no mailing list service yet, so each sign-up is emailed to
- * the office (see lib/email.ts) to add by hand.
- */
+/** Sand card above the footer. Sign-ups are stored in the CMS subscriber list. */
 export function Newsletter() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
@@ -35,16 +32,7 @@ export function Newsletter() {
     setSending(true);
     setFailed(false);
     try {
-      await sendFormEmail({
-        form: "Newsletter sign-up",
-        subject: `New newsletter subscriber: ${address}`,
-        replyTo: address,
-        fields: [
-          ["Email", address],
-          ["Action", "Add this address to the Let's Fly newsletter list"],
-          ["Signed up on page", window.location.href],
-        ],
-      });
+      await subscribeNewsletter(address);
       setDone(true);
     } catch (err) {
       console.error(err);

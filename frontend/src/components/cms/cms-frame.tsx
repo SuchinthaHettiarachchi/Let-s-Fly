@@ -17,6 +17,7 @@ import HotelBookingTab from "@/components/cms/hotels/hotel-booking-tab";
 import AirTicketsTab from "@/components/cms/air-tickets/air-tickets-tab";
 import VisasTab from "@/components/cms/visas/visas-tab";
 import ContactTab from "@/components/cms/contact/contact-tab";
+import NewsletterTab from "@/components/cms/newsletter/newsletter-tab";
 import CmsSectionTab from "@/components/cms/cms-section-tab";
 
 const sections = [
@@ -34,6 +35,7 @@ const sections = [
   { id: "rental", title: "Rental", description: "Manage rental categories and vehicle cards shown on the Rentals page." },
   { id: "inquiries", title: "Inquiries", description: "Review customer inquiries, comments and responses." },
   { id: "contact", title: "Contact", description: "Manage the job postings shown on the visitor Contact page." },
+  { id: "newsletter", title: "Newsletter", description: "View newsletter subscribers and copy their email addresses." },
 ];
 
 const navigationIcons: Record<string, ReactNode> = {
@@ -51,6 +53,7 @@ const navigationIcons: Record<string, ReactNode> = {
   rental: <><path d="M5 17h14M5 17a2 2 0 1 0 4 0M15 17a2 2 0 1 0 4 0" /><path d="M3 17v-5l2-5h11l3 5h2v5M5 12h16" /></>,
   inquiries: <><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z" /><path d="M8 12h8M8 9h5" /></>,
   contact: <><rect height="16" rx="2" width="18" x="3" y="4" /><path d="m3 6 9 7 9-7" /></>,
+  newsletter: <><rect height="16" rx="2" width="18" x="3" y="4" /><path d="m3 6 9 7 9-7" /><path d="M3 18l6-5M21 18l-6-5" /></>,
 };
 
 function getSectionFromHash() {
@@ -211,6 +214,8 @@ export default function CmsFrame() {
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><HotelBookingTab onNavigate={navigate} /></div>
           ) : activeSection === "contact" ? (
             <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><ContactTab onNavigate={navigate} /></div>
+          ) : activeSection === "newsletter" ? (
+            <div className="w-full px-5 py-6 sm:px-7 sm:py-7 xl:px-10 xl:py-8"><NewsletterTab onNavigate={navigate} /></div>
           ) : (
             <CmsSectionTab title={current.title} description={current.description} onNavigate={navigate} />
           )}

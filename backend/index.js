@@ -23,6 +23,7 @@ const airTicketsRouter = require('./routers/airTicketsRouter');
 const visaRouter = require('./routers/visaRouter');
 const projectRouter = require('./routers/projectRouter');
 const jobRouter = require('./routers/jobRouter');
+const newsletterRouter = require('./routers/newsletterRouter');
 const { errorHandler } = require('./middleware/error');
 
 const app = express();
@@ -50,6 +51,7 @@ app.use((req, res, next) => {
     || req.originalUrl.startsWith('/api/visas')
     || req.originalUrl.startsWith('/api/projects')
     || req.originalUrl.startsWith('/api/jobs')
+    || req.originalUrl.startsWith('/api/newsletter')
   ) return next();
   express.json({ limit: '10kb' })(req, res, next);
 });
@@ -86,6 +88,7 @@ app.use('/api/air-tickets', airTicketsRouter);
 app.use('/api/visas', visaRouter);
 app.use('/api/projects', projectRouter);
 app.use('/api/jobs', jobRouter);
+app.use('/api/newsletter', newsletterRouter);
 app.use(errorHandler);
 
 mongoose.connect(config.mongoUri)
