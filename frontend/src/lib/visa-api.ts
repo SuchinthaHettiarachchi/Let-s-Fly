@@ -1,4 +1,4 @@
-import { apiUrl } from "@/lib/api-url";
+import { apiUrl, browserApiUrl } from "@/lib/api-url";
 
 export type VisaDocument = { title: string; note?: string };
 export type VisaFact = { icon: string; label: string };
@@ -64,9 +64,9 @@ async function j<T>(res: Response): Promise<T> { return (await res.json().catch(
 
 export async function fetchVisaManage() {
   const [cats, countries, visas] = await Promise.all([
-    fetch(apiUrl("/visas/categories"), { credentials: "include" }),
-    fetch(apiUrl("/visas/countries"), { credentials: "include" }),
-    fetch(apiUrl("/visas/manage"), { credentials: "include" }),
+    fetch(browserApiUrl("/visas/categories"), { credentials: "include" }),
+    fetch(browserApiUrl("/visas/countries"), { credentials: "include" }),
+    fetch(browserApiUrl("/visas/manage"), { credentials: "include" }),
   ]);
   if (!cats.ok || !countries.ok || !visas.ok) throw new Error("Failed to load visa CMS data");
   const c = await j<{ categories?: VisaCategory[] }>(cats);
@@ -80,10 +80,10 @@ export async function fetchVisaManage() {
 }
 
 export const visaCmsApi = {
-  saveCategory: (body: Partial<VisaCategory>, id?: string) => fetch(apiUrl(id ? `/visas/categories/${id}` : "/visas/categories"), { method: id ? "PUT" : "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }),
-  deleteCategory: (id: string) => fetch(apiUrl(`/visas/categories/${id}`), { method: "DELETE", credentials: "include" }),
-  saveCountry: (body: Partial<VisaCountry>, id?: string) => fetch(apiUrl(id ? `/visas/countries/${id}` : "/visas/countries"), { method: id ? "PUT" : "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }),
-  deleteCountry: (id: string) => fetch(apiUrl(`/visas/countries/${id}`), { method: "DELETE", credentials: "include" }),
-  saveVisa: (body: Partial<Visa>, id?: string) => fetch(apiUrl(id ? `/visas/manage/${id}` : "/visas/manage"), { method: id ? "PUT" : "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }),
-  deleteVisa: (id: string) => fetch(apiUrl(`/visas/manage/${id}`), { method: "DELETE", credentials: "include" }),
+  saveCategory: (body: Partial<VisaCategory>, id?: string) => fetch(browserApiUrl(id ? `/visas/categories/${id}` : "/visas/categories"), { method: id ? "PUT" : "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }),
+  deleteCategory: (id: string) => fetch(browserApiUrl(`/visas/categories/${id}`), { method: "DELETE", credentials: "include" }),
+  saveCountry: (body: Partial<VisaCountry>, id?: string) => fetch(browserApiUrl(id ? `/visas/countries/${id}` : "/visas/countries"), { method: id ? "PUT" : "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }),
+  deleteCountry: (id: string) => fetch(browserApiUrl(`/visas/countries/${id}`), { method: "DELETE", credentials: "include" }),
+  saveVisa: (body: Partial<Visa>, id?: string) => fetch(browserApiUrl(id ? `/visas/manage/${id}` : "/visas/manage"), { method: id ? "PUT" : "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }),
+  deleteVisa: (id: string) => fetch(browserApiUrl(`/visas/manage/${id}`), { method: "DELETE", credentials: "include" }),
 };

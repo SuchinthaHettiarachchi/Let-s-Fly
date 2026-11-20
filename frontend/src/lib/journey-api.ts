@@ -1,4 +1,4 @@
-import { apiUrl } from "@/lib/api-url";
+import { apiUrl, browserApiUrl } from "@/lib/api-url";
 
 export type Journey = {
   id: string;
@@ -41,7 +41,7 @@ export async function getJourneys(): Promise<Journey[]> {
 }
 
 export async function createJourney(data: Omit<Journey, "id">): Promise<Journey> {
-  const response = await fetch(apiUrl("/journey-categories"), {
+  const response = await fetch(browserApiUrl("/journey-categories"), {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
@@ -52,7 +52,7 @@ export async function createJourney(data: Omit<Journey, "id">): Promise<Journey>
 }
 
 export async function updateJourney(id: string, data: Partial<Journey>): Promise<Journey> {
-  const response = await fetch(`${apiUrl("/journey-categories")}/${id}`, {
+  const response = await fetch(`${browserApiUrl("/journey-categories")}/${id}`, {
     method: "PUT",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
@@ -63,7 +63,7 @@ export async function updateJourney(id: string, data: Partial<Journey>): Promise
 }
 
 export async function deleteJourney(id: string): Promise<void> {
-  const response = await fetch(`${apiUrl("/journey-categories")}/${id}`, {
+  const response = await fetch(`${browserApiUrl("/journey-categories")}/${id}`, {
     method: "DELETE",
     credentials: "include",
   });

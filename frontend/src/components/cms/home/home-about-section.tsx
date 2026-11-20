@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
 import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
-import { apiUrl } from "@/lib/api-url";
+import { browserApiUrl } from "@/lib/api-url";
 import { uploadMediaFile } from "@/lib/cms-upload";
 import { UploadProgressCircle } from "@/components/cms/UploadProgress";
 import type { HomeAboutContent } from "@/lib/home-about-api";
 
-const URL_API = apiUrl("/home-about");
+const URL_API = browserApiUrl("/home-about");
 
 const inputShell =
   "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[14px] font-normal text-cms-ink outline-none placeholder:text-cms-muted focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";

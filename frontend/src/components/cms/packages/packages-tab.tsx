@@ -11,7 +11,7 @@ import { CmsIconSelect } from "@/components/cms/CmsIconSelect";
 import { CmsViewModal, ViewLines, ViewPills, type CmsViewSection } from "@/components/cms/CmsViewModal";
 import { UploadProgressCircle } from "@/components/cms/UploadProgress";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
-import { apiUrl } from "@/lib/api-url";
+import { browserApiUrl } from "@/lib/api-url";
 import { uploadMediaFile } from "@/lib/cms-upload";
 import {
   defaultInclusions,
@@ -30,8 +30,8 @@ import {
 } from "@/lib/package-cms";
 import type { Package } from "@/data/packages";
 
-const API = apiUrl("/packages");
-const CATEGORIES_API = apiUrl("/categories");
+const API = browserApiUrl("/packages");
+const CATEGORIES_API = browserApiUrl("/categories");
 const inputShell = "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[13px] text-cms-ink outline-none focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
 const areaShell = `${inputShell} min-h-[72px] py-2 leading-[1.5] resize-y`;
 const primary = cmsButtonClasses("primary");

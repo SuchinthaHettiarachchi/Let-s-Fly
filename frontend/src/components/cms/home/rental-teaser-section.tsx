@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
 import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
 import { ImageUpload } from "@/components/cms/ImageUpload";
-import { apiUrl } from "@/lib/api-url";
+import { browserApiUrl } from "@/lib/api-url";
 import { uploadMediaFile } from "@/lib/cms-upload";
 import {
   defaultRentalTeaser,
@@ -15,7 +15,7 @@ import {
   type RentalTeaserContent,
 } from "@/lib/rental-teaser-api";
 
-const URL_API = apiUrl("/rental-teaser");
+const URL_API = browserApiUrl("/rental-teaser");
 const inputShell =
   "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[14px] font-normal text-cms-ink outline-none placeholder:text-cms-muted focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
 

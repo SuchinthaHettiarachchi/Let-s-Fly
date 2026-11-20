@@ -1,5 +1,5 @@
 import type { Package } from "@/data/packages";
-import { apiUrl } from "@/lib/api-url";
+import { apiUrl, browserApiUrl } from "@/lib/api-url";
 
 export type TourCategory = {
   _id: string;
@@ -130,7 +130,7 @@ export async function getCategories(scope: "sri-lanka" | "outbound" = "sri-lanka
 
 export async function fetchCategoriesManage(scope: "sri-lanka" | "outbound" = "sri-lanka"): Promise<TourCategory[]> {
   try {
-    const response = await fetch(apiUrl(`/categories?scope=${scope}`), { cache: "no-store", credentials: "include" });
+    const response = await fetch(browserApiUrl(`/categories?scope=${scope}`), { cache: "no-store", credentials: "include" });
     if (!response.ok) return [];
     const data: { categories?: TourCategory[] } = await response.json();
     return Array.isArray(data.categories) ? data.categories : [];
@@ -150,7 +150,7 @@ export async function fetchTourCategories(): Promise<TourCategory[]> {
 export type PackageListItem = Package & { _id?: string };
 
 export async function fetchManagePackages(category: "outbound" | "sri-lanka"): Promise<PackageListItem[]> {
-  const response = await fetch(apiUrl(`/packages/manage?category=${category}`), { credentials: "include" });
+  const response = await fetch(browserApiUrl(`/packages/manage?category=${category}`), { credentials: "include" });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const data: { packages?: PackageListItem[] } = await response.json();
   return Array.isArray(data.packages) ? data.packages : [];

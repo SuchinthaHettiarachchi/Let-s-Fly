@@ -10,7 +10,7 @@ import { ImageUpload } from "@/components/cms/ImageUpload";
 import HomeAboutSection from "@/components/cms/home/home-about-section";
 import RentalTeaserSection from "@/components/cms/home/rental-teaser-section";
 import { aboutLink, contactGroup, footerColumns, navGroups } from "@/data/site";
-import { apiUrl } from "@/lib/api-url";
+import { browserApiUrl } from "@/lib/api-url";
 import { uploadBlobWithProgress } from "@/lib/cms-upload";
 
 type HeroKind = "desktop" | "mobile";
@@ -28,7 +28,7 @@ interface HeroError {
   [key: string]: string;
 }
 
-const HERO_URL = apiUrl("/hero");
+const HERO_URL = browserApiUrl("/hero");
 const HERO_MAX = 10;
 // Sizes taken from the live website's hero assets (public/images/hero).
 // Uploads are accepted when the aspect ratio is within RATIO_TOLERANCE of the

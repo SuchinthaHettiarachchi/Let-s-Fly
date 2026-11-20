@@ -8,11 +8,11 @@ import { CmsSelect } from "@/components/cms/CmsSelect";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { CmsViewModal, ViewPills } from "@/components/cms/CmsViewModal";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
-import { apiUrl } from "@/lib/api-url";
+import { browserApiUrl } from "@/lib/api-url";
 import { uploadMediaFile } from "@/lib/cms-upload";
 import type { Journey } from "@/lib/journey-api";
 
-const JOURNEYS_API = apiUrl("/journey-categories");
+const JOURNEYS_API = browserApiUrl("/journey-categories");
 
 const inputShell = "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[13px] text-cms-ink outline-none focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
 

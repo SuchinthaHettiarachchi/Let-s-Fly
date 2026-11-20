@@ -1,4 +1,4 @@
-import { apiUrl } from "@/lib/api-url";
+import { apiUrl, browserApiUrl } from "@/lib/api-url";
 
 export type AirTicketContent = {
   _id?: string;
@@ -60,8 +60,8 @@ export async function getAirTickets(): Promise<AirTicketsData> {
 
 export async function fetchAirTicketsManage(): Promise<AirTicketsData> {
   const [contentRes, routesRes] = await Promise.all([
-    fetch(apiUrl("/air-tickets/content"), { credentials: "include" }),
-    fetch(apiUrl("/air-tickets/routes"), { credentials: "include" }),
+    fetch(browserApiUrl("/air-tickets/content"), { credentials: "include" }),
+    fetch(browserApiUrl("/air-tickets/routes"), { credentials: "include" }),
   ]);
   if (!contentRes.ok || !routesRes.ok) throw new Error("Failed to load air tickets");
   const contentData = (await contentRes.json()) as { content?: AirTicketContent };

@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { UploadProgressCircle } from "@/components/cms/UploadProgress";
-import { apiUrl } from "@/lib/api-url";
+import { browserApiUrl } from "@/lib/api-url";
 import { uploadMediaFile } from "@/lib/cms-upload";
 import type { WhoWeAreContent } from "@/lib/who-we-are-api";
 
-const URL_API = apiUrl("/who-we-are");
+const URL_API = browserApiUrl("/who-we-are");
 
 const inputShell =
   "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[14px] font-normal text-cms-ink outline-none placeholder:text-cms-muted focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";

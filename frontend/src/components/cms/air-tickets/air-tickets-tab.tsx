@@ -7,7 +7,7 @@ import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { CmsViewModal } from "@/components/cms/CmsViewModal";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
-import { apiUrl } from "@/lib/api-url";
+import { browserApiUrl } from "@/lib/api-url";
 import { uploadMediaFile } from "@/lib/cms-upload";
 import {
   defaultAirTicketContent,
@@ -16,7 +16,7 @@ import {
   type AirTicketRoute,
 } from "@/lib/air-tickets-api";
 
-const API = apiUrl("/air-tickets");
+const API = browserApiUrl("/air-tickets");
 const inputShell =
   "mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[13px] font-normal text-cms-ink outline-none placeholder:text-cms-muted focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]";
 const areaShell = `${inputShell} min-h-[110px] py-2.5 leading-[1.55] resize-y`;
