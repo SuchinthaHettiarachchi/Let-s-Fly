@@ -1,38 +1,28 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type DragEvent } from "react";
-import seeds from "./projects.json";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
+import {
+  fetchManageProjects,
+  projectCategoryLabel,
+  projectCmsApi,
+  type ProjectCategory,
+  type ProjectImage,
+  type ProjectRecord,
+  type ProjectStatus,
+} from "@/lib/project-api";
 
-const STORAGE_KEY = "letsfly-cms-projects-v1";
 const VIEW_KEY = "cms-proj-view";
-const categories = {
+const categories: Record<ProjectCategory, string> = {
   meetings: "Meetings",
   incentives: "Incentives",
-  conventions: "Conventions",
+  conferences: "Conferences",
   exhibitions: "Exhibitions",
-} as const;
-type ProjectCategory = keyof typeof categories;
-type LegacyProjectCategory = "csr" | "events" | "other";
-type ProjectStatus = "draft" | "published";
-type ProjectImage = { src: string; alt: string; name?: string };
-interface Project {
-  id: string;
-  slug: string;
-  category: ProjectCategory | LegacyProjectCategory | "";
-  title: string;
-  date: string;
-  summary: string;
-  description: string;
-  cover: ProjectImage;
-  gallery: ProjectImage[];
-  status: ProjectStatus;
-  updatedAt: number;
-}
-type SeedProject = (typeof seeds)[number];
+};
+type Project = Omit<ProjectRecord, "category"> & { category: ProjectCategory | "" };
 
 const btnPrimary = cmsButtonClasses("primary");
 const btnSecondary = cmsButtonClasses("secondary");
@@ -47,11 +37,8 @@ const chipShell = "inline-flex items-center rounded-full px-2 py-[3px] text-[10p
 const categoryChipStyles: Record<string, string> = {
   meetings: "bg-[#ecebff] text-[#1b0fd8] dark:bg-[#232755] dark:text-[#8f86ff]",
   incentives: "bg-[#e6f7ef] text-[#087a4e] dark:bg-[#12351f] dark:text-[#6ee7a8]",
-  conventions: "bg-[#fff8c2] text-[#796900] dark:bg-[#3a3413] dark:text-[#f5d76e]",
+  conferences: "bg-[#fff8c2] text-[#796900] dark:bg-[#3a3413] dark:text-[#f5d76e]",
   exhibitions: "bg-[#ffeef1] text-[#d42a6a] dark:bg-[#3a1420] dark:text-[#ff9aa8]",
-  csr: "bg-[#f1f0fd] text-cms-muted dark:bg-[#232755]",
-  events: "bg-[#f1f0fd] text-cms-muted dark:bg-[#232755]",
-  other: "bg-[#f1f0fd] text-cms-muted dark:bg-[#232755]",
   none: "bg-[#f1f0fd] text-cms-ink dark:bg-[#232755]",
 };
 const chipClass = (category: string) => `${chipShell} ${categoryChipStyles[category] ?? categoryChipStyles.none}`;
@@ -60,28 +47,7 @@ const statusClass = (status: ProjectStatus) =>
     ? "bg-[#e6f7ef] text-[#087a4e] dark:bg-[#12351f] dark:text-[#6ee7a8]"
     : "bg-[#fff8c2] text-[#796900] dark:bg-[#3a3413] dark:text-[#f5d76e]";
 
-const seedProjects = (): Project[] => seeds.map((project: SeedProject, index) => ({
-  id: `pj-${project.id}`,
-  slug: project.id,
-  category: project.category as LegacyProjectCategory,
-  title: project.title,
-  date: project.date,
-  summary: project.summary || "",
-  description: project.overview.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join(""),
-  cover: { ...project.cover },
-  gallery: project.gallery.map((image) => ({ ...image })),
-  status: project.id === "corporate-awards-night-colombo" ? "draft" : "published",
-  updatedAt: Date.now() - (index + 1) * 5 * 3600_000,
-}));
-
-const categoryLabel = (category: Project["category"]) =>
-  category ? categories[category as ProjectCategory] ?? { csr: "CSR", events: "Events", other: "Other" }[category as LegacyProjectCategory] : "";
-
-function escapeHtml(value: string) {
-  return value.replace(/[&<>"']/g, (character) => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
-  })[character] ?? character);
-}
+const categoryLabel = (category: Project["category"]) => (category ? projectCategoryLabel(category) : "");
 
 function safeDescription(value: string) {
   const template = document.createElement("template");
@@ -137,23 +103,6 @@ function safeDescription(value: string) {
   return output.innerHTML;
 }
 
-function readProjects(): Project[] {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved === null) {
-    const initial = seedProjects();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
-    return initial;
-  }
-  try {
-    const parsed: unknown = JSON.parse(saved);
-    if (Array.isArray(parsed)) return parsed as Project[];
-  } catch (error) {
-    console.error("Saved project data is not readable; restoring the existing sample projects.", error);
-  }
-  const initial = seedProjects();
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
-  return initial;
-}
 
 function slugify(value: string) {
   return value.normalize("NFKD").toLowerCase().trim()
@@ -249,13 +198,10 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
   const descriptionEditor = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    try {
-      setProjects(readProjects());
-      setView(localStorage.getItem(VIEW_KEY) === "list" ? "list" : "grid");
-    } catch (caught) {
-      console.error("Could not load projects.", caught);
-      setError("Projects could not be loaded from browser storage.");
-    }
+    setView(localStorage.getItem(VIEW_KEY) === "list" ? "list" : "grid");
+    fetchManageProjects()
+      .then(setProjects)
+      .catch(() => setError("Projects could not be loaded. Please sign in again or try again."));
   }, []);
 
   useEffect(() => {
@@ -266,7 +212,7 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
     all: projects.length,
     meetings: projects.filter((project) => project.category === "meetings").length,
     incentives: projects.filter((project) => project.category === "incentives").length,
-    conventions: projects.filter((project) => project.category === "conventions").length,
+    conferences: projects.filter((project) => project.category === "conferences").length,
     exhibitions: projects.filter((project) => project.category === "exhibitions").length,
   }), [projects]);
   const filtered = useMemo(() => {
@@ -285,18 +231,10 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
     return result.sort(comparators[sort]);
   }, [category, projects, query, sort, status]);
 
-  function saveList(next: Project[], message?: string) {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      setProjects(next);
-      setError("");
-      if (message) setNotice(message);
-      return true;
-    } catch (caught) {
-      console.error("Could not save projects.", caught);
-      setError("Could not save: browser storage is full. Try fewer or smaller photos.");
-      return false;
-    }
+  function applySaved(next: Project[], message?: string) {
+    setProjects(next);
+    setError("");
+    if (message) setNotice(message);
   }
 
   function startNew() {
@@ -328,7 +266,7 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
     setError("");
   }
 
-  function saveProject(nextStatus: ProjectStatus) {
+  async function saveProject(nextStatus: ProjectStatus) {
     if (!draft) return;
     const savedProject = projects.find((project) => project.id === draft.id);
     if (nextStatus === "draft" && savedProject?.status === "published" &&
@@ -338,8 +276,8 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
     const slug = slugify(draft.title);
     const validation = !draft.title.trim()
       ? "Add a project title."
-      : nextStatus === "published" && !(draft.category in categories)
-        ? "Choose a category: Meetings, Incentives, Conventions or Exhibitions."
+      : !(draft.category in categories)
+        ? "Choose a category: Meetings, Incentives, Conferences or Exhibitions."
         : nextStatus === "published" && projects.some((project) => project.id !== draft.id && project.slug === slug)
           ? "This title produces a URL already used by another project. Please change the title."
         : nextStatus === "published" && !draft.date
@@ -371,13 +309,19 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
       updatedAt: Date.now(),
     };
     const exists = projects.some((project) => project.id === updated.id);
-    const next = exists
-      ? projects.map((project) => project.id === updated.id ? updated : project)
-      : [updated, ...projects];
-    if (saveList(next, nextStatus === "published" ? "Project published." : "Draft saved successfully.")) {
-      setDraft(updated);
+    try {
+      const response = await projectCmsApi.save({ ...updated, category: updated.category as ProjectCategory }, exists ? updated.id : undefined);
+      const data = (await response.json().catch(() => ({}))) as { project?: ProjectRecord; message?: string };
+      if (!response.ok || !data.project) throw new Error(data.message || "Could not save project.");
+      const saved = data.project as Project;
+      const next = exists ? projects.map((project) => project.id === saved.id ? saved : project) : [saved, ...projects];
+      applySaved(next, nextStatus === "published" ? "Project published." : "Draft saved successfully.");
+      setDraft(null);
       setActiveId(null);
+      setFormOpen(false);
       onDirtyChange(false);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Could not save project.");
     }
   }
 
@@ -422,17 +366,29 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
     let suffix = 2;
     while (projects.some((item) => item.slug === uniqueSlug)) uniqueSlug = `${copy.slug}-${suffix++}`;
     copy.slug = uniqueSlug;
-    saveList([...projects.slice(0, projects.indexOf(project) + 1), copy, ...projects.slice(projects.indexOf(project) + 1)], `Duplicated as “${copy.title}” (Draft).`);
+    try {
+      const response = await projectCmsApi.save({ ...copy, category: copy.category as ProjectCategory });
+      const data = (await response.json().catch(() => ({}))) as { project?: ProjectRecord; message?: string };
+      if (!response.ok || !data.project) throw new Error(data.message || "Could not duplicate project.");
+      const index = projects.indexOf(project);
+      applySaved(
+        [...projects.slice(0, index + 1), data.project as Project, ...projects.slice(index + 1)],
+        `Duplicated as “${copy.title}” (Draft).`,
+      );
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Could not duplicate project.");
+    }
   }
 
   async function deleteProject(project: Project) {
     if (!window.confirm(`Delete “${project.title}” and all ${imageCount(project)} photos? This cannot be undone.`)) return;
-    saveList(projects.filter((item) => item.id !== project.id), `“${project.title}” deleted.`);
-  }
-
-  function resetProjects() {
-    if (!window.confirm("All projects will be replaced with the original sample projects. Anything you added or edited in this browser will be lost.")) return;
-    saveList(seedProjects(), "Sample projects restored.");
+    try {
+      const response = await projectCmsApi.remove(project.id);
+      if (!response.ok) throw new Error("Could not delete project.");
+      applySaved(projects.filter((item) => item.id !== project.id), `“${project.title}” deleted.`);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Could not delete project.");
+    }
   }
 
   function clearFilters() {
@@ -500,10 +456,10 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
   }
 
   return (
-    <div className="animate-[cms-home-fade_0.35s_cubic-bezier(.2,.7,.2,1)] text-cms-text">
+    <div className="flex animate-[cms-home-fade_0.35s_cubic-bezier(.2,.7,.2,1)] flex-col text-cms-text">
       {notice && <p className="mb-3 rounded-[7px] bg-[#e6f7ef] px-3 py-2.5 text-[12px] text-[#087a4e] dark:bg-[#12351f] dark:text-[#6ee7a8]" role="status">{notice}</p>}
       {error && <p className="mb-3 rounded-[7px] border-l-[3px] border-[#d42a45] bg-[#fff1f2] px-3 py-2.5 text-[12px] text-[#991b1b] dark:border-[#5c2233] dark:bg-[#3a1420] dark:text-[#ff9aa8]" role="alert">{error}</p>}
-          <section className="mb-5 flex flex-col items-start justify-between gap-[18px] min-[481px]:flex-row min-[481px]:items-center">
+          <section className="order-1 mb-5 flex flex-col items-start justify-between gap-[18px] min-[481px]:flex-row min-[481px]:items-center">
             <div>
               <h2 className="text-[21px] font-semibold text-cms-ink">Projects</h2>
               <p className="mt-1 text-[13px] text-cms-muted">Manage meetings, incentives, conventions and exhibitions shown on the website’s Projects page.</p>
@@ -514,8 +470,9 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
               />
             </div>
           </section>
+          <div className="order-3">
           <nav aria-label="Filter by category" className="mb-[15px] flex gap-1.5 overflow-x-auto">
-            {(["all", "meetings", "incentives", "conventions", "exhibitions"] as const).map((item) => (
+            {(["all", "meetings", "incentives", "conferences", "exhibitions"] as const).map((item) => (
               <button suppressHydrationWarning aria-pressed={category === item} key={item}
                 className={`inline-flex min-h-9 flex-none items-center gap-[7px] whitespace-nowrap rounded-lg border px-[11px] text-[12px] transition-colors ${
                   category === item
@@ -614,12 +571,11 @@ export default function ProjectsTab({ onDirtyChange, onNavigate }: { onDirtyChan
               ))}
             </div>
           )}
-          <p className="mt-[18px] flex flex-wrap items-center gap-2 text-[11px] text-cms-muted max-[480px]:items-start">Prototype: changes are saved in this browser only, not on a server. Published projects appear on the public Projects page, newest first.
-            <button suppressHydrationWarning className="ml-auto border-0 bg-transparent p-1 text-[12px] font-semibold text-cms-primary max-[480px]:ml-0" onClick={resetProjects} type="button">Reset sample projects</button>
-          </p>
+          <p className="mt-[18px] text-[11px] text-cms-muted">Published projects appear on the public Projects page, newest first.</p>
+          </div>
       {draft && (
         <CollapsiblePanel
-          className="mt-5 rounded-[13px] border border-cms-line bg-cms-card p-4 shadow-[0_1px_2px_rgba(19,8,122,.04)] dark:shadow-none"
+          className="order-2 mb-5 rounded-[13px] border border-cms-line bg-cms-card p-4 shadow-[0_1px_2px_rgba(19,8,122,.04)] dark:shadow-none"
           onToggle={() => setFormOpen((current) => !current)}
           open={formOpen}
           subtitle="Add or edit a project. Changes are saved in this browser only."

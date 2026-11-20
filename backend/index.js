@@ -21,6 +21,7 @@ const journeyRouter = require('./routers/journeyRouter');
 const hotelBookingRouter = require('./routers/hotelBookingRouter');
 const airTicketsRouter = require('./routers/airTicketsRouter');
 const visaRouter = require('./routers/visaRouter');
+const projectRouter = require('./routers/projectRouter');
 const { errorHandler } = require('./middleware/error');
 
 const app = express();
@@ -46,6 +47,7 @@ app.use((req, res, next) => {
     || req.originalUrl.startsWith('/api/hotel-booking')
     || req.originalUrl.startsWith('/api/air-tickets')
     || req.originalUrl.startsWith('/api/visas')
+    || req.originalUrl.startsWith('/api/projects')
   ) return next();
   express.json({ limit: '10kb' })(req, res, next);
 });
@@ -80,6 +82,7 @@ app.use('/api/journey-categories', journeyRouter);
 app.use('/api/hotel-booking', hotelBookingRouter);
 app.use('/api/air-tickets', airTicketsRouter);
 app.use('/api/visas', visaRouter);
+app.use('/api/projects', projectRouter);
 app.use(errorHandler);
 
 mongoose.connect(config.mongoUri)

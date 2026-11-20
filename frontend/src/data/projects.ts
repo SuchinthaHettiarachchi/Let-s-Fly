@@ -4,6 +4,8 @@
  * has full copy; the others use their card summary.
  */
 
+import { getProjectBySlug, type ProjectRecord } from "@/lib/project-api";
+
 export type ProjectCategory = "meetings" | "incentives" | "conferences" | "exhibitions";
 
 export type Project = {
@@ -111,6 +113,29 @@ export const projects: Project[] = [
       "A guided nine-day pilgrimage for 110 devotees to Bodh Gaya, Sarnath and Kushinagar, with flights, visas and ground transport arranged.",
   },
 ];
+
+export function fromRecord(record: ProjectRecord): Project {
+  return {
+    slug: record.slug,
+    title: record.title,
+    category: record.category,
+    date: (record.date || "").slice(0, 7),
+    summary: record.summary,
+    image: record.cover?.src || undefined,
+    body: (record.description || "")
+      .split(/<\/p>/i)
+      .map((part) => part.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim())
+      .filter(Boolean),
+    gallery: (record.gallery || []).map((image) => image.src).filter(Boolean),
+    photoCount: [record.cover, ...(record.gallery || [])].filter((image) => image?.src).length,
+  };
+}
+
+export async function loadProject(slug: string): Promise<Project | null> {
+  const record = await getProjectBySlug(slug);
+  if (record) return fromRecord(record);
+  return projects.find((p) => p.slug === slug) ?? null;
+}
 
 export const getProject = (slug: string) => projects.find((p) => p.slug === slug);
 

@@ -4,7 +4,8 @@ import { CtaBand } from "@/components/layout/CtaBand";
 import { Container } from "@/components/ui/Container";
 import { ProjectGrid } from "@/components/projects/ProjectGrid";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { projects } from "@/data/projects";
+import { fromRecord, projects as sampleProjects } from "@/data/projects";
+import { getProjects } from "@/lib/project-api";
 
 export const metadata: Metadata = {
   title: { absolute: "MICE Tourism Sri Lanka | Corporate Events & Incentive Tours" },
@@ -12,7 +13,9 @@ export const metadata: Metadata = {
     "Corporate meetings, incentive trips, conferences and events handled end to end. See Let's Fly's MICE projects in Sri Lanka and overseas.",
 };
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  const records = await getProjects();
+  const projects = records.length ? records.map(fromRecord) : sampleProjects;
   return (
     <>
       <PageHero

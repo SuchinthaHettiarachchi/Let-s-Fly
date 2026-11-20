@@ -5,6 +5,7 @@ import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsButton } from "@/components/cms/CmsButton";
 import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
 import { CmsSelect } from "@/components/cms/CmsSelect";
+import { CmsIconSelect } from "@/components/cms/CmsIconSelect";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
 import { uploadMediaFile } from "@/lib/cms-upload";
@@ -352,7 +353,16 @@ function ArrayEditor<T extends Record<string, string>>({ title, hint, items, bla
       <div className="flex flex-col gap-2">
         {items.map((item, i) => (
           <div key={i} className={`grid grid-cols-1 gap-2 rounded-[10px] border border-cms-line p-3 ${columns.length >= 2 ? "sm:grid-cols-[140px_1fr_auto]" : "sm:grid-cols-[1fr_auto]"}`}>
-            {columns.map((col) => <input key={col} className={input} placeholder={labels[col] || col} value={item[col] || ""} onChange={(e) => onChange(items.map((it, idx) => idx === i ? ({ ...it, [col]: e.target.value } as T) : it))} />)}
+            {columns.map((col) => col === "icon" ? (
+              <CmsIconSelect
+                key={col}
+                kind="highlight"
+                onChange={(icon) => onChange(items.map((it, idx) => idx === i ? ({ ...it, icon } as T) : it))}
+                value={String(item[col] || "")}
+              />
+            ) : (
+              <input key={col} className={input} placeholder={labels[col] || col} value={item[col] || ""} onChange={(e) => onChange(items.map((it, idx) => idx === i ? ({ ...it, [col]: e.target.value } as T) : it))} />
+            ))}
             <button className="text-[12px] font-semibold text-[#d42a45]" type="button" onClick={() => onChange(items.filter((_, idx) => idx !== i))}>Remove</button>
           </div>
         ))}

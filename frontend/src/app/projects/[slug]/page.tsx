@@ -8,21 +8,21 @@ import { Icon } from "@/components/ui/Icon";
 import { CategoryPill } from "@/components/projects/CategoryPill";
 import { ProjectCover, ProjectGallery } from "@/components/projects/ProjectMedia";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { getProject, projectDate, projects } from "@/data/projects";
+import { loadProject, projectDate, projects } from "@/data/projects";
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps<"/projects/[slug]">): Promise<Metadata> {
-  const project = getProject((await params).slug);
+  const project = await loadProject((await params).slug);
   return project ? { title: project.title, description: project.summary } : {};
 }
 
 export default async function ProjectPage({ params }: PageProps<"/projects/[slug]">) {
-  const project = getProject((await params).slug);
+  const project = await loadProject((await params).slug);
   if (!project) notFound();
 
   const images = project.gallery ?? (project.image ? [project.image] : []);

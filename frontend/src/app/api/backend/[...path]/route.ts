@@ -30,8 +30,11 @@ async function forward(request: NextRequest, context: { params: Promise<{ path: 
   const setCookie = response.headers.get("set-cookie");
   if (setCookie) responseHeaders.set("set-cookie", setCookie);
 
-  return new Response(await response.arrayBuffer(), {
-    status: response.status,
+  const status = response.status;
+  const body = status === 204 || status === 205 || status === 304 ? null : await response.arrayBuffer();
+
+  return new Response(body, {
+    status,
     headers: responseHeaders,
   });
 }
