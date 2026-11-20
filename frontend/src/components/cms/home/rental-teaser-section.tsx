@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
+import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { apiUrl } from "@/lib/api-url";
 import { uploadMediaFile } from "@/lib/cms-upload";
@@ -22,6 +23,7 @@ const btnPrimary = cmsButtonClasses("primary");
 
 export default function RentalTeaserSection() {
   const [content, setContent] = useState<RentalTeaserContent | null>(null);
+  const [sectionOpen, setSectionOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -112,21 +114,28 @@ export default function RentalTeaserSection() {
 
   if (!content) {
     return (
-      <section aria-label="Car and bike rental" className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4">
-        <h2 className="text-[16px] font-semibold text-cms-ink">Car &amp; bike rental</h2>
-        <p className="mt-1.5 text-[12.5px] text-cms-muted" aria-live="polite">{notice || "Loading section content."}</p>
-      </section>
+      <CollapsiblePanel
+        ariaLabel="Car and bike rental"
+        className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4"
+        onToggle={() => setSectionOpen((current) => !current)}
+        open={sectionOpen}
+        subtitle={notice || "Loading section content."}
+        title="Car & bike rental"
+      >
+        {null}
+      </CollapsiblePanel>
     );
   }
 
   return (
-    <section aria-label="Car and bike rental" className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4">
-      <div className="mb-4">
-        <h2 className="text-[16px] font-semibold text-cms-ink">Car &amp; bike rental</h2>
-        <p className="mt-1.5 max-w-[760px] text-[12.5px] leading-[1.5] text-cms-muted">
-          Homepage teaser - four category slots. Each slot: one image plus the two text lines that overlap the photo.
-        </p>
-      </div>
+    <CollapsiblePanel
+      ariaLabel="Car and bike rental"
+      className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4"
+      onToggle={() => setSectionOpen((current) => !current)}
+      open={sectionOpen}
+      subtitle="Homepage teaser - four category slots. Each slot: one image plus the two text lines that overlap the photo."
+      title="Car & bike rental"
+    >
 
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)]">
         {rentalSlotIds.map((id, index) => {
@@ -180,6 +189,6 @@ export default function RentalTeaserSection() {
           {saving ? "Saving…" : "Save section"}
         </button>
       </div>
-    </section>
+    </CollapsiblePanel>
   );
 }

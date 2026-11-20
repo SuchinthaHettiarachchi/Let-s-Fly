@@ -128,7 +128,7 @@ exports.validatePackage = (body) => {
     area: optionalText(body.area, 'Area', 160),
     category,
     outboundRegion: optionalText(body.outboundRegion, 'Outbound region', 40),
-    themes: category === 'sri-lanka' ? selectedThemes : [],
+    themes: selectedThemes,
     featured: body.featured === true,
     badge: optionalText(body.badge, 'Badge', 80),
     days,

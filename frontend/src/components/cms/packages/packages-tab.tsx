@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsCheckbox } from "@/components/cms/CmsCheckbox";
 import { CmsButton, cmsButtonClasses } from "@/components/cms/CmsButton";
+import { CmsSelect } from "@/components/cms/CmsSelect";
 import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { CmsIconSelect } from "@/components/cms/CmsIconSelect";
@@ -97,8 +98,8 @@ async function fetchPackages(category: Category) {
   return Array.isArray(data.packages) ? data.packages : [];
 }
 
-async function fetchCategories() {
-  const response = await fetch(CATEGORIES_API, { credentials: "include" });
+async function fetchCategories(scope: Category) {
+  const response = await fetch(`${CATEGORIES_API}?scope=${scope}`, { credentials: "include" });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const data: { categories?: TourCategory[] } = await response.json();
   return Array.isArray(data.categories) ? data.categories : [];
@@ -120,11 +121,13 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   const [galleryUploadProgress, setGalleryUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState("");
   const [catNotice, setCatNotice] = useState("");
-  const [catDraft, setCatDraft] = useState({ key: "", label: "", sortOrder: 0 });
+  const [catDraft, setCatDraft] = useState({ key: "", label: "", sortOrder: 0, image: "" });
   const [catEditingId, setCatEditingId] = useState<string | null>(null);
   const [savingCategory, setSavingCategory] = useState(false);
+  const [catUploading, setCatUploading] = useState(false);
   const [catDeleteTarget, setCatDeleteTarget] = useState<TourCategory | null>(null);
   const [deletingCategory, setDeletingCategory] = useState(false);
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [packageDeleteTarget, setPackageDeleteTarget] = useState<PackageItem | null>(null);
   const [deletingPackage, setDeletingPackage] = useState(false);
   const [packageViewTarget, setPackageViewTarget] = useState<PackageItem | null>(null);
@@ -162,9 +165,8 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   }
 
   const loadCategories = useCallback(async () => {
-    if (category !== "sri-lanka") return;
     try {
-      setCategories(await fetchCategories());
+      setCategories(await fetchCategories(category));
     } catch {
       setCatNotice("Could not load categories.");
     }
@@ -192,15 +194,13 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
       .finally(() => {
         if (!cancelled) setLoaded(true);
       });
-    if (category === "sri-lanka") {
-      fetchCategories()
-        .then((next) => {
-          if (!cancelled) setCategories(next);
-        })
-        .catch(() => {
-          if (!cancelled) setCatNotice("Could not load categories.");
-        });
-    }
+    fetchCategories(category)
+      .then((next) => {
+        if (!cancelled) setCategories(next);
+      })
+      .catch(() => {
+        if (!cancelled) setCatNotice("Could not load categories.");
+      });
     return () => {
       cancelled = true;
     };
@@ -327,7 +327,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
         method: catEditingId ? "PUT" : "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...catDraft, key: catDraft.key || slugify(catDraft.label) }),
+        body: JSON.stringify({ ...catDraft, key: catDraft.key || slugify(catDraft.label), scope: category, image: catDraft.image }),
       });
       const data: { message?: string } = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.message ?? "Could not save category.");
@@ -343,12 +343,27 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
 
   function editCategory(cat: TourCategory) {
     setCatEditingId(cat._id);
-    setCatDraft({ key: cat.key, label: cat.label, sortOrder: cat.sortOrder ?? 0 });
+    setCatDraft({ key: cat.key, label: cat.label, sortOrder: cat.sortOrder ?? 0, image: cat.image ?? "" });
+    setCategoriesOpen(true);
   }
 
   function resetCategory() {
     setCatEditingId(null);
-    setCatDraft({ key: "", label: "", sortOrder: 0 });
+    setCatDraft({ key: "", label: "", sortOrder: 0, image: "" });
+  }
+
+  async function uploadCategoryImage(file?: File | null) {
+    if (!file) return;
+    setCatUploading(true);
+    setCatNotice("");
+    try {
+      const url = await uploadMediaFile(file, { folder: "categories", kind: "image" });
+      setCatDraft((current) => ({ ...current, image: url }));
+    } catch (error) {
+      setCatNotice(error instanceof Error ? error.message : "Upload failed.");
+    } finally {
+      setCatUploading(false);
+    }
   }
 
   async function removeCategory() {
@@ -424,99 +439,120 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
         </div>
       </div>
 
-      {category === "sri-lanka" && (
-        <section className="mb-5 rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-          <div className="mb-4">
-            <h2 className="text-[16px] font-semibold text-cms-ink">Categories</h2>
-            <p className="mt-1.5 text-[12px] text-cms-muted">Filter chips on the Sri Lanka listing page. Each category groups packages of one theme.</p>
+      <CollapsiblePanel
+        onToggle={() => setCategoriesOpen((current) => !current)}
+        open={categoriesOpen}
+        subtitle={category === "outbound"
+          ? "Filter chips and category cards on the Outbound Travels listing page. Each category can have its own image."
+          : "Filter chips on the Sri Lanka listing page. Each category groups packages of one theme."}
+        title="Categories"
+      >
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+          {/* Left: add / edit form */}
+          <div className="rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#101435]">
+            <h3 className="text-[13px] font-semibold text-cms-ink">{catEditingId ? "Edit category" : "Add category"}</h3>
+            <div className="mt-3 grid gap-3">
+              <Field label="Label">
+                <input
+                  className={inputShell}
+                  placeholder={category === "outbound" ? "Middle East" : "Cultural Triangle"}
+                  value={catDraft.label}
+                  onChange={(event) => setCatDraft((d) => ({ ...d, label: event.target.value }))}
+                />
+              </Field>
+              <Field label="Sort order">
+                <input
+                  className={inputShell}
+                  min="0"
+                  type="number"
+                  value={catDraft.sortOrder}
+                  onChange={(event) => setCatDraft((d) => ({ ...d, sortOrder: Number(event.target.value) }))}
+                />
+              </Field>
+              <ImageUpload
+                accept="image/*"
+                error={catNotice}
+                height="h-[120px]"
+                hint="JPEG, PNG, WebP or GIF · up to 5MB"
+                label="Category image"
+                onFile={(file) => void uploadCategoryImage(file)}
+                onRemove={() => setCatDraft((d) => ({ ...d, image: "" }))}
+                uploading={catUploading}
+                value={catDraft.image}
+              />
+            </div>
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <CmsButton variant="primary" disabled={!categoryValid || savingCategory || catUploading} onClick={() => void saveCategory()}>
+                {savingCategory ? "Saving…" : catEditingId ? "Update category" : "Add category"}
+              </CmsButton>
+              {catEditingId && <CmsButton variant="secondary" onClick={resetCategory}>Cancel edit</CmsButton>}
+              {!categoryValid && <span className="text-[12px] text-cms-muted">Label is required.</span>}
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            {/* Left: add / edit form */}
-            <div className="rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#101435]">
-              <h3 className="text-[13px] font-semibold text-cms-ink">{catEditingId ? "Edit category" : "Add category"}</h3>
-              <div className="mt-3 grid gap-3">
-                <Field label="Label">
-                  <input
-                    className={inputShell}
-                    placeholder="Cultural Triangle"
-                    value={catDraft.label}
-                    onChange={(event) => setCatDraft((d) => ({ ...d, label: event.target.value }))}
-                  />
-                </Field>
-                <Field label="Sort order">
-                  <input
-                    className={inputShell}
-                    min="0"
-                    type="number"
-                    value={catDraft.sortOrder}
-                    onChange={(event) => setCatDraft((d) => ({ ...d, sortOrder: Number(event.target.value) }))}
-                  />
-                </Field>
-              </div>
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                <CmsButton variant="primary" disabled={!categoryValid || savingCategory} onClick={() => void saveCategory()}>
-                  {savingCategory ? "Saving…" : catEditingId ? "Update category" : "Add category"}
-                </CmsButton>
-                {catEditingId && <CmsButton variant="secondary" onClick={resetCategory}>Cancel edit</CmsButton>}
-                {!categoryValid && <span className="text-[12px] text-cms-muted">Label is required.</span>}
-                <span className="text-[12px] text-cms-muted" aria-live="polite">{catNotice}</span>
-              </div>
-            </div>
-
-            {/* Right: existing categories table */}
-            <div className="rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#101435]">
-              <h3 className="text-[13px] font-semibold text-cms-ink">Existing categories</h3>
-              {!loaded ? (
-                <p className="mt-3 text-[12.5px] text-cms-muted">Loading…</p>
-              ) : !categories.length ? (
-                <p className="mt-3 text-[12.5px] text-cms-muted">No categories yet — add one on the left.</p>
-              ) : (
-                <div className="mt-3 overflow-x-auto">
-                  <table className="w-full border-collapse text-left">
-                    <thead>
-                      <tr className="border-b border-cms-line text-[11px] font-semibold uppercase tracking-wide text-cms-muted">
-                        <th className="pb-2 pr-3">Name</th>
-                        <th className="pb-2 pr-3">Packages</th>
-                        <th className="pb-2 text-right">Actions</th>
+          {/* Right: existing categories table */}
+          <div className="rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#101435]">
+            <h3 className="text-[13px] font-semibold text-cms-ink">Existing categories</h3>
+            {!loaded ? (
+              <p className="mt-3 text-[12.5px] text-cms-muted">Loading…</p>
+            ) : !categories.length ? (
+              <p className="mt-3 text-[12.5px] text-cms-muted">No categories yet — add one on the left.</p>
+            ) : (
+              <div className="mt-3 overflow-x-auto">
+                <table className="w-full border-collapse text-left">
+                  <thead>
+                    <tr className="border-b border-cms-line text-[11px] font-semibold uppercase tracking-wide text-cms-muted">
+                      <th className="pb-2 pr-3">Image</th>
+                      <th className="pb-2 pr-3">Name</th>
+                      <th className="pb-2 pr-3">Packages</th>
+                      <th className="pb-2 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {categories.map((cat) => (
+                      <tr className="border-b border-cms-line last:border-0" key={cat._id}>
+                        <td className="py-2.5 pr-3">
+                          <div className="h-12 w-16 overflow-hidden rounded-md bg-[#eef1ff] dark:bg-[#101435]">
+                            {cat.image ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img alt="" className="h-full w-full object-cover" src={cat.image} />
+                            ) : (
+                              <div className="grid h-full w-full place-items-center text-[10px] text-cms-muted">No image</div>
+                            )}
+                          </div>
+                        </td>
+                        <td className="py-2.5 pr-3 text-[13px] font-medium text-cms-ink">
+                          {cat.label}
+                          <span className="ml-1.5 text-[11.5px] font-normal text-cms-muted">{cat.key}</span>
+                        </td>
+                        <td className="py-2.5 pr-3 text-[13px] text-cms-muted">
+                          {items.filter((item) => item.themes?.includes(cat.key)).length}
+                        </td>
+                        <td className="py-2.5 text-right">
+                          <span className="inline-flex gap-1.5">
+                            <CmsButton size="sm" variant="secondary" onClick={() => editCategory(cat)}>Edit</CmsButton>
+                            <CmsButton size="sm" variant="danger" onClick={() => setCatDeleteTarget(cat)}>Delete</CmsButton>
+                          </span>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {categories.map((cat) => (
-                        <tr className="border-b border-cms-line last:border-0" key={cat._id}>
-                          <td className="py-2.5 pr-3 text-[13px] font-medium text-cms-ink">
-                            {cat.label}
-                            <span className="ml-1.5 text-[11.5px] font-normal text-cms-muted">{cat.key}</span>
-                          </td>
-                          <td className="py-2.5 pr-3 text-[13px] text-cms-muted">
-                            {items.filter((item) => item.themes?.includes(cat.key)).length}
-                          </td>
-                          <td className="py-2.5 text-right">
-                            <span className="inline-flex gap-1.5">
-                              <CmsButton size="sm" variant="secondary" onClick={() => editCategory(cat)}>Edit</CmsButton>
-                              <CmsButton size="sm" variant="danger" onClick={() => setCatDeleteTarget(cat)}>Delete</CmsButton>
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
+        </div>
 
-          <DeleteConfirmModal
-            open={catDeleteTarget !== null}
-            title="Delete category?"
-            message={`“${catDeleteTarget?.label ?? ""}” will be removed. Packages keep their keys until you edit them.`}
-            confirmLabel="Delete"
-            busy={deletingCategory}
-            onConfirm={() => void removeCategory()}
-            onCancel={() => { if (!deletingCategory) setCatDeleteTarget(null); }}
-          />
-        </section>
-      )}
+        <DeleteConfirmModal
+          open={catDeleteTarget !== null}
+          title="Delete category?"
+          message={`“${catDeleteTarget?.label ?? ""}” will be removed. Packages keep their keys until you edit them.`}
+          confirmLabel="Delete"
+          busy={deletingCategory}
+          onConfirm={() => void removeCategory()}
+          onCancel={() => { if (!deletingCategory) setCatDeleteTarget(null); }}
+        />
+      </CollapsiblePanel>
 
       <CollapsiblePanel
         headerExtra={editingId ? <CmsButton variant="secondary" onClick={reset}>Cancel edit</CmsButton> : undefined}
@@ -524,24 +560,30 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
         open={formOpen}
         title={editingId ? "Edit package" : "Add package"}
       >
-        <div role="tablist" aria-label="Package form sections" className="mb-5 flex flex-wrap gap-2 border-b border-cms-line pb-3">
-          {TABS.map((tab) => (
-            <button
-              key={tab}
-              role="tab"
-              aria-selected={activeTab === tab}
-              type="button"
-              onClick={() => setActiveTab(tab)}
-              className={`rounded-full border px-3.5 py-1.5 text-[12px] font-semibold transition-colors ${
-                activeTab === tab
-                  ? "border-cms-primary bg-cms-primary text-white"
-                  : "border-cms-line bg-cms-card text-cms-ink hover:bg-[#f5f5f7] dark:hover:bg-[#101435]"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
+        <nav aria-label="Package form pages" className="mb-5 flex flex-wrap items-center gap-1.5 border-b border-cms-line pb-3">
+          {TABS.map((tab, index) => {
+            const current = tab === activeTab;
+            const done = index < TABS.indexOf(activeTab);
+            return (
+              <span
+                aria-current={current ? "step" : undefined}
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold ${
+                  current
+                    ? "bg-cms-primary text-white"
+                    : done
+                      ? "bg-cms-card2 text-cms-ink"
+                      : "text-cms-muted"
+                }`}
+                key={tab}
+              >
+                <span className={`grid size-5 place-items-center rounded-full text-[10px] ${current ? "bg-white/25" : "bg-cms-card"}`}>
+                  {done ? "✓" : index + 1}
+                </span>
+                {tab}
+              </span>
+            );
+          })}
+        </nav>
 
         {activeTab === "Details" && (
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_1px_360px] lg:items-start">
@@ -550,6 +592,33 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
               <Field label="Region"><input className={inputShell} placeholder="Sri Lanka" value={draft.region} onChange={(event) => update("region", event.target.value)} /></Field>
               <Field label="Area label"><input className={inputShell} placeholder="Sigiriya" value={draft.area} onChange={(event) => update("area", event.target.value)} /></Field>
               <Field label="Location (card/detail)"><input className={inputShell} placeholder="Sigiriya, Central Province" value={draft.location} onChange={(event) => update("location", event.target.value)} /></Field>
+              <div>
+                <Field label="Category">
+                  <CmsSelect
+                    onChange={(key) => setDraft((d) => ({ ...d, themes: key ? [key] : [] }))}
+                    options={categories.map((cat) => ({ value: cat.key, label: cat.label }))}
+                    placeholder="Select a category…"
+                    value={draft.themes[0] ?? ""}
+                  />
+                </Field>
+                {draft.themes.length > 0 && (
+                  <div className="mt-1.5 flex flex-wrap gap-1.5">
+                    {draft.themes.map((key) => (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-cms-card2 px-2.5 py-1 text-[11.5px] font-semibold text-cms-ink" key={key}>
+                        {themeLabel(key)}
+                        <button
+                          aria-label={`Remove ${themeLabel(key)}`}
+                          className="border-0 bg-transparent p-0 text-[14px] leading-none text-cms-muted hover:text-[#d42a45]"
+                          onClick={() => setDraft((d) => ({ ...d, themes: d.themes.filter((theme) => theme !== key) }))}
+                          type="button"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
               {draft.category === "outbound" && (
                 <Field label="Outbound region">
                   <select className={inputShell} value={draft.outboundRegion} onChange={(event) => update("outboundRegion", event.target.value)}>
@@ -938,8 +1007,33 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
           </div>
         )}
 
-        <div className="mt-5 flex items-center gap-2 border-t border-cms-line pt-4">
-          <button className={primary} disabled={saving} onClick={() => void save()} type="button">{saving ? "Saving…" : editingId ? "Update package" : "Create package"}</button>
+        <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-cms-line pt-4">
+          {TABS.indexOf(activeTab) > 0 && (
+            <button className={secondary} onClick={() => setActiveTab(TABS[TABS.indexOf(activeTab) - 1])} type="button">← Back</button>
+          )}
+          {TABS.indexOf(activeTab) < TABS.length - 1 ? (
+            <>
+              {editingId && (
+                <button className={secondary} disabled={saving} onClick={() => void save()} type="button">
+                  {saving ? "Saving…" : "Update package"}
+                </button>
+              )}
+              <button
+                className={primary}
+                onClick={() => {
+                  setActiveTab(TABS[TABS.indexOf(activeTab) + 1]);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                type="button"
+              >
+                Next: {TABS[TABS.indexOf(activeTab) + 1]}
+              </button>
+            </>
+          ) : (
+            <button className={primary} disabled={saving} onClick={() => void save()} type="button">
+              {saving ? "Saving…" : editingId ? "Update package" : "Create package"}
+            </button>
+          )}
           <span className="text-[12px] text-cms-muted" aria-live="polite">{notice}</span>
         </div>
       </CollapsiblePanel>
