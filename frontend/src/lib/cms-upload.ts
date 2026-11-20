@@ -1,6 +1,6 @@
 "use client";
 
-import { apiUrl } from "@/lib/api-url";
+import { browserApiUrl } from "@/lib/api-url";
 
 export type UploadProgress = (percent: number) => void;
 
@@ -146,7 +146,7 @@ async function presignAndUploadBlob(
   folder: string,
   onProgress?: UploadProgress,
 ): Promise<string> {
-  const presignRes = await fetch(apiUrl("/upload/presign"), {
+  const presignRes = await fetch(browserApiUrl("/upload/presign"), {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
@@ -173,7 +173,7 @@ async function binaryProxyUploadBlob(
   folder: string,
   onProgress?: UploadProgress,
 ): Promise<string> {
-  const res = await xhrRequest("POST", `${apiUrl("/upload/binary")}?folder=${encodeURIComponent(folder)}`, blob, {
+  const res = await xhrRequest("POST", `${browserApiUrl("/upload/binary")}?folder=${encodeURIComponent(folder)}`, blob, {
     headers: { "Content-Type": contentType },
     withCredentials: true,
     onProgress,
