@@ -29,7 +29,6 @@ import {
   type TourCategory,
 } from "@/lib/package-cms";
 import type { Package } from "@/data/packages";
-import { outboundRegions } from "@/data/package-config";
 
 const API = apiUrl("/packages");
 const CATEGORIES_API = apiUrl("/categories");
@@ -133,6 +132,9 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   const [packageViewTarget, setPackageViewTarget] = useState<PackageItem | null>(null);
 
   const categoryValid = catDraft.label.trim().length > 0;
+  const selectedCategoryKeys = category === "outbound"
+    ? (draft.outboundRegion ? [draft.outboundRegion] : [])
+    : draft.themes;
 
   async function uploadImage(file?: File | null) {
     if (!file) return;
@@ -220,7 +222,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
       location: item.location ?? "",
       area: item.area ?? "",
       category: item.category,
-      outboundRegion: item.outboundRegion ?? "",
+      outboundRegion: item.outboundRegion || item.themes?.[0] || "",
       themes: item.themes ?? [],
       badge: item.badge ?? "",
       days: item.days,
@@ -263,7 +265,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
         area: draft.area,
         category,
         outboundRegion: category === "outbound" ? draft.outboundRegion : "",
-        themes: draft.themes,
+        themes: category === "sri-lanka" ? draft.themes : [],
         badge: draft.badge,
         days: draft.days,
         nights: draft.nights,
@@ -526,7 +528,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                           <span className="ml-1.5 text-[11.5px] font-normal text-cms-muted">{cat.key}</span>
                         </td>
                         <td className="py-2.5 pr-3 text-[13px] text-cms-muted">
-                          {items.filter((item) => item.themes?.includes(cat.key)).length}
+                          {items.filter((item) => (category === "outbound" ? item.outboundRegion === cat.key : item.themes?.includes(cat.key))).length}
                         </td>
                         <td className="py-2.5 text-right">
                           <span className="inline-flex gap-1.5">
@@ -595,21 +597,25 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
               <div>
                 <Field label="Category">
                   <CmsSelect
-                    onChange={(key) => setDraft((d) => ({ ...d, themes: key ? [key] : [] }))}
+                    onChange={(key) => setDraft((d) => (category === "outbound"
+                      ? { ...d, outboundRegion: key }
+                      : { ...d, themes: key ? [key] : [] }))}
                     options={categories.map((cat) => ({ value: cat.key, label: cat.label }))}
                     placeholder="Select a category…"
-                    value={draft.themes[0] ?? ""}
+                    value={selectedCategoryKeys[0] ?? ""}
                   />
                 </Field>
-                {draft.themes.length > 0 && (
+                {selectedCategoryKeys.length > 0 && (
                   <div className="mt-1.5 flex flex-wrap gap-1.5">
-                    {draft.themes.map((key) => (
+                    {selectedCategoryKeys.map((key) => (
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-cms-card2 px-2.5 py-1 text-[11.5px] font-semibold text-cms-ink" key={key}>
                         {themeLabel(key)}
                         <button
                           aria-label={`Remove ${themeLabel(key)}`}
                           className="border-0 bg-transparent p-0 text-[14px] leading-none text-cms-muted hover:text-[#d42a45]"
-                          onClick={() => setDraft((d) => ({ ...d, themes: d.themes.filter((theme) => theme !== key) }))}
+                          onClick={() => setDraft((d) => (category === "outbound"
+                            ? { ...d, outboundRegion: "" }
+                            : { ...d, themes: d.themes.filter((theme) => theme !== key) }))}
                           type="button"
                         >
                           ×
@@ -619,16 +625,6 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                   </div>
                 )}
               </div>
-              {draft.category === "outbound" && (
-                <Field label="Outbound region">
-                  <select className={inputShell} value={draft.outboundRegion} onChange={(event) => update("outboundRegion", event.target.value)}>
-                    <option value="">Select region</option>
-                    {outboundRegions.map((r) => (
-                      <option key={r.id} value={r.id}>{r.label}</option>
-                    ))}
-                  </select>
-                </Field>
-              )}
               <Field label="Badge (optional)"><input className={inputShell} placeholder="Best seller" value={draft.badge} onChange={(event) => update("badge", event.target.value)} /></Field>
               <Field label="Days"><input className={inputShell} min="1" type="number" value={draft.days} onChange={(event) => update("days", Number(event.target.value))} /></Field>
               <Field label="Nights"><input className={inputShell} min="0" type="number" value={draft.nights} onChange={(event) => update("nights", Number(event.target.value))} /></Field>
@@ -1122,14 +1118,14 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
             {packageViewTarget.badge}
           </span>
         ) : undefined}
-        sections={packageViewSections(packageViewTarget, themeLabel)}
+        sections={packageViewSections(packageViewTarget, themeLabel, category)}
         onClose={() => setPackageViewTarget(null)}
       />
     </div>
   );
 }
 
-function packageViewSections(item: PackageItem | null, themeLabel: (key: string) => string): CmsViewSection[] {
+function packageViewSections(item: PackageItem | null, themeLabel: (key: string) => string, scope: Category): CmsViewSection[] {
   if (!item) return [];
   return [
     {
@@ -1157,7 +1153,9 @@ function packageViewSections(item: PackageItem | null, themeLabel: (key: string)
     {
       title: "Themes & media",
       fields: [
-        { label: "Themes", value: <ViewPills items={item.themes?.map(themeLabel)} />, wide: true },
+        { label: scope === "outbound" ? "Category" : "Themes", value: scope === "outbound"
+          ? (item.outboundRegion ? themeLabel(item.outboundRegion) : "—")
+          : <ViewPills items={item.themes?.map(themeLabel)} />, wide: true },
         { label: "Gallery", value: item.gallery?.length ? `${item.gallery.length} image(s)` : "—" },
         { label: "Related", value: <ViewPills items={item.related} /> },
       ],
