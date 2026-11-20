@@ -1,12 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useId, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsButton } from "@/components/cms/CmsButton";
+import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
 import { CmsSelect } from "@/components/cms/CmsSelect";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
-import { Icon } from "@/components/ui/Icon";
 import { uploadMediaFile } from "@/lib/cms-upload";
 import {
   fetchVisaManage,
@@ -85,8 +85,8 @@ export default function VisasTab({ onNavigate }: { onNavigate: (section: string)
   async function saveNamed(kind: "category" | "country") {
     const isCat = kind === "category";
     const draftVal = isCat ? catDraft : countryDraft;
-    if (!draftVal.key.trim() || !draftVal.label.trim()) { setNotice("Key and label are required."); return; }
-    const payload = { key: slugify(draftVal.key), label: draftVal.label.trim(), sortOrder: Number(draftVal.sortOrder) || 0 };
+    if (!draftVal.label.trim()) { setNotice("Label is required."); return; }
+    const payload = { key: slugify(draftVal.label), label: draftVal.label.trim(), sortOrder: Number(draftVal.sortOrder) || 0 };
     if (isCat) setCatSaving(true); else setCountrySaving(true);
     setNotice("");
     try {
@@ -307,46 +307,18 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   return <label className="block text-[12.5px] font-semibold text-cms-text">{label}{children}</label>;
 }
 
-function CollapsiblePanel({ title, subtitle, count, open, onToggle, children }: {
-  title: string; subtitle?: string; count?: number; open: boolean; onToggle: () => void; children: ReactNode;
-}) {
-  const bodyId = useId();
-  return (
-    <section className="rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-      <button
-        aria-controls={bodyId}
-        aria-expanded={open}
-        className="flex w-full cursor-pointer items-center justify-between gap-3 text-left"
-        onClick={onToggle}
-        type="button"
-      >
-        <span className="min-w-0">
-          <span className="block text-[16px] font-semibold text-cms-ink">{title}</span>
-          {subtitle && <span className="mt-1.5 block text-[12px] text-cms-muted">{subtitle}</span>}
-        </span>
-        <span className="flex shrink-0 items-center gap-2">
-          {count !== undefined && <span className="rounded-full bg-cms-card2 px-2 py-0.5 text-[11px] font-semibold text-cms-muted">{count}</span>}
-          <Icon className="text-cms-muted" name={open ? "expand_less" : "expand_more"} size={20} />
-        </span>
-      </button>
-      {open && <div className="mt-4" id={bodyId}>{children}</div>}
-    </section>
-  );
-}
-
 function NamedManager({ title, subtitle, draft, setDraft, items, editId, saving, onEdit, onCancel, onSave, onDelete }: {
   title: string; subtitle: string; draft: NamedDraft; setDraft: (d: NamedDraft) => void; items: Named[]; editId: string | null; saving: boolean;
   onEdit: (i: Named) => void; onCancel: () => void; onSave: () => void; onDelete: (i: Named) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const valid = draft.key.trim() && draft.label.trim();
+  const valid = draft.label.trim();
   return (
     <CollapsiblePanel count={items.length} onToggle={() => setOpen((current) => !current)} open={open} subtitle={subtitle} title={title}>
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           <div className={subcard}>
             <h3 className="text-[13px] font-semibold text-cms-ink">{editId ? "Edit" : "Add"}</h3>
             <div className="mt-3 grid gap-3">
-              <Field label="Key (slug)"><input className={input} value={draft.key} onChange={(e) => setDraft({ ...draft, key: e.target.value })} placeholder="tourist-visa" /></Field>
               <Field label="Label"><input className={input} value={draft.label} onChange={(e) => setDraft({ ...draft, label: e.target.value })} placeholder="Tourist Visa" /></Field>
               <Field label="Sort order"><input className={input} type="number" value={draft.sortOrder} onChange={(e) => setDraft({ ...draft, sortOrder: Number(e.target.value) || 0 })} /></Field>
             </div>

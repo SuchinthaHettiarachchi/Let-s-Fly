@@ -4,6 +4,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsCheckbox } from "@/components/cms/CmsCheckbox";
 import { cmsButtonClasses } from "@/components/cms/CmsButton";
+import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
 import { CmsSelect } from "@/components/cms/CmsSelect";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import HomeAboutSection from "@/components/cms/home/home-about-section";
@@ -186,6 +187,7 @@ async function prepareHeroBlob(file: File, kind: HeroKind): Promise<{ blob?: Blo
 
 export default function HomeTab({ onNavigate }: { onNavigate: (section: string) => void }) {
   const [slides, setSlides] = useState<HeroSlide[]>([]);
+  const [heroOpen, setHeroOpen] = useState(false);
   const [errors, setErrors] = useState<HeroError>({});
   const [uploading, setUploading] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -389,18 +391,20 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
         ))}
       </section>
 
-      <section aria-label="Hero slider" className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4">
-          <div className="mb-5 flex justify-between items-center gap-3">
-            <div className="flex flex-col">
-              <h2 className="text-[16px] font-semibold text-cms-ink">Hero Slider</h2>
-              <p className="mt-1.5 max-w-[760px] text-[12.5px] leading-[1.5] text-cms-muted">Add as many slots as you need (up to 10); each slot needs a desktop and a mobile image.</p>
-            </div>
-        <div className="flex flex-wrap gap-2">
-          <span className="rounded-full border border-cms-line bg-[#f5f5f7] dark:bg-[#101435] px-3 py-[5px] text-[12.5px] text-cms-muted">Desktop: <b className="text-cms-ink">1800 × 1061 px</b> (≈1.7:1)</span>
-          <span className="rounded-full border border-cms-line bg-[#f5f5f7] dark:bg-[#101435] px-3 py-[5px] text-[12.5px] text-cms-muted">Mobile: <b className="text-cms-ink">1080 × 1920 px</b> (9:16)</span>
-        </div>
-        </div>
-
+      <CollapsiblePanel
+        ariaLabel="Hero slider"
+        className="mt-9 rounded-[14px] border border-cms-line bg-cms-card p-[22px] shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none max-[760px]:p-4"
+        headerExtra={
+          <div className="flex flex-wrap gap-2">
+            <span className="rounded-full border border-cms-line bg-[#f5f5f7] px-3 py-[5px] text-[12.5px] text-cms-muted dark:bg-[#101435]">Desktop: <b className="text-cms-ink">1800 × 1061 px</b> (≈1.7:1)</span>
+            <span className="rounded-full border border-cms-line bg-[#f5f5f7] px-3 py-[5px] text-[12.5px] text-cms-muted dark:bg-[#101435]">Mobile: <b className="text-cms-ink">1080 × 1920 px</b> (9:16)</span>
+          </div>
+        }
+        onToggle={() => setHeroOpen((current) => !current)}
+        open={heroOpen}
+        subtitle="Add as many slots as you need (up to 10); each slot needs a desktop and a mobile image."
+        title="Hero Slider"
+      >
         {slides.length ? slides.map((slide, index) => (
           <article className="mb-3 rounded-[14px] border border-cms-line bg-cms-card p-4" key={slide.id}>
             <div className="mb-3 flex flex-wrap items-center justify-end gap-2">
@@ -483,7 +487,7 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
           <button suppressHydrationWarning className={btnGhost} disabled={slides.length >= HERO_MAX} onClick={addSlide} type="button">+ Add slot</button>
           <button suppressHydrationWarning className={btnPrimary} disabled={!loaded || saving} onClick={() => void saveSlides()} type="button">{saving ? "Saving…" : "Save hero slider"}</button>
         </div>
-      </section>
+      </CollapsiblePanel>
 
       <HomeAboutSection />
       <RentalTeaserSection />

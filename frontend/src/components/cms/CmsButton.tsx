@@ -11,7 +11,7 @@ export type CmsButtonVariant = "primary" | "secondary" | "muted" | "danger";
 export type CmsButtonSize = "sm" | "md" | "lg" | "icon";
 
 const base =
-  "inline-flex items-center justify-center gap-1.5 pt-1 whitespace-nowrap rounded-[8px] border font-semibold transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50";
+  "inline-flex items-center justify-center gap-1.5 pt-1 whitespace-nowrap rounded-[8px] border font-normal transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50";
 
 const variants: Record<CmsButtonVariant, string> = {
   primary: "border-transparent bg-cms-primary text-white hover:bg-[#150cb0] dark:hover:bg-[#7d74ff]",
@@ -23,7 +23,7 @@ const variants: Record<CmsButtonVariant, string> = {
 };
 
 const sizes: Record<CmsButtonSize, string> = {
-  sm: "h-7 px-2.5 text-[11px] py-2 pt-2",
+  sm: "h-7 px-2.5 text-[11px] py-2 pt-3",
   md: "h-8 px-3 text-[12px] py-2 pt-2.5",
   lg: "h-9 px-4 text-[12.5px] py-2 pt-3",
   icon: "size-8 p-0 text-[18px] leading-none py-3 pt-3",

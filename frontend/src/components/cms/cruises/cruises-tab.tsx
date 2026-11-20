@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsButton } from "@/components/cms/CmsButton";
+import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { CmsViewModal, ViewPills } from "@/components/cms/CmsViewModal";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
@@ -44,6 +45,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
   const [journeys, setJourneys] = useState<Journey[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [notice, setNotice] = useState("");
+  const [formOpen, setFormOpen] = useState(false);
 
   const [draft, setDraft] = useState<JourneyDraft>(blankJourney());
   const [chipsInput, setChipsInput] = useState("");
@@ -199,6 +201,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
     setChipsInput(j.chips.join(", "));
     setNotice("");
     setStops(j.stops);
+    setFormOpen(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -250,12 +253,12 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
       </div>
 
       {/* ── Journey form ───────────────────────────────────────────── */}
-      <section className="mb-5 rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-        <div className="mb-4">
-          <h2 className="text-[16px] font-semibold text-cms-ink">Add New Cruise Journey</h2>
-          <p className="mt-1.5 text-[12px] text-cms-muted">Fill in all fields.</p>
-        </div>
-
+      <CollapsiblePanel
+        onToggle={() => setFormOpen((current) => !current)}
+        open={formOpen}
+        subtitle="Fill in all fields."
+        title="Add New Cruise Journey"
+      >
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_1px_360px] lg:items-start">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Name (e.g. Singapore → Penang → Phuket)">
@@ -414,7 +417,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
           </CmsButton>
           {!draftValid && <span className="text-[12px] text-cms-muted">All fields marked with * are required.</span>}
         </div>
-      </section>
+      </CollapsiblePanel>
 
       {/* ── Journeys list ───────────────────────────────────────────── */}
       <section className="rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">

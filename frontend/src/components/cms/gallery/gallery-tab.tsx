@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsButton } from "@/components/cms/CmsButton";
+import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
 import { CmsSelect } from "@/components/cms/CmsSelect";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
@@ -29,6 +30,8 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [notice, setNotice] = useState("");
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [itemFormOpen, setItemFormOpen] = useState(false);
 
   const [categoryDraft, setCategoryDraft] = useState<CategoryDraft>(blankCategory());
   const [categoryEditingId, setCategoryEditingId] = useState<string | null>(null);
@@ -125,6 +128,7 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
     setCategoryEditingId(cat._id);
     setCategoryDraft({ name: cat.name });
     setNotice("");
+    setCategoriesOpen(true);
   }
 
   function resetCategory() {
@@ -203,6 +207,7 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
     });
     setUploadError("");
     setNotice("");
+    setItemFormOpen(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -277,12 +282,12 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
       </div>
 
       {/* —— Categories: form | list —— */}
-      <section className="mb-5 rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-        <div className="mb-4">
-          <h2 className="text-[16px] font-semibold text-cms-ink">Categories</h2>
-          <p className="mt-1.5 text-[12px] text-cms-muted">Filter chips on the Travellers Gallery page. Each category groups the photos and videos of one theme.</p>
-        </div>
-
+      <CollapsiblePanel
+        onToggle={() => setCategoriesOpen((current) => !current)}
+        open={categoriesOpen}
+        subtitle="Filter chips on the Travellers Gallery page. Each category groups the photos and videos of one theme."
+        title="Categories"
+      >
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
           {/* Left: add / edit form */}
           <div className="rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#101435]">
@@ -352,18 +357,16 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
             )}
           </div>
         </div>
-      </section>
+      </CollapsiblePanel>
 
       {/* —— Item form —— */}
-      <section className="mb-5 rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <div>
-            <h2 className="text-[16px] font-semibold text-cms-ink">{itemEditingId ? "Edit gallery item" : "Add gallery item"}</h2>
-            <p className="mt-1.5 text-[12px] text-cms-muted">Each item is one photo or video with a caption, shown in the Travellers Gallery wall.</p>
-          </div>
-          {itemEditingId && <CmsButton variant="secondary" onClick={resetItem}>Cancel edit</CmsButton>}
-        </div>
-
+      <CollapsiblePanel
+        headerExtra={itemEditingId ? <CmsButton variant="secondary" onClick={resetItem}>Cancel edit</CmsButton> : undefined}
+        onToggle={() => setItemFormOpen((current) => !current)}
+        open={itemFormOpen}
+        subtitle="Each item is one photo or video with a caption, shown in the Travellers Gallery wall."
+        title={itemEditingId ? "Edit gallery item" : "Add gallery item"}
+      >
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_1px_360px] lg:items-start">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Caption (Location)">
@@ -421,7 +424,7 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
           </CmsButton>
           {!itemValid && <span className="text-[12px] text-cms-muted">Caption, category and media are required.</span>}
         </div>
-      </section>
+      </CollapsiblePanel>
 
       {/* —— Item listing —— */}
       <section className="rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">

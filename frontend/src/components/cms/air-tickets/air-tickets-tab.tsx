@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsButton } from "@/components/cms/CmsButton";
+import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { CmsViewModal } from "@/components/cms/CmsViewModal";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
@@ -55,6 +56,8 @@ export default function AirTicketsTab({ onNavigate }: { onNavigate: (section: st
   const [savingRoute, setSavingRoute] = useState(false);
 
   const [notice, setNotice] = useState("");
+  const [topCardOpen, setTopCardOpen] = useState(false);
+  const [routeFormOpen, setRouteFormOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<AirTicketRoute | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [viewTarget, setViewTarget] = useState<AirTicketRoute | null>(null);
@@ -156,6 +159,7 @@ export default function AirTicketsTab({ onNavigate }: { onNavigate: (section: st
     });
     setRouteError("");
     setNotice("");
+    setRouteFormOpen(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -236,11 +240,12 @@ export default function AirTicketsTab({ onNavigate }: { onNavigate: (section: st
         <span className="text-[12px] text-cms-muted" aria-live="polite">{notice || (contentDirty ? "Unsaved changes" : "All changes saved")}</span>
       </div>
 
-      <section className="mb-5 rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-        <div className="mb-4">
-          <h2 className="text-[16px] font-semibold text-cms-ink">Top card (visitor hero card)</h2>
-          <p className="mt-1 text-[12px] text-cms-muted">Customize the photo, title, description and phone number shown in the top booking card.</p>
-        </div>
+      <CollapsiblePanel
+        onToggle={() => setTopCardOpen((current) => !current)}
+        open={topCardOpen}
+        subtitle="Customize the photo, title, description and phone number shown in the top booking card."
+        title="Top card (visitor hero card)"
+      >
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_1px_360px] lg:items-start">
           <div className="grid grid-cols-1 gap-4">
             <Field label="Title">
@@ -273,17 +278,15 @@ export default function AirTicketsTab({ onNavigate }: { onNavigate: (section: st
           </CmsButton>
           {!contentLoaded && <span className="text-[12px] text-cms-muted">Loading...</span>}
         </div>
-      </section>
+      </CollapsiblePanel>
 
-      <section className="mb-5 rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <div>
-            <h2 className="text-[16px] font-semibold text-cms-ink">{routeEditingId ? "Edit route" : "Add popular route"}</h2>
-            <p className="mt-1 text-[12px] text-cms-muted">Each route card shows image, start/end location, price per person and a WhatsApp CTA on the visitor page.</p>
-          </div>
-          {routeEditingId && <CmsButton variant="secondary" onClick={resetRoute}>Cancel edit</CmsButton>}
-        </div>
-
+      <CollapsiblePanel
+        headerExtra={routeEditingId ? <CmsButton variant="secondary" onClick={resetRoute}>Cancel edit</CmsButton> : undefined}
+        onToggle={() => setRouteFormOpen((current) => !current)}
+        open={routeFormOpen}
+        subtitle="Each route card shows image, start/end location, price per person and a WhatsApp CTA on the visitor page."
+        title={routeEditingId ? "Edit route" : "Add popular route"}
+      >
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_1px_360px] lg:items-start">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Start location">
@@ -318,7 +321,7 @@ export default function AirTicketsTab({ onNavigate }: { onNavigate: (section: st
             {savingRoute ? "Saving..." : routeEditingId ? "Update route" : "Add route"}
           </CmsButton>
         </div>
-      </section>
+      </CollapsiblePanel>
 
       <section className="rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
         <div className="mb-4 flex items-center justify-between gap-3">
