@@ -266,7 +266,7 @@ export default function HomeAboutSection() {
               <button className={cmsButtonClasses("danger")} onClick={() => update("video", "")} type="button">Remove</button>
             )}
           </div>
-          <span className="mt-1.5 block truncate text-[11.5px] text-cms-muted" title={content.video}>{content.video || "No video yet"}</span>
+          <span className="mt-1.5 block text-[11.5px] text-cms-muted">{content.video ? "Video uploaded" : "No video yet"}</span>
         </div>
       </div>
       <span className="mt-1.5 block text-[12px] text-[#d42a45] empty:hidden dark:text-[#ff9aa8]" role="alert">{uploadError}</span>

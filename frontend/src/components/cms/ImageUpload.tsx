@@ -169,9 +169,7 @@ export function ImageUpload({
 
       {(value || hint) && (
         <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
-          <span className="min-w-0 flex-1 truncate text-[11.5px] text-cms-muted" title={value || undefined}>
-            {value || hint}
-          </span>
+          <span className="min-w-0 flex-1 truncate text-[11.5px] text-cms-muted">{hint}</span>
           <span className="flex items-center gap-2">
             {value && isVideo && !uploading && (
               <button className={cmsButtonClasses("secondary", "sm")} onClick={pick} type="button">

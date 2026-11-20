@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsButton } from "@/components/cms/CmsButton";
 import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
+import { CmsViewModal, ViewPills } from "@/components/cms/CmsViewModal";
 import { CmsCheckbox } from "@/components/cms/CmsCheckbox";
 import { CmsSelect } from "@/components/cms/CmsSelect";
 import { ImageUpload } from "@/components/cms/ImageUpload";
@@ -56,6 +57,7 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
   const [notice, setNotice] = useState("");
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [vehicleFormOpen, setVehicleFormOpen] = useState(false);
+  const [viewTarget, setViewTarget] = useState<RentalVehicle | null>(null);
 
   const [categoryDraft, setCategoryDraft] = useState<CategoryDraft>(blankCategory());
   const [categoryEditingId, setCategoryEditingId] = useState<string | null>(null);
@@ -507,39 +509,59 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
         ) : !vehicles.length ? (
           <p className="text-[13px] text-cms-muted">No vehicles yet.</p>
         ) : (
-          <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-            {vehicles.map((vehicle) => (
-              <article className="flex overflow-hidden rounded-[11px] border border-cms-line" key={vehicle._id}>
-                <div
-                  className="min-h-[96px] w-24 flex-none border-r border-cms-line bg-cms-bg bg-cover bg-center bg-no-repeat sm:w-28"
-                  style={vehicle.image ? { backgroundImage: `url("${vehicle.image}")` } : undefined}
-                  aria-hidden="true"
-                />
-                <div className="min-w-0 flex-1 p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <h3 className="truncate font-semibold text-cms-ink">{vehicle.name}</h3>
-                      <p className="mt-1 text-[12px] text-cms-muted">
-                        {categoryName(vehicle.category)} · {vehicle.seats} seats · {vehicle.transmission} · {vehicle.fuel}
-                      </p>
-                      <p className="mt-0.5 text-[11.5px] text-cms-muted">
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-left">
+              <thead>
+                <tr className="border-b border-cms-line text-[11px] font-semibold uppercase tracking-wide text-cms-muted">
+                  <th className="pb-2 pr-3">Image</th>
+                  <th className="pb-2 pr-3">Name</th>
+                  <th className="pb-2 pr-3">Category</th>
+                  <th className="pb-2 pr-3">Seats</th>
+                  <th className="pb-2 pr-3">Transmission</th>
+                  <th className="pb-2 pr-3">Fuel</th>
+                  <th className="pb-2 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {vehicles.map((vehicle) => (
+                  <tr className="border-b border-cms-line last:border-0" key={vehicle._id}>
+                    <td className="py-2.5 pr-3">
+                      <div className="h-12 w-16 overflow-hidden rounded-md bg-[#eef1ff] dark:bg-[#101435]">
+                        {vehicle.image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img alt="" className="h-full w-full object-cover" src={vehicle.image} />
+                        ) : (
+                          <div className="grid h-full w-full place-items-center text-[10px] text-cms-muted">No image</div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="py-2.5 pr-3 text-[13px] font-medium text-cms-ink">
+                      {vehicle.name}
+                      <span className="mt-0.5 block text-[11.5px] font-normal text-cms-muted">
                         {vehicle.modes.map((m) => (m === "self-drive" ? "Self-drive" : "With driver")).join(" · ")}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="mt-3 flex gap-2">
-                    <CmsButton size="sm" variant="secondary" onClick={() => editVehicle(vehicle)}>Edit</CmsButton>
-                    <CmsButton
-                      size="sm"
-                      variant="danger"
-                      onClick={() => setDeleteTarget({ kind: "vehicle", id: vehicle._id, label: vehicle.name })}
-                    >
-                      Delete
-                    </CmsButton>
-                  </div>
-                </div>
-              </article>
-            ))}
+                      </span>
+                    </td>
+                    <td className="py-2.5 pr-3 text-[13px] text-cms-muted">{categoryName(vehicle.category)}</td>
+                    <td className="py-2.5 pr-3 text-[13px] text-cms-muted">{vehicle.seats}</td>
+                    <td className="py-2.5 pr-3 text-[13px] text-cms-muted">{vehicle.transmission}</td>
+                    <td className="py-2.5 pr-3 text-[13px] text-cms-muted">{vehicle.fuel}</td>
+                    <td className="py-2.5 text-right">
+                      <span className="inline-flex gap-1.5">
+                        <CmsButton size="sm" variant="secondary" onClick={() => setViewTarget(vehicle)}>View</CmsButton>
+                        <CmsButton size="sm" variant="secondary" onClick={() => editVehicle(vehicle)}>Edit</CmsButton>
+                        <CmsButton
+                          size="sm"
+                          variant="danger"
+                          onClick={() => setDeleteTarget({ kind: "vehicle", id: vehicle._id, label: vehicle.name })}
+                        >
+                          Delete
+                        </CmsButton>
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </section>
@@ -560,6 +582,26 @@ export default function RentalsTab({ onNavigate }: { onNavigate: (section: strin
         onCancel={() => {
           if (!deleting) setDeleteTarget(null);
         }}
+      />
+
+      <CmsViewModal
+        open={viewTarget !== null}
+        title={viewTarget?.name ?? ""}
+        subtitle={viewTarget ? categoryName(viewTarget.category) : undefined}
+        image={viewTarget?.image}
+        sections={viewTarget ? [{
+          title: "Vehicle details",
+          fields: [
+            { label: "Category", value: categoryName(viewTarget.category) },
+            { label: "Seats", value: viewTarget.seats },
+            { label: "Transmission", value: viewTarget.transmission },
+            { label: "Fuel", value: viewTarget.fuel },
+            { label: "Drive modes", value: <ViewPills items={viewTarget.modes.map((m) => (m === "self-drive" ? "Self-drive" : "With driver"))} />, wide: true },
+            { label: "Sort order", value: viewTarget.sortOrder ?? 0 },
+            { label: "Record ID", value: viewTarget._id },
+          ],
+        }] : []}
+        onClose={() => setViewTarget(null)}
       />
     </div>
   );

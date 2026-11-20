@@ -9,7 +9,6 @@ import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { CmsIconSelect } from "@/components/cms/CmsIconSelect";
 import { CmsViewModal, ViewLines, ViewPills, type CmsViewSection } from "@/components/cms/CmsViewModal";
-import { UploadProgressCircle } from "@/components/cms/UploadProgress";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
 import { browserApiUrl } from "@/lib/api-url";
 import { uploadMediaFile } from "@/lib/cms-upload";
@@ -135,6 +134,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   const selectedCategoryKeys = category === "outbound"
     ? (draft.outboundRegion ? [draft.outboundRegion] : [])
     : draft.themes;
+  const galleryComplete = draft.gallery.length >= 5 && draft.gallery.slice(0, 5).every(Boolean);
 
   async function uploadImage(file?: File | null) {
     if (!file) return;
@@ -151,19 +151,33 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
     }
   }
 
-  async function addGalleryImage(file?: File | null) {
+  async function uploadGallerySlot(index: number, file?: File | null) {
     if (!file) return;
     setUploadError("");
     setGalleryUploading(true);
     setGalleryUploadProgress(0);
     try {
       const url = await uploadMediaFile(file, { folder: "packages", kind: "image", onProgress: setGalleryUploadProgress });
-      setDraft((current) => ({ ...current, gallery: [...current.gallery, url] }));
+      setDraft((current) => {
+        const gallery = [...current.gallery];
+        while (gallery.length < 5) gallery.push("");
+        gallery[index] = url;
+        return { ...current, gallery };
+      });
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : "Upload failed.");
     } finally {
       setGalleryUploading(false);
     }
+  }
+
+  function setGallerySlot(index: number, url: string) {
+    setDraft((current) => {
+      const gallery = [...current.gallery];
+      while (gallery.length < 5) gallery.push("");
+      gallery[index] = url;
+      return { ...current, gallery };
+    });
   }
 
   const loadCategories = useCallback(async () => {
@@ -239,13 +253,6 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function toggleTheme(key: string) {
-    setDraft((current) => ({
-      ...current,
-      themes: current.themes.includes(key) ? current.themes.filter((item) => item !== key) : [...current.themes, key],
-    }));
-  }
-
   function reset() {
     setEditingId(null);
     setDraft(blankDraft(category));
@@ -254,6 +261,11 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   }
 
   async function save() {
+    if (!galleryComplete) {
+      setNotice("Please add all 5 gallery images (1 main photo + 4 subphotos).");
+      setActiveTab("Gallery");
+      return;
+    }
     setSaving(true);
     setNotice("");
     try {
@@ -644,29 +656,6 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                 containerClassName="mt-7"
                 labelClassName="text-[13px] font-normal text-cms-text"
               />
-              {draft.category === "sri-lanka" && (
-                <fieldset className="sm:col-span-2">
-                  <legend className="text-[12.5px] font-semibold text-cms-text">Category (filter chips)</legend>
-                  <div className="mt-2 flex flex-wrap gap-3">
-                    {categories.length ? (
-                    categories.map((cat) => (
-                      <CmsCheckbox
-                        key={cat.key}
-                        checked={draft.themes.includes(cat.key)}
-                        onChange={() => toggleTheme(cat.key)}
-                        label={cat.label}
-                        labelClassName="text-[12px] font-normal text-cms-text"
-                      />
-                    ))
-                    ) : (
-                      <span className="text-[12px] text-cms-muted">No dynamic categories loaded — add them in Categories above.</span>
-                    )}
-                  </div>
-                  {draft.themes.length > 0 && (
-                    <p className="mt-2 text-[11.5px] text-cms-muted">Selected: {draft.themes.map(themeLabel).join(", ")}</p>
-                  )}
-                </fieldset>
-              )}
             </div>
 
             <div aria-hidden className="hidden self-stretch bg-gradient-to-b from-transparent via-gray-300/80 to-transparent dark:via-[#2a2e63] lg:block" />
@@ -690,61 +679,32 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
 
         {activeTab === "Gallery" && (
           <div>
-            <p className="mb-3 text-[12.5px] text-cms-muted">Multiple images shown on the package detail page. Up to 20.</p>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-              {draft.gallery.map((url, index) => (
-                <div key={`${url}-${index}`} className="overflow-hidden rounded-[10px] border border-cms-line">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img alt={`Gallery ${index + 1}`} className="h-28 w-full object-cover" src={url} />
-                  <div className="flex justify-between gap-1 p-2">
-                    <button
-                      className={secondary}
-                      disabled={index === 0}
-                      onClick={() => setDraft((current) => {
-                        const next = [...current.gallery];
-                        [next[index - 1], next[index]] = [next[index], next[index - 1]];
-                        return { ...current, gallery: next };
-                      })}
-                      type="button"
-                      aria-label="Move left"
-                    >
-                      ←
-                    </button>
-                    <button
-                      className={cmsButtonClasses("danger", "sm")}
-                      onClick={() => setDraft((current) => ({ ...current, gallery: current.gallery.filter((_, i) => i !== index) }))}
-                      type="button"
-                    >
-                      Remove
-                    </button>
-                    <button
-                      className={secondary}
-                      disabled={index === draft.gallery.length - 1}
-                      onClick={() => setDraft((current) => {
-                        const next = [...current.gallery];
-                        [next[index + 1], next[index]] = [next[index], next[index + 1]];
-                        return { ...current, gallery: next };
-                      })}
-                      type="button"
-                      aria-label="Move right"
-                    >
-                      →
-                    </button>
-                  </div>
-                </div>
+            <p className="mb-3 text-[12.5px] text-cms-muted">Exactly 5 images are required: 1 main photo and 4 subphotos, shown on the package detail page.</p>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 5 }, (_, index) => (
+                <ImageUpload
+                  key={index}
+                  accept="image/*"
+                  height="h-[150px]"
+                  hint={index === 0 ? "Main photo" : `Subphoto ${index}`}
+                  label={index === 0 ? "Main photo *" : `Subphoto ${index} *`}
+                  onFile={(file) => void uploadGallerySlot(index, file)}
+                  onRemove={() => setGallerySlot(index, "")}
+                  progress={galleryUploadProgress}
+                  uploading={galleryUploading}
+                  value={draft.gallery[index] ?? ""}
+                />
               ))}
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-3">
-              <label className={`${secondary} ${galleryUploading ? "pointer-events-none opacity-70" : "cursor-pointer"}`}>
-                {galleryUploading ? (
-                  <span className="inline-flex items-center gap-2">
-                    <UploadProgressCircle progress={galleryUploadProgress} size={28} />
-                    <span>Uploading {galleryUploadProgress >= 0 ? `${galleryUploadProgress}%` : "..."}</span>
-                  </span>
-                ) : "Add gallery image"}
-                <input accept="image/*" hidden disabled={galleryUploading} onChange={(event) => { void addGalleryImage(event.target.files?.[0]); event.target.value = ""; }} type="file" />
-              </label>
-              <span className="text-[11.5px] text-cms-muted">{draft.gallery.length}/20 images</span>
+              <span className="text-[11.5px] text-cms-muted">
+                {draft.gallery.slice(0, 5).filter(Boolean).length}/5 images
+              </span>
+              {!galleryComplete && (
+                <span className="text-[12px] text-[#d42a45] dark:text-[#ff9aa8]" role="alert">
+                  All 5 images are required (main photo + 4 subphotos).
+                </span>
+              )}
             </div>
             <span className="mt-1 block text-[12px] text-[#d42a45] empty:hidden dark:text-[#ff9aa8]" role="alert">{uploadError}</span>
           </div>

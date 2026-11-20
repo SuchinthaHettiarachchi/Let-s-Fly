@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsButton } from "@/components/cms/CmsButton";
 import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
+import { CmsViewModal } from "@/components/cms/CmsViewModal";
 import { CmsSelect } from "@/components/cms/CmsSelect";
 import { ImageUpload } from "@/components/cms/ImageUpload";
 import { DeleteConfirmModal } from "@/components/ui/DeleteConfirmModal";
@@ -32,6 +33,7 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
   const [notice, setNotice] = useState("");
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [itemFormOpen, setItemFormOpen] = useState(false);
+  const [viewTarget, setViewTarget] = useState<GalleryItem | null>(null);
 
   const [categoryDraft, setCategoryDraft] = useState<CategoryDraft>(blankCategory());
   const [categoryEditingId, setCategoryEditingId] = useState<string | null>(null);
@@ -442,6 +444,7 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
               <thead>
                 <tr className="border-b border-cms-line text-[11px] font-semibold uppercase tracking-wide text-cms-muted">
                   <th className="pb-2 pr-3">Order</th>
+                  <th className="pb-2 pr-3">Image</th>
                   <th className="pb-2 pr-3">Media</th>
                   <th className="pb-2 pr-3">Caption</th>
                   <th className="pb-2 pr-3">Category</th>
@@ -474,6 +477,20 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
                       </span>
                     </td>
                     <td className="py-2.5 pr-3">
+                      <div className="h-12 w-16 overflow-hidden rounded-md bg-[#eef1ff] dark:bg-[#101435]">
+                        {item.media && item.mediaType === "image" ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img alt="" className="h-full w-full object-cover" src={item.media} />
+                        ) : item.media && item.mediaType === "video" ? (
+                          <span className="grid h-full w-full place-items-center text-cms-muted">
+                            <Icon name="play_arrow" size={22} />
+                          </span>
+                        ) : (
+                          <div className="grid h-full w-full place-items-center text-[10px] text-cms-muted">No image</div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="py-2.5 pr-3">
                       <span className="flex items-center gap-2 text-[13px] text-cms-ink">
                         <Icon name={item.mediaType === "video" ? "play_arrow" : "photo_camera"} size={18} className="text-cms-primary" />
                         <span className="text-[12px] text-cms-muted">{item.mediaType}</span>
@@ -483,6 +500,7 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
                     <td className="py-2.5 pr-3 text-[13px] text-cms-muted">{categoryName(typeof item.category === "string" ? item.category : "")}</td>
                     <td className="py-2.5 text-right">
                       <span className="inline-flex gap-1.5">
+                        <CmsButton size="sm" variant="secondary" onClick={() => setViewTarget(item)}>View</CmsButton>
                         <CmsButton size="sm" variant="secondary" onClick={() => editItem(item)}>Edit</CmsButton>
                         <CmsButton
                           size="sm"
@@ -517,6 +535,25 @@ export default function GalleryTab({ onNavigate }: { onNavigate: (section: strin
         onCancel={() => {
           if (!deleting) setDeleteTarget(null);
         }}
+      />
+
+      <CmsViewModal
+        open={viewTarget !== null}
+        title={viewTarget?.caption ?? ""}
+        subtitle={viewTarget ? `${viewTarget.mediaType} · ${categoryName(typeof viewTarget.category === "string" ? viewTarget.category : "")}` : undefined}
+        image={viewTarget?.mediaType === "image" ? viewTarget.media : undefined}
+        sections={viewTarget ? [{
+          title: "Gallery item",
+          fields: [
+            { label: "Caption", value: viewTarget.caption, wide: true },
+            { label: "Category", value: categoryName(typeof viewTarget.category === "string" ? viewTarget.category : "") },
+            { label: "Media type", value: viewTarget.mediaType },
+            { label: "Sort order", value: viewTarget.sortOrder ?? 0 },
+            { label: "Media URL", value: <a className="text-cms-primary hover:underline" href={viewTarget.media} rel="noopener noreferrer" target="_blank">Open media</a>, wide: true },
+            { label: "Record ID", value: viewTarget._id },
+          ],
+        }] : []}
+        onClose={() => setViewTarget(null)}
       />
     </div>
   );
