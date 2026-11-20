@@ -93,7 +93,7 @@ export function RouteTransition() {
     <div
       aria-hidden="true"
       data-route-transition
-      className={`fixed inset-0 z-[1000] flex ${phase === "idle" ? "pointer-events-none invisible" : ""}`}
+      className={`pointer-events-none fixed inset-0 z-[1000] flex ${phase === "idle" ? "invisible" : ""}`}
     >
       {Array.from({ length: COLUMNS }, (_, i) => (
         <span

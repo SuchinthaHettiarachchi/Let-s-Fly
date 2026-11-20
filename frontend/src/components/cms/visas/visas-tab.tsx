@@ -86,7 +86,7 @@ export default function VisasTab({ onNavigate }: { onNavigate: (section: string)
     const isCat = kind === "category";
     const draftVal = isCat ? catDraft : countryDraft;
     if (!draftVal.label.trim()) { setNotice("Label is required."); return; }
-    const payload = { key: slugify(draftVal.label), label: draftVal.label.trim(), sortOrder: Number(draftVal.sortOrder) || 0 };
+    const payload = { key: draftVal.key || slugify(draftVal.label), label: draftVal.label.trim(), sortOrder: Number(draftVal.sortOrder) || 0 };
     if (isCat) setCatSaving(true); else setCountrySaving(true);
     setNotice("");
     try {

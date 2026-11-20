@@ -35,6 +35,8 @@ const areaShell = `${inputShell} min-h-[72px] py-2 leading-[1.5] resize-y`;
 const primary = cmsButtonClasses("primary");
 const secondary = cmsButtonClasses("secondary");
 
+const slugify = (value: string) => value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
 const TABS = ["Details", "Gallery", "Overview", "Itinerary", "Inclusions", "Payment"] as const;
 type FormTab = (typeof TABS)[number];
 
@@ -124,7 +126,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   const [deletingPackage, setDeletingPackage] = useState(false);
   const [packageViewTarget, setPackageViewTarget] = useState<PackageItem | null>(null);
 
-  const categoryValid = catDraft.key.trim().length > 0 && catDraft.label.trim().length > 0;
+  const categoryValid = catDraft.label.trim().length > 0;
 
   async function uploadImage(file?: File | null) {
     if (!file) return;
@@ -320,7 +322,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
         method: catEditingId ? "PUT" : "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(catDraft),
+        body: JSON.stringify({ ...catDraft, key: catDraft.key || slugify(catDraft.label) }),
       });
       const data: { message?: string } = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.message ?? "Could not save category.");
@@ -429,14 +431,6 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
             <div className="rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#101435]">
               <h3 className="text-[13px] font-semibold text-cms-ink">{catEditingId ? "Edit category" : "Add category"}</h3>
               <div className="mt-3 grid gap-3">
-                <Field label="Key (slug)">
-                  <input
-                    className={inputShell}
-                    placeholder="cultural"
-                    value={catDraft.key}
-                    onChange={(event) => setCatDraft((d) => ({ ...d, key: event.target.value }))}
-                  />
-                </Field>
                 <Field label="Label">
                   <input
                     className={inputShell}
@@ -460,7 +454,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                   {savingCategory ? "Saving…" : catEditingId ? "Update category" : "Add category"}
                 </CmsButton>
                 {catEditingId && <CmsButton variant="secondary" onClick={resetCategory}>Cancel edit</CmsButton>}
-                {!categoryValid && <span className="text-[12px] text-cms-muted">Key and label are required.</span>}
+                {!categoryValid && <span className="text-[12px] text-cms-muted">Label is required.</span>}
                 <span className="text-[12px] text-cms-muted" aria-live="polite">{catNotice}</span>
               </div>
             </div>
