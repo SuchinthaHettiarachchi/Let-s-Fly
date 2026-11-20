@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { FormSent } from "@/components/forms/FormSent";
+import { FormError, Honeypot, isBot } from "@/components/forms/FormStatus";
+import { sendFormEmail } from "@/lib/email";
 import { errorClass, fieldClass, labelClass } from "@/components/forms/styles";
 
 function emailError(value: string) {
@@ -12,24 +14,47 @@ function emailError(value: string) {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return "Enter a valid email address, e.g. you@email.com.";
 }
 
-/**
- * Data amendment / deletion request. There's no backend yet, so a valid submit only shows the
- * confirmation; nothing is sent anywhere.
- */
+/** Data amendment / deletion request, emailed to the office (see lib/email.ts). */
 export function GdprForm() {
   const [email, setEmail] = useState("");
   const [touched, setTouched] = useState(false);
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
   const error = touched ? emailError(email) : undefined;
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (sending) return;
+    const form = e.currentTarget;
     setTouched(true);
     if (emailError(email)) {
-      e.currentTarget.querySelector("input")?.focus();
+      form.querySelector<HTMLInputElement>('input[name="email"]')?.focus();
       return;
     }
-    setSent(true);
+    if (isBot(form)) return setSent(true);
+
+    const address = email.trim();
+    setSending(true);
+    setFailed(false);
+    try {
+      await sendFormEmail({
+        form: "GDPR data request",
+        subject: `GDPR request: amend or delete the data for ${address}`,
+        replyTo: address,
+        fields: [
+          ["Request", "Amend or delete the personal data linked to this email address"],
+          ["Email", address],
+          ["Respond by", "Within 24 hours, as promised on the GDPR page"],
+        ],
+      });
+      setSent(true);
+    } catch (err) {
+      console.error(err);
+      setFailed(true);
+    } finally {
+      setSending(false);
+    }
   }
 
   if (sent) {
@@ -40,6 +65,7 @@ export function GdprForm() {
         onReset={() => {
           setEmail("");
           setTouched(false);
+          setFailed(false);
           setSent(false);
         }}
       />
@@ -48,6 +74,7 @@ export function GdprForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+      <Honeypot />
       <label className={labelClass}>
         <span>
           Email <span aria-hidden="true" className="text-red-600">*</span>
@@ -75,9 +102,10 @@ export function GdprForm() {
       <span className="text-caption font-normal text-ink-400">
         <span className="text-red-600">*</span>Required Fields
       </span>
-      <Button type="submit" variant="primary" size="lg" icon="send" className="self-start">
-        Submit
+      <Button type="submit" variant="primary" size="lg" icon={sending ? undefined : "send"} disabled={sending} className="self-start">
+        {sending ? "Sending…" : "Submit"}
       </Button>
+      {failed && <FormError />}
     </form>
   );
 }

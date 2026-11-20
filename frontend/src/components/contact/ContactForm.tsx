@@ -1,12 +1,12 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Button, ButtonLink } from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { ConsentBlock } from "@/components/forms/ConsentBlock";
 import { FormSent } from "@/components/forms/FormSent";
-import { SocialIcon } from "@/components/ui/SocialIcon";
-import { contact } from "@/data/site";
+import { FormError, Honeypot, isBot } from "@/components/forms/FormStatus";
+import { oneLine, sendFormEmail } from "@/lib/email";
 import { errorClass, fieldClass, labelClass, serviceOptions, textareaClass } from "@/components/forms/styles";
 
 const MESSAGE_MIN = 10;
@@ -54,15 +54,17 @@ function check(field: Field, v: Values): string | undefined {
 const empty: Values = { name: "", phone: "", email: "", message: "" };
 
 type ContactFormProps = {
-  /** Shown as a read-only Subject field, sent with the message and used as the WhatsApp opener, e.g. a package name. */
+  /** Shown as a read-only Subject field and sent with the message, e.g. a package name. */
   subject?: string;
   /** Service picked in the dropdown when the form loads. */
   service?: (typeof serviceOptions)[number];
 };
 
-/** "How can we help?" message form, with a WhatsApp alternative under the submit button. */
+/** "How can we help?" message form. Submissions are emailed to the office (see lib/email.ts). */
 export function ContactForm({ subject, service = serviceOptions[0] }: ContactFormProps) {
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
   const [values, setValues] = useState<Values>(empty);
   // Errors appear once a field is left (or on submit), then update as the visitor types.
   const [touched, setTouched] = useState<Partial<Record<Field, boolean>>>({});
@@ -74,21 +76,53 @@ export function ContactForm({ subject, service = serviceOptions[0] }: ContactFor
   const set = (field: Field, value: string) => setValues((v) => ({ ...v, [field]: value }));
   const touch = (field: Field) => setTouched((t) => ({ ...t, [field]: true }));
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (sending) return;
+    const form = e.currentTarget;
     setTouched({ name: true, phone: true, email: true, message: true });
     const firstBad = order.find((f) => check(f, values));
     if (firstBad) {
       formRef.current?.querySelector<HTMLElement>(`[name="${firstBad}"]`)?.focus();
       return;
     }
-    // TODO: send to the inquiry endpoint once the backend exists.
-    setSent(true);
+    if (isBot(form)) return setSent(true);
+
+    const data = new FormData(form);
+    const name = oneLine(values.name);
+    const picked = String(data.get("service") ?? "");
+    setSending(true);
+    setFailed(false);
+    try {
+      await sendFormEmail({
+        form: "Contact form",
+        subject: `New enquiry: ${subject ?? picked} from ${name}`,
+        fromName: name,
+        replyTo: values.email.trim(),
+        fields: [
+          ["Subject", subject],
+          ["Service", picked],
+          ["Full name", name],
+          ["Phone", values.phone.trim()],
+          ["Email", values.email.trim()],
+          ["Message", values.message],
+          ["Sent from page", window.location.href],
+        ],
+        consent: data.get("consent") === "on",
+      });
+      setSent(true);
+    } catch (err) {
+      console.error(err);
+      setFailed(true);
+    } finally {
+      setSending(false);
+    }
   }
 
   function reset() {
     setValues(empty);
     setTouched({});
+    setFailed(false);
     setSent(false);
   }
 
@@ -110,6 +144,7 @@ export function ContactForm({ subject, service = serviceOptions[0] }: ContactFor
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} noValidate className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <Honeypot />
       {subject && <SubjectField value={subject} className="sm:col-span-2" />}
       <label className={labelClass}>
         <span>
@@ -158,22 +193,10 @@ export function ContactForm({ subject, service = serviceOptions[0] }: ContactFor
         </span>
       </label>
       <ConsentBlock className="sm:col-span-2" />
-      <Button type="submit" variant="primary" size="lg" icon="send" className="w-full sm:col-span-2">
-        Send Message
+      <Button type="submit" variant="primary" size="lg" icon={sending ? undefined : "send"} disabled={sending} className="w-full sm:col-span-2">
+        {sending ? "Sending…" : "Send Message"}
       </Button>
-      <ButtonLink
-        href={`${contact.whatsappHref}?text=${encodeURIComponent(`Hi Let's Fly, ${subject ?? "General enquiry"}: `)}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        variant="outline"
-        size="lg"
-        className="w-full sm:col-span-2"
-      >
-        <span className="flex size-6 items-center justify-center rounded-full bg-[#25d366] text-white">
-          <SocialIcon name="WhatsApp" size={14} />
-        </span>
-        WhatsApp Us
-      </ButtonLink>
+      {failed && <FormError className="sm:col-span-2" />}
     </form>
   );
 }
