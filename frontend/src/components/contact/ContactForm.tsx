@@ -7,7 +7,7 @@ import { ConsentBlock } from "@/components/forms/ConsentBlock";
 import { FormSent } from "@/components/forms/FormSent";
 import { FormError, Honeypot, isBot } from "@/components/forms/FormStatus";
 import { oneLine, sendFormEmail } from "@/lib/email";
-import { categoryFromService, submitInquiry } from "@/lib/inquiry-api";
+import { categoryFromContactForm, submitInquiry } from "@/lib/inquiry-api";
 import { errorClass, fieldClass, labelClass, serviceOptions, textareaClass } from "@/components/forms/styles";
 
 const MESSAGE_MIN = 10;
@@ -101,7 +101,7 @@ export function ContactForm({ subject, service = serviceOptions[0] }: ContactFor
           customerName: name,
           email: values.email.trim(),
           phone: values.phone.trim(),
-          category: categoryFromService(picked, subject ?? "Contact"),
+          category: categoryFromContactForm(subject ?? "", picked),
           subject: subject ?? picked,
           message: values.message,
         });

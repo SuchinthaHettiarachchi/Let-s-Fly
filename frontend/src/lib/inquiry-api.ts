@@ -30,9 +30,14 @@ export function categoryFromService(service = "", subject = ""): InquiryCategory
   const value = `${subject} ${service}`.toLowerCase();
   if (value.includes("visa")) return "Visa Inquiry";
   if (value.includes("air ticket") || value.includes("flight") || value.includes("fare")) return "Air Ticket";
-  if (value.includes("plan my trip") || value.includes("trip") || value.includes("package") || value.includes("tour")) {
-    return "Plan my Trip Section";
-  }
+  return "Plan my Trip Section";
+}
+
+/** The Contact page form defaults to Contact unless the subject/service is clearly visa or air ticket. */
+export function categoryFromContactForm(subject = "", service = ""): InquiryCategory {
+  const value = `${subject} ${service}`.toLowerCase();
+  if (value.includes("visa")) return "Visa Inquiry";
+  if (value.includes("air ticket") || value.includes("flight") || value.includes("fare")) return "Air Ticket";
   return "Contact";
 }
 

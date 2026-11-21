@@ -3,12 +3,16 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsButton } from "@/components/cms/CmsButton";
+import { CollapsiblePanel } from "@/components/cms/CollapsiblePanel";
+import { CmsSelect } from "@/components/cms/CmsSelect";
 
 import {
   fetchManageInquiries,
   inquiryCmsApi,
+  submitInquiry,
   type Inquiry,
   type InquiryCategory,
+  type InquiryInput,
   type InquiryStatus,
 } from "@/lib/inquiry-api";
 
@@ -36,6 +40,12 @@ export default function InquiriesTab({ onNavigate }: { onNavigate: (section: str
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [storageError, setStorageError] = useState("");
   const [activeCategory, setActiveCategory] = useState<InquiryCategory | "All">("All");
+  const [activeStatus, setActiveStatus] = useState<InquiryStatus | "All">("All");
+  const [formOpen, setFormOpen] = useState(false);
+  const [manualDraft, setManualDraft] = useState<InquiryInput>({
+    customerName: "", email: "", phone: "", category: "Contact", subject: "", message: "",
+  });
+  const [savingManual, setSavingManual] = useState(false);
   const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null);
   const [commentInquiryId, setCommentInquiryId] = useState<string | null>(null);
   const [commentText, setCommentText] = useState("");
@@ -54,20 +64,29 @@ export default function InquiriesTab({ onNavigate }: { onNavigate: (section: str
     void load();
   }, []);
 
+  const statusFilteredInquiries = activeStatus === "All"
+    ? inquiries
+    : inquiries.filter((inquiry) => inquiry.status === activeStatus);
   const counts = useMemo(() => ({
     categories: Object.fromEntries(
       categories.map((category) => [
         category,
-        inquiries.filter((inquiry) => inquiry.category === category).length,
+        statusFilteredInquiries.filter((inquiry) => inquiry.category === category).length,
       ]),
     ) as Record<InquiryCategory, number>,
-  }), [inquiries]);
+  }), [statusFilteredInquiries]);
 
-  const filteredInquiries = activeCategory === "All"
-    ? inquiries
-    : inquiries.filter((inquiry) => inquiry.category === activeCategory);
-  const pendingCount = filteredInquiries.filter((inquiry) => inquiry.status !== "Closed").length;
-  const completedCount = filteredInquiries.filter((inquiry) => inquiry.status === "Closed").length;
+  const categoryInquiries = activeCategory === "All"
+    ? statusFilteredInquiries
+    : statusFilteredInquiries.filter((inquiry) => inquiry.category === activeCategory);
+  const statusCounts = {
+    New: categoryInquiries.filter((inquiry) => inquiry.status === "New").length,
+    "In Progress": categoryInquiries.filter((inquiry) => inquiry.status === "In Progress").length,
+    Closed: categoryInquiries.filter((inquiry) => inquiry.status === "Closed").length,
+  };
+  const filteredInquiries = activeStatus === "All"
+    ? categoryInquiries
+    : categoryInquiries.filter((inquiry) => inquiry.status === activeStatus);
 
   async function changeStatus(inquiryId: string, status: InquiryStatus) {
     try {
@@ -100,6 +119,25 @@ export default function InquiriesTab({ onNavigate }: { onNavigate: (section: str
     }
   }
 
+  async function saveManualInquiry() {
+    if (!manualDraft.customerName.trim()) {
+      setStorageError("Customer name is required.");
+      return;
+    }
+    setSavingManual(true);
+    try {
+      await submitInquiry(manualDraft);
+      await load();
+      setManualDraft({ customerName: "", email: "", phone: "", category: "Contact", subject: "", message: "" });
+      setFormOpen(false);
+      setStorageError("");
+    } catch (error) {
+      setStorageError(error instanceof Error ? error.message : "Could not add inquiry.");
+    } finally {
+      setSavingManual(false);
+    }
+  }
+
   const commentInquiry = inquiries.find((inquiry) => inquiry.id === commentInquiryId);
   const detailInquiry = selectedInquiry
     ? inquiries.find((inquiry) => inquiry.id === selectedInquiry.id) ?? selectedInquiry
@@ -109,22 +147,71 @@ export default function InquiriesTab({ onNavigate }: { onNavigate: (section: str
     <div className="w-full animate-[cms-home-fade_0.35s_cubic-bezier(.2,.7,.2,1)]">
       {storageError && <p className="mt-4 w-full py-3 px-[14px] border-l-[3px] border-l-[#d42a45] rounded-[7px] bg-[#fff1f2] text-[#991b1b] text-[13px] dark:bg-[#3a1420] dark:text-[#ff9aa8] dark:border-l-[#5c2233]" role="alert">{storageError}</p>}
 
-      <section aria-labelledby="inquiry-list-heading" className="mt-6 w-full overflow-hidden border border-cms-line rounded-[14px] bg-cms-card shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-        <header className="flex min-h-18 items-center justify-between py-[14px] px-5 border-b border-cms-line max-[480px]:px-4">
+      <div className="mt-6 w-full">
+        <header className="flex min-h-18 items-center justify-between gap-4 py-[14px]">
           <div>
             <h2 id="inquiry-list-heading" className="text-cms-ink text-[16px] font-semibold">All inquiries</h2>
             <p className="mt-[2px] text-cms-muted text-[12px]">{filteredInquiries.length} {filteredInquiries.length === 1 ? "inquiry" : "inquiries"}</p>
             <Breadcrumbs items={[{ label: "Home", href: "#home", id: "home" }, { label: "Inquiries" }]} onNavigate={onNavigate} className="mt-3" />
           </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e3a900]/40 bg-[#fff8c2] px-2.5 py-1 text-[11px] font-semibold text-[#796900] dark:border-[#5c4a13] dark:bg-[#3a3413] dark:text-[#f5d76e]">
-              Pending <strong className="text-[12px]">{pendingCount}</strong>
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#12a36a]/30 bg-[#e6f7ef] px-2.5 py-1 text-[11px] font-semibold text-[#087a4e] dark:border-[#205b43] dark:bg-[#12351f] dark:text-[#6ee7a8]">
-              Completed <strong className="text-[12px]">{completedCount}</strong>
-            </span>
+          <div className="w-48 shrink-0">
+            <CmsSelect
+              aria-label="Filter by status"
+              onChange={(value) => setActiveStatus(value as InquiryStatus | "All")}
+              options={[
+                { value: "All", label: `All statuses (${categoryInquiries.length})` },
+                { value: "New", label: `New (${statusCounts.New})` },
+                { value: "In Progress", label: `In Progress (${statusCounts["In Progress"]})` },
+                { value: "Closed", label: `Closed (${statusCounts.Closed})` },
+              ]}
+              value={activeStatus}
+            />
           </div>
         </header>
+        <CollapsiblePanel
+          className="mb-5 rounded-[14px] border border-cms-line bg-cms-card p-5 shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none"
+          onToggle={() => setFormOpen((current) => !current)}
+          open={formOpen}
+          subtitle="Add an inquiry manually and choose which CMS tab it appears under."
+          title="Add Inquiry"
+        >
+          <div className="grid grid-cols-1 gap-4 rounded-[11px] border border-cms-line bg-cms-bg p-4 dark:bg-[#101435] sm:grid-cols-2">
+            <label className="block text-[12.5px] font-semibold text-cms-text">Customer name *
+              <input className="mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[13px] text-cms-ink outline-none focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]"
+                onChange={(event) => setManualDraft((d) => ({ ...d, customerName: event.target.value }))} placeholder="Full name" value={manualDraft.customerName} />
+            </label>
+            <label className="block text-[12.5px] font-semibold text-cms-text">Goes to tab
+              <CmsSelect
+                onChange={(value) => setManualDraft((d) => ({ ...d, category: value as InquiryCategory }))}
+                options={categories.map((category) => ({ value: category, label: category }))}
+                value={manualDraft.category}
+              />
+            </label>
+            <label className="block text-[12.5px] font-semibold text-cms-text">Email
+              <input className="mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[13px] text-cms-ink outline-none focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]"
+                onChange={(event) => setManualDraft((d) => ({ ...d, email: event.target.value }))} placeholder="name@example.com" value={manualDraft.email} />
+            </label>
+            <label className="block text-[12.5px] font-semibold text-cms-text">Phone
+              <input className="mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[13px] text-cms-ink outline-none focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]"
+                onChange={(event) => setManualDraft((d) => ({ ...d, phone: event.target.value }))} placeholder="+94 77 000 0000" value={manualDraft.phone} />
+            </label>
+            <label className="block text-[12.5px] font-semibold text-cms-text sm:col-span-2">Subject
+              <input className="mt-1.5 h-10 w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 text-[13px] text-cms-ink outline-none focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]"
+                onChange={(event) => setManualDraft((d) => ({ ...d, subject: event.target.value }))} placeholder="Enquiry subject" value={manualDraft.subject} />
+            </label>
+            <label className="block text-[12.5px] font-semibold text-cms-text sm:col-span-2">Message
+              <textarea className="mt-1.5 min-h-[88px] w-full rounded-[9px] border border-[#dcdaf0] bg-white px-3 py-2.5 text-[13px] text-cms-ink outline-none focus:border-cms-primary dark:border-[#2a2e63] dark:bg-[#101435]"
+                onChange={(event) => setManualDraft((d) => ({ ...d, message: event.target.value }))} placeholder="What does the customer need?" value={manualDraft.message} />
+            </label>
+          </div>
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <CmsButton variant="primary" disabled={savingManual} onClick={() => void saveManualInquiry()}>
+              {savingManual ? "Saving…" : "Add inquiry"}
+            </CmsButton>
+            {!manualDraft.customerName.trim() && <span className="text-[12px] text-cms-muted">Customer name is required.</span>}
+          </div>
+        </CollapsiblePanel>
+        <section aria-label="Inquiry records" className="overflow-hidden rounded-[14px] border border-cms-line bg-cms-card shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
         <nav aria-label="Filter inquiries by category" className="flex w-full gap-[6px] px-4 py-3 overflow-x-auto border-b border-cms-line [scrollbar-width:thin] max-[480px]:px-3">
           <button suppressHydrationWarning
             aria-pressed={activeCategory === "All"}
@@ -132,7 +219,7 @@ export default function InquiriesTab({ onNavigate }: { onNavigate: (section: str
             onClick={() => setActiveCategory("All")}
             type="button"
           >
-            All <span className="grid min-w-5 h-5 place-items-center px-[5px] rounded-full bg-[rgba(19,8,122,.07)] text-inherit text-[10px] dark:bg-[rgba(255,255,255,.09)]">{inquiries.length}</span>
+            All <span className="grid min-w-5 h-5 place-items-center px-[5px] rounded-full bg-[rgba(19,8,122,.07)] text-inherit text-[10px] dark:bg-[rgba(255,255,255,.09)]">{statusFilteredInquiries.length}</span>
           </button>
           {categories.map((category) => (
             <button suppressHydrationWarning
@@ -190,7 +277,8 @@ export default function InquiriesTab({ onNavigate }: { onNavigate: (section: str
             ))}
           </div>
         )}
-      </section>
+        </section>
+      </div>
       {commentInquiry && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-5 bg-[rgba(10,4,70,.48)] backdrop-blur-[3px]" onClick={() => setCommentInquiryId(null)}>
           <section
