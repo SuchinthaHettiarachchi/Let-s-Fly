@@ -249,21 +249,6 @@ export default function InquiriesTab({ onNavigate }: { onNavigate: (section: str
 
   return (
     <div className="w-full animate-[cms-home-fade_0.35s_cubic-bezier(.2,.7,.2,1)]">
-      <section aria-label="Inquiry totals" className="grid w-full grid-cols-1 gap-[10px] sm:grid-cols-2 sm:gap-[14px] lg:grid-cols-3">
-        <article className="flex min-h-24 flex-col justify-between gap-2 py-4 px-[18px] border border-cms-line border-t-[3px] border-t-cms-primary rounded-[14px] bg-cms-card shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-          <span className="text-cms-muted text-[12px] font-medium leading-[1.35]">Total inquiries</span>
-          <strong className="text-cms-ink text-[22px] font-bold leading-none sm:text-[25px]">{filteredInquiries.length}</strong>
-        </article>
-        <article className="flex min-h-24 flex-col justify-between gap-2 py-4 px-[18px] border border-cms-line border-t-[3px] border-t-[#e3a900] rounded-[14px] bg-cms-card shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-          <span className="text-cms-muted text-[12px] font-medium leading-[1.35]">Pending</span>
-          <strong className="text-cms-ink text-[22px] font-bold leading-none sm:text-[25px]">{pendingCount}</strong>
-        </article>
-        <article className="flex min-h-24 flex-col justify-between gap-2 py-4 px-[18px] border border-cms-line border-t-[3px] border-t-[#12a36a] rounded-[14px] bg-cms-card shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
-          <span className="text-cms-muted text-[12px] font-medium leading-[1.35]">Completed</span>
-          <strong className="text-cms-ink text-[22px] font-bold leading-none sm:text-[25px]">{completedCount}</strong>
-        </article>
-      </section>
-
       {storageError && <p className="mt-4 w-full py-3 px-[14px] border-l-[3px] border-l-[#d42a45] rounded-[7px] bg-[#fff1f2] text-[#991b1b] text-[13px] dark:bg-[#3a1420] dark:text-[#ff9aa8] dark:border-l-[#5c2233]" role="alert">{storageError}</p>}
 
       <section aria-labelledby="inquiry-list-heading" className="mt-6 w-full overflow-hidden border border-cms-line rounded-[14px] bg-cms-card shadow-[0_1px_3px_rgba(16,10,80,0.06)] dark:shadow-none">
@@ -272,6 +257,14 @@ export default function InquiriesTab({ onNavigate }: { onNavigate: (section: str
             <h2 id="inquiry-list-heading" className="text-cms-ink text-[16px] font-semibold">All inquiries</h2>
             <p className="mt-[2px] text-cms-muted text-[12px]">{filteredInquiries.length} {filteredInquiries.length === 1 ? "inquiry" : "inquiries"}</p>
             <Breadcrumbs items={[{ label: "Home", href: "#home", id: "home" }, { label: "Inquiries" }]} onNavigate={onNavigate} className="mt-3" />
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e3a900]/40 bg-[#fff8c2] px-2.5 py-1 text-[11px] font-semibold text-[#796900] dark:border-[#5c4a13] dark:bg-[#3a3413] dark:text-[#f5d76e]">
+              Pending <strong className="text-[12px]">{pendingCount}</strong>
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#12a36a]/30 bg-[#e6f7ef] px-2.5 py-1 text-[11px] font-semibold text-[#087a4e] dark:border-[#205b43] dark:bg-[#12351f] dark:text-[#6ee7a8]">
+              Completed <strong className="text-[12px]">{completedCount}</strong>
+            </span>
           </div>
         </header>
         <nav aria-label="Filter inquiries by category" className="flex w-full gap-[6px] px-4 py-3 overflow-x-auto border-b border-cms-line [scrollbar-width:thin] max-[480px]:px-3">
