@@ -30,6 +30,8 @@ const { errorHandler } = require('./middleware/error');
 
 const app = express();
 
+app.set('trust proxy', Number(process.env.TRUST_PROXY || 1));
+
 app.use(helmet());
 app.use(cors({ origin: config.frontendUrl, credentials: true }));
 // These routers parse their own larger JSON bodies in the router.
