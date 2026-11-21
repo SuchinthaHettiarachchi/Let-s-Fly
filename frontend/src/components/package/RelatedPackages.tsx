@@ -31,7 +31,7 @@ export function RelatedPackages({ items }: { items: Package[] }) {
                 <span className="text-h5">{p.title}</span>
                 <div className="mt-1 flex items-center justify-between">
                   <span className="text-small text-ink-400">{durationShort(p)}</span>
-                  <span className="num text-h5 font-bold text-ocean-600">{formatLKR(p.price)}</span>
+                  <span className="num text-h5 font-bold text-ocean-600">{p.price > 0 ? formatLKR(p.price) : "Price on Request"}</span>
                 </div>
               </div>
               <div className="mt-auto h-1.5 bg-sun-400" />

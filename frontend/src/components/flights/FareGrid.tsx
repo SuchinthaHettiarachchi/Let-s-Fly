@@ -6,6 +6,7 @@ import { Placeholder } from "@/components/ui/Placeholder";
 import { buttonClasses } from "@/components/ui/Button";
 import { useInquiry } from "@/components/inquiry/InquiryProvider";
 import { bookingPortals } from "@/data/site";
+import { mediaUrl } from "@/lib/media-url";
 import { formatLKR } from "@/lib/package-format";
 import type { AirTicketRoute } from "@/lib/air-tickets-api";
 
@@ -27,7 +28,7 @@ export function FareGrid({ fares }: { fares: AirTicketRoute[] }) {
           >
             {f.image ? (
               <Image
-                src={f.image}
+                src={mediaUrl(f.image)}
                 alt=""
                 fill
                 sizes="(min-width: 1024px) 400px, 100vw"
@@ -66,8 +67,14 @@ export function FareGrid({ fares }: { fares: AirTicketRoute[] }) {
                 </span>
               </div>
               <div className="flex flex-col items-end">
-                <span className="text-caption font-normal text-white/75">from</span>
-                <span className="num text-h4 font-bold">{formatLKR(f.pricePerPerson)}</span>
+                {f.pricePerPerson > 0 ? (
+                  <>
+                    <span className="text-caption font-normal text-white/75">from</span>
+                    <span className="num text-h4 font-bold">{formatLKR(f.pricePerPerson)}</span>
+                  </>
+                ) : (
+                  <span className="num text-h4 font-bold">Price on Request</span>
+                )}
               </div>
             </div>
           </li>

@@ -115,8 +115,8 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   const [notice, setNotice] = useState("");
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [galleryUploading, setGalleryUploading] = useState(false);
-  const [galleryUploadProgress, setGalleryUploadProgress] = useState(0);
+  const [galleryUploading, setGalleryUploading] = useState<Record<number, boolean>>({});
+  const [galleryProgress, setGalleryProgress] = useState<Record<number, number>>({});
   const [uploadError, setUploadError] = useState("");
   const [catNotice, setCatNotice] = useState("");
   const [catDraft, setCatDraft] = useState({ key: "", label: "", sortOrder: 0, image: "" });
@@ -154,10 +154,14 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   async function uploadGallerySlot(index: number, file?: File | null) {
     if (!file) return;
     setUploadError("");
-    setGalleryUploading(true);
-    setGalleryUploadProgress(0);
+    setGalleryUploading((current) => ({ ...current, [index]: true }));
+    setGalleryProgress((current) => ({ ...current, [index]: 0 }));
     try {
-      const url = await uploadMediaFile(file, { folder: "packages", kind: "image", onProgress: setGalleryUploadProgress });
+      const url = await uploadMediaFile(file, {
+        folder: "packages",
+        kind: "image",
+        onProgress: (percent) => setGalleryProgress((current) => ({ ...current, [index]: percent })),
+      });
       setDraft((current) => {
         const gallery = [...current.gallery];
         while (gallery.length < 5) gallery.push("");
@@ -167,7 +171,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : "Upload failed.");
     } finally {
-      setGalleryUploading(false);
+      setGalleryUploading((current) => ({ ...current, [index]: false }));
     }
   }
 
@@ -690,8 +694,8 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                   label={index === 0 ? "Main photo *" : `Subphoto ${index} *`}
                   onFile={(file) => void uploadGallerySlot(index, file)}
                   onRemove={() => setGallerySlot(index, "")}
-                  progress={galleryUploadProgress}
-                  uploading={galleryUploading}
+                progress={galleryUploading[index] ? galleryProgress[index] : undefined}
+                uploading={galleryUploading[index] ?? false}
                   value={draft.gallery[index] ?? ""}
                 />
               ))}
