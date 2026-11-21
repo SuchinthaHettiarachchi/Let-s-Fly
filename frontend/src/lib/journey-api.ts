@@ -26,7 +26,7 @@ export async function getJourneys(): Promise<Journey[]> {
       }, 3000);
     });
     const response = await Promise.race([
-      fetch(apiUrl("/journey-categories"), { cache: "no-store", signal: controller.signal }),
+      fetch(apiUrl("/journey-categories"), { next: { revalidate: 60 }, signal: controller.signal }),
       timeout,
     ]);
     if (!response.ok) return [];
