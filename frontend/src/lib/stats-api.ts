@@ -10,6 +10,7 @@ export type DashboardCounts = {
 export type StorageStats = {
   usedBytes: number;
   quotaBytes: number;
+  objectCount: number;
   percent: number;
   unavailable: boolean;
   error?: string;

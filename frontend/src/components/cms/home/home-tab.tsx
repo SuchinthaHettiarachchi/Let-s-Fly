@@ -398,7 +398,9 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
           />
         </div>
         <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-[11.5px] text-cms-muted">
-          <span>{storage && !storage.unavailable ? `${storage.percent}% used` : "Connect the R2 analytics token to see usage."}</span>
+          <span>{storage && !storage.unavailable
+            ? `${storage.percent}% used${storage.objectCount ? ` · ${storage.objectCount} files` : ""}`
+            : "Check the R2 credentials to see usage."}</span>
           <span>{storage?.unavailable && storage.error ? storage.error : ""}</span>
         </div>
       </section>

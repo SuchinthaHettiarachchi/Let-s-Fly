@@ -1,4 +1,4 @@
-const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, PutObjectCommand, DeleteObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3');
 const crypto = require('crypto');
 const config = require('../config/config');
 const { httpError } = require('../middleware/error');
@@ -116,4 +116,25 @@ exports.deleteByUrl = async (url) => {
   if (!key || key.startsWith('/') || key.includes('..')) return false;
   await getClient().send(new DeleteObjectCommand({ Bucket: config.r2.bucket, Key: key }));
   return true;
+};
+
+/** Sums object sizes in the bucket through the S3-compatible ListObjectsV2 API. */
+exports.getStorageUsage = async () => {
+  const client = getClient();
+  let usedBytes = 0;
+  let objectCount = 0;
+  let continuationToken;
+
+  do {
+    const page = await client.send(new ListObjectsV2Command({
+      Bucket: config.r2.bucket,
+      ContinuationToken: continuationToken,
+      MaxKeys: 1000,
+    }));
+    for (const object of page.Contents || []) usedBytes += Number(object.Size || 0);
+    objectCount += page.KeyCount ?? (page.Contents || []).length;
+    continuationToken = page.IsTruncated ? page.NextContinuationToken : undefined;
+  } while (continuationToken);
+
+  return { usedBytes, objectCount };
 };

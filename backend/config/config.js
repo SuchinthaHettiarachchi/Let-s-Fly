@@ -14,8 +14,6 @@ const config = {
     secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
     bucket: process.env.R2_BUCKET || '',
     publicUrl: (process.env.R2_PUBLIC_URL || '').replace(/\/+$/, ''),
-    analyticsToken: process.env.R2_Analytics_Token || process.env.R2_ANALYTICS_TOKEN || '',
-    analyticsEndpoint: process.env.R2_ANALYTICS_ENDPOINT || 'https://api.cloudflare.com/client/v4/graphql',
     quotaBytes: Number(process.env.R2_STORAGE_QUOTA_GB || 10) * 1024 * 1024 * 1024,
   },
 };
