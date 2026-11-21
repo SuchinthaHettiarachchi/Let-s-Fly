@@ -49,10 +49,12 @@ export function PackageCard({ pkg, className = "", imageSizes = "(min-width: 102
         <div className="mt-auto flex items-end justify-between">
           <div className="flex flex-col">
             <span className={`text-caption font-normal text-ink-400 ${pkg.price > 0 ? "" : "invisible"}`}>From</span>
-            <span className={`num whitespace-nowrap font-bold text-ocean-600 ${compact ? "text-h5" : "text-h4"}`}>
-              {pkg.price > 0 ? formatLKR(pkg.price) : "Price on Request"}
+            <span className={`num whitespace-nowrap font-bold text-ocean-600 ${compact ? "text-h5" : "text-h4"} ${pkg.price > 0 ? "" : "invisible"}`}>
+              {pkg.price > 0 ? formatLKR(pkg.price) : " "}
             </span>
-            <span className={`text-caption font-normal text-ink-400 ${pkg.price > 0 ? "" : "invisible"}`}>per person</span>
+            <span className={`${pkg.price > 0 ? "text-caption font-normal text-ink-400" : `num whitespace-nowrap font-bold text-ocean-600 ${compact ? "text-h5" : "text-h4"}`}`}>
+              {pkg.price > 0 ? "per person" : "Price on Request"}
+            </span>
           </div>
           <span className="flex items-center gap-0.5 text-small font-semibold text-ocean-600">
             View More
