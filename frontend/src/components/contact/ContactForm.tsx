@@ -7,6 +7,7 @@ import { ConsentBlock } from "@/components/forms/ConsentBlock";
 import { FormSent } from "@/components/forms/FormSent";
 import { FormError, Honeypot, isBot } from "@/components/forms/FormStatus";
 import { oneLine, sendFormEmail } from "@/lib/email";
+import { categoryFromService, submitInquiry } from "@/lib/inquiry-api";
 import { errorClass, fieldClass, labelClass, serviceOptions, textareaClass } from "@/components/forms/styles";
 
 const MESSAGE_MIN = 10;
@@ -94,6 +95,19 @@ export function ContactForm({ subject, service = serviceOptions[0] }: ContactFor
     setSending(true);
     setFailed(false);
     try {
+      // Save to the CMS before the EmailJS notification is sent.
+      try {
+        await submitInquiry({
+          customerName: name,
+          email: values.email.trim(),
+          phone: values.phone.trim(),
+          category: categoryFromService(picked, subject ?? "Contact"),
+          subject: subject ?? picked,
+          message: values.message,
+        });
+      } catch (saveError) {
+        console.error("Could not save inquiry to the CMS.", saveError);
+      }
       await sendFormEmail({
         form: "Contact form",
         subject: `New enquiry: ${subject ?? picked} from ${name}`,

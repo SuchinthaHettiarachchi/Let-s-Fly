@@ -8,6 +8,7 @@ import { SubjectField } from "@/components/contact/ContactForm";
 import { fieldClass, labelClass, serviceOptions, textareaClass, titleOptions } from "@/components/forms/styles";
 import { FormError, Honeypot, isBot } from "@/components/forms/FormStatus";
 import { oneLine, sendFormEmail } from "@/lib/email";
+import { categoryFromService, submitInquiry } from "@/lib/inquiry-api";
 
 export type InquiryPrefill = { subject?: string; service?: string; destination?: string; details?: string };
 
@@ -54,6 +55,23 @@ export function InquiryForm({ prefill = {}, autoFocus = false }: Props) {
     setSending(true);
     setFailed(false);
     try {
+      // Save to the CMS before the EmailJS notification is sent.
+      try {
+        await submitInquiry({
+          customerName: name,
+          email: get("email"),
+          phone: get("phone"),
+          category: categoryFromService(service, prefill.subject ?? ""),
+          subject: prefill.subject ?? `${service}${destination ? `, ${destination}` : ""}`,
+          message: [
+            destination ? `Destination: ${destination}` : "",
+            get("departure") ? `Departure: ${formatDate(get("departure"))}` : "",
+            get("details"),
+          ].filter(Boolean).join("\n"),
+        });
+      } catch (saveError) {
+        console.error("Could not save inquiry to the CMS.", saveError);
+      }
       await sendFormEmail({
         form: "Trip inquiry",
         subject: `New inquiry: ${prefill.subject ?? `${service}, ${destination}`} from ${name}`,

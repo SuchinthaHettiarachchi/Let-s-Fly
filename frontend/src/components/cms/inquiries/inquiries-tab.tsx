@@ -4,153 +4,22 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Breadcrumbs } from "@/components/cms/Breadcrumbs";
 import { CmsButton } from "@/components/cms/CmsButton";
 
-const INQUIRIES_STORAGE_KEY = "lf_inquiries";
+import {
+  fetchManageInquiries,
+  inquiryCmsApi,
+  type Inquiry,
+  type InquiryCategory,
+  type InquiryStatus,
+} from "@/lib/inquiry-api";
 
 const statuses = ["New", "In Progress", "Closed"] as const;
-type InquiryStatus = (typeof statuses)[number];
 
 const categories = [
-  "Outbound Travel",
-  "Travel Sri Lanka",
-  "Hotel Bookings",
-  "Trains",
-  "Cruises",
-] as const;
-type InquiryCategory = (typeof categories)[number];
-
-interface Inquiry {
-  id: string;
-  createdAt: string;
-  customerName: string;
-  email: string;
-  phone: string;
-  category: InquiryCategory;
-  message: string;
-  status: InquiryStatus;
-  comments: string[];
-}
-
-const demoInquiries: Inquiry[] = [
-  {
-    id: "demo-outbound-1",
-    createdAt: "2026-10-21T09:35:00.000Z",
-    customerName: "Amelia Perera",
-    email: "amelia.perera@example.com",
-    phone: "+94 77 123 4567",
-    category: "Outbound Travel",
-    message: "We are planning a family holiday to Japan for two adults and two children in December. Could you share package options and estimated costs?",
-    status: "New",
-    comments: [],
-  },
-  {
-    id: "demo-srilanka-1",
-    createdAt: "2026-10-20T13:10:00.000Z",
-    customerName: "Daniel Fernando",
-    email: "daniel.fernando@example.com",
-    phone: "+94 71 234 5678",
-    category: "Travel Sri Lanka",
-    message: "Looking for a 5-day cultural tour covering Kandy, Sigiriya, and Anuradhapura for three guests.",
-    status: "In Progress",
-    comments: ["Asked the customer to confirm preferred travel dates."],
-  },
-  {
-    id: "demo-hotel-1",
-    createdAt: "2026-10-19T07:45:00.000Z",
-    customerName: "Nisha Jayawardena",
-    email: "nisha.j@example.com",
-    phone: "+94 76 345 6789",
-    category: "Hotel Bookings",
-    message: "Please check availability for a double room in Galle from 12 to 15 November, including breakfast.",
-    status: "New",
-    comments: [],
-  },
-  {
-    id: "demo-train-1",
-    createdAt: "2026-10-18T11:20:00.000Z",
-    customerName: "Oliver Smith",
-    email: "oliver.smith@example.com",
-    phone: "+44 7700 900123",
-    category: "Trains",
-    message: "Can you arrange two reserved seats on the scenic train from Kandy to Ella on 8 December?",
-    status: "Closed",
-    comments: ["Train seats confirmed and details sent to the customer."],
-  },
-  {
-    id: "demo-cruise-1",
-    createdAt: "2026-10-17T15:05:00.000Z",
-    customerName: "Ravi Kumar",
-    email: "ravi.kumar@example.com",
-    phone: "+91 98765 43210",
-    category: "Cruises",
-    message: "Interested in a Maldives cruise in January. Please send itinerary and cabin pricing for two people.",
-    status: "In Progress",
-    comments: [],
-  },
-  {
-    id: "demo-outbound-2",
-    createdAt: "2026-10-16T08:15:00.000Z",
-    customerName: "Sophie Martin",
-    email: "sophie.martin@example.com",
-    phone: "+33 6 12 34 56 78",
-    category: "Outbound Travel",
-    message: "I would like to know whether you offer a guided group tour to Vietnam in March next year.",
-    status: "New",
-    comments: [],
-  },
-];
-
-function normalizeInquiry(value: unknown): Inquiry | null {
-  if (typeof value !== "object" || value === null) return null;
-  const inquiry = value as Record<string, unknown>;
-  const status = inquiry.status ?? "New";
-  if (
-    typeof inquiry.id !== "string" ||
-    typeof inquiry.createdAt !== "string" ||
-    typeof inquiry.customerName !== "string" ||
-    (inquiry.email !== undefined && typeof inquiry.email !== "string") ||
-    (inquiry.phone !== undefined && typeof inquiry.phone !== "string") ||
-    !categories.includes(inquiry.category as InquiryCategory) ||
-    typeof inquiry.message !== "string" ||
-    !statuses.includes(status as InquiryStatus) ||
-    (inquiry.comments !== undefined &&
-      (!Array.isArray(inquiry.comments) ||
-        !inquiry.comments.every((comment) => typeof comment === "string")))
-  ) {
-    return null;
-  }
-
-  return {
-    id: inquiry.id,
-    createdAt: inquiry.createdAt,
-    customerName: inquiry.customerName,
-    email: typeof inquiry.email === "string" ? inquiry.email : "",
-    phone: typeof inquiry.phone === "string" ? inquiry.phone : "",
-    category: inquiry.category as InquiryCategory,
-    message: inquiry.message,
-    status: status as InquiryStatus,
-    comments: Array.isArray(inquiry.comments) ? inquiry.comments : [],
-  };
-}
-
-function readInquiries(): Inquiry[] {
-  const stored = localStorage.getItem(INQUIRIES_STORAGE_KEY);
-  if (!stored) {
-    localStorage.setItem(INQUIRIES_STORAGE_KEY, JSON.stringify(demoInquiries));
-    return demoInquiries;
-  }
-
-  const records: unknown = JSON.parse(stored);
-  if (!Array.isArray(records)) {
-    throw new Error("Saved inquiry data has an invalid format.");
-  }
-  const normalized: Inquiry[] = [];
-  for (const record of records) {
-    const inquiry = normalizeInquiry(record);
-    if (!inquiry) throw new Error("Saved inquiry data has an invalid format.");
-    normalized.push(inquiry);
-  }
-  return normalized;
-}
+  "Contact",
+  "Plan my Trip Section",
+  "Air Ticket",
+  "Visa Inquiry",
+] as const satisfies readonly InquiryCategory[];
 
 function formatDate(value: string) {
   const date = new Date(value);
@@ -171,23 +40,18 @@ export default function InquiriesTab({ onNavigate }: { onNavigate: (section: str
   const [commentInquiryId, setCommentInquiryId] = useState<string | null>(null);
   const [commentText, setCommentText] = useState("");
 
-  useEffect(() => {
-    function load() {
-      try {
-        setInquiries(readInquiries());
-        setStorageError("");
-      } catch (error) {
-        console.error("Could not load inquiries.", error);
-        setStorageError("Inquiries could not be loaded from browser storage.");
-      }
+  const load = async () => {
+    try {
+      setInquiries(await fetchManageInquiries());
+      setStorageError("");
+    } catch {
+      setStorageError("Inquiries could not be loaded. Please sign in again or try again.");
     }
-    function handleStorage(event: StorageEvent) {
-      if (event.key === INQUIRIES_STORAGE_KEY) load();
-    }
+  };
 
-    load();
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial async CMS data load
+    void load();
   }, []);
 
   const counts = useMemo(() => ({
@@ -205,39 +69,33 @@ export default function InquiriesTab({ onNavigate }: { onNavigate: (section: str
   const pendingCount = filteredInquiries.filter((inquiry) => inquiry.status !== "Closed").length;
   const completedCount = filteredInquiries.filter((inquiry) => inquiry.status === "Closed").length;
 
-  function changeStatus(inquiryId: string, status: InquiryStatus) {
-    const updated = inquiries.map((inquiry) =>
-      inquiry.id === inquiryId ? { ...inquiry, status } : inquiry,
-    );
-
+  async function changeStatus(inquiryId: string, status: InquiryStatus) {
     try {
-      localStorage.setItem(INQUIRIES_STORAGE_KEY, JSON.stringify(updated));
-      setInquiries(updated);
+      const response = await inquiryCmsApi.update(inquiryId, { status });
+      if (!response.ok) throw new Error("Could not update status.");
+      setInquiries((current) => current.map((inquiry) => inquiry.id === inquiryId ? { ...inquiry, status } : inquiry));
       setStorageError("");
-    } catch (error) {
-      console.error("Could not update inquiry status.", error);
+    } catch {
       setStorageError("The status change could not be saved. Please try again.");
     }
   }
 
-  function addComment(event: FormEvent<HTMLFormElement>) {
+  async function addComment(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const comment = commentText.trim();
     if (!comment || !commentInquiryId) return;
 
-    const updated = inquiries.map((inquiry) =>
-      inquiry.id === commentInquiryId
-        ? { ...inquiry, comments: [...inquiry.comments, comment] }
-        : inquiry,
-    );
+    const inquiryId = commentInquiryId;
     try {
-      localStorage.setItem(INQUIRIES_STORAGE_KEY, JSON.stringify(updated));
-      setInquiries(updated);
+      const response = await inquiryCmsApi.update(inquiryId, { comment });
+      if (!response.ok) throw new Error("Could not save comment.");
+      setInquiries((current) => current.map((inquiry) =>
+        inquiry.id === inquiryId ? { ...inquiry, comments: [...inquiry.comments, comment] } : inquiry,
+      ));
       setCommentText("");
       setCommentInquiryId(null);
       setStorageError("");
-    } catch (error) {
-      console.error("Could not save inquiry comment.", error);
+    } catch {
       setStorageError("The comment could not be saved. Please try again.");
     }
   }
