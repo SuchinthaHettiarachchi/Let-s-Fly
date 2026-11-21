@@ -24,7 +24,7 @@ exports.validateJourneyCreate = (body) => {
   const kind = body.kind === 'train' || body.kind === 'cruise' ? body.kind : null;
   if (!kind) throw httpError(400, 'Journey kind is required');
   const price = Number(body.price);
-  if (!Number.isFinite(price) || price <= 0) throw httpError(400, 'Price must be greater than 0');
+  if (!Number.isFinite(price) || price < 0) throw httpError(400, 'Price must be zero or greater');
   const image = typeof body.image === 'string' ? body.image.trim() : '';
   if (!image) throw httpError(400, 'Image is required');
 
@@ -34,7 +34,7 @@ exports.validateJourneyCreate = (body) => {
     label: sanitizePlain(String(body.label ?? ''), 'Label', { max: 80 }),
     text: sanitizePlain(String(body.text ?? ''), 'Description', { max: 2000 }),
     price,
-    priceNote: sanitizePlain(String(body.priceNote ?? ''), 'Price note', { max: 200 }),
+    priceNote: price === 0 ? '' : sanitizePlain(String(body.priceNote ?? ''), 'Price note', { max: 200 }),
     image,
     chips: Array.isArray(body.chips) ? body.chips.map((c) => String(c).trim()).filter(Boolean).slice(0, 20) : [],
     country: body.country === 'Sri Lankan' || body.country === 'Overseas' ? body.country : undefined,
@@ -55,10 +55,10 @@ exports.validateJourneyUpdate = (body) => {
   if (body.text !== undefined) result.text = sanitizePlain(String(body.text), 'Description', { max: 2000 });
   if (body.price !== undefined) {
     const price = Number(body.price);
-    if (!Number.isFinite(price) || price <= 0) throw httpError(400, 'Price must be greater than 0');
+    if (!Number.isFinite(price) || price < 0) throw httpError(400, 'Price must be zero or greater');
     result.price = price;
   }
-  if (body.priceNote !== undefined) result.priceNote = sanitizePlain(String(body.priceNote), 'Price note', { max: 200 });
+  if (body.priceNote !== undefined) result.priceNote = sanitizeOptional(body.priceNote, 'Price note', { max: 200 });
   if (body.image !== undefined) {
     const image = typeof body.image === 'string' ? body.image.trim() : '';
     if (!image) throw httpError(400, 'Image is required');

@@ -21,6 +21,9 @@ exports.create = async (data) => {
 };
 
 exports.update = async (id, data) => {
+  const current = await Journey.findById(id).lean();
+  const finalPrice = data.price !== undefined ? data.price : current?.price;
+  if (finalPrice === 0) data.priceNote = '';
   const doc = await Journey.findByIdAndUpdate(id, data, { new: true, runValidators: true }).lean();
   return toJourney(doc);
 };

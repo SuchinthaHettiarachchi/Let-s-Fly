@@ -130,8 +130,8 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
     draft.name.trim().length > 0 &&
     draft.label.trim().length > 0 &&
     draft.text.trim().length > 0 &&
-    draft.price > 0 &&
-    draft.priceNote.trim().length > 0 &&
+    draft.price >= 0 &&
+    (draft.price > 0 ? draft.priceNote.trim().length > 0 : true) &&
     draft.image.length > 0;
 
   async function saveJourney() {
@@ -146,7 +146,7 @@ export default function CruisesTab({ onNavigate }: { onNavigate: (section: strin
         label: draft.label.trim(),
         text: draft.text.trim(),
         price: draft.price,
-        priceNote: draft.priceNote.trim(),
+        priceNote: draft.price > 0 ? draft.priceNote.trim() : "",
         image: draft.image,
         chips,
         startingPoint: draft.startingPoint.trim(),

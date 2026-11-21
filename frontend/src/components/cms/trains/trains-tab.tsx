@@ -142,8 +142,8 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
     draft.name.trim().length > 0 &&
     draft.label.trim().length > 0 &&
     draft.text.trim().length > 0 &&
-    draft.price > 0 &&
-    draft.priceNote.trim().length > 0 &&
+    draft.price >= 0 &&
+    (draft.price > 0 ? draft.priceNote.trim().length > 0 : true) &&
     draft.image.length > 0 &&
     draft.country.length > 0 &&
     draft.startingPoint.trim().length > 0;
@@ -160,7 +160,7 @@ export default function TrainsTab({ onNavigate }: { onNavigate: (section: string
         label: draft.label.trim(),
         text: draft.text.trim(),
         price: draft.price,
-        priceNote: draft.priceNote.trim(),
+        priceNote: draft.price > 0 ? draft.priceNote.trim() : "",
         image: draft.image,
         chips,
         country: draft.country || undefined,

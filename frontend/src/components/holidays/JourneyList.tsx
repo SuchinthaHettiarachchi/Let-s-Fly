@@ -204,13 +204,21 @@ export function JourneyCard({ journey: j }: { journey: Journey }) {
 
         <aside className="flex flex-col justify-between gap-5 border-t border-sand-200 bg-gradient-to-b from-sand-50/70 via-white to-white p-6 md:col-span-2 md:flex-row md:items-end xl:col-span-1 xl:flex-col xl:items-stretch xl:justify-center xl:border-t-0 xl:border-l xl:p-7">
           <div className="flex flex-col">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-400">Starting from</span>
-            <div className="mt-2 flex items-baseline gap-2">
-              <span className="num font-sans text-[2rem] font-bold leading-none tracking-[-0.03em] text-ocean-700">{formatLKR(j.price)}</span>
-            </div>
-            <span className="mt-2 inline-flex w-fit items-center rounded-full bg-white px-2.5 py-1 text-caption font-medium text-ink-500 ring-1 ring-sand-200">
-              {j.priceNote}
-            </span>
+            {j.price > 0 ? (
+              <>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-400">Starting from</span>
+                <div className="mt-2 flex items-baseline gap-2">
+                  <span className="num font-sans text-[2rem] font-bold leading-none tracking-[-0.03em] text-ocean-700">{formatLKR(j.price)}</span>
+                </div>
+                <span className="mt-2 inline-flex w-fit items-center rounded-full bg-white px-2.5 py-1 text-caption font-medium text-ink-500 ring-1 ring-sand-200">
+                  {j.priceNote}
+                </span>
+              </>
+            ) : (
+              <div className="mt-2">
+                <span className="num font-sans text-[2rem] font-bold leading-none tracking-[-0.03em] text-ocean-700">Price on Request</span>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col gap-2 md:min-w-[220px] xl:min-w-0">

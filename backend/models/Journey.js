@@ -6,7 +6,7 @@ const journeySchema = new mongoose.Schema({
   label: { type: String, default: '' },
   text: { type: String, required: true },
   price: { type: Number, required: true },
-  priceNote: { type: String, required: true },
+  priceNote: { type: String, default: '' },
   image: { type: String, required: true },
   chips: { type: [String], default: [] },
 
