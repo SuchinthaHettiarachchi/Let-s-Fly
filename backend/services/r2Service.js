@@ -18,7 +18,7 @@ const getClient = () => {
   }
   return new S3Client({
     region: 'auto',
-    endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+    endpoint: config.r2.s3Api || `https://${accountId}.r2.cloudflarestorage.com`,
     credentials: { accessKeyId, secretAccessKey },
   });
 };
@@ -46,6 +46,19 @@ const publicUrlForKey = (key) => {
   return `${config.r2.publicUrl}/${key}`;
 };
 
+/** Fails before any object is written if this upload would exceed the configured bucket limit. */
+exports.assertStorageAvailable = async (additionalBytes) => {
+  const limit = config.r2.storageLimitBytes;
+  if (!Number.isFinite(limit) || limit <= 0) return null;
+  const usage = await exports.getStorageUsage();
+  if (usage.usedBytes + additionalBytes > limit) {
+    const usedGb = (usage.usedBytes / 1024 ** 3).toFixed(2);
+    const limitGb = (limit / 1024 ** 3).toFixed(2);
+    throw httpError(413, `Media storage limit reached (${usedGb} GB of ${limitGb} GB used). Delete old files or upgrade the bucket.`);
+  }
+  return usage;
+};
+
 const putObject = async (buffer, contentType, ext, folder) => {
   const key = `${safeFolder(folder)}/${Date.now()}-${crypto.randomBytes(6).toString('hex')}.${ext}`;
   await getClient().send(new PutObjectCommand({
@@ -68,6 +81,7 @@ exports.uploadDataUrl = async (dataUrl, folder = 'packages') => {
   const buffer = Buffer.from(match[2], 'base64');
   if (!buffer.length) throw httpError(400, 'The image is empty.');
   if (buffer.length > MAX_IMAGE_BYTES) throw httpError(413, 'Image must be 5MB or smaller.');
+  await exports.assertStorageAvailable(buffer.length);
   return putObject(buffer, contentType, ext, folder);
 };
 
@@ -80,11 +94,12 @@ exports.uploadRaw = async (buffer, contentType, folder = 'uploads') => {
   const isVideo = Boolean(VIDEO_MIME_EXT[type]);
   const limit = isVideo ? MAX_VIDEO_BYTES : MAX_IMAGE_BYTES;
   if (buffer.length > limit) throw httpError(413, isVideo ? 'Video must be 100MB or smaller.' : 'Image must be 5MB or smaller.');
+  await exports.assertStorageAvailable(buffer.length);
   return putObject(buffer, type, ext, folder);
 };
 
 // Presigned direct-to-R2 PUT URL (browser uploads directly to R2).
-exports.presignPut = async (contentType, folder = 'uploads') => {
+exports.presignPut = async (contentType, folder = 'uploads', fileSize = 0) => {
   if (!getSignedUrlFn) {
     try {
       ({ getSignedUrl: getSignedUrlFn } = require('@aws-sdk/s3-request-presigner'));
@@ -95,6 +110,12 @@ exports.presignPut = async (contentType, folder = 'uploads') => {
   const type = String(contentType || '').split(';')[0].trim().toLowerCase();
   const ext = MIME_EXT[type];
   if (!ext) throw httpError(400, 'Only JPEG, PNG, WebP, AVIF, GIF, MP4 or WebM files are allowed.');
+  const size = Number(fileSize);
+  if (!Number.isFinite(size) || size < 0) throw httpError(400, 'Invalid file size.');
+  if (size > (VIDEO_MIME_EXT[type] ? MAX_VIDEO_BYTES : MAX_IMAGE_BYTES)) {
+    throw httpError(413, VIDEO_MIME_EXT[type] ? 'Video must be 100MB or smaller.' : 'Image must be 5MB or smaller.');
+  }
+  await exports.assertStorageAvailable(size);
   const key = `${safeFolder(folder)}/${Date.now()}-${crypto.randomBytes(6).toString('hex')}.${ext}`;
   const command = new PutObjectCommand({
     Bucket: config.r2.bucket,

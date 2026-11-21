@@ -150,7 +150,7 @@ async function presignAndUploadBlob(
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ contentType, folder }),
+    body: JSON.stringify({ contentType, folder, fileSize: blob.size }),
   });
   const presignData = await presignRes.json().catch(() => ({}));
   if (!presignRes.ok || !presignData.uploadUrl || !presignData.publicUrl) {

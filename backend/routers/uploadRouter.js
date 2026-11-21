@@ -19,8 +19,12 @@ router.post('/', requireAuth, limiter(30), express.json({ limit: '7mb' }), async
 // Presigned direct-to-R2 upload (browser PUTs to R2, avoiding backend hop).
 router.post('/presign', requireAuth, limiter(60), express.json({ limit: '10kb' }), async (req, res, next) => {
   try {
-    const { contentType, folder } = req.body || {};
-    const data = await r2Service.presignPut(contentType, typeof folder === 'string' ? folder : 'uploads');
+    const { contentType, folder, fileSize, size, contentLength } = req.body || {};
+    const data = await r2Service.presignPut(
+      contentType,
+      typeof folder === 'string' ? folder : 'uploads',
+      fileSize ?? size ?? contentLength ?? 0,
+    );
     res.json(data);
   } catch (error) {
     next(error);

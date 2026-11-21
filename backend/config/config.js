@@ -13,8 +13,10 @@ const config = {
     accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
     secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
     bucket: process.env.R2_BUCKET || '',
+    s3Api: (process.env.S3_API || '').replace(/\/+$/, ''),
     publicUrl: (process.env.R2_PUBLIC_URL || '').replace(/\/+$/, ''),
-    quotaBytes: Number(process.env.R2_STORAGE_QUOTA_GB || 10) * 1024 * 1024 * 1024,
+    storageLimitBytes: Number(process.env.R2_STORAGE_LIMIT_GB || process.env.R2_STORAGE_QUOTA_GB || 10) * 1024 * 1024 * 1024,
+    quotaBytes: Number(process.env.R2_STORAGE_LIMIT_GB || process.env.R2_STORAGE_QUOTA_GB || 10) * 1024 * 1024 * 1024,
   },
 };
 
