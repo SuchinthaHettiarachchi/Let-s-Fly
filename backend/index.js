@@ -25,6 +25,7 @@ const projectRouter = require('./routers/projectRouter');
 const jobRouter = require('./routers/jobRouter');
 const newsletterRouter = require('./routers/newsletterRouter');
 const inquiryRouter = require('./routers/inquiryRouter');
+const statsRouter = require('./routers/statsRouter');
 const { errorHandler } = require('./middleware/error');
 
 const app = express();
@@ -92,6 +93,7 @@ app.use('/api/projects', projectRouter);
 app.use('/api/jobs', jobRouter);
 app.use('/api/newsletter', newsletterRouter);
 app.use('/api/inquiries', inquiryRouter);
+app.use('/api/stats', statsRouter);
 app.use(errorHandler);
 
 mongoose.connect(config.mongoUri)

@@ -12,6 +12,7 @@ import RentalTeaserSection from "@/components/cms/home/rental-teaser-section";
 import { aboutLink, contactGroup, footerColumns, navGroups } from "@/data/site";
 import { browserApiUrl } from "@/lib/api-url";
 import { uploadBlobWithProgress } from "@/lib/cms-upload";
+import { fetchDashboardCounts, fetchStorageStats, formatBytes, type DashboardCounts, type StorageStats } from "@/lib/stats-api";
 
 type HeroKind = "desktop" | "mobile";
 
@@ -48,12 +49,14 @@ const heroLinkOptions = [
   ...footerColumns.flatMap((column) => column.links),
 ].filter((link, index, links) => links.findIndex((item) => item.href === link.href) === index);
 
-const stats = [
-  { label: "Travel Packages", value: 24, icon: "outbound", style: "text-cms-muted", trend: "+3", foot: "Outbound & Sri Lanka" },
-  { label: "Projects", value: 12, icon: "projects", style: "text-[#8a7700] dark:text-cms-yellow", trend: "+1", foot: "Active this quarter" },
-  { label: "Hotels", value: 38, icon: "hotels", style: "text-[#12a36a] dark:text-[#6ee7a8]", trend: "+5", foot: "Partner properties" },
-  { label: "Gallery Images", value: 246, icon: "gallery", style: "text-[#d42a6a] dark:text-[#ff9aa8]", trend: "+18", foot: "Across all albums" },
+const buildStats = (counts: DashboardCounts) => [
+  { label: "Travel Packages", value: counts.packages, icon: "outbound", style: "text-cms-muted", foot: "Outbound & Sri Lanka" },
+  { label: "Projects", value: counts.projects, icon: "projects", style: "text-[#8a7700] dark:text-cms-yellow", foot: "All projects" },
+  { label: "Gallery Images", value: counts.galleryImages, icon: "gallery", style: "text-[#d42a6a] dark:text-[#ff9aa8]", foot: "Photos in the gallery" },
+  { label: "Rental Vehicles", value: counts.vehicles, icon: "hotels", style: "text-[#12a36a] dark:text-[#6ee7a8]", foot: "Fleet listings" },
 ];
+
+const emptyCounts: DashboardCounts = { packages: 0, projects: 0, galleryImages: 0, vehicles: 0 };
 
 const quickLinks = [
   { id: "outbound", title: "Outbound Travels", description: "International tour packages", icon: "outbound" },
@@ -196,6 +199,13 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
   const [loaded, setLoaded] = useState(false);
   const [saving, setSaving] = useState(false);
   const [now, setNow] = useState<Date | null>(null);
+  const [counts, setCounts] = useState<DashboardCounts>(emptyCounts);
+  const [storage, setStorage] = useState<StorageStats | null>(null);
+
+  useEffect(() => {
+    fetchDashboardCounts().then(setCounts).catch(() => {});
+    fetchStorageStats().then(setStorage).catch(() => {});
+  }, []);
 
   useEffect(() => {
     setNow(new Date());
@@ -359,17 +369,38 @@ export default function HomeTab({ onNavigate }: { onNavigate: (section: string) 
       </section>
 
       <section aria-label="Overview" className={cardGrid}>
-        {stats.map((stat) => (
+        {buildStats(counts).map((stat) => (
           <article className={`p-5 ${cardShell} ${liftCard}`} key={stat.label}>
-            <div className="flex items-start justify-between">
-              <span className={`grid size-[42px] place-items-center rounded-[12px] bg-[#f5f5f7] dark:bg-[#101435] ${stat.style}`}><HomeIcon name={stat.icon} /></span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-[#f5f5f7] dark:bg-[#101435] px-2 py-[3px] text-[11.5px] font-semibold text-[#12a36a] dark:text-[#6ee7a8]"><HomeIcon name="up" size={12} />{stat.trend}</span>
-            </div>
+            <span className={`grid size-[42px] place-items-center rounded-[12px] bg-[#f5f5f7] dark:bg-[#101435] ${stat.style}`}><HomeIcon name={stat.icon} /></span>
             <div className="mt-4 text-[13px] font-medium text-cms-muted">{stat.label}</div>
             <div className="mt-[2px] text-[30px] font-bold leading-[1.15] tracking-[-0.8px] text-cms-ink">{stat.value}</div>
             <div className="mt-2 text-[12px] text-cms-muted">{stat.foot}</div>
           </article>
         ))}
+      </section>
+
+      <section aria-label="Media storage" className={`mt-5 p-5 ${cardShell}`}>
+        <div className="flex flex-wrap items-end justify-between gap-2">
+          <div>
+            <h3 className="text-[14px] font-semibold text-cms-ink">Media storage</h3>
+            <p className="mt-1 text-[12px] text-cms-muted">Cloudflare R2 bucket usage for uploaded images and videos.</p>
+          </div>
+          <span className="text-[12px] font-semibold text-cms-ink">
+            {storage && !storage.unavailable
+              ? `${formatBytes(storage.usedBytes)} / ${formatBytes(storage.quotaBytes)}`
+              : "Storage usage unavailable"}
+          </span>
+        </div>
+        <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-[#f1f0fa] dark:bg-[#232755]">
+          <div
+            className={`h-full rounded-full transition-[width] duration-500 ${(storage?.percent ?? 0) >= 90 ? "bg-[#dc2626]" : (storage?.percent ?? 0) >= 70 ? "bg-[#e3a900]" : "bg-cms-primary"}`}
+            style={{ width: `${Math.min(100, Math.max(0, storage?.percent ?? 0))}%` }}
+          />
+        </div>
+        <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-[11.5px] text-cms-muted">
+          <span>{storage && !storage.unavailable ? `${storage.percent}% used` : "Connect the R2 analytics token to see usage."}</span>
+          <span>{storage?.unavailable && storage.error ? storage.error : ""}</span>
+        </div>
       </section>
 
       <div className="mt-9 mb-3 flex items-baseline justify-between max-[480px]:flex-col max-[480px]:items-start max-[480px]:gap-[3px]">
