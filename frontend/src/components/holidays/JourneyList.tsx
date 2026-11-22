@@ -95,9 +95,9 @@ export function JourneyList({ journeys }: { journeys: Journey[] }) {
       </div>
 
       {visible.length ? (
-        <ul role="tabpanel" aria-label={current.label} className="flex flex-col gap-6">
+        <ul role="tabpanel" aria-label={current.label} className="grid grid-cols-1 gap-6 [grid-auto-rows:1fr]">
           {visible.map((j, i) => (
-            <li key={j.id} data-reveal={(i % 3) * 90}>
+            <li className="h-full" key={j.id} data-reveal={(i % 3) * 90}>
               <JourneyCard journey={j} />
             </li>
           ))}
@@ -126,9 +126,9 @@ export function JourneyCard({ journey: j }: { journey: Journey }) {
   const stopCount = Math.max(0, dedupedRoute.length - 1);
 
   return (
-    <article className="group relative overflow-hidden rounded-3xl border-2 border-dashed border-sand-300/80 bg-white shadow-[0_12px_40px_rgba(11,37,69,0.08)] transition-all duration-300 ease-lf hover:-translate-y-1 hover:border-ocean-600/35 hover:shadow-[0_20px_50px_rgba(11,37,69,0.14)]">
-      <div className="grid grid-cols-1 md:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[320px_minmax(0,1fr)_260px]">
-        <div className="relative min-h-[220px] overflow-hidden bg-sand-200 md:min-h-full">
+    <article className="group relative h-full overflow-hidden rounded-3xl border-2 border-dashed border-sand-300/80 bg-white shadow-[0_12px_40px_rgba(11,37,69,0.08)] transition-all duration-300 ease-lf hover:-translate-y-1 hover:border-ocean-600/35 hover:shadow-[0_20px_50px_rgba(11,37,69,0.14)]">
+      <div className="grid h-full grid-cols-1 md:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[320px_minmax(0,1fr)_260px]">
+        <div className="relative h-full min-h-[220px] overflow-hidden bg-sand-200">
           {j.image ? (
             <Image
               src={j.image}
@@ -202,7 +202,7 @@ export function JourneyCard({ journey: j }: { journey: Journey }) {
           )}
         </div>
 
-        <aside className="flex flex-col justify-between gap-5 border-t border-sand-200 bg-gradient-to-b from-sand-50/70 via-white to-white p-6 md:col-span-2 md:flex-row md:items-end xl:col-span-1 xl:flex-col xl:items-stretch xl:justify-center xl:border-t-0 xl:border-l xl:p-7">
+        <aside className="flex h-full flex-col justify-between gap-5 border-t border-sand-200 bg-gradient-to-b from-sand-50/70 via-white to-white p-6 md:col-span-2 md:flex-row md:items-end xl:col-span-1 xl:flex-col xl:items-stretch xl:justify-center xl:border-t-0 xl:border-l xl:p-7">
           <div className="flex flex-col">
             {j.price > 0 ? (
               <>
@@ -215,8 +215,10 @@ export function JourneyCard({ journey: j }: { journey: Journey }) {
                 </span>
               </>
             ) : (
-              <div className="mt-2">
-                <span className="num font-sans text-[2rem] font-bold leading-none tracking-[-0.03em] text-ocean-700">Price on Request</span>
+              <div className="mt-2 flex min-h-[4.25rem] items-start">
+                <span className="font-sans text-[2rem] font-bold leading-[1.05] tracking-[-0.03em] text-ocean-700">
+                  Price on<br />Request
+                </span>
               </div>
             )}
           </div>

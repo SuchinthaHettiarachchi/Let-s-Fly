@@ -212,9 +212,9 @@ export function LatestPackages() {
           extrasLoading ? (
             <div className="rounded-xl border border-dashed border-sand-300 py-12 text-center text-body text-ink-400">Loading journeys…</div>
           ) : shownJourneys.length ? (
-            <ul className="flex flex-col gap-4 pt-2">
+            <ul className="grid grid-cols-1 gap-4 pt-2 [grid-auto-rows:1fr]">
               {shownJourneys.map((j) => (
-                <li key={j.id}>
+                <li className="h-full" key={j.id}>
                   <JourneyCard journey={j} />
                 </li>
               ))}
