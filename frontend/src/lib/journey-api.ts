@@ -1,4 +1,5 @@
 import { apiUrl, browserApiUrl } from "@/lib/api-url";
+import type { Journey as VisitorJourney } from "@/data/journeys";
 
 export type Journey = {
   id: string;
@@ -14,6 +15,23 @@ export type Journey = {
   startingPoint: string;
   stops: string[];
 };
+
+export function toVisitorJourney(record: Journey): VisitorJourney {
+  return {
+    id: record.id,
+    kind: record.kind,
+    label: record.label,
+    title: record.name,
+    text: record.text,
+    chips: record.chips || [],
+    price: record.price,
+    priceNote: record.priceNote || "",
+    image: record.image,
+    country: record.country === "Overseas" || record.country === "Sri Lankan" ? record.country : undefined,
+    startingPoint: record.startingPoint,
+    stops: record.stops || [],
+  };
+}
 
 export async function getJourneys(): Promise<Journey[]> {
   const controller = new AbortController();

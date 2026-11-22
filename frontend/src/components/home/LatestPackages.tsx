@@ -9,12 +9,14 @@ import { PackageCard, type PackageCardData } from "@/components/package/PackageC
 import { HotelBookingCard } from "@/components/holidays/HotelBookings";
 import { JourneyCard } from "@/components/holidays/JourneyList";
 import type { Package } from "@/data/packages";
-import { journeys } from "@/data/journeys";
-import { apiUrl } from "@/lib/api-url";
+import type { Journey as VisitorJourney } from "@/data/journeys";
+import { defaultHotelBooking, type HotelBookingContent } from "@/lib/hotel-booking-api";
+import { browserApiUrl } from "@/lib/api-url";
+import { toVisitorJourney, type Journey as JourneyRecord } from "@/lib/journey-api";
 
 /** At most 3 rows of 4, balanced across Travel Sri Lanka and Outbound. */
 const MAX_SHOWN = 12;
-const PACKAGES_URL = apiUrl("/packages");
+const PACKAGES_URL = browserApiUrl("/packages");
 
 type CmsPackage = PackageCardData & {
   category: Package["category"];
@@ -65,6 +67,9 @@ export function LatestPackages() {
   const [outboundPackages, setOutboundPackages] = useState<CmsPackage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [hotelContent, setHotelContent] = useState<HotelBookingContent | null>(null);
+  const [journeys, setJourneys] = useState<VisitorJourney[]>([]);
+  const [extrasLoading, setExtrasLoading] = useState(true);
   const pills = useRef<HTMLDivElement>(null);
   const { show, category, href } = filters[active];
 
@@ -79,6 +84,26 @@ export function LatestPackages() {
       : category === "outbound"
         ? outboundPackages.slice(0, MAX_SHOWN)
         : allPackages;
+
+  const shownJourneys = useMemo(() => {
+    const time = (j: VisitorJourney) => {
+      const t = parseInt(String(j.id).slice(0, 8), 16);
+      return Number.isFinite(t) ? t * 1000 : 0;
+    };
+    const sorted = [...journeys].sort((a, b) => time(b) - time(a));
+    const trains = sorted.filter((j) => j.kind === "train");
+    const cruises = sorted.filter((j) => j.kind === "cruise");
+    const picked = [...trains.slice(0, 3), ...cruises.slice(0, 2)];
+    const used = new Set(picked.map((j) => j.id));
+    for (const j of [...trains.slice(3), ...cruises.slice(2)]) {
+      if (picked.length >= 5) break;
+      if (!used.has(j.id)) {
+        picked.push(j);
+        used.add(j.id);
+      }
+    }
+    return picked.slice(0, 5);
+  }, [journeys]);
 
   useEffect(() => {
     let cancelled = false;
@@ -105,6 +130,35 @@ export function LatestPackages() {
     }
 
     void load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadExtras() {
+      try {
+        const [hotelRes, journeyRes] = await Promise.all([
+          fetch(browserApiUrl("/hotel-booking")),
+          fetch(browserApiUrl("/journey-categories")),
+        ]);
+        if (cancelled) return;
+        if (hotelRes.ok) {
+          const data = (await hotelRes.json()) as { content?: Partial<HotelBookingContent> };
+          if (data.content) setHotelContent({ ...defaultHotelBooking, ...data.content });
+        }
+        if (journeyRes.ok) {
+          const data = (await journeyRes.json()) as { journeys?: JourneyRecord[] };
+          if (Array.isArray(data.journeys)) setJourneys(data.journeys.map(toVisitorJourney));
+        }
+      } catch {
+        setHotelContent(defaultHotelBooking);
+      } finally {
+        if (!cancelled) setExtrasLoading(false);
+      }
+    }
+    void loadExtras();
     return () => {
       cancelled = true;
     };
@@ -152,16 +206,22 @@ export function LatestPackages() {
           </div>
         </div>
 
-        {show === "hotels" && <HotelBookingCard />}
+        {show === "hotels" && <HotelBookingCard content={hotelContent ?? defaultHotelBooking} />}
 
         {show === "journeys" && (
-          <ul className="flex flex-col gap-4 pt-2">
-            {journeys.map((j) => (
-              <li key={j.id}>
-                <JourneyCard journey={j} />
-              </li>
-            ))}
-          </ul>
+          extrasLoading ? (
+            <div className="rounded-xl border border-dashed border-sand-300 py-12 text-center text-body text-ink-400">Loading journeys…</div>
+          ) : shownJourneys.length ? (
+            <ul className="flex flex-col gap-4 pt-2">
+              {shownJourneys.map((j) => (
+                <li key={j.id}>
+                  <JourneyCard journey={j} />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="rounded-xl border border-dashed border-sand-300 py-12 text-center text-body text-ink-600">No journeys are available yet.</div>
+          )
         )}
 
         {/* Fills 4 across, then wraps: 12 packages make 3 full rows, 10 make 4 + 4 + 2. */}
