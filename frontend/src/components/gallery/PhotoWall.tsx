@@ -67,8 +67,12 @@ export function PhotoWall({ items, categories }: { items: GalleryItem[]; categor
                 <div className={`${tile} bg-black`}>
                   <video
                     className="absolute inset-0 h-full w-full object-contain"
+                    autoPlay
                     controls
-                    preload="metadata"
+                    loop
+                    muted
+                    playsInline
+                    preload="auto"
                     src={p.media}
                   />
                   {caption}
