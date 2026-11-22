@@ -9,6 +9,7 @@ import { Newsletter } from "@/components/layout/Newsletter";
 import { ConsentGate } from "@/components/consent/ConsentGate";
 import { CookieSettingsButton } from "@/components/consent/CookieSettingsButton";
 import { contact, footerColumns, paymentMethodsAccepted, socials } from "@/data/site";
+import { officeHours } from "@/data/careers";
 
 /** Small uppercase label over each footer block. */
 function Label({ children }: { children: React.ReactNode }) {
@@ -85,7 +86,13 @@ export function Footer() {
               </div>
               <div>
                 <Label>Office hours</Label>
-                <span className="text-white">{contact.hours}</span>
+                <ul className="flex flex-col gap-0.5 text-white">
+                  {officeHours.map((o) => (
+                    <li key={o.days}>
+                      {o.days} <span className="text-white/70">{o.hours}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
