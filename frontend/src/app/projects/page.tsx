@@ -19,6 +19,7 @@ export default async function ProjectsPage() {
   return (
     <>
       <PageHero
+        image="/images/banners/projects.webp"
         crumbs={[{ label: "Home", href: "/" }, { label: "Our Projects" }]}
         eyebrow="MICE tourism"
         title="Corporate MICE tourism, events and incentive travel"

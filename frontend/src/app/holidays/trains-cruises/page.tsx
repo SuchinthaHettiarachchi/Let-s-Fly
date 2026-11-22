@@ -38,7 +38,7 @@ export default async function TrainsCruisesPage() {
   return (
     <>
       <PageHero
-        image="/images/hero/hill-country-rail.jpg"
+        image="/images/banners/trainscruises.webp"
         crumbs={[{ label: "Home", href: "/" }, { label: "Trains & Cruise Adventures" }]}
         eyebrow="Scenic journeys"
         title="Scenic train tickets and cruise holiday packages"

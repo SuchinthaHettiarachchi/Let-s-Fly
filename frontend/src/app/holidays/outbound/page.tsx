@@ -30,7 +30,7 @@ export default async function OutboundPage() {
   return (
     <>
       <PageHero
-        image="/images/hero/dubai.jpg"
+        image="/images/banners/outbound.webp"
         crumbs={[{ label: "Home", href: "/" }, { label: "Outbound Packages" }]}
         eyebrow="Outbound travel"
         title="Holiday packages from Sri Lanka, fully planned"

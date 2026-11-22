@@ -24,6 +24,7 @@ export default async function AirTicketsPage() {
   return (
     <>
       <PageHero
+        image="/images/banners/airticket.webp"
         crumbs={[{ label: "Home", href: "/" }, { label: "Air Tickets" }]}
         eyebrow="Air tickets"
         title="Book cheap air tickets from Sri Lanka"

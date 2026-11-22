@@ -19,7 +19,7 @@ export default async function RentalsPage() {
   return (
     <>
       <PageHero
-        image="/images/rentals/van.jpg"
+        image="/images/banners/rentals.webp"
         crumbs={[{ label: "Home", href: "/" }, { label: "Car & Bike Rentals" }]}
         eyebrow="Vehicle rental"
         title="Car and bike rental across Sri Lanka"

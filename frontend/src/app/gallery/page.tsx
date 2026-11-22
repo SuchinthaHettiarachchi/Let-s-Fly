@@ -21,7 +21,7 @@ export default async function GalleryPage() {
   return (
     <>
       <PageHero
-        image="/images/packages/bali-honeymoon.jpg"
+        image="/images/banners/gallery.webp"
         crumbs={[{ label: "Home", href: "/" }, { label: "Travellers Gallery" }]}
         eyebrow="Tour gallery"
         title="Photos and videos from our latest tours"

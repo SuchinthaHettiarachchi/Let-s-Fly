@@ -21,6 +21,7 @@ export default async function VisaServicesPage() {
   return (
     <>
       <PageHero
+        image="/images/banners/visa.webp"
         crumbs={[{ label: "Home", href: "/" }, { label: "Visa Services" }]}
         eyebrow="Visa services"
         title="Visa services for Sri Lankan travellers, simplified"
