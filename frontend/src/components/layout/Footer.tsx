@@ -168,9 +168,9 @@ export function Footer() {
         </Container>
 
         <div className="border-t border-white/14">
-          <Container className="flex flex-col items-start gap-3 py-5 text-white/70 lg:flex-row lg:items-center lg:justify-between">
+          <Container className="flex flex-col items-start gap-3 py-5 text-white/70 xl:flex-row xl:items-center xl:justify-between">
             <span>© {new Date().getFullYear()} Let&apos;s Fly.lk · All rights reserved.</span>
-            <nav aria-label={legalLinks.title} className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <nav aria-label={legalLinks.title} className="flex flex-wrap items-center gap-x-3 gap-y-1 whitespace-nowrap">
               {legalLinks.links.map((l, i) => (
                 <Fragment key={l.href}>
                   {i > 0 && <span aria-hidden="true" className="h-3 w-px bg-white/30" />}
