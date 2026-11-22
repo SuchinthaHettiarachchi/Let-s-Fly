@@ -1,7 +1,7 @@
 export const contact = {
   phone: "+94 77 831 6020",
   phoneHref: "tel:+94778316020",
-  email: "info@letsfly.lk",
+  email: "inquiry@letsfly.lk",
   whatsappHref: "https://wa.me/94778316020",
   addressShort: "Rajagiriya, Sri Lanka",
   address: "3rd floor, No. 246/2/2, Nawala Road, Rajagiriya",
