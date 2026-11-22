@@ -16,7 +16,7 @@ Until the three keys below are set, the forms show "Sorry, we couldn't send that
 ## 1. Create the account (about 10 minutes)
 
 1. Sign up at https://dashboard.emailjs.com/sign-up. Use the office account, not a personal one.
-2. **Email Services → Add New Service → Gmail** (or Outlook / another provider). Sign in with the mailbox that should **send** these emails, for example info@letsfly.lk. Copy the **Service ID**, e.g. `service_ab12cd3`.
+2. **Email Services → Add New Service → Gmail** (or Outlook / another provider). Sign in with the mailbox that should **send** these emails, for example inquiry@letsfly.lk. Copy the **Service ID**, e.g. `service_ab12cd3`.
 3. **Email Templates → Create New Template**, then fill it in exactly like this:
 
    | Field | Value |

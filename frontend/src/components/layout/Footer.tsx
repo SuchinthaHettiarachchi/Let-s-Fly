@@ -9,6 +9,7 @@ import { Newsletter } from "@/components/layout/Newsletter";
 import { ConsentGate } from "@/components/consent/ConsentGate";
 import { CookieSettingsButton } from "@/components/consent/CookieSettingsButton";
 import { contact, footerColumns, paymentMethodsAccepted, socials } from "@/data/site";
+import { officeHours } from "@/data/careers";
 
 /** Small uppercase label over each footer block. */
 function Label({ children }: { children: React.ReactNode }) {
@@ -85,7 +86,13 @@ export function Footer() {
               </div>
               <div>
                 <Label>Office hours</Label>
-                <span className="text-white">{contact.hours}</span>
+                <ul className="flex flex-col gap-0.5 text-white">
+                  {officeHours.map((o) => (
+                    <li key={o.days}>
+                      {o.days} <span className="text-white/70">{o.hours}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
@@ -161,9 +168,9 @@ export function Footer() {
         </Container>
 
         <div className="border-t border-white/14">
-          <Container className="flex flex-col items-start gap-3 py-5 text-white/70 lg:flex-row lg:items-center lg:justify-between">
+          <Container className="flex flex-col items-start gap-3 py-5 text-white/70 xl:flex-row xl:items-center xl:justify-between">
             <span>© {new Date().getFullYear()} Let&apos;s Fly.lk · All rights reserved.</span>
-            <nav aria-label={legalLinks.title} className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <nav aria-label={legalLinks.title} className="flex flex-wrap items-center gap-x-3 gap-y-1 whitespace-nowrap">
               {legalLinks.links.map((l, i) => (
                 <Fragment key={l.href}>
                   {i > 0 && <span aria-hidden="true" className="h-3 w-px bg-white/30" />}

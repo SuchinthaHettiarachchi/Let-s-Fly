@@ -4,6 +4,7 @@ import { Icon } from "@/components/ui/Icon";
 import { ContactForm } from "@/components/contact/ContactForm";
 import type { serviceOptions } from "@/components/forms/styles";
 import { contact } from "@/data/site";
+import { officeHours } from "@/data/careers";
 
 type MessageSectionProps = {
   /** Pre-filled for each page so the team knows where the message came from. */
@@ -18,7 +19,19 @@ type MessageSectionProps = {
 const reach = [
   { icon: "call", label: "Call us", value: contact.phone, href: contact.phoneHref },
   { icon: "mail", label: "Email us", value: contact.email, href: `mailto:${contact.email}` },
-  { icon: "schedule", label: "Office hours", value: contact.hours },
+  {
+    icon: "schedule",
+    label: "Office hours",
+    value: (
+      <span className="flex flex-col">
+        {officeHours.map((o) => (
+          <span key={o.days}>
+            {o.days} <span className="text-ink-600">{o.hours}</span>
+          </span>
+        ))}
+      </span>
+    ),
+  },
 ];
 
 /** "Send a message / How can we help?" block: short intro and contact details beside the message form. */

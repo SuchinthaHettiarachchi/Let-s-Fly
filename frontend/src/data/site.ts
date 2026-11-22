@@ -1,7 +1,7 @@
 export const contact = {
   phone: "+94 77 831 6020",
   phoneHref: "tel:+94778316020",
-  email: "info@letsfly.lk",
+  email: "inquiry@letsfly.lk",
   whatsappHref: "https://wa.me/94778316020",
   addressShort: "Rajagiriya, Sri Lanka",
   address: "3rd floor, No. 246/2/2, Nawala Road, Rajagiriya",
@@ -10,7 +10,7 @@ export const contact = {
   /** Keyless Google Maps embed of the office, used on Contact and in the footer. */
   mapEmbedHref:
     "https://maps.google.com/maps?q=Let%27s+Fly.lk+Rajagiriya&z=16&output=embed",
-  hours: "Mon to Sat, 9.00am to 6.00pm",
+  hours: "Monday to Saturday, 9 AM to 5 PM (closed on Sunday)",
   /** Searches Google Maps for the business. Swap for the Google Business Profile reviews link once it's confirmed. */
   googleReviewsHref: "https://www.google.com/maps/search/?api=1&query=Let%27s+Fly.lk+Rajagiriya",
   /** Opens the "write a review" box. Needs the business's Place ID: https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID */

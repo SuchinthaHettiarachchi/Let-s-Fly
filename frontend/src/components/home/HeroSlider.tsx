@@ -7,7 +7,6 @@ import { Eyebrow } from "@/components/ui/SectionHeading";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { useInquiry } from "@/components/inquiry/InquiryProvider";
-import { contact } from "@/data/site";
 import { heroSlides } from "@/data/home";
 import { apiUrl } from "@/lib/api-url";
 
@@ -150,17 +149,6 @@ export function HeroSlider() {
           </Button>
           <ButtonLink href="/air-tickets" variant="ghostOnDark" size="xl" leadingIcon="flight">
             Book a Flight
-          </ButtonLink>
-          <ButtonLink
-            href={contact.whatsappHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="sand"
-            className="max-sm:hidden"
-            size="xl"
-            icon="forum"
-          >
-            Ask Let&apos;s Fly
           </ButtonLink>
         </div>
       </Container>

@@ -25,9 +25,7 @@ export default async function SriLankaPage() {
   return (
     <>
       <PageHero
-        image="/images/hero/sigiriya-sunset.jpg"
-        imagePosition="object-[50%_55%]"
-        overlay={false}
+        image="/images/banners/travelsrilanka.webp"
         crumbs={[{ label: "Home", href: "/" }, { label: "Sri Lanka Tours" }]}
         eyebrow="Inbound tours"
         title="Sri Lanka tour packages and hotel bookings"

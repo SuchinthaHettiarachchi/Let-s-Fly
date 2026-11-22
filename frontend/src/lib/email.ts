@@ -48,24 +48,23 @@ export async function sendFormEmail(email: FormEmail): Promise<void> {
   const { serviceId, templateId, publicKey } = config;
   if (!serviceId || !templateId || !publicKey) throw new EmailNotConfiguredError();
 
-  // const res = await fetch(ENDPOINT, {
-  //   method: "POST",
-  //   headers: { "Content-Type": "application/json" },
-  //   body: JSON.stringify({
-  //     service_id: serviceId,
-  //     template_id: templateId,
-  //     user_id: publicKey,
-  //     template_params: {
-  //       subject: email.subject,
-  //       from_name: email.fromName ? `${email.fromName} via letsfly.lk` : "Let's Fly website",
-  //       reply_to: email.replyTo ?? "",
-  //       message_html: renderEmail(email),
-  //     },
-  //   }),
-  // });
-  // if (!res.ok) throw new Error(`EmailJS ${res.status}: ${await res.text()}`);
+  const res = await fetch(ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      service_id: serviceId,
+      template_id: templateId,
+      user_id: publicKey,
+      template_params: {
+        subject: email.subject,
+        from_name: email.fromName ? `${email.fromName} via letsfly.lk` : "Let's Fly website",
+        reply_to: email.replyTo ?? "",
+        message_html: renderEmail(email),
+      },
+    }),
+  });
+  if (!res.ok) throw new Error(`EmailJS ${res.status}: ${await res.text()}`);
 }
-
 
 /** Collapses whitespace and trims, for one-line values such as names in a subject. */
 export function oneLine(value: string) {
