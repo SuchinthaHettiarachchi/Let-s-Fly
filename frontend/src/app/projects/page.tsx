@@ -4,7 +4,7 @@ import { CtaBand } from "@/components/layout/CtaBand";
 import { Container } from "@/components/ui/Container";
 import { ProjectGrid } from "@/components/projects/ProjectGrid";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { fromRecord, projects as sampleProjects } from "@/data/projects";
+import { fromRecord } from "@/data/projects";
 import { getProjects } from "@/lib/project-api";
 
 export const metadata: Metadata = {
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default async function ProjectsPage() {
   const records = await getProjects();
-  const projects = records.length ? records.map(fromRecord) : sampleProjects;
+  const projects = records.map(fromRecord);
   return (
     <>
       <PageHero
