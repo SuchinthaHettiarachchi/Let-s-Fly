@@ -54,7 +54,7 @@ export function PhotoWall({ items, categories }: { items: GalleryItem[]; categor
 
       <ul className="columns-2 gap-3 sm:gap-4 lg:columns-4">
         {shown.map((p, i) => {
-          const tile = `relative mb-3 block w-full sm:mb-4 break-inside-avoid overflow-hidden rounded-xl bg-sand-200 ${heights[i % heights.length]}`;
+          const tile = `relative mb-3 block w-full sm:mb-4 break-inside-avoid overflow-hidden rounded-xl ${heights[i % heights.length]}`;
           const caption = (
             <span className="absolute bottom-2 left-2 z-10 flex max-w-[calc(100%-1rem)] items-center gap-1 truncate sm:bottom-3 sm:left-3 rounded-full bg-white/95 px-2.5 py-1 text-caption text-ink-900">
               <Icon name="location_on" size={14} className="text-ocean-600" />
@@ -66,7 +66,7 @@ export function PhotoWall({ items, categories }: { items: GalleryItem[]; categor
               {p.mediaType === "video" ? (
                 <div className={`${tile} bg-black`}>
                   <video
-                    className="absolute inset-0 h-full w-full object-contain"
+                    className="absolute inset-0 h-full w-full bg-black object-contain"
                     autoPlay
                     controls
                     loop
@@ -82,7 +82,7 @@ export function PhotoWall({ items, categories }: { items: GalleryItem[]; categor
                   type="button"
                   onClick={() => setViewing(withImages.findIndex((w) => w._id === p._id))}
                   aria-label={`View photo: ${p.caption}`}
-                  className={`${tile} group cursor-zoom-in`}
+                  className={`${tile} bg-sand-200 group cursor-zoom-in`}
                 >
                   <Image
                     src={p.media}
