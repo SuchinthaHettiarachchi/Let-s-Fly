@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { ButtonLink, buttonClasses } from "@/components/ui/Button";
@@ -37,6 +37,27 @@ export function Header() {
   const mobileOpen = menuPath === pathname;
   const setMobileOpen = (open: boolean) => setMenuPath(open ? pathname : null);
 
+  // Tapping the page you're already on in the mobile menu: close the menu, then scroll to the top.
+  // (PageTransition does the scroll for every other same-page link, but scrolling while the full-height
+  // menu closes gets cancelled, so wait two frames for it to go.) Capture phase, ahead of next/link.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = (e.target as Element | null)?.closest?.("nav[data-mobile-menu] a[href]") as HTMLAnchorElement | null;
+      if (!a) return;
+      const url = new URL(a.href, location.href);
+      if (url.origin !== location.origin || url.pathname !== location.pathname || url.search !== location.search || url.hash) return;
+      e.preventDefault();
+      setMenuPath(null);
+      const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: smooth ? "smooth" : "auto" })),
+      );
+    };
+    document.addEventListener("click", onClick, true);
+    return () => document.removeEventListener("click", onClick, true);
+  }, []);
+
   return (
     <div data-site-header className="sticky top-0 z-50 md:-top-[42px]">
       <TopBar />
@@ -46,13 +67,6 @@ export function Header() {
             href="/"
             aria-label="Let's Fly.lk home"
             className="flex items-center"
-            onClick={(e) => {
-              // Already on the home page: a link to "/" wouldn't move, so scroll back to the top instead.
-              if (pathname !== "/") return;
-              e.preventDefault();
-              const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-              window.scrollTo({ top: 0, behavior: smooth ? "smooth" : "auto" });
-            }}
           >
             <Image
               src="/images/logo.png"
@@ -233,10 +247,10 @@ function MobileMenu({ pathname }: { pathname: string }) {
       on ? "bg-sand-50 font-semibold text-ocean-600 shadow-[inset_3px_0_0_var(--color-ocean-600)]" : "text-ink-900 hover:bg-sand-50"
     }`;
   return (
-    <nav aria-label="Mobile" className="max-h-[calc(100dvh-64px)] overflow-y-auto overscroll-contain border-t border-sand-300 bg-white pb-[env(safe-area-inset-bottom)] md:max-h-[calc(100dvh-88px)] lg:hidden">
+    <nav aria-label="Mobile" data-mobile-menu className="max-h-[calc(100dvh-64px)] animate-drop overflow-y-auto overscroll-contain border-t border-sand-300 bg-white pb-[env(safe-area-inset-bottom)] md:max-h-[calc(100dvh-88px)] lg:hidden">
       <Container className="flex flex-col gap-1 py-4">
-        {[...navGroups, { key: "about", label: aboutLink.label, links: [aboutLink] }, contactGroup].map((g) => (
-          <div key={g.key} className="flex flex-col gap-1">
+        {[...navGroups, { key: "about", label: aboutLink.label, links: [aboutLink] }, contactGroup].map((g, i) => (
+          <div key={g.key} className="flex animate-drop flex-col gap-1" style={{ animationDelay: `${60 + i * 50}ms` }}>
             <div className="mt-3 px-3 eyebrow text-ink-400">{g.label}</div>
             {g.links.map((l) => (
               <Link key={l.href} href={l.href} aria-current={pathname === l.href ? "page" : undefined} className={item(pathname === l.href)}>
