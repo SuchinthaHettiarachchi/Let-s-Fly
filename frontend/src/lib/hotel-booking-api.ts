@@ -1,4 +1,4 @@
-import { apiUrl } from "@/lib/api-url";
+import { apiUrl, backendTimeout } from "@/lib/api-url";
 
 export type HotelBookingStat = { value: string; label: string };
 
@@ -41,7 +41,7 @@ export const defaultHotelBooking: HotelBookingContent = {
 
 export async function getHotelBooking(): Promise<HotelBookingContent> {
   try {
-    const response = await fetch(apiUrl("/hotel-booking"), { next: { revalidate: 60 } });
+    const response = await fetch(apiUrl("/hotel-booking"), { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!response.ok) return defaultHotelBooking;
     const data: { content?: Partial<HotelBookingContent> } = await response.json();
     if (!data.content || typeof data.content !== "object") return defaultHotelBooking;

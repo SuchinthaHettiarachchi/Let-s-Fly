@@ -1,4 +1,4 @@
-import { apiUrl, browserApiUrl } from "@/lib/api-url";
+import { apiUrl, browserApiUrl, backendTimeout } from "@/lib/api-url";
 
 export type JobStatus = "Hiring" | "Soon" | "Open";
 export type Job = {
@@ -35,7 +35,7 @@ export { blankJob };
 
 export async function getPublicJobs(): Promise<{ jobs: Job[]; sectionVisible: boolean }> {
   try {
-    const response = await fetch(apiUrl("/jobs/public"), { next: { revalidate: 60 } });
+    const response = await fetch(apiUrl("/jobs/public"), { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!response.ok) return { jobs: [], sectionVisible: false };
     const data = (await response.json()) as { jobs?: Job[]; sectionVisible?: boolean };
     return {

@@ -1,5 +1,5 @@
 import { aboutParagraphs, founderQuote } from "@/data/about";
-import { apiUrl } from "@/lib/api-url";
+import { apiUrl, backendTimeout } from "@/lib/api-url";
 
 export type WhoWeAreContent = {
   eyebrow: string;
@@ -35,7 +35,7 @@ export const defaultWhoWeAre: WhoWeAreContent = {
 
 export async function getWhoWeAre(): Promise<WhoWeAreContent> {
   try {
-    const response = await fetch(apiUrl("/who-we-are"), { next: { revalidate: 60 } });
+    const response = await fetch(apiUrl("/who-we-are"), { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!response.ok) return defaultWhoWeAre;
     const data: { content?: Partial<WhoWeAreContent> } = await response.json();
     if (!data.content || typeof data.content !== "object") return defaultWhoWeAre;

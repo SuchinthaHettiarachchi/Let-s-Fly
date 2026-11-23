@@ -1,5 +1,5 @@
 import type { Package } from "@/data/packages";
-import { apiUrl, browserApiUrl } from "@/lib/api-url";
+import { apiUrl, browserApiUrl, backendTimeout } from "@/lib/api-url";
 
 export type TourCategory = {
   _id: string;
@@ -119,7 +119,7 @@ export function hydrateDetailFields(pkg: Partial<Package>): PackageDetailFields 
 
 export async function getCategories(scope: "sri-lanka" | "outbound" = "sri-lanka"): Promise<TourCategory[]> {
   try {
-    const response = await fetch(apiUrl(`/categories?scope=${scope}`), { next: { revalidate: 60 } });
+    const response = await fetch(apiUrl(`/categories?scope=${scope}`), { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!response.ok) return [];
     const data: { categories?: TourCategory[] } = await response.json();
     return Array.isArray(data.categories) ? data.categories : [];

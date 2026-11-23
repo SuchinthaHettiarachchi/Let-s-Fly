@@ -1,9 +1,9 @@
 import type { Package } from "@/data/packages";
-import { apiUrl } from "@/lib/api-url";
+import { apiUrl, backendTimeout } from "@/lib/api-url";
 
 export async function getPackagesByCategory(category: Package["category"]): Promise<Package[]> {
   try {
-    const response = await fetch(`${apiUrl("/packages")}?category=${category}`, { next: { revalidate: 60 } });
+    const response = await fetch(`${apiUrl("/packages")}?category=${category}`, { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!response.ok) return [];
     const data: { packages?: Package[] } = await response.json();
     return Array.isArray(data.packages) ? data.packages : [];
@@ -14,7 +14,7 @@ export async function getPackagesByCategory(category: Package["category"]): Prom
 
 export async function getPackageBySlug(slug: string): Promise<Package | undefined> {
   try {
-    const response = await fetch(apiUrl(`/packages/${encodeURIComponent(slug)}`), { next: { revalidate: 60 } });
+    const response = await fetch(apiUrl(`/packages/${encodeURIComponent(slug)}`), { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!response.ok) return undefined;
     const data: { package?: Package } = await response.json();
     return data.package;
