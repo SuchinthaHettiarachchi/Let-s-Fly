@@ -113,8 +113,6 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
   const [loaded, setLoaded] = useState(false);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("");
-  const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [galleryUploading, setGalleryUploading] = useState<Record<number, boolean>>({});
   const [galleryProgress, setGalleryProgress] = useState<Record<number, number>>({});
   const [uploadError, setUploadError] = useState("");
@@ -135,21 +133,6 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
     ? (draft.outboundRegion ? [draft.outboundRegion] : [])
     : draft.themes;
   const galleryComplete = draft.gallery.length >= 5 && draft.gallery.slice(0, 5).every(Boolean);
-
-  async function uploadImage(file?: File | null) {
-    if (!file) return;
-    setUploadError("");
-    setUploading(true);
-    setUploadProgress(0);
-    try {
-      const url = await uploadMediaFile(file, { folder: "packages", kind: "image", onProgress: setUploadProgress });
-      update("image", url);
-    } catch (error) {
-      setUploadError(error instanceof Error ? error.message : "Upload failed.");
-    } finally {
-      setUploading(false);
-    }
-  }
 
   async function uploadGallerySlot(index: number, file?: File | null) {
     if (!file) return;
@@ -287,7 +270,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
         nights: draft.nights,
         price: draft.price,
         priceNote: draft.priceNote,
-        image: draft.image,
+        image: draft.gallery[0] || draft.image,
         flightsIncluded: draft.flightsIncluded,
         featured: draft.featured,
         gallery: draft.gallery,
@@ -604,7 +587,6 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
         </nav>
 
         {activeTab === "Details" && (
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_1px_360px] lg:items-start">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Field label="Package Name"><input className={inputShell} value={draft.title} onChange={(event) => { const value = event.target.value; setDraft((d) => ({ ...d, title: value, slug: d.slug || slugify(value) })); }} /></Field>
               <Field label="Region"><input className={inputShell} placeholder="Sri Lanka" value={draft.region} onChange={(event) => update("region", event.target.value)} /></Field>
@@ -661,37 +643,19 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                 labelClassName="text-[13px] font-normal text-cms-text"
               />
             </div>
-
-            <div aria-hidden className="hidden self-stretch bg-gradient-to-b from-transparent via-gray-300/80 to-transparent dark:via-[#2a2e63] lg:block" />
-
-            <div className="lg:sticky lg:top-4">
-              <ImageUpload
-                accept="image/*"
-                error={uploadError}
-                height="h-[180px]"
-                hint="JPEG, PNG, WebP or GIF · up to 5MB"
-                label="Cover image"
-                onFile={(file) => void uploadImage(file)}
-                onRemove={() => update("image", "")}
-                uploading={uploading}
-                progress={uploadProgress}
-                value={draft.image}
-              />
-            </div>
-          </div>
         )}
 
         {activeTab === "Gallery" && (
           <div>
-            <p className="mb-3 text-[12.5px] text-cms-muted">Exactly 5 images are required: 1 main photo and 4 subphotos, shown on the package detail page.</p>
+            <p className="mb-3 text-[12.5px] text-cms-muted">Exactly 5 images are required: 1 main photo (cover photo) and 4 subphotos. The main photo is used as the package cover photo.</p>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 5 }, (_, index) => (
                 <ImageUpload
                   key={index}
                   accept="image/*"
                   height="h-[150px]"
-                  hint={index === 0 ? "Main photo" : `Subphoto ${index}`}
-                  label={index === 0 ? "Main photo *" : `Subphoto ${index} *`}
+                  hint={index === 0 ? "Main photo (cover photo)" : `Subphoto ${index}`}
+                  label={index === 0 ? "Main photo (cover photo) *" : `Subphoto ${index} *`}
                   onFile={(file) => void uploadGallerySlot(index, file)}
                   onRemove={() => setGallerySlot(index, "")}
                 progress={galleryUploading[index] ? galleryProgress[index] : undefined}
@@ -706,7 +670,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
               </span>
               {!galleryComplete && (
                 <span className="text-[12px] text-[#d42a45] dark:text-[#ff9aa8]" role="alert">
-                  All 5 images are required (main photo + 4 subphotos).
+                  All 5 images are required (main photo (cover photo) + 4 subphotos).
                 </span>
               )}
             </div>
@@ -1024,9 +988,9 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
                   <tr className="border-b border-cms-line last:border-0" key={item._id}>
                     <td className="py-2.5 pr-3">
                       <div className="h-12 w-16 overflow-hidden rounded-md bg-[#eef1ff] dark:bg-[#101435]">
-                        {item.image ? (
+                        {(item.gallery?.[0] || item.image) ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={item.image} alt="" className="h-full w-full object-cover" />
+                          <img src={item.gallery?.[0] || item.image} alt="" className="h-full w-full object-cover" />
                         ) : (
                           <div className="grid h-full w-full place-items-center text-[10px] text-cms-muted">No image</div>
                         )}
@@ -1076,7 +1040,7 @@ export default function PackagesTab({ category, onNavigate }: { category: Catego
         subtitle={packageViewTarget
           ? `${packageViewTarget.region}${packageViewTarget.area ? ` · ${packageViewTarget.area}` : ""} · ${packageViewTarget.days}D / ${packageViewTarget.nights}N`
           : undefined}
-        image={packageViewTarget?.image}
+        image={packageViewTarget?.gallery?.[0] || packageViewTarget?.image}
         badge={packageViewTarget?.badge ? (
           <span className="rounded-full bg-[#fff8c2] px-2 py-1 text-[10px] font-semibold text-[#796900]">
             {packageViewTarget.badge}

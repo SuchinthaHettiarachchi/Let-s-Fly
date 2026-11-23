@@ -5,7 +5,7 @@ import { Placeholder } from "@/components/ui/Placeholder";
 import type { Package } from "@/data/packages";
 import { durationLabel, durationShort, formatLKR } from "@/lib/package-format";
 
-export type PackageCardData = Pick<Package, "slug" | "title" | "region" | "area" | "badge" | "days" | "nights" | "price" | "image" | "flightsIncluded">;
+export type PackageCardData = Pick<Package, "slug" | "title" | "region" | "area" | "badge" | "days" | "nights" | "price" | "image" | "gallery" | "flightsIncluded">;
 type Props = { pkg: PackageCardData; className?: string; imageSizes?: string; compact?: boolean };
 
 /** Package card: photo with place tag + badge, title, duration, price and the yellow bottom strip. */
@@ -16,8 +16,8 @@ export function PackageCard({ pkg, className = "", imageSizes = "(min-width: 102
       className={`group flex flex-col overflow-hidden rounded-xl border border-sand-300 bg-white text-ink-900 transition-[translate,box-shadow,border-color,scale] duration-300 ease-lf press-card hover:-translate-y-1.5 hover:border-ocean-600 hover:text-ink-900 hover:shadow-lf-lg ${className}`}
     >
       <div className={`relative overflow-hidden bg-sand-200 ${compact ? "h-[150px]" : "h-[210px]"}`}>
-        {pkg.image ? (
-          <Image src={pkg.image} alt={pkg.title} fill sizes={imageSizes} className="object-cover transition-transform duration-500 ease-out group-hover:scale-105" />
+        {(pkg.gallery?.[0] || pkg.image) ? (
+          <Image src={(pkg.gallery?.[0] || pkg.image)!} alt={pkg.title} fill sizes={imageSizes} className="object-cover transition-transform duration-500 ease-out group-hover:scale-105" />
         ) : (
           <Placeholder label="PHOTO" className="absolute inset-0 rounded-none border-0" />
         )}
