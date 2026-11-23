@@ -6,6 +6,7 @@ import { Icon } from "@/components/ui/Icon";
 import { ConsentBlock } from "@/components/forms/ConsentBlock";
 import { FormSent } from "@/components/forms/FormSent";
 import { FormError, Honeypot, isBot } from "@/components/forms/FormStatus";
+import { WhatsAppSendButton, openWhatsApp } from "@/components/forms/WhatsAppSend";
 import { oneLine, sendFormEmail } from "@/lib/email";
 import { categoryFromContactForm, submitInquiry } from "@/lib/inquiry-api";
 import { errorClass, fieldClass, labelClass, serviceOptions, textareaClass } from "@/components/forms/styles";
@@ -133,6 +134,25 @@ export function ContactForm({ subject, service = serviceOptions[0] }: ContactFor
     }
   }
 
+  /** Same checks as Send Message, then opens WhatsApp with the details filled in. */
+  function sendOnWhatsApp() {
+    setTouched({ name: true, phone: true, email: true, message: true });
+    const firstBad = order.find((f) => check(f, values));
+    if (firstBad) {
+      formRef.current?.querySelector<HTMLElement>(`[name="${firstBad}"]`)?.focus();
+      return;
+    }
+    const picked = formRef.current?.querySelector<HTMLSelectElement>('[name="service"]')?.value;
+    openWhatsApp("Hi Let's Fly, I'd like to make an enquiry.", [
+      ["Subject", subject],
+      ["Service", picked],
+      ["Name", oneLine(values.name)],
+      ["Phone", values.phone],
+      ["Email", values.email],
+      ["Message", values.message],
+    ]);
+  }
+
   function reset() {
     setValues(empty);
     setTouched({});
@@ -207,9 +227,10 @@ export function ContactForm({ subject, service = serviceOptions[0] }: ContactFor
         </span>
       </label>
       <ConsentBlock className="sm:col-span-2" />
-      <Button type="submit" variant="primary" size="lg" icon={sending ? undefined : "send"} disabled={sending} className="w-full sm:col-span-2">
+      <Button type="submit" variant="primary" size="lg" icon={sending ? undefined : "send"} disabled={sending} className="w-full">
         {sending ? "Sending…" : "Send Message"}
       </Button>
+      <WhatsAppSendButton onClick={sendOnWhatsApp} className="w-full" />
       {failed && <FormError className="sm:col-span-2" />}
     </form>
   );
