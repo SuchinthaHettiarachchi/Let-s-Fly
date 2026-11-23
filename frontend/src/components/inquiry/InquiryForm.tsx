@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ConsentBlock } from "@/components/forms/ConsentBlock";
 import { FormSent } from "@/components/forms/FormSent";
 import { SubjectField } from "@/components/contact/ContactForm";
 import { fieldClass, labelClass, serviceOptions, textareaClass, titleOptions } from "@/components/forms/styles";
 import { FormError, Honeypot, isBot } from "@/components/forms/FormStatus";
+import { WhatsAppSendButton, openWhatsApp } from "@/components/forms/WhatsAppSend";
 import { oneLine, sendFormEmail } from "@/lib/email";
 import { categoryFromService, submitInquiry } from "@/lib/inquiry-api";
 
@@ -40,6 +41,25 @@ export function InquiryForm({ prefill = {}, autoFocus = false }: Props) {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [failed, setFailed] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  /** Uses the browser's required-field checks, then opens WhatsApp with the details filled in. */
+  function sendOnWhatsApp() {
+    const form = formRef.current;
+    if (!form || !form.reportValidity()) return;
+    const data = new FormData(form);
+    const get = (key: string) => String(data.get(key) ?? "").trim();
+    openWhatsApp("Hi Let's Fly, I'd like to make an inquiry.", [
+      ["Subject", prefill.subject],
+      ["Service", get("service")],
+      ["Name", oneLine(`${get("title")} ${get("name")}`)],
+      ["Phone", get("phone")],
+      ["Email", get("email")],
+      ["Destination", oneLine(get("destination"))],
+      ["Departure date", formatDate(get("departure"))],
+      ["Details", get("details")],
+    ]);
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -112,7 +132,7 @@ export function InquiryForm({ prefill = {}, autoFocus = false }: Props) {
 
   return (
     <div className="@container">
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 @min-[21rem]:grid-cols-2">
+      <form ref={formRef} onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 @min-[21rem]:grid-cols-2">
         <Honeypot />
         {prefill.subject && <SubjectField value={prefill.subject} className="@min-[21rem]:col-span-2" />}
         <div className="grid grid-cols-[100px_1fr] gap-4 @min-[21rem]:col-span-2 @min-[21rem]:grid-cols-[120px_1fr]">
@@ -185,6 +205,7 @@ export function InquiryForm({ prefill = {}, autoFocus = false }: Props) {
         >
           {sending ? "Sending…" : "Inquire Now · Send Inquiry"}
         </Button>
+        <WhatsAppSendButton onClick={sendOnWhatsApp} className="w-full @min-[21rem]:col-span-2" />
         {failed && <FormError className="@min-[21rem]:col-span-2" />}
       </form>
     </div>

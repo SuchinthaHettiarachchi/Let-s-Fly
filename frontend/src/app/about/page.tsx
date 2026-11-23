@@ -17,7 +17,6 @@ import {
   aboutStats,
   approach,
   commitments,
-  journeysThisYear,
   team,
   underOneRoof,
   visionMission,
@@ -196,37 +195,6 @@ export default async function AboutPage() {
             A ticket is never just a ticket. Behind every booking is a reason to go and someone waiting at the other end.
             That&apos;s why we take the details personally.
           </p>
-        </Container>
-      </section>
-
-      <section className="py-14 lg:py-20">
-        <Container className="flex flex-col gap-6">
-          <div data-reveal className="flex items-end justify-between gap-4">
-            <h3>The journeys we&apos;ve helped with this year</h3>
-            <span className="text-small text-ink-400 lg:hidden">Swipe to see more →</span>
-          </div>
-          <ul className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 lg:mx-0 lg:grid lg:grid-cols-5 lg:px-0">
-            {journeysThisYear.map((j, i) => (
-              <li
-                key={j.place}
-                data-reveal={(i % 5) * 90}
-                className="group relative h-[300px] w-[220px] flex-none snap-start overflow-hidden rounded-xl bg-navy-900 transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lf-md lg:w-auto"
-              >
-                <Image
-                  src={j.image}
-                  alt=""
-                  fill
-                  sizes="240px"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                />
-                <span className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,37,69,0)_45%,rgba(11,37,69,.88)_100%)]" />
-                <span className="absolute inset-x-4 bottom-4 flex flex-col text-white">
-                  <span className="text-h5">{j.place}</span>
-                  <span className="text-caption font-normal text-white/75">{j.caption}</span>
-                </span>
-              </li>
-            ))}
-          </ul>
         </Container>
       </section>
 
