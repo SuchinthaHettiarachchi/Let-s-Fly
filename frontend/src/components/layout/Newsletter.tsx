@@ -83,7 +83,7 @@ export function Newsletter() {
                   placeholder="name@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-[52px] min-w-0 flex-1 rounded-full border border-sand-300 bg-white px-[22px] text-ink-900 placeholder:text-ink-400 focus:border-transparent focus:outline-2 focus:outline-offset-1 focus:outline-ocean-600"
+                  className="h-[52px] min-w-0 shrink-0 rounded-full min-[480px]:flex-1 border border-sand-300 bg-white px-[22px] text-ink-900 placeholder:text-ink-400 focus:border-transparent focus:outline-2 focus:outline-offset-1 focus:outline-ocean-600"
                 />
                 <button suppressHydrationWarning
                   type="submit"

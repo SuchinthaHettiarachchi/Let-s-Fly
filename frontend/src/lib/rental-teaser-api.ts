@@ -1,4 +1,4 @@
-import { apiUrl } from "@/lib/api-url";
+import { apiUrl, backendTimeout } from "@/lib/api-url";
 
 export type RentalSlotId = "cars" | "vans" | "bikes" | "scooters";
 
@@ -37,7 +37,7 @@ const URL_API = apiUrl("/rental-teaser");
 
 export async function getRentalTeaser(): Promise<RentalTeaserContent> {
   try {
-    const response = await fetch(URL_API, { next: { revalidate: 60 } });
+    const response = await fetch(URL_API, { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!response.ok) return defaultRentalTeaser;
     const data: { content?: Partial<RentalTeaserContent> } = await response.json();
     if (!data.content || !Array.isArray(data.content.slots) || data.content.slots.length !== 4) {

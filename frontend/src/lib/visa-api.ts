@@ -1,4 +1,4 @@
-import { apiUrl, browserApiUrl } from "@/lib/api-url";
+import { apiUrl, browserApiUrl, backendTimeout } from "@/lib/api-url";
 
 export type VisaDocument = { title: string; note?: string };
 export type VisaFact = { icon: string; label: string };
@@ -36,7 +36,7 @@ export type VisaPublicData = {
 
 export async function getVisaPublic(): Promise<VisaPublicData> {
   try {
-    const res = await fetch(apiUrl("/visas/public"), { next: { revalidate: 60 } });
+    const res = await fetch(apiUrl("/visas/public"), { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!res.ok) throw new Error("Failed");
     const data = (await res.json()) as Partial<VisaPublicData>;
     return {
@@ -51,7 +51,7 @@ export async function getVisaPublic(): Promise<VisaPublicData> {
 
 export async function getVisaBySlug(slug: string): Promise<Visa | null> {
   try {
-    const res = await fetch(apiUrl(`/visas/by-slug/${encodeURIComponent(slug)}`), { next: { revalidate: 60 } });
+    const res = await fetch(apiUrl(`/visas/by-slug/${encodeURIComponent(slug)}`), { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!res.ok) return null;
     const data = (await res.json()) as { visa?: Visa };
     return data.visa || null;

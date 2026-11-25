@@ -1,5 +1,5 @@
 import { googleRating, stats } from "@/data/home";
-import { apiUrl } from "@/lib/api-url";
+import { apiUrl, backendTimeout } from "@/lib/api-url";
 
 export type HomeStat = { value: string; label: string };
 
@@ -29,7 +29,7 @@ export const defaultHomeAbout: HomeAboutContent = {
 
 export async function getHomeAbout(): Promise<HomeAboutContent> {
   try {
-    const response = await fetch(apiUrl("/home-about"), { next: { revalidate: 60 } });
+    const response = await fetch(apiUrl("/home-about"), { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!response.ok) return defaultHomeAbout;
     const data: { content?: Partial<HomeAboutContent> } = await response.json();
     if (!data.content || typeof data.content !== "object") return defaultHomeAbout;

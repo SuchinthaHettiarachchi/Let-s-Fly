@@ -32,8 +32,8 @@ export type SocialName = "Facebook" | "Instagram" | "TikTok" | "LinkedIn";
 export const socials: { name: SocialName; href: string }[] = [
   { name: "Facebook", href: "https://www.facebook.com/Letsfly.lk" },
   { name: "Instagram", href: "https://www.instagram.com/letsfly.lk/" },
-  { name: "TikTok", href: "#" },
-  { name: "LinkedIn", href: "https://www.linkedin.com/company/letsfly-lk" },
+  { name: "TikTok", href: "https://www.tiktok.com/@kasunbulathsinhal16" },
+  { name: "LinkedIn", href: "https://www.linkedin.com/company/letsflylk/" },
 ];
 
 export type NavLink = { label: string; href: string; icon?: string };

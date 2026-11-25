@@ -62,10 +62,11 @@ export function Footer() {
           </Container>
         </section>
 
-        <Container className="grid grid-cols-1 gap-11 pt-6 pb-12 sm:grid-cols-2 lg:grid-cols-[1.15fr_1.25fr_1.15fr] lg:gap-16 lg:pb-14">
+        <Container className="grid grid-cols-1 gap-9 pt-6 pb-10 sm:grid-cols-2 sm:gap-11 sm:pb-12 lg:grid-cols-[1.15fr_1.25fr_1.15fr] lg:gap-16 lg:pb-14">
           <div className="flex flex-col gap-[22px]">
-            <Image src="/images/logo.png" alt="Let's Fly.lk" width={96} height={96} className="size-[96px]" />
-            <div className="grid gap-[18px]">
+            <Image src="/images/logo.png" alt="Let's Fly.lk" width={96} height={96} className="size-[72px] sm:size-[96px]" />
+            {/* Phones: address and phone on the left, email and office hours on the right. */}
+            <div className="grid grid-flow-col grid-cols-2 grid-rows-[auto_auto] gap-x-5 gap-y-[18px] sm:grid-flow-row sm:grid-cols-1 sm:grid-rows-none">
               <div>
                 <Label>Address</Label>
                 <a href={contact.mapHref} target="_blank" rel="noopener noreferrer" className="text-white hover:text-sun-400">
@@ -80,7 +81,7 @@ export function Footer() {
               </div>
               <div>
                 <Label>Email</Label>
-                <a href={`mailto:${contact.email}`} className="text-white hover:text-sun-400">
+                <a href={`mailto:${contact.email}`} className="text-white [overflow-wrap:anywhere] hover:text-sun-400">
                   {contact.email}
                 </a>
               </div>
@@ -89,7 +90,7 @@ export function Footer() {
                 <ul className="flex flex-col gap-0.5 text-white">
                   {officeHours.map((o) => (
                     <li key={o.days}>
-                      {o.days} <span className="text-white/70">{o.hours}</span>
+                      {o.days} <span className="block text-white/70 sm:inline">{o.hours}</span>
                     </li>
                   ))}
                 </ul>

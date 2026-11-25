@@ -1,4 +1,4 @@
-import { apiUrl, browserApiUrl } from "@/lib/api-url";
+import { apiUrl, browserApiUrl, backendTimeout } from "@/lib/api-url";
 
 export type AirTicketContent = {
   _id?: string;
@@ -42,7 +42,7 @@ export const defaultAirTicketRoutes: Omit<AirTicketRoute, "_id">[] = [
 
 export async function getAirTickets(): Promise<AirTicketsData> {
   try {
-    const response = await fetch(apiUrl("/air-tickets"), { next: { revalidate: 60 } });
+    const response = await fetch(apiUrl("/air-tickets"), { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!response.ok) throw new Error("Failed");
     const data = (await response.json()) as Partial<AirTicketsData>;
     const content = { ...defaultAirTicketContent, ...(data.content || {}) };

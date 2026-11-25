@@ -1,4 +1,4 @@
-import { apiUrl } from "@/lib/api-url";
+import { apiUrl, backendTimeout } from "@/lib/api-url";
 
 export type DriveMode = "self-drive" | "with-driver";
 export type Transmission = "Automatic" | "Manual";
@@ -26,7 +26,7 @@ export type RentalVehicle = {
 
 export async function getRentalCategories(): Promise<RentalCategory[]> {
   try {
-    const response = await fetch(apiUrl("/rental-categories"), { next: { revalidate: 60 } });
+    const response = await fetch(apiUrl("/rental-categories"), { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!response.ok) return [];
     const data: { categories?: RentalCategory[] } = await response.json();
     return Array.isArray(data.categories) ? data.categories : [];
@@ -37,7 +37,7 @@ export async function getRentalCategories(): Promise<RentalCategory[]> {
 
 export async function getRentalVehicles(): Promise<RentalVehicle[]> {
   try {
-    const response = await fetch(apiUrl("/rental-vehicles"), { next: { revalidate: 60 } });
+    const response = await fetch(apiUrl("/rental-vehicles"), { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!response.ok) return [];
     const data: { vehicles?: RentalVehicle[] } = await response.json();
     return Array.isArray(data.vehicles) ? data.vehicles : [];

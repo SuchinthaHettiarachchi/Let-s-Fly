@@ -1,4 +1,4 @@
-import { apiUrl } from "@/lib/api-url";
+import { apiUrl, backendTimeout } from "@/lib/api-url";
 
 export type GalleryCategory = {
   _id: string;
@@ -21,7 +21,7 @@ export type GalleryItem = {
 
 export async function getGalleryCategories(): Promise<GalleryCategory[]> {
   try {
-    const response = await fetch(apiUrl("/gallery-categories"), { next: { revalidate: 60 } });
+    const response = await fetch(apiUrl("/gallery-categories"), { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!response.ok) return [];
     const data: { categories?: GalleryCategory[] } = await response.json();
     return Array.isArray(data.categories) ? data.categories : [];
@@ -32,7 +32,7 @@ export async function getGalleryCategories(): Promise<GalleryCategory[]> {
 
 export async function getGalleryItems(): Promise<GalleryItem[]> {
   try {
-    const response = await fetch(apiUrl("/gallery-items"), { next: { revalidate: 60 } });
+    const response = await fetch(apiUrl("/gallery-items"), { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!response.ok) return [];
     const data: { items?: GalleryItem[] } = await response.json();
     return Array.isArray(data.items) ? data.items : [];

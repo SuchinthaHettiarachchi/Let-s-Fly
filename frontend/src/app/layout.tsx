@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFab } from "@/components/layout/WhatsAppFab";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { RouteTransition } from "@/components/layout/RouteTransition";
+import { MobileReveal } from "@/components/layout/MobileReveal";
 import { InquiryProvider } from "@/components/inquiry/InquiryProvider";
 import { ConsentProvider } from "@/components/consent/ConsentProvider";
 import { ThemeProvider } from "./theme-provider";
@@ -76,6 +77,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <WhatsAppFab />
               <Footer />
               <RouteTransition />
+              <MobileReveal />
             </InquiryProvider>
           </ConsentProvider>
         </ThemeProvider>

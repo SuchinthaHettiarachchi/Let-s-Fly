@@ -1,4 +1,4 @@
-import { apiUrl, browserApiUrl } from "@/lib/api-url";
+import { apiUrl, browserApiUrl, backendTimeout } from "@/lib/api-url";
 
 export type ProjectCategory = "meetings" | "incentives" | "conferences" | "exhibitions";
 export type ProjectImage = { src: string; alt: string; name?: string };
@@ -31,7 +31,7 @@ export const projectCategoryLabel = (category: string) =>
 
 export async function getProjects(): Promise<ProjectRecord[]> {
   try {
-    const response = await fetch(apiUrl("/projects"), { next: { revalidate: 60 } });
+    const response = await fetch(apiUrl("/projects"), { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!response.ok) return [];
     const data = (await response.json()) as { projects?: ProjectRecord[] };
     return Array.isArray(data.projects) ? data.projects : [];
@@ -42,7 +42,7 @@ export async function getProjects(): Promise<ProjectRecord[]> {
 
 export async function getProjectBySlug(slug: string): Promise<ProjectRecord | null> {
   try {
-    const response = await fetch(apiUrl(`/projects/by-slug/${encodeURIComponent(slug)}`), { next: { revalidate: 60 } });
+    const response = await fetch(apiUrl(`/projects/by-slug/${encodeURIComponent(slug)}`), { next: { revalidate: 60 }, signal: backendTimeout() });
     if (!response.ok) return null;
     const data = (await response.json()) as { project?: ProjectRecord };
     return data.project ?? null;

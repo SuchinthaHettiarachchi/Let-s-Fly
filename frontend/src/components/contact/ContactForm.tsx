@@ -79,6 +79,10 @@ export function ContactForm({ subject, service = serviceOptions[0], inquiryCateg
   const set = (field: Field, value: string) => setValues((v) => ({ ...v, [field]: value }));
   const touch = (field: Field) => setTouched((t) => ({ ...t, [field]: true }));
 
+  /** The form skips the browser's checks (noValidate), so ask the consent box itself; it shows its own message. */
+  const consentGiven = () =>
+    formRef.current?.querySelector<HTMLInputElement>('[name="consent"]')?.checkValidity() ?? false;
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (sending) return;
@@ -89,6 +93,7 @@ export function ContactForm({ subject, service = serviceOptions[0], inquiryCateg
       formRef.current?.querySelector<HTMLElement>(`[name="${firstBad}"]`)?.focus();
       return;
     }
+    if (!consentGiven()) return;
     if (isBot(form)) return setSent(true);
 
     const data = new FormData(form);
@@ -143,7 +148,8 @@ export function ContactForm({ subject, service = serviceOptions[0], inquiryCateg
       formRef.current?.querySelector<HTMLElement>(`[name="${firstBad}"]`)?.focus();
       return;
     }
-    const picked = formRef.current?.querySelector<HTMLSelectElement>('[name="service"]')?.value;
+    if (!consentGiven()) return;
+    const picked =formRef.current?.querySelector<HTMLSelectElement>('[name="service"]')?.value;
     openWhatsApp("Hi Let's Fly, I'd like to make an enquiry.", [
       ["Subject", subject],
       ["Service", picked],
