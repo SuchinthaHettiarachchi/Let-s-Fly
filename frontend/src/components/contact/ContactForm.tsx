@@ -8,7 +8,7 @@ import { FormSent } from "@/components/forms/FormSent";
 import { FormError, Honeypot, isBot } from "@/components/forms/FormStatus";
 import { WhatsAppSendButton, openWhatsApp } from "@/components/forms/WhatsAppSend";
 import { oneLine, sendFormEmail } from "@/lib/email";
-import { categoryFromContactForm, submitInquiry } from "@/lib/inquiry-api";
+import { categoryFromContactForm, submitInquiry, type InquiryCategory } from "@/lib/inquiry-api";
 import { errorClass, fieldClass, labelClass, serviceOptions, textareaClass } from "@/components/forms/styles";
 
 const MESSAGE_MIN = 10;
@@ -60,10 +60,11 @@ type ContactFormProps = {
   subject?: string;
   /** Service picked in the dropdown when the form loads. */
   service?: (typeof serviceOptions)[number];
+  inquiryCategory?: InquiryCategory;
 };
 
 /** "How can we help?" message form. Submissions are emailed to the office (see lib/email.ts). */
-export function ContactForm({ subject, service = serviceOptions[0] }: ContactFormProps) {
+export function ContactForm({ subject, service = serviceOptions[0], inquiryCategory }: ContactFormProps) {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -102,7 +103,7 @@ export function ContactForm({ subject, service = serviceOptions[0] }: ContactFor
           customerName: name,
           email: values.email.trim(),
           phone: values.phone.trim(),
-          category: categoryFromContactForm(subject ?? "", picked),
+          category: inquiryCategory ?? categoryFromContactForm(subject ?? "", picked),
           subject: subject ?? picked,
           message: values.message,
         });

@@ -54,16 +54,17 @@ export function ServicesGrid() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((s, i) => {
             const className = `${cardClass} ${loneLastCard && i === services.length - 1 ? lastCardClass : ""}`;
+            const reveal = (i % 3) * 90;
             return s.href ? (
-              <Link key={s.title} href={s.href} data-reveal={(i % 3) * 90} className={className}>
+              <Link key={s.title} href={s.href} data-reveal={reveal} className={className}>
                 <CardBody s={s} />
               </Link>
             ) : (
               <button
                 key={s.title}
                 type="button"
-                data-reveal={(i % 3) * 90}
-                onClick={() => openInquiry({ service: s.inquiry })}
+                data-reveal={reveal}
+                onClick={() => openInquiry({ service: s.inquiry, category: s.inquiry === "Travel insurance" ? "Travel Insurance" : undefined })}
                 className={`${className} cursor-pointer`}
               >
                 <CardBody s={s} />

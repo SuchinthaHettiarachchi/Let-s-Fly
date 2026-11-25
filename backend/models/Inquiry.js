@@ -7,7 +7,7 @@ const inquirySchema = new mongoose.Schema(
     phone: { type: String, default: '', trim: true },
     category: {
       type: String,
-      enum: ['Contact', 'Plan my Trip Section', 'Air Ticket', 'Visa Inquiry'],
+      enum: ['Contact', 'Plan my Trip Section', 'Air Ticket', 'Visa Inquiry', 'Travel Sri Lanka', 'Overseas Travel', 'Rentals', 'Travel Insurance', 'Hotels'],
       required: true,
     },
     subject: { type: String, default: '', trim: true },

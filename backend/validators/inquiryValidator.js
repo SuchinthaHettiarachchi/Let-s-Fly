@@ -1,6 +1,6 @@
 const { httpError } = require('../middleware/error');
 
-const CATEGORIES = new Set(['Contact', 'Plan my Trip Section', 'Air Ticket', 'Visa Inquiry']);
+const CATEGORIES = new Set(['Contact', 'Plan my Trip Section', 'Air Ticket', 'Visa Inquiry', 'Travel Sri Lanka', 'Overseas Travel', 'Rentals', 'Travel Insurance', 'Hotels']);
 const STATUSES = new Set(['New', 'In Progress', 'Closed']);
 
 const text = (value, field, { required = false, max = 2000 } = {}) => {

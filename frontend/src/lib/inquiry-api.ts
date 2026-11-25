@@ -1,6 +1,6 @@
 import { browserApiUrl } from "@/lib/api-url";
 
-export type InquiryCategory = "Contact" | "Plan my Trip Section" | "Air Ticket" | "Visa Inquiry";
+export type InquiryCategory = "Contact" | "Plan my Trip Section" | "Air Ticket" | "Visa Inquiry" | "Travel Sri Lanka" | "Overseas Travel" | "Rentals" | "Travel Insurance" | "Hotels";
 export type InquiryStatus = "New" | "In Progress" | "Closed";
 
 export type Inquiry = {
@@ -25,20 +25,29 @@ export type InquiryInput = {
   message: string;
 };
 
-/** Map the service/subject chosen in a visitor form to a CMS inquiry category. */
-export function categoryFromService(service = "", subject = ""): InquiryCategory {
+export function mapInquiryCategory(service = "", subject = "", fallback: InquiryCategory = "Contact"): InquiryCategory {
   const value = `${subject} ${service}`.toLowerCase();
-  if (value.includes("visa")) return "Visa Inquiry";
+  if (value.includes("visa service") || value.includes("visa")) return "Visa Inquiry";
   if (value.includes("air ticket") || value.includes("flight") || value.includes("fare")) return "Air Ticket";
-  return "Plan my Trip Section";
+  if (value.includes("travel insurance")) return "Travel Insurance";
+  if (value.includes("rental")) return "Rentals";
+  if (value.includes("hotel")) return "Hotels";
+  if (value.includes("plan my trip")) return "Plan my Trip Section";
+  if (value.includes("overseas travel")) return "Overseas Travel";
+  if (value.includes("travel sri lanka")) return "Travel Sri Lanka";
+  if (value.includes("tour package")) return "Contact";
+  if (value.includes("trains & cruise") || value.includes("train") || value.includes("cruise")) return "Contact";
+  return fallback;
 }
 
-/** The Contact page form defaults to Contact unless the subject/service is clearly visa or air ticket. */
+/** Map the service/subject chosen in a visitor form to a CMS inquiry category. */
+export function categoryFromService(service = "", subject = ""): InquiryCategory {
+  return mapInquiryCategory(service, subject, "Plan my Trip Section");
+}
+
+/** The Contact page form defaults to Contact unless the subject/service maps to a specific tab. */
 export function categoryFromContactForm(subject = "", service = ""): InquiryCategory {
-  const value = `${subject} ${service}`.toLowerCase();
-  if (value.includes("visa")) return "Visa Inquiry";
-  if (value.includes("air ticket") || value.includes("flight") || value.includes("fare")) return "Air Ticket";
-  return "Contact";
+  return mapInquiryCategory(service, subject, "Contact");
 }
 
 /** Persist a visitor inquiry before the EmailJS notification is sent. */

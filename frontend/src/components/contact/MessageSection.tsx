@@ -5,11 +5,13 @@ import { ContactForm } from "@/components/contact/ContactForm";
 import type { serviceOptions } from "@/components/forms/styles";
 import { contact } from "@/data/site";
 import { officeHours } from "@/data/careers";
+import type { InquiryCategory } from "@/lib/inquiry-api";
 
 type MessageSectionProps = {
   /** Pre-filled for each page so the team knows where the message came from. */
   subject: string;
   service: (typeof serviceOptions)[number];
+  inquiryCategory?: InquiryCategory;
   title?: string;
   text?: string;
   id?: string;
@@ -38,6 +40,7 @@ const reach = [
 export function MessageSection({
   subject,
   service,
+  inquiryCategory,
   title = "How can we help?",
   text = "Send us your questions or plans and our team will get back to you, usually within two working hours.",
   id = "send-message",
@@ -78,7 +81,7 @@ export function MessageSection({
           </ul>
         </div>
         <div data-reveal="150" className="rounded-2xl border border-sand-300 bg-white p-6 shadow-lf-md sm:p-8">
-          <ContactForm subject={subject} service={service} />
+          <ContactForm subject={subject} service={service} inquiryCategory={inquiryCategory} />
         </div>
       </Container>
     </section>

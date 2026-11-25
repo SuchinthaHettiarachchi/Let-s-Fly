@@ -70,6 +70,7 @@ export default async function PackagePage({ params }: PageProps<"/packages/[slug
       <MessageSection
         subject={pkg.title}
         service="Tour package"
+        inquiryCategory={pkg.category === "sri-lanka" ? "Travel Sri Lanka" : "Overseas Travel"}
         text={`Questions about ${pkg.title}, or want to change dates, hotels or the route? Send us a message and we'll tailor it for you.`}
       />
 
@@ -78,7 +79,7 @@ export default async function PackagePage({ params }: PageProps<"/packages/[slug
       <MobileActionBar
         label="From, per person"
         value={formatLKR(pkg.price)}
-        prefill={{ subject: pkg.title, service: "Tour package", destination: pkg.title }}
+        prefill={{ subject: pkg.title, service: "Tour package", destination: pkg.title, category: pkg.category === "sri-lanka" ? "Travel Sri Lanka" : "Overseas Travel" }}
       />
       <RevealOnScroll />
     </>

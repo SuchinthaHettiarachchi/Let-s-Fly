@@ -9,9 +9,9 @@ import { fieldClass, labelClass, serviceOptions, textareaClass, titleOptions } f
 import { FormError, Honeypot, isBot } from "@/components/forms/FormStatus";
 import { WhatsAppSendButton, openWhatsApp } from "@/components/forms/WhatsAppSend";
 import { oneLine, sendFormEmail } from "@/lib/email";
-import { categoryFromService, submitInquiry } from "@/lib/inquiry-api";
+import { categoryFromService, submitInquiry, type InquiryCategory } from "@/lib/inquiry-api";
 
-export type InquiryPrefill = { subject?: string; service?: string; destination?: string; details?: string };
+export type InquiryPrefill = { subject?: string; service?: string; destination?: string; details?: string; category?: InquiryCategory };
 
 /** Today as YYYY-MM-DD in the visitor's time zone, for the read-only inquiry date. */
 function today() {
@@ -81,7 +81,7 @@ export function InquiryForm({ prefill = {}, autoFocus = false }: Props) {
           customerName: name,
           email: get("email"),
           phone: get("phone"),
-          category: categoryFromService(service, prefill.subject ?? ""),
+          category: prefill.category ?? categoryFromService(service, prefill.subject ?? ""),
           subject: prefill.subject ?? `${service}${destination ? `, ${destination}` : ""}`,
           message: [
             destination ? `Destination: ${destination}` : "",

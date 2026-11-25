@@ -23,6 +23,11 @@ const categories = [
   "Plan my Trip Section",
   "Air Ticket",
   "Visa Inquiry",
+  "Travel Sri Lanka",
+  "Overseas Travel",
+  "Rentals",
+  "Travel Insurance",
+  "Hotels",
 ] as const satisfies readonly InquiryCategory[];
 
 function formatDate(value: string) {
